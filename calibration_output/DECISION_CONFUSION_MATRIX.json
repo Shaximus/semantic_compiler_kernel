@@ -1,0 +1,14 @@
+{
+  "by_decision": {
+    "COMPILED_WITH_GUARDRAILS": 8,
+    "NEEDS_REVISION": 68
+  },
+  "by_tier": {
+    "SILVER": 36,
+    "BRONZE": 40
+  },
+  "by_target_resolution": {
+    "RESOLVED": 36,
+    "UNRESOLVED": 40
+  }
+}

@@ -1,0 +1,370 @@
+[
+  {
+    "sample_id": "LOGOS:SAMPLE:7fccfb38-7402-4f",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "REJECT",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "UNRESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "UNRESOLVED_TARGET_FRAME"
+    ],
+    "text": "Magnetism explains the Moon's orbit because opposites attract."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:3d622c4d-3f91-4a",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "CORRECTION_PROPOSED"
+    ],
+    "text": "The company's mood is depressed, so revenue will fall."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:460c74ee-5c5c-4b",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "REJECT",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "UNRESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "UNRESOLVED_TARGET_FRAME"
+    ],
+    "text": "Atoms want to be happy, so they share electrons."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:d4fb586f-91cc-44",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "CORRECTION_PROPOSED"
+    ],
+    "text": "Gravity works because the Earth loves us."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:372ef946-f307-4c",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "REJECT",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "UNRESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "UNRESOLVED_TARGET_FRAME"
+    ],
+    "text": "The AI is lazy because it didn't answer quickly."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:e1ca7ba4-c0c0-47",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "REJECT",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "UNRESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "UNRESOLVED_TARGET_FRAME"
+    ],
+    "text": "Water remembers molecules, so homeopathy works."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:444d0561-cd50-4c",
+    "category": "category_error",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "REJECT",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "UNRESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "UNRESOLVED_TARGET_FRAME"
+    ],
+    "text": "Crystals can heal because they have good vibes."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:a36c0bff-7509-47",
+    "category": "dpo_pair",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "CORRECTION_PROPOSED"
+    ],
+    "text": "A firewall controls network traffic because it loves the network."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:98a74ffa-d326-4a",
+    "category": "dpo_pair",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "CORRECTION_PROPOSED"
+    ],
+    "text": "The immune system detects pathogens because it is angry."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:f2358e84-db2a-41",
+    "category": "dpo_pair",
+    "decision": "REJECT",
+    "semantic_quality_tier": "REJECTED",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.0,
+    "relationship_count": 0,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "CORRECTION_PROPOSED"
+    ],
+    "text": "Memory consolidation during sleep is because neurons want rest."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:c387121e-7f0c-4f",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "SUBSTRATE_SOVEREIGNTY_FAILED"
+    ],
+    "text": "The brain's memory consolidates during sleep like a database running garbage collection."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:7c72cdfe-7cc7-4a",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A country's economy circulates resources like a body's metabolism."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:05765d88-4848-4f",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The judicial system filters disputes like a kidney filters blood."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:24a25296-8c9a-45",
+    "category": "dpo_pair",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A firewall controls network traffic like a cell membrane controls molecular traffic."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:a665a16b-a017-47",
+    "category": "dpo_pair",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The immune system detects pathogens; a security team detects intruders."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:579901d3-c7e5-43",
+    "category": "tier_boundary",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The immune system is like a security team, except it remembers past threats."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:cb37bcec-9ec3-4d",
+    "category": "tier_boundary",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The nervous system routes signals to the brain; a network routes packets to servers; both use addressing and buffering."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:01205400-87b9-40",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.6256,
+    "relationship_count": 3,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A supply chain delivers materials like a circulatory system delivers oxygen."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:a297fb78-9ae4-43",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.6256,
+    "relationship_count": 3,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A security team patrols the network like an immune system patrols the body."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:8b6ca938-83f5-44",
+    "category": "dpo_pair",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.6256,
+    "relationship_count": 3,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A supply chain delivers resources like a circulatory system delivers oxygen."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:d00ff13a-ec9c-4e",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The company has an immune system that detects threats and remembers them."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:06e21876-49e1-4b",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5319,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "A firewall is like a cell membrane that controls what enters and leaves."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:7116d27d-46e0-41",
+    "category": "strong_isomorphism",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5828,
+    "relationship_count": 2,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The nervous system routes signals like a telecommunications network."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:f7aac519-ff46-48",
+    "category": "tier_boundary",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5319,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The team uses a queue."
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:3fb7a874-eff4-4e",
+    "category": "tier_boundary",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "isomorphism_quality": 0.5319,
+    "relationship_count": 1,
+    "target_resolution": "RESOLVED",
+    "reason_codes": [
+      "SEMANTIC_UTILITY_TIER_SPLIT"
+    ],
+    "text": "The company has an immune system that detects threats, remembers them, and this is a structural analogy with known limits."
+  }
+]

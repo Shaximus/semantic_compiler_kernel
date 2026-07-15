@@ -1,0 +1,14 @@
+{
+  "ASSESSED": {
+    "count": 76,
+    "mean_isomorphism_quality": 0.1316,
+    "median_isomorphism_quality": 0.0493,
+    "min_isomorphism_quality": 0.0,
+    "max_isomorphism_quality": 0.6256,
+    "decisions": {
+      "COMPILED_WITH_GUARDRAILS": 17,
+      "NEEDS_REVISION": 47,
+      "REJECT": 12
+    }
+  }
+}

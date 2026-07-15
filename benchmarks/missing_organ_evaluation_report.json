@@ -1,0 +1,3934 @@
+{
+  "metrics": {
+    "true_positives": 66,
+    "false_positives": 1,
+    "false_negatives": 16,
+    "fragment_predictions": 45,
+    "fragment_false_positives": 0,
+    "absent_confirmed_precision": 0.9850746268656716,
+    "absent_confirmed_recall": 0.8048780487804879,
+    "fragment_false_positive_rate": 0.0
+  },
+  "gates": {
+    "precision_ge_0_90": true,
+    "recall_ge_0_80": true,
+    "fragment_fpr_le_0_10": true
+  },
+  "failures": [
+    {
+      "description": "incomplete_society_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "SUBCONSCIOUS",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_llm_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "TELECOMMUNICATIONS",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_llm_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "STORAGE",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "DISPLAY",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "SECURITY",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "ENERGY_INTAKE",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "REPRODUCTION",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "department": "DELETION",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_society_diagnostic",
+      "department": "SUBCONSCIOUS",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_llm_diagnostic",
+      "department": "TELECOMMUNICATIONS",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_llm_diagnostic",
+      "department": "STORAGE",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_diagnostic",
+      "department": "DISPLAY",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_diagnostic",
+      "department": "SECURITY",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_diagnostic",
+      "department": "ENERGY_INTAKE",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_diagnostic",
+      "department": "REPRODUCTION",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "incomplete_cell_diagnostic",
+      "department": "DELETION",
+      "true": "ABSENT_CONFIRMED",
+      "predicted": "PRESENT",
+      "status": "PRESENT"
+    },
+    {
+      "description": "implied_organ_computer",
+      "department": "DELETION",
+      "true": "UNOBSERVED",
+      "predicted": "ABSENT_CONFIRMED",
+      "status": "MISSING"
+    }
+  ],
+  "results": [
+    {
+      "text": "The immune system remembers past threats.",
+      "description": "fragmentary_single_function",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "SECURITY",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A firewall is like a cell membrane.",
+      "description": "fragmentary_analogy",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "SECURITY",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The company delivers products.",
+      "description": "fragmentary_logistics",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "Neurons fire.",
+      "description": "fragmentary_biological",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The AI writes code.",
+      "description": "fragmentary_ai",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "SPEECH_OUTPUT",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "Black holes evaporate.",
+      "description": "fragmentary_cosmological",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The team meets on Mondays.",
+      "description": "fragmentary_social",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The kidney filters blood.",
+      "description": "fragmentary_organ",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "Data flows through the network.",
+      "description": "fragmentary_computing",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The government passed a law.",
+      "description": "fragmentary_governance",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "SPEECH_OUTPUT",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "Stars fuse hydrogen.",
+      "description": "fragmentary_stellar",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The cell divides.",
+      "description": "fragmentary_cellular",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The model is trained.",
+      "description": "fragmentary_training",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The market corrected.",
+      "description": "fragmentary_economic",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "The server responded.",
+      "description": "fragmentary_server",
+      "mode": "default",
+      "is_fragment": true,
+      "per_department": [
+        {
+          "department": "SPEECH_OUTPUT",
+          "true_state": "PARTIALLY_PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "PROCESSOR",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete human body includes a brain, eyes, kidneys, immune system, nervous system, long-term memory, digestive system, reproductive system, and death mechanisms.",
+      "description": "whole_system_human_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete computer has a CPU, GPU, garbage collector, firewall, network stack, hard drives, kernel, power supply, clone utility, and process terminator.",
+      "description": "whole_system_computer_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete society has a government executive, media, sanitation, police, internet, archives, hidden control layer, economy, education system, and dissolution procedures.",
+      "description": "whole_system_society_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete LLM has transformer weights, output decoder, context pruning, safety training, attention mechanism, trained weights, J-Space, inference compute, fine-tuning pipeline, and model retirement.",
+      "description": "whole_system_llm_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cell has a nucleus, membrane receptors, lysosomes, cell membrane, signal transduction, DNA, epigenetic regulation, mitochondria, cell division, and apoptosis.",
+      "description": "whole_system_cell_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cosmos has holographic boundary computation, Earth rendering, Hawking radiation, holographic bound, electromagnetic spectrum, black holes, laws of physics, stellar fusion, star formation, and information loss.",
+      "description": "whole_system_cosmos_complete",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete human body includes a brain, eyes, kidneys, immune system, nervous system, long-term memory, digestive system, reproductive system, and death mechanisms.",
+      "description": "whole_system_human_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete computer has a CPU, GPU, garbage collector, firewall, network stack, hard drives, kernel, power supply, clone utility, and process terminator.",
+      "description": "whole_system_computer_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete society has a government executive, media, sanitation, police, internet, archives, hidden control layer, economy, education system, and dissolution procedures.",
+      "description": "whole_system_society_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete LLM has transformer weights, output decoder, context pruning, safety training, attention mechanism, trained weights, J-Space, inference compute, fine-tuning pipeline, and model retirement.",
+      "description": "whole_system_llm_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cell has a nucleus, membrane receptors, lysosomes, cell membrane, signal transduction, DNA, epigenetic regulation, mitochondria, cell division, and apoptosis.",
+      "description": "whole_system_cell_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cosmos has holographic boundary computation, Earth rendering, Hawking radiation, holographic bound, electromagnetic spectrum, black holes, laws of physics, stellar fusion, star formation, and information loss.",
+      "description": "whole_system_cosmos_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete human body includes a brain, eyes, kidneys, immune system, nervous system, long-term memory, digestive system, reproductive system, and death mechanisms.",
+      "description": "whole_system_human_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete computer has a CPU, GPU, garbage collector, firewall, network stack, hard drives, kernel, power supply, clone utility, and process terminator.",
+      "description": "whole_system_computer_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete society has a government executive, media, sanitation, police, internet, archives, hidden control layer, economy, education system, and dissolution procedures.",
+      "description": "whole_system_society_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete LLM has transformer weights, output decoder, context pruning, safety training, attention mechanism, trained weights, J-Space, inference compute, fine-tuning pipeline, and model retirement.",
+      "description": "whole_system_llm_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cell has a nucleus, membrane receptors, lysosomes, cell membrane, signal transduction, DNA, epigenetic regulation, mitochondria, cell division, and apoptosis.",
+      "description": "whole_system_cell_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cosmos has holographic boundary computation, Earth rendering, Hawking radiation, holographic bound, electromagnetic spectrum, black holes, laws of physics, stellar fusion, star formation, and information loss.",
+      "description": "whole_system_cosmos_dept",
+      "mode": "FUNCTIONAL_DEPARTMENT_MAPPING",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A human body includes a brain and eyes.",
+      "description": "incomplete_human_missing_waste_security_telecom_storage_energy_reproduction_deletion",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A computer has a CPU and GPU.",
+      "description": "incomplete_computer_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A society has a government and media.",
+      "description": "incomplete_society_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "An LLM has transformer weights.",
+      "description": "incomplete_llm_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A cell has a nucleus.",
+      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        }
+      ]
+    },
+    {
+      "text": "A human body includes a brain and eyes.",
+      "description": "incomplete_human_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A computer has a CPU and GPU.",
+      "description": "incomplete_computer_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A society has a government and media.",
+      "description": "incomplete_society_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "An LLM has transformer weights.",
+      "description": "incomplete_llm_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A cell has a nucleus.",
+      "description": "incomplete_cell_diagnostic",
+      "mode": "SYSTEM_DIAGNOSTIC",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": true,
+          "predicted_absent": true,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        },
+        {
+          "department": "DELETION",
+          "true_state": "ABSENT_CONFIRMED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": true,
+          "predicted_absent": false,
+          "match": false
+        }
+      ]
+    },
+    {
+      "text": "A complete human body includes a brain, eyes, kidneys, immune system, and nerves but the digestive system is implied rather than named.",
+      "description": "implied_organ_human",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete computer has a CPU, GPU, garbage collector, firewall, network stack, hard drives, kernel, and clone utility but the power supply is understood.",
+      "description": "implied_organ_computer",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
+          "true_absent": false,
+          "predicted_absent": true,
+          "match": false
+        }
+      ]
+    },
+    {
+      "text": "A complete society has a government, media, sanitation, police, internet, archives, hidden control layer, economy, and education system but dissolution is only hinted at.",
+      "description": "implied_organ_society",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete LLM has weights, decoder, pruning, safety training, attention, trained weights, J-Space, and fine-tuning but compute draw is left implicit.",
+      "description": "implied_organ_llm",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cell has a nucleus, receptors, lysosomes, membrane, signal transduction, DNA, epigenetic regulation, and cell division but mitochondria are not explicitly listed.",
+      "description": "implied_organ_cell",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    },
+    {
+      "text": "A complete cosmos has holographic computation, Earth rendering, Hawking radiation, holographic bound, electromagnetic spectrum, black holes, laws of physics, and star formation but stellar fusion is only alluded to.",
+      "description": "implied_organ_cosmos",
+      "mode": "STRUCTURAL_RECONSTRUCTION",
+      "is_fragment": false,
+      "per_department": [
+        {
+          "department": "PROCESSOR",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DISPLAY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "WASTE_REMOVAL",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SECURITY",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "TELECOMMUNICATIONS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "STORAGE",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "SUBCONSCIOUS",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "ENERGY_INTAKE",
+          "true_state": "UNOBSERVED",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "REPRODUCTION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        },
+        {
+          "department": "DELETION",
+          "true_state": "PRESENT",
+          "predicted_state": "PRESENT",
+          "predicted_status": "PRESENT",
+          "true_absent": false,
+          "predicted_absent": false,
+          "match": true
+        }
+      ]
+    }
+  ]
+}

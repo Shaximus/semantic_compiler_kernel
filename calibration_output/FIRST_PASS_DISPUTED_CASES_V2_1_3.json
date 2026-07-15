@@ -1,0 +1,91 @@
+[
+  {
+    "sample_id": "LOGOS:SAMPLE:dc51ef2d-301d-43",
+    "category": "whole_system",
+    "subcategory": "computer_incomplete",
+    "text": "A computer has a CPU and GPU but no garbage collector, firewall, or network stack.",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "training_ready": false,
+    "isomorphism_quality": 0.0597,
+    "mapping_quality": 0.0597,
+    "assessment_coverage": 0.8571,
+    "target_resolution": "RESOLVED",
+    "relationship_count": 0,
+    "semantic_error_class": null,
+    "duplicate_count": 9,
+    "duplicate_sample_ids": [
+      "LOGOS:SAMPLE:dc51ef2d-301d-43",
+      "LOGOS:SAMPLE:ceeaea9e-42dd-45",
+      "LOGOS:SAMPLE:e082570e-a9ec-47",
+      "LOGOS:SAMPLE:edc25b71-9239-4e",
+      "LOGOS:SAMPLE:7203dae8-cc3f-4a",
+      "LOGOS:SAMPLE:150fd7cb-fb86-4e",
+      "LOGOS:SAMPLE:6d69f225-d3c7-41",
+      "LOGOS:SAMPLE:930740cd-2443-48",
+      "LOGOS:SAMPLE:0bbd63ce-8058-44"
+    ],
+    "first_pass_reasons": [
+      "LOW_ISO_COMPILED"
+    ]
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:0dc86964-7ec3-45",
+    "category": "whole_system",
+    "subcategory": "society_incomplete",
+    "text": "A society has a government and media but no sanitation, police, or internet.",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "training_ready": false,
+    "isomorphism_quality": 0.0597,
+    "mapping_quality": 0.0597,
+    "assessment_coverage": 0.8571,
+    "target_resolution": "RESOLVED",
+    "relationship_count": 0,
+    "semantic_error_class": null,
+    "duplicate_count": 8,
+    "duplicate_sample_ids": [
+      "LOGOS:SAMPLE:0dc86964-7ec3-45",
+      "LOGOS:SAMPLE:c0c55806-4977-41",
+      "LOGOS:SAMPLE:b6c33cee-2210-46",
+      "LOGOS:SAMPLE:64660fcc-1e94-42",
+      "LOGOS:SAMPLE:3249ca13-516e-43",
+      "LOGOS:SAMPLE:64b18606-c80a-44",
+      "LOGOS:SAMPLE:69895fb8-0e3b-46",
+      "LOGOS:SAMPLE:2120be65-2cf2-42"
+    ],
+    "first_pass_reasons": [
+      "LOW_ISO_COMPILED"
+    ]
+  },
+  {
+    "sample_id": "LOGOS:SAMPLE:c1f4f30c-10c5-4e",
+    "category": "whole_system",
+    "subcategory": "cellular",
+    "text": "A complete cell has a nucleus, membrane receptors, lysosomes, cell membrane, signal transduction, DNA, epigenetic regulation, mitochondria, cell division, and apoptosis.",
+    "decision": "COMPILED_WITH_GUARDRAILS",
+    "semantic_quality_tier": "COMPILED_WITH_GUARDRAILS",
+    "dataset_utility_tier": "SILVER",
+    "training_ready": false,
+    "isomorphism_quality": 0.0597,
+    "mapping_quality": 0.0597,
+    "assessment_coverage": 0.8571,
+    "target_resolution": "RESOLVED",
+    "relationship_count": 0,
+    "semantic_error_class": null,
+    "duplicate_count": 6,
+    "duplicate_sample_ids": [
+      "LOGOS:SAMPLE:c1f4f30c-10c5-4e",
+      "LOGOS:SAMPLE:07f3c1cc-7601-4f",
+      "LOGOS:SAMPLE:d1215ab5-aece-46",
+      "LOGOS:SAMPLE:81b80b95-cc5a-42",
+      "LOGOS:SAMPLE:da4af736-d54b-4a",
+      "LOGOS:SAMPLE:1a0092fc-93b3-46"
+    ],
+    "first_pass_reasons": [
+      "LOW_ISO_COMPILED"
+    ]
+  }
+]

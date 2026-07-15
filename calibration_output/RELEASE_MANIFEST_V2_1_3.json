@@ -1,0 +1,70 @@
+{
+  "manifest_version": "2.1.3",
+  "semantic_compiler_version": "2.0.0",
+  "schema_version": "2.1.0",
+  "generated_at": "2026-07-14T23:09:09.503378Z",
+  "git_commit": null,
+  "generator_script": "scripts/generate_v2_1_3_freeze_artifacts.py",
+  "test_command": "PYTHONPATH=/home/shax/Apps python3 -m unittest discover -s tests -v",
+  "test_result": "67/67 OK",
+  "corpus_statistics": {
+    "calibration": {
+      "total_rows": 76,
+      "decisions": {
+        "COMPILED_WITH_GUARDRAILS": 17,
+        "NEEDS_REVISION": 47,
+        "REJECT": 12
+      },
+      "quarantined": 0,
+      "training_ready": 15
+    },
+    "release_candidate": {
+      "total_rows": 500,
+      "decisions": {
+        "NEEDS_REVISION": 240,
+        "COMPILED_WITH_GUARDRAILS": 127,
+        "REJECT": 133
+      },
+      "quarantined": 23,
+      "training_ready": 127
+    }
+  },
+  "dpo_summary": {
+    "total_pairs": 4,
+    "production_exportable": 3,
+    "diagnostic_only": 1,
+    "mean_delta": 0.4615,
+    "median_delta": 0.5828
+  },
+  "sft_pilot": {
+    "train_rows": 15,
+    "eval_rows": 30
+  },
+  "artifact_hashes": {
+    "calibration_corpus": "b48b84dd430c74a0b356ba789433c3b92c81695d9de3cec5c81c87634dbcbf6d",
+    "release_candidate_corpus": "30969b0b6a2569eae3b6bf898f3fd8173724a5929a95a5eb528c38dea65a21af",
+    "calibration_report": "0e7ef6084ef5be265f9f42bd8c8a2bc8e1121fb80df68b49d1ed9e3fd85cfb8d",
+    "release_candidate_report": "f99f418eb549cd565f00b2f527d4e3b2e61404234698705b90f3ce780601d291",
+    "human_review_selection": "f3b2da5e110320f5419101d6c769fb3ee92ef5c72a214fcfaa84d4a356c2c62f",
+    "unique_review_selection": "525995ec9bb95f66105fe014b06e6836e33ed8ab0aceb5db15cf0fa8a61bc347",
+    "four_case_ruling_verification": "8d5b2dae7fc39590f83bc451ee9996d088e4b27a0ccb6a42f32e108572763609",
+    "quarantine_report": "cf3b4891255f04cccc82a8945537eb0db69dde5ea6e1355702ca7ff3ce550034",
+    "dpo_delta_distribution": "fed34cae622ca6ba8b88dc6731d707e230e3fef199804551012a9069ae58d8ef",
+    "dpo_diagnostic_registry": "5aed9b10dd39fc3c326d983a62f0d0361b31a09d40c21c73fbf3f936ea547e3f",
+    "sft_pilot_dataset": "cd167730609124272b0d57dddd8cf4d8be0e50258906763e2969f0aff3059891",
+    "sft_pilot_evaluation_set": "d385951249171f767edb03db22ea5cc3be46825b7c0e4e805b8a49111879d41c",
+    "score_by_mapping_status": "e1971fc2ea7273a4736d2ed462ecb1479a1f407b151b546635a381616bca0ec3",
+    "empty_mapping_invariant_report": "6634507e8ecdfd63e43157f79823187074e5a422deb4f8df93813d3ee8b13956",
+    "negative_category_decision_report": "205a2f609207ac375da7f8c937b305635e12bc4ed938facd808d88cb05972765",
+    "relative_clause_extraction_report": "95b8be01efd271128002f2f80e1454b305bfa522250c1ccd16e6fb06bd0edc1f",
+    "missing_organ_labeled_benchmark": "8e0c28580defb95716f4e936db453b1ebea4da3878ee82b6aa349492e4bbbfb3"
+  },
+  "approvals": {
+    "canonical_freeze": "Kestrel",
+    "controlled_corpus_production": "approved",
+    "deduplicated_human_reviewed_sft_pilot": "approved",
+    "production_dpo_training": "not approved",
+    "missing_organ_hard_gate": "not approved",
+    "autonomous_gold_promotion": "not approved"
+  }
+}

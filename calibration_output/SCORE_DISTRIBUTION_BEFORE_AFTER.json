@@ -1,0 +1,42 @@
+{
+  "before": {
+    "total_samples": 76,
+    "schema_validity_rate": 1.0,
+    "mean_isomorphism_quality": 0.015,
+    "mean_structural_fit": 0.375,
+    "decision_counts": {
+      "COMPILED_PRIVATE_REDACTED_ONLY": 1,
+      "COMPILED_WITH_GUARDRAILS": 8,
+      "NEEDS_REVISION": 67
+    },
+    "tier_counts": {
+      "BRONZE": 40,
+      "SILVER": 36
+    },
+    "target_resolution_counts": {
+      "RESOLVED": 36,
+      "UNRESOLVED": 40
+    },
+    "hard_gate_failures": 2
+  },
+  "after": {
+    "total_samples": 76,
+    "schema_validity_rate": 1.0,
+    "mean_isomorphism_quality": 0.7473,
+    "mean_mapping_quality": 0.7473,
+    "mean_assessment_coverage": 0.3842,
+    "mean_structural_fit": 0.1776,
+    "decision_counts": {
+      "COMPILED_WITH_GUARDRAILS": 8,
+      "NEEDS_REVISION": 68
+    },
+    "tier_counts": {
+      "SILVER": 36,
+      "BRONZE": 40
+    },
+    "target_resolution_counts": {
+      "RESOLVED": 36,
+      "UNRESOLVED": 40
+    }
+  }
+}

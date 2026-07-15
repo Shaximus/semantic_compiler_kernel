@@ -1,0 +1,49 @@
+{
+  "COMPILED_WITH_GUARDRAILS": {
+    "count": 17,
+    "mean_isomorphism_quality": 0.5193,
+    "median_isomorphism_quality": 0.5828,
+    "min_isomorphism_quality": 0.0508,
+    "max_isomorphism_quality": 0.6256,
+    "mean_mapping_quality": 0.5193,
+    "mean_assessment_coverage": 0.8571,
+    "mean_structural_fit": 0.65,
+    "reason_codes": [
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "SUBSTRATE_SOVEREIGNTY_FAILED"
+    ]
+  },
+  "NEEDS_REVISION": {
+    "count": 47,
+    "mean_isomorphism_quality": 0.025,
+    "median_isomorphism_quality": 0.0001,
+    "min_isomorphism_quality": 0.0001,
+    "max_isomorphism_quality": 0.0597,
+    "mean_mapping_quality": 0.025,
+    "mean_assessment_coverage": 0.6292,
+    "mean_structural_fit": 0.3614,
+    "reason_codes": [
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "SUBSTRATE_SOVEREIGNTY_FAILED",
+      "UNRESOLVED_TARGET_FRAME"
+    ]
+  },
+  "REJECT": {
+    "count": 12,
+    "mean_isomorphism_quality": 0.0,
+    "median_isomorphism_quality": 0.0,
+    "min_isomorphism_quality": 0.0,
+    "max_isomorphism_quality": 0.0,
+    "mean_mapping_quality": 0.0,
+    "mean_assessment_coverage": 0.6429,
+    "mean_structural_fit": 0.5,
+    "reason_codes": [
+      "CORRECTION_PROPOSED",
+      "NO_RELATIONSHIPS_EXTRACTED",
+      "SEMANTIC_UTILITY_TIER_SPLIT",
+      "UNRESOLVED_TARGET_FRAME"
+    ]
+  }
+}

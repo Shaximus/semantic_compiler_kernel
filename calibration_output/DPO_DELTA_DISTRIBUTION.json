@@ -1,0 +1,49 @@
+{
+  "pairs": [
+    {
+      "pair_id": "firewall_membrane",
+      "positive_iso": 0.5828,
+      "negative_iso": 0.0,
+      "delta": 0.5828,
+      "positive_tier": "SILVER",
+      "negative_tier": "SILVER",
+      "positive_decision": "COMPILED_WITH_GUARDRAILS",
+      "negative_decision": "REJECT"
+    },
+    {
+      "pair_id": "immune_security",
+      "positive_iso": 0.5828,
+      "negative_iso": 0.0,
+      "delta": 0.5828,
+      "positive_tier": "SILVER",
+      "negative_tier": "SILVER",
+      "positive_decision": "COMPILED_WITH_GUARDRAILS",
+      "negative_decision": "REJECT"
+    },
+    {
+      "pair_id": "memory_gc",
+      "positive_iso": 0.0548,
+      "negative_iso": 0.0,
+      "delta": 0.0548,
+      "positive_tier": "SILVER",
+      "negative_tier": "SILVER",
+      "positive_decision": "NEEDS_REVISION",
+      "negative_decision": "REJECT"
+    },
+    {
+      "pair_id": "supply_circulation",
+      "positive_iso": 0.6256,
+      "negative_iso": 0.0,
+      "delta": 0.6256,
+      "positive_tier": "SILVER",
+      "negative_tier": "SILVER",
+      "positive_decision": "COMPILED_WITH_GUARDRAILS",
+      "negative_decision": "REJECT"
+    }
+  ],
+  "count": 4,
+  "mean_delta": 0.4615,
+  "median_delta": 0.5828,
+  "min_delta": 0.0548,
+  "max_delta": 0.6256
+}
