@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["domain", "decompression_version", "components", "relationships", "universal_functional_graph", "pathology_profile", "reconstruction", "advisor"],
+  "properties": {
+    "domain": {"type": "string"},
+    "decompression_version": {"type": "string"},
+    "components": {"type": "array"},
+    "relationships": {"type": "array"},
+    "universal_functional_graph": {
+      "type": "object",
+      "required": ["nodes", "edges", "coverage_ratio"],
+      "properties": {
+        "nodes": {"type": "array"},
+        "edges": {"type": "array"},
+        "coverage_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "pathology_profile": {
+      "type": "object",
+      "required": ["detected_pathologies", "medical_diagnoses"],
+      "properties": {
+        "detected_pathologies": {"type": "array"},
+        "medical_diagnoses": {"type": "array"}
+      }
+    },
+    "reconstruction": {
+      "type": "object",
+      "required": ["missing_components", "completeness_scope"],
+      "properties": {
+        "missing_components": {"type": "array"},
+        "completeness_scope": {"enum": ["whole_system_claimed", "fragmentary", "unknown"]}
+      }
+    },
+    "advisor": {
+      "type": "object",
+      "required": ["diagnosis", "prescriptions", "architecture_improvements", "resilience_training", "prognosis"],
+      "properties": {
+        "diagnosis": {"type": "array"},
+        "prescriptions": {"type": "array"},
+        "architecture_improvements": {"type": "array"},
+        "resilience_training": {"type": "array"},
+        "prognosis": {"type": "string"}
+      }
+    }
+  }
+}
