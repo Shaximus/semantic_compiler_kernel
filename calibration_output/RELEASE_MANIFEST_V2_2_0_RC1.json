@@ -1,0 +1,47 @@
+{
+  "version": "2.2.0-rc1",
+  "commit_hash": "3e262aee128e5dfd2a0c9bdf393f70fda1606065",
+  "generated_at": "2026-07-21T07:41:57Z",
+  "test_count": 89,
+  "calibration_corpus_hash": "2cbc1fea2d5a4123d2fe0509ccaea746bc80b3839bd06db88e4f411a364c6baf",
+  "domain_template_count": 16,
+  "schema_validity_rate": 1.0,
+  "acceptance_gate_results": {
+    "invalid_domain_templates": {
+      "target": 0,
+      "observed": 0,
+      "status": "met",
+      "note": "All 16 domain templates plus the universal_generic fallback skeleton load and validate; loader rejects invalid templates (test_all_templates, test_domain_template_schema, test_domain_loader)."
+    },
+    "silent_decompression_failures": {
+      "target": 0,
+      "observed": 0,
+      "status": "met",
+      "note": "80/80 calibration rows produced by expansion.decompress with no skipped or quarantined rows (DECOMPRESSION_CALIBRATION_REPORT_V2_2.md)."
+    },
+    "pathology_detection_accuracy_seeded": {
+      "target": ">=0.90",
+      "observed": "not achieved",
+      "status": "not_met",
+      "note": "Detector fires on 80/80 rows across all 8 categories: 100% sensitivity on pathology_positive but no specificity (boundary_breach alone accounts for 73/87 detections, including all strong_whole_system rows). Accuracy on seeded cases cannot reach 90% while every input is flagged. Flagged for post-V2.2 profile tuning."
+    },
+    "cross_domain_reconstruction_agreement_human": {
+      "target": ">=0.85",
+      "observed": "not evaluated",
+      "status": "not_met",
+      "note": "No human review of cross-domain reconstruction was conducted in this phase. Template function coverage is 100% but coverage is not agreement; the human-agreement measurement is outstanding."
+    },
+    "absent_findings_on_fragmentary_without_scope_claim": {
+      "target": 0,
+      "observed": 0,
+      "status": "met_vacuous",
+      "note": "0 ABSENT findings observed, but vacuously: the pipeline materializes every template component (inferred_by_analogy, confidence 0.6) so the missing-component channel never fires and the scope classifier scores all 80 rows 'unknown'. The invariant holds on this corpus without being exercised."
+    },
+    "schema_valid_v2_2_dataset_rows": {
+      "target": "100%",
+      "observed": "80/80 (100.0%)",
+      "status": "met",
+      "note": "Every corpus row re-validated post hoc against expansion/schemas/v2_2_system_model.schema.json with 0 validation errors."
+    }
+  }
+}
