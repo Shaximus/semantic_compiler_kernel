@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["domain", "version", "description", "components", "relationships", "invariants", "failure_modes", "architecture_patterns"],
+  "properties": {
+    "domain": {"type": "string"},
+    "version": {"type": "number"},
+    "description": {"type": "string"},
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "function", "criticality"],
+        "properties": {
+          "name": {"type": "string"},
+          "function": {"type": "string"},
+          "criticality": {"enum": ["low", "medium", "high"]}
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "type": {"type": "string"}
+        }
+      }
+    },
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "medical_map", "description", "indicators"],
+        "properties": {
+          "name": {"type": "string"},
+          "medical_map": {"type": "string"},
+          "description": {"type": "string"},
+          "indicators": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "architecture_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "medical_map", "description"],
+        "properties": {
+          "name": {"type": "string"},
+          "medical_map": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      }
+    }
+  }
+}
