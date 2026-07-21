@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-DOMAIN_TEMPLATE_SCHEMA_PATH = Path(__file__).parent / "domain-template.schema.json"
+DOMAIN_TEMPLATE_SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "domain-template.schema.json"
 
 def validate_domain_template(template: dict) -> list[str]:
     """Validate a domain template against the schema. Returns list of errors."""
