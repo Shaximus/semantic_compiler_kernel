@@ -9,6 +9,7 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 - 89/89 tests passing (67 frozen core + 22 expansion)
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
 - Expansion decompression version: `2.2.0-rc1`
+- Buildcraft compute ontology available in `registry/` and `translation/`
 - Manifest: `calibration_output/RELEASE_MANIFEST_V2_1_3.json`
 
 ## What it does
@@ -46,6 +47,35 @@ Calibration: `calibration_output/decompression_calibration_v2_2.jsonl`
 (80 rows, 8 categories × 10, 16 domains × 5, 100% schema-valid) with the full
 analysis in `calibration_output/DECOMPRESSION_CALIBRATION_REPORT_V2_2.md`.
 
+## Buildcraft compute ontology
+
+The optional `BUILDCRAFT_COMPUTE_ONTOLOGY` formalizes Path of Exile buildcraft shorthand as guarded structural mappings:
+
+- motherboard/chassis topology → character equipment paper doll
+- PCIe accelerator slot → weapon slot
+- CPU socket/host position → body-armour slot
+- GPU/accelerator → equipped weapon
+- CPU package → equipped body armour
+- hardware integration capacity → item sockets and links
+- LLM/application → active skill gem
+- drafter/MTP/cache/framework → support gem
+- CUDA/PyTorch/drivers/ABI → compatibility requirements
+- occupied VRAM → mana reservation
+- deployed architecture → complete build
+
+The registry preserves slot → item → socket/link → component → reservation relationships while rejecting literal material identity. Repositories and packages are classified by deployed function rather than artifact format alone.
+
+Example:
+
+```python
+from semantic_compiler.translation import resolve_buildcraft_mappings
+
+mappings = resolve_buildcraft_mappings(
+    "PCIe slots are weapon slots; the GPU is the weapon; "
+    "the LLM and support gems consume VRAM."
+)
+```
+
 ## Quick start
 
 ```bash
@@ -70,8 +100,8 @@ PYTHONPATH=/home/shax/Apps .venv/bin/python scripts/build_decompression_calibrat
 - `core/` — pipeline, types, scoring, audit, dataset export
 - `extraction/` — skeleton, relationships, frames, claims, evidence
 - `gates/` — semantic gates and repair logic
-- `registry/` — terms, cosmological constants, department mappings
-- `translation/` — fractal / cross-domain translation
+- `registry/` — terms, cosmological constants, department mappings, buildcraft ontology
+- `translation/` — fractal / cross-domain translation and buildcraft shorthand resolution
 - `modes/` — operating modes (coherence, reality orientation, defense pathology)
 - `expansion/` — V2.2 medical-ontology decompression (templates, pathology, reconstruction, advisor, schema)
 - `schemas/` — JSON Schema for V2.1 dataset rows
