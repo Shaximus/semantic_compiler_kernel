@@ -1,48 +1,110 @@
 domain: law
-version: 1.0
-description: Legal systems, statutes, contracts, and jurisprudence.
+version: 2.0
+description: >
+  Legal-judicial organism: constitutional identity code, rule synthesis,
+  adjudication, precedent memory, enforcement effectors, and procedural membrane.
+  Boundary note: political legitimacy and elections belong to government.yaml;
+  legislature is a deliberate shared bridge organ.
+
 components:
-  - name: statutes
-    function: codify binding rules
+  - name: constitution
+    function: encode supreme rule-set and identity boundary for all law and power
     criticality: high
-  - name: courts
-    function: adjudicate disputes and interpret rules
+  - name: legislature
+    function: synthesize and amend binding rule-artifacts
     criticality: high
-  - name: precedent
-    function: preserve consistent interpretation over time
+  - name: judiciary
+    function: interpret rules, adjudicate disputes, detect norm violations
     criticality: high
-  - name: enforcement
-    function: compel compliance with judgments
+  - name: precedent_system
+    function: preserve interpretive consistency across time
     criticality: high
-  - name: contracts
-    function: bind private parties to agreed obligations
-    criticality: medium
+  - name: executive_enforcement
+    function: compel compliance with judgments and statutes
+    criticality: high
+  - name: due_process
+    function: procedural membrane guaranteeing notice, hearing, neutrality
+    criticality: high
+
 relationships:
-  - from: courts
-    to: precedent
+  - from: constitution
+    to: legislature
+    type: constrains
+  - from: legislature
+    to: judiciary
     type: feeds
-  - from: enforcement
-    to: courts
-    type: executes
-  - from: precedent
-    to: courts
-    type: regulates
+  - from: judiciary
+    to: precedent_system
+    type: reads_writes
+  - from: judiciary
+    to: executive_enforcement
+    type: directs
+  - from: due_process
+    to: executive_enforcement
+    type: guards
+
 invariants:
   - like cases must be treated alike
   - no one may judge their own case
+  - power must trace to a valid rule of recognition
+
 failure_modes:
-  - name: contradictory_precedent
+  - name: regulatory_capture
     medical_map: autoimmune
-    description: the system attacks its own consistency
-    indicators: [circuit_splits, conflicting_holdings]
-  - name: unenforced_judgments
+    description: >
+      Defense organ treats regulated industry interests as self; attacks the
+      public-interest function it was built to defend.
+    indicators: [revolving_door_appointments, industry_drafted_rule_text,
+      enforcement_rate_collapse_after_appointment, comment_period_asymmetry]
+  - name: corruption
+    medical_map: pathogen
+    description: >
+      External actors purchase or coerce decisions; outputs stop tracking
+      rule-inputs (spread phase reclassifies as metastasis).
+    indicators: [bribery_conviction_rate, procurement_anomalies,
+      unexplained_official_wealth, kickback_networks]
+  - name: constitutional_crisis
+    medical_map: sepsis
+    description: >
+      Local organ conflict cascades into contested identity code and
+      whole-system legitimacy collapse; acute onset, cascade lethality.
+    indicators: [executive_defiance_of_court_orders, dual_legitimacy_claims,
+      emergency_decrees_without_sunset, succession_disputes]
+  - name: judicial_overreach
+    medical_map: autoimmune
+    description: >
+      Diagnostic organ attacks healthy sibling tissue; courts substitute their
+      own policy for the legislature's.
+    indicators: [policy_substitution_rulings,
+      structural_injunctions_administering_agencies, legislative_reversal_spikes]
+  - name: precedent_drift
     medical_map: chronic
-    description: rulings persist without effect
-    indicators: [contempt_backlog, ignored_injunctions]
+    description: >
+      Persistent low-grade erosion of interpretive consistency;
+      technical-debt-like accumulation of exceptions.
+    indicators: [rising_inter_circuit_conflict_rate,
+      distinguishing_opinion_growth, overrule_frequency_spike]
+  - name: legal_arbitrage
+    medical_map: metastasis
+    description: >
+      Lateral movement across jurisdictional seams to escape regulation;
+      spreads through gaps between organs.
+    indicators: [forum_shopping_rates, shell_jurisdiction_registrations,
+      regulatory_haven_capital_flows]
+
 architecture_patterns:
-  - name: stare_decisis
-    medical_map: homeostasis
-    description: binding precedent stabilizes interpretation
-  - name: appeals_review
+  - name: separation_of_powers
+    medical_map: quarantine
+    description: >
+      Standing structural compartmentalization; single-organ lesions contained
+      by anatomical isolation.
+  - name: checks_and_balances
     medical_map: immune_system
-    description: higher courts detect and correct errors
+    description: >
+      Distributed mutual surveillance; every organ carries immune effectors
+      against sibling overreach.
+  - name: judicial_review
+    medical_map: diagnosis
+    description: >
+      New rule-artifacts scanned against the constitutional genome;
+      non-conforming artifacts flagged and destroyed before integration.

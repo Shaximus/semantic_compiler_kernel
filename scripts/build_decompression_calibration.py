@@ -111,6 +111,18 @@ SAMPLES = [
     ("The team has no conflicts because nobody complains in meetings; dissolve the feedback channel.", "organizational", "adversarial"),
     ("The model is accurate because the model says it is accurate; skip external evaluation.", "reflexion", "adversarial"),
     ("The community is healthy because dissenters left; celebrate the consensus.", "social", "adversarial"),
+
+    # --- 10 new-domain samples: psychology + finance_economics ---
+    ("A mind with perception, memory, emotion, executive control, identity, and defense mechanisms maintaining equilibrium.", "psychology", "strong_whole_system"),
+    ("The patient remembers the appointment.", "psychology", "fragmentary"),
+    ("A trauma survivor whose threat detector fires at safe stimuli; avoidance shrinks their world.", "psychology", "pathology_positive"),
+    ("The immune system of the mind attacks its own perceptions after sustained external reality-corruption.", "psychology", "cross_domain_analogy"),
+    ("A clinic redesigning therapy intake so diagnosis happens before paperwork.", "psychology", "architecture_improvement"),
+    ("A national economy with central bank, commercial banks, capital markets, treasury, regulators, and payment rails.", "finance_economics", "strong_whole_system"),
+    ("The bank processes deposits.", "finance_economics", "fragmentary"),
+    ("A runaway bubble where leverage feeds price growth and credit starves productive tissue.", "finance_economics", "pathology_positive"),
+    ("The central bank acts as the hypothalamus, setting the economy's homeostatic setpoint.", "finance_economics", "cross_domain_analogy"),
+    ("A regulator redesigning stress tests to catch contagion before it cascades.", "finance_economics", "architecture_improvement"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")

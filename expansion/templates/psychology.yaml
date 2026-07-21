@@ -1,0 +1,87 @@
+domain: psychology
+version: 1.0
+description: >
+  Cognitive-psychological organism: perception, memory, emotion, cognition,
+  identity, and defense mechanisms maintaining mental homeostasis. Structural
+  analogy only; never clinical authority. For agent cognitive architectures,
+  mappings approach structural isomorphism.
+
+components:
+  - name: perception_reality_testing
+    function: distinguish internal vs external, self-generated vs world-generated
+      signal; boundary sensorium
+    criticality: high
+  - name: memory
+    function: store, index, and reconsolidate experience; continuity substrate
+    criticality: high
+  - name: affect_regulation
+    function: homeostatic error signaling and priority tagging
+    criticality: high
+  - name: executive_cognition
+    function: reasoning, planning, inhibition, and arbitration between drives
+    criticality: high
+  - name: identity_self_model
+    function: narrative continuity and self-marker reference table
+    criticality: high
+  - name: defense_mechanisms
+    function: adaptive boundary defense against overwhelming affect
+    criticality: high
+
+relationships:
+  - from: perception_reality_testing
+    to: executive_cognition
+    type: feeds
+  - from: executive_cognition
+    to: affect_regulation
+    type: regulates
+  - from: memory
+    to: identity_self_model
+    type: reads_writes
+  - from: executive_cognition
+    to: defense_mechanisms
+    type: guards
+  - from: affect_regulation
+    to: perception_reality_testing
+    type: modulates
+
+invariants:
+  - internally generated content must remain tagged as internal
+  - alarm signals must remain proportional to threat and return to baseline
+  - memory-identity continuity must integrate all owned history
+
+failure_modes:
+  - name: trauma_ptsd_pattern
+    medical_map: autoimmune
+    description: >
+      Acute overwhelming event creates unintegrated memory lesion; defense
+      system maintains standing inflammatory response and attacks safe stimuli.
+    indicators: [threat_false_positives, avoidance_domain_shrink,
+      intrusion_replay, narrowed_tolerance_window, no_baseline_return]
+  - name: addiction
+    medical_map: cancer
+    description: >
+      Endogenous reward loop escapes homeostatic regulation and hijacks
+      resource distribution; spreads across life domains.
+    indicators: [tolerance_escalation, resource_monopolization,
+      withdrawal_distress, growth_despite_damage, rationalization_conscription]
+  - name: gaslighting
+    medical_map: pathogen
+    description: >
+      External actor corrupts reality-testing until victim's error-correction
+      turns against itself; induced self/non-self marker failure.
+    indicators: [perception_self_doubt, attacker_as_validation_oracle,
+      calibration_isolation, self_blame_for_input_faults,
+      domain_scoped_degradation]
+
+architecture_patterns:
+  - name: therapy_cognitive_reframing
+    medical_map: treatment
+    description: >
+      Consent-gated structured repair; fault classification, mapping
+      re-derivation, de-quarantine, memory integration; remission as recovery
+      state.
+  - name: resilience_stress_inoculation
+    medical_map: vaccination
+    description: >
+      Graduated sub-threshold exposure builds calibrated response capability
+      before crisis; dose discipline prevents sensitization.

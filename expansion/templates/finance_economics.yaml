@@ -1,0 +1,97 @@
+domain: finance_economics
+version: 1.0
+description: >
+  Macro-financial organism whose blood is credit and whose signaling medium is
+  price. Allocates capital to productive entities, defends against fraud and
+  panic, maintains stable internal medium, and repairs damage without cascade
+  collapse.
+
+components:
+  - name: central_bank
+    function: set homeostatic setpoint for inflation and policy rate; modulate
+      money supply and reserves
+    criticality: high
+  - name: commercial_banking
+    function: pump credit from deposit pools to productive tissues; maturity
+      transformation
+    criticality: high
+  - name: capital_markets
+    function: distributed signal processing; prices carry allocation information
+    criticality: high
+  - name: treasury_fiscal
+    function: taxation, spending, and sovereign debt management
+    criticality: high
+  - name: regulatory_bodies
+    function: surveillance, boundary enforcement, and resolution of malignant
+      institutions
+    criticality: high
+  - name: payment_settlement
+    function: guarantee finality of transfer through clearing and settlement
+      infrastructure
+    criticality: high
+
+relationships:
+  - from: central_bank
+    to: commercial_banking
+    type: regulates
+  - from: treasury_fiscal
+    to: central_bank
+    type: constrains
+  - from: regulatory_bodies
+    to: commercial_banking
+    type: guards
+  - from: capital_markets
+    to: commercial_banking
+    type: feeds
+  - from: payment_settlement
+    to: capital_markets
+    type: enables
+
+invariants:
+  - money must remain a credible store of value and unit of account
+  - risk cannot be destroyed, only transformed, transferred, or diversified
+  - settlement finality must be irrevocable once executed
+
+failure_modes:
+  - name: systemic_banking_crisis
+    medical_map: sepsis
+    description: >
+      Localized loss of confidence triggers system-wide inflammatory cascade;
+      deposit flight, interbank freeze, fire sales kill illiquid but solvent
+      institutions.
+    indicators: [deposit_outflow_velocity, interbank_spread_spikes,
+      cds_spread_widening, emergency_facility_drawdowns, fire_sale_price_gaps]
+  - name: asset_bubble
+    medical_map: cancer
+    description: >
+      Self-reinforcing price growth decoupled from fundamental cash flows;
+      leverage is the growth factor; tumor starves healthy tissue by
+      misallocating credit.
+    indicators: [price_to_fundamental_divergence, credit_growth_exceeding_gdp,
+      margin_debt_spikes, novel_valuation_narratives, retail_participation_spikes]
+  - name: chronic_inflation
+    medical_map: chronic
+    description: >
+      Circulating medium degrades as money loses store-of-value function;
+      sustained inflammation that never resolves; hyperinflation is runaway
+      fever destroying the patient.
+    indicators: [cpi_acceleration, inflation_expectations_unanchoring,
+      money_velocity_inflection, currency_depreciation_spiral,
+      wage_price_indexation]
+
+architecture_patterns:
+  - name: lender_of_last_resort
+    medical_map: treatment
+    description: >
+      Central bank lends freely at penalty rate against sound collateral to
+      institutions in liquidity crisis; emergency fluid resuscitation for
+      septic shock.
+  - name: deposit_insurance
+    medical_map: vaccination
+    description: >
+      Pre-committed guarantee installed before pathogen arrives; removes
+      incentive to run; acquired immunity against panic.
+  - name: capital_requirements
+    medical_map: vaccination
+    description: >
+      Baseline antibody titer; peacetime hardening verified by stress tests.
