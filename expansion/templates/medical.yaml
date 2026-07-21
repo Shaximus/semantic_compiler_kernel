@@ -1,0 +1,52 @@
+domain: medical
+version: 1.0
+description: Healthcare delivery and clinical care systems.
+components:
+  - name: diagnosis
+    function: identify pathology from symptoms and tests
+    criticality: high
+  - name: treatment
+    function: intervene to restore health
+    criticality: high
+  - name: triage
+    function: allocate limited care by urgency
+    criticality: high
+  - name: pharmacy
+    function: supply and verify medications
+    criticality: medium
+  - name: patient_records
+    function: persist clinical history
+    criticality: high
+relationships:
+  - from: triage
+    to: diagnosis
+    type: feeds
+  - from: diagnosis
+    to: treatment
+    type: directs
+  - from: patient_records
+    to: diagnosis
+    type: informs
+invariants:
+  - do no harm
+  - patient consent must precede non-emergency intervention
+failure_modes:
+  - name: misdiagnosis
+    medical_map: pathogen
+    description: false classification drives harmful treatment
+    indicators: [anchoring_bias, unverified_assumptions]
+  - name: hospital_acquired_infection
+    medical_map: sepsis
+    description: the care system itself becomes a source of harm
+    indicators: [postoperative_infection_rates, hygiene_breaches]
+  - name: overtreatment
+    medical_map: inflammation
+    description: excessive intervention causes iatrogenic damage
+    indicators: [polypharmacy, defensive_testing]
+architecture_patterns:
+  - name: quarantine_protocol
+    medical_map: quarantine
+    description: isolate contagious cases to protect the ward
+  - name: preventive_screening
+    medical_map: vaccination
+    description: early detection before acute presentation

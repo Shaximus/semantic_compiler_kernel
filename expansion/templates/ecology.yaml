@@ -1,0 +1,52 @@
+domain: ecology
+version: 1.0
+description: Ecosystems, species interactions, and habitat dynamics.
+components:
+  - name: producers
+    function: convert sunlight into biomass
+    criticality: high
+  - name: consumers
+    function: transfer energy through the food web
+    criticality: medium
+  - name: decomposers
+    function: recycle nutrients back to the soil
+    criticality: high
+  - name: keystone_species
+    function: stabilize community structure
+    criticality: high
+  - name: habitat
+    function: provide niche space and resources
+    criticality: high
+relationships:
+  - from: producers
+    to: consumers
+    type: feeds
+  - from: decomposers
+    to: producers
+    type: recycles
+  - from: keystone_species
+    to: consumers
+    type: regulates
+invariants:
+  - energy flow must remain unidirectional through trophic levels
+  - nutrient cycles must close
+failure_modes:
+  - name: trophic_cascade
+    medical_map: metastasis
+    description: loss of a keystone species destabilizes the web
+    indicators: [predator_removal, prey_population_explosion]
+  - name: invasive_species
+    medical_map: pathogen
+    description: external species outcompetes native defenses
+    indicators: [rapid_spread, native_decline]
+  - name: eutrophication
+    medical_map: inflammation
+    description: nutrient overload triggers destructive algal response
+    indicators: [algal_blooms, oxygen_depletion]
+architecture_patterns:
+  - name: biodiversity_buffer
+    medical_map: immune_system
+    description: species redundancy absorbs perturbations
+  - name: succession_dynamics
+    medical_map: homeostasis
+    description: staged recovery returns the system to climax state

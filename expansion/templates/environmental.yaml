@@ -1,0 +1,52 @@
+domain: environmental
+version: 1.0
+description: Planetary-scale environmental and climate regulation systems.
+components:
+  - name: atmosphere
+    function: regulate temperature and gas composition
+    criticality: high
+  - name: oceans
+    function: store heat and sequester carbon
+    criticality: high
+  - name: biosphere
+    function: cycle carbon, nitrogen, and water
+    criticality: high
+  - name: cryosphere
+    function: reflect solar radiation and store freshwater
+    criticality: medium
+  - name: human_activity
+    function: extract and emit at planetary scale
+    criticality: high
+relationships:
+  - from: human_activity
+    to: atmosphere
+    type: perturbs
+  - from: oceans
+    to: atmosphere
+    type: regulates
+  - from: biosphere
+    to: oceans
+    type: feeds
+invariants:
+  - energy balance must close over long timescales
+  - biogeochemical cycles must not be permanently broken
+failure_modes:
+  - name: runaway_greenhouse
+    medical_map: cancer
+    description: self-reinforcing warming escapes feedback control
+    indicators: [albedo_loss, methane_release]
+  - name: tipping_point_breach
+    medical_map: acute
+    description: abrupt regime shift after slow accumulation
+    indicators: [ice_sheet_instability, current_slowdown]
+  - name: pollution_accumulation
+    medical_map: chronic
+    description: persistent contaminants build up in sinks
+    indicators: [plastic_concentration, heavy_metal_loads]
+architecture_patterns:
+  - name: negative_feedback_loops
+    medical_map: homeostasis
+    description: carbon sinks and weathering stabilize climate
+  - name: protected_reserves
+    medical_map: quarantine
+    description: isolate ecosystems from extractive pressure

@@ -1,0 +1,52 @@
+domain: reflexion
+version: 1.0
+description: Self-modeling and meta-cognitive systems that observe and adjust themselves.
+components:
+  - name: observer
+    function: record system state and behavior
+    criticality: high
+  - name: model_of_self
+    function: represent the system to itself
+    criticality: high
+  - name: evaluator
+    function: compare behavior against goals
+    criticality: high
+  - name: adjuster
+    function: modify behavior based on evaluation
+    criticality: high
+  - name: memory_of_changes
+    function: persist what was learned
+    criticality: medium
+relationships:
+  - from: observer
+    to: model_of_self
+    type: feeds
+  - from: evaluator
+    to: adjuster
+    type: directs
+  - from: adjuster
+    to: memory_of_changes
+    type: records
+invariants:
+  - the self-model must be updateable by observation
+  - adjustment must not destroy the capacity to observe
+failure_modes:
+  - name: recursive_distortion
+    medical_map: autoimmune
+    description: the system optimizes against its own measurement
+    indicators: [metric_gaming, self_sealing_beliefs]
+  - name: infinite_regress
+    medical_map: cancer
+    description: meta-levels multiply without actionable output
+    indicators: [analysis_paralysis, unbounded_abstraction]
+  - name: blind_spot_fixation
+    medical_map: chronic
+    description: unobserved subsystem persists unexamined
+    indicators: [repeated_surprises, unlogged_failures]
+architecture_patterns:
+  - name: bounded_meta_levels
+    medical_map: homeostasis
+    description: fixed recursion depth keeps reflection tractable
+  - name: external_audit
+    medical_map: immune_system
+    description: independent review detects self-model blind spots

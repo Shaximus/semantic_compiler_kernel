@@ -1,0 +1,52 @@
+domain: informational
+version: 1.0
+description: Information flows, knowledge systems, and communication networks.
+components:
+  - name: sources
+    function: originate signals and claims
+    criticality: high
+  - name: channels
+    function: transmit information between nodes
+    criticality: high
+  - name: encoders
+    function: package information for transmission
+    criticality: medium
+  - name: decoders
+    function: interpret received signals
+    criticality: high
+  - name: archives
+    function: persist information against loss
+    criticality: high
+relationships:
+  - from: sources
+    to: encoders
+    type: feeds
+  - from: channels
+    to: decoders
+    type: carries
+  - from: archives
+    to: sources
+    type: preserves
+invariants:
+  - meaning must survive encoding and decoding
+  - archives must be verifiable against tampering
+failure_modes:
+  - name: signal_noise_degradation
+    medical_map: inflammation
+    description: noise accumulates until meaning is buried
+    indicators: [low_signal_ratio, repetition_without_content]
+  - name: disinformation_injection
+    medical_map: pathogen
+    description: deliberately false content enters the channel
+    indicators: [coordinated_inauthentic_behavior, provenance_gaps]
+  - name: knowledge_loss
+    medical_map: chronic
+    description: archives decay and institutional memory fades
+    indicators: [link_rot, expertise_attrition]
+architecture_patterns:
+  - name: redundancy_of_channels
+    medical_map: immune_system
+    description: multiple independent paths preserve the message
+  - name: source_verification
+    medical_map: quarantine
+    description: unverified claims are held before propagation

@@ -1,0 +1,52 @@
+domain: organizational
+version: 1.0
+description: Generic organizations, teams, and management structures.
+components:
+  - name: leadership
+    function: set direction and priorities
+    criticality: high
+  - name: operations
+    function: execute day-to-day work
+    criticality: high
+  - name: communication_channels
+    function: carry information between units
+    criticality: high
+  - name: culture
+    function: encode shared norms and identity
+    criticality: medium
+  - name: feedback_mechanisms
+    function: surface problems to decision-makers
+    criticality: high
+relationships:
+  - from: leadership
+    to: operations
+    type: directs
+  - from: feedback_mechanisms
+    to: leadership
+    type: informs
+  - from: communication_channels
+    to: operations
+    type: connects
+invariants:
+  - feedback must reach leadership unfiltered
+  - authority must be matched by accountability
+failure_modes:
+  - name: silo_formation
+    medical_map: quarantine
+    description: units isolate and information flow stops
+    indicators: [duplicate_work, knowledge_hoarding]
+  - name: mission_drift
+    medical_map: chronic
+    description: gradual divergence from founding purpose
+    indicators: [metric_gaming, priority_inflation]
+  - name: groupthink
+    medical_map: autoimmune
+    description: the organization attacks internal dissent that protects it
+    indicators: [suppressed_objections, unanimous_deference]
+architecture_patterns:
+  - name: skip_level_reviews
+    medical_map: immune_system
+    description: independent channels detect middle-layer distortion
+  - name: blameless_postmortems
+    medical_map: vaccination
+    description: controlled exposure to failure builds learning

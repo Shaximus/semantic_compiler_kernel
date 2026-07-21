@@ -1,0 +1,52 @@
+domain: economic
+version: 1.0
+description: Markets, monetary systems, and resource allocation.
+components:
+  - name: markets
+    function: discover prices and allocate resources
+    criticality: high
+  - name: central_bank
+    function: regulate money supply and stability
+    criticality: high
+  - name: firms
+    function: produce goods and services
+    criticality: high
+  - name: households
+    function: supply labor and consume output
+    criticality: medium
+  - name: regulators
+    function: enforce fair play and transparency
+    criticality: high
+relationships:
+  - from: central_bank
+    to: markets
+    type: regulates
+  - from: regulators
+    to: firms
+    type: guards
+  - from: households
+    to: firms
+    type: feeds
+invariants:
+  - contracts must be enforceable
+  - money supply must track productive capacity over time
+failure_modes:
+  - name: asset_bubble
+    medical_map: cancer
+    description: prices grow beyond underlying value without feedback
+    indicators: [leverage_growth, speculative_volume]
+  - name: hyperinflation
+    medical_map: sepsis
+    description: systemic loss of confidence in the currency
+    indicators: [price_spirals, currency_flight]
+  - name: stagflation
+    medical_map: chronic
+    description: persistent stagnation combined with inflation
+    indicators: [rising_unemployment, rising_prices]
+architecture_patterns:
+  - name: lender_of_last_resort
+    medical_map: quarantine
+    description: contain liquidity crises before contagion spreads
+  - name: automatic_stabilizers
+    medical_map: homeostasis
+    description: countercyclical mechanisms dampen shocks

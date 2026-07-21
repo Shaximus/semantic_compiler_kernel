@@ -1,0 +1,52 @@
+domain: construction
+version: 1.0
+description: Buildings, infrastructure, and physical engineering projects.
+components:
+  - name: foundation
+    function: bear and distribute structural load
+    criticality: high
+  - name: structural_frame
+    function: maintain integrity of the whole
+    criticality: high
+  - name: building_envelope
+    function: separate interior from environment
+    criticality: high
+  - name: utilities
+    function: circulate power, water, and air
+    criticality: medium
+  - name: inspection
+    function: verify code and safety compliance
+    criticality: high
+relationships:
+  - from: foundation
+    to: structural_frame
+    type: supports
+  - from: inspection
+    to: structural_frame
+    type: guards
+  - from: building_envelope
+    to: utilities
+    type: protects
+invariants:
+  - load paths must be continuous to ground
+  - inspection sign-off must precede occupancy
+failure_modes:
+  - name: progressive_collapse
+    medical_map: metastasis
+    description: local failure propagates through the structure
+    indicators: [crack_propagation, load_redistribution]
+  - name: deferred_maintenance
+    medical_map: chronic
+    description: accumulating small defects degrade integrity
+    indicators: [corrosion, inspection_backlog]
+  - name: water_ingress
+    medical_map: pathogen
+    description: envelope breach admits destructive moisture
+    indicators: [leaks, mold_growth]
+architecture_patterns:
+  - name: redundancy_in_load_paths
+    medical_map: immune_system
+    description: alternate supports absorb single-point failures
+  - name: compartmentalization
+    medical_map: quarantine
+    description: fire and flood barriers contain damage

@@ -1,0 +1,52 @@
+domain: social
+version: 1.0
+description: Societies, communities, and collective human behavior.
+components:
+  - name: norms
+    function: encode expected behavior
+    criticality: high
+  - name: institutions
+    function: formalize roles and coordination
+    criticality: high
+  - name: trust_networks
+    function: enable cooperation between strangers
+    criticality: high
+  - name: communication_media
+    function: spread information and narratives
+    criticality: medium
+  - name: subcultures
+    function: experiment with alternative norms
+    criticality: low
+relationships:
+  - from: norms
+    to: institutions
+    type: shapes
+  - from: trust_networks
+    to: institutions
+    type: supports
+  - from: communication_media
+    to: norms
+    type: influences
+invariants:
+  - trust must be repairable after violation
+  - norms must allow legitimate dissent
+failure_modes:
+  - name: polarization
+    medical_map: autoimmune
+    description: the society treats internal groups as threats
+    indicators: [out_group_hostility, dehumanizing_language]
+  - name: misinformation_cascade
+    medical_map: pathogen
+    description: false narratives replicate through the media layer
+    indicators: [viral_falsehoods, source_laundering]
+  - name: trust_collapse
+    medical_map: sepsis
+    description: systemic loss of confidence in all institutions
+    indicators: [institutional_defection, conspiracy_proliferation]
+architecture_patterns:
+  - name: bridging_institutions
+    medical_map: immune_system
+    description: cross-cutting groups reconnect polarized factions
+  - name: norm_vaccination
+    medical_map: vaccination
+    description: controlled exposure to weak misinformation builds resistance

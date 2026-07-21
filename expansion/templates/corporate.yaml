@@ -1,0 +1,39 @@
+domain: corporate
+version: 1.0
+description: Corporate and organizational structures.
+components:
+  - name: executive_board
+    function: strategic control and decision-making
+    criticality: high
+  - name: legal_compliance
+    function: boundary enforcement and risk mitigation
+    criticality: high
+  - name: hr_department
+    function: personnel homeostasis and culture
+    criticality: medium
+  - name: market_operations
+    function: revenue generation and growth
+    criticality: high
+relationships:
+  - from: executive_board
+    to: market_operations
+    type: regulates
+  - from: legal_compliance
+    to: market_operations
+    type: guards
+invariants:
+  - board decisions must be recorded
+  - compliance must not be bypassed
+failure_modes:
+  - name: uncontrolled_expansion
+    medical_map: cancer
+    description: growth without resource or compliance feedback
+    indicators: [debt_spiral, compliance_violations]
+  - name: regulatory_capture
+    medical_map: autoimmune
+    description: compliance function serves the units it oversees instead of the firm
+    indicators: [waivers_for_core_business, suppressed_audits]
+architecture_patterns:
+  - name: separation_of_powers
+    medical_map: immune_system
+    description: independent oversight layers

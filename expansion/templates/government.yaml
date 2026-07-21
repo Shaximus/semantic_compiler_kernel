@@ -1,0 +1,52 @@
+domain: government
+version: 1.0
+description: State institutions and public administration systems.
+components:
+  - name: legislature
+    function: create and amend laws
+    criticality: high
+  - name: executive
+    function: implement policy and administer services
+    criticality: high
+  - name: judiciary
+    function: interpret law and resolve disputes
+    criticality: high
+  - name: civil_service
+    function: maintain continuity of operations
+    criticality: medium
+  - name: election_system
+    function: renew legitimacy through citizen input
+    criticality: high
+relationships:
+  - from: legislature
+    to: executive
+    type: directs
+  - from: judiciary
+    to: executive
+    type: guards
+  - from: election_system
+    to: legislature
+    type: feeds
+invariants:
+  - no branch may exercise another branch's core power
+  - elections must be periodic and verifiable
+failure_modes:
+  - name: authoritarian_consolidation
+    medical_map: cancer
+    description: one branch captures the checks meant to constrain it
+    indicators: [court_packing, emergency_power_renewal]
+  - name: institutional_gridlock
+    medical_map: chronic
+    description: persistent inability to pass or execute policy
+    indicators: [budget_stalemates, unfilled_appointments]
+  - name: corruption_spread
+    medical_map: metastasis
+    description: localized graft migrates across institutions
+    indicators: [procurement_anomalies, patronage_networks]
+architecture_patterns:
+  - name: checks_and_balances
+    medical_map: immune_system
+    description: mutual oversight between independent branches
+  - name: federal_subsidiarity
+    medical_map: homeostasis
+    description: decisions taken at the lowest competent level

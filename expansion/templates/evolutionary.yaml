@@ -1,0 +1,52 @@
+domain: evolutionary
+version: 1.0
+description: Darwinian selection, adaptation, and lineage dynamics.
+components:
+  - name: variation
+    function: generate heritable differences
+    criticality: high
+  - name: selection_pressure
+    function: filter variants by fitness
+    criticality: high
+  - name: inheritance
+    function: transmit traits across generations
+    criticality: high
+  - name: population
+    function: carry the gene pool over time
+    criticality: high
+  - name: niche
+    function: define the adaptive landscape
+    criticality: medium
+relationships:
+  - from: variation
+    to: selection_pressure
+    type: feeds
+  - from: selection_pressure
+    to: population
+    type: filters
+  - from: inheritance
+    to: population
+    type: preserves
+invariants:
+  - variation must be generated before selection can act
+  - heritability must be maintained for adaptation to accumulate
+failure_modes:
+  - name: extinction_vortex
+    medical_map: sepsis
+    description: shrinking population triggers compounding collapse
+    indicators: [inbreeding_depression, demographic_stochasticity]
+  - name: evolutionary_trap
+    medical_map: pathogen
+    description: novel environment hijacks adapted preferences
+    indicators: [maladaptive_attraction, fitness_mismatch]
+  - name: runaway_selection
+    medical_map: cancer
+    description: trait elaboration escapes viability constraints
+    indicators: [ornament_cost_growth, survival_decline]
+architecture_patterns:
+  - name: genetic_diversity
+    medical_map: immune_system
+    description: standing variation buffers against novel threats
+  - name: bet_hedging
+    medical_map: vaccination
+    description: diversified offspring strategies survive uncertainty

@@ -1,0 +1,48 @@
+domain: law
+version: 1.0
+description: Legal systems, statutes, contracts, and jurisprudence.
+components:
+  - name: statutes
+    function: codify binding rules
+    criticality: high
+  - name: courts
+    function: adjudicate disputes and interpret rules
+    criticality: high
+  - name: precedent
+    function: preserve consistent interpretation over time
+    criticality: high
+  - name: enforcement
+    function: compel compliance with judgments
+    criticality: high
+  - name: contracts
+    function: bind private parties to agreed obligations
+    criticality: medium
+relationships:
+  - from: courts
+    to: precedent
+    type: feeds
+  - from: enforcement
+    to: courts
+    type: executes
+  - from: precedent
+    to: courts
+    type: regulates
+invariants:
+  - like cases must be treated alike
+  - no one may judge their own case
+failure_modes:
+  - name: contradictory_precedent
+    medical_map: autoimmune
+    description: the system attacks its own consistency
+    indicators: [circuit_splits, conflicting_holdings]
+  - name: unenforced_judgments
+    medical_map: chronic
+    description: rulings persist without effect
+    indicators: [contempt_backlog, ignored_injunctions]
+architecture_patterns:
+  - name: stare_decisis
+    medical_map: homeostasis
+    description: binding precedent stabilizes interpretation
+  - name: appeals_review
+    medical_map: immune_system
+    description: higher courts detect and correct errors

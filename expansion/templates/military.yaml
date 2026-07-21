@@ -1,0 +1,55 @@
+domain: military
+version: 1.0
+description: Armed forces, defense strategy, and conflict systems.
+components:
+  - name: command
+    function: direct strategy and authorize force
+    criticality: high
+  - name: logistics
+    function: sustain forces with materiel and supply
+    criticality: high
+  - name: intelligence
+    function: gather and assess threat information
+    criticality: high
+  - name: combat_units
+    function: execute operations on the ground
+    criticality: high
+  - name: civilian_oversight
+    function: constrain force under political authority
+    criticality: high
+relationships:
+  - from: command
+    to: combat_units
+    type: directs
+  - from: intelligence
+    to: command
+    type: informs
+  - from: logistics
+    to: combat_units
+    type: supports
+  - from: civilian_oversight
+    to: command
+    type: guards
+invariants:
+  - use of force must remain under civilian control
+  - rules of engagement must be followed
+failure_modes:
+  - name: mission_creep
+    medical_map: cancer
+    description: objectives expand beyond mandate without review
+    indicators: [scope_expansion, undefined_end_state]
+  - name: intelligence_failure
+    medical_map: autoimmune
+    description: assessment filters or attacks the truth it needs
+    indicators: [cherry_picked_estimates, politicized_analysis]
+  - name: logistics_collapse
+    medical_map: acute
+    description: supply failure disables forces rapidly
+    indicators: [fuel_shortages, attrition_of_reserves]
+architecture_patterns:
+  - name: defense_in_depth
+    medical_map: immune_system
+    description: layered positions absorb and slow penetration
+  - name: strategic_reserves
+    medical_map: homeostasis
+    description: held-back capacity restores equilibrium after shock
