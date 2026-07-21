@@ -1,96 +1,93 @@
-"""Resolve Path of Exile buildcraft shorthand into typed compute mappings."""
+"""Resolve Path of Exile buildcraft shorthand into typed compute mappings.
 
+Resolution is relation-aware: ontology concepts are extracted first, then mapping
+rules are scored against concept coverage and relationship evidence. This avoids
+one-off dense-signal recovery while preserving deterministic, auditable behavior.
+"""
 from __future__ import annotations
 
-import re
-
 from semantic_compiler.registry.buildcraft import BUILDCRAFT_MAPPINGS, BuildcraftMapping
+from semantic_compiler.translation.structural_resolver import (
+    RelationPattern,
+    StructuralRule,
+    resolve_rules,
+)
 
 
-def _normalize(text: str) -> str:
-    normalized = text.casefold().replace("’", "'").replace("–", "-").replace("—", "-")
-    normalized = re.sub(r"[^a-z0-9+./' -]+", " ", normalized)
-    return re.sub(r"\s+", " ", normalized).strip()
+ALIASES = {
+    "pcie_slot": ("pcie", "pcie slot", "accelerator slot"),
+    "weapon_slot": ("weapon slot", "weapon sockets", "weapon links"),
+    "gpu": ("gpu", "gpus", "accelerator", "graphics card"),
+    "weapon": ("weapon", "equipped weapon"),
+    "cpu_socket": ("cpu socket", "cpu slot", "host compute position"),
+    "armour_slot": ("armor slot", "armour slot", "body armor slot", "body armour slot"),
+    "cpu": ("cpu", "cpus", "processor", "host compute"),
+    "armour": ("armor", "armour", "body armor", "body armour"),
+    "integration_capacity": ("linked sockets", "gem slots", "six link", "6 link", "ten link", "10 link"),
+    "llm": ("llm", "model", "primary application", "active workload"),
+    "active_skill": ("active skill", "active skill gem", "skill gem"),
+    "support_runtime": ("support gem", "mtp", "drafter", "speculative drafter", "cache layer", "vllm", "sglang", "inference framework"),
+    "compatibility": ("cuda", "pytorch", "driver", "drivers", "abi", "runtime compatibility", "gem tags"),
+    "vram": ("vram", "accelerator memory", "gpu memory"),
+    "reservation": ("mana reservation", "reserved mana", "resource reservation", "allocation"),
+    "repository": ("repo", "repository", "package", "docker profile"),
+    "complete_build": ("complete build", "compute build", "architecture build", "path of building", "reflexion of building"),
+    "delivery_proliferation": ("too many builds", "twenty viable builds", "20 viable builds", "before reaching maps", "league starter reaches maps"),
+    "premium_accelerator": ("rtx pro 6000", "blackwell 96 gb"),
+    "mirror_item": ("mirror-tier 10 link bow", "mirror tier ten link bow", "10 link bow", "ten link bow"),
+}
 
 
-def _trigger_matches(text: str, trigger: str) -> bool:
-    normalized_trigger = _normalize(trigger)
-    return bool(normalized_trigger and normalized_trigger in text)
+RULES = (
+    StructuralRule("BUILD_001", concepts_any=(frozenset({"complete_build"}),), minimum_score=0.25),
+    StructuralRule("BUILD_002", concepts_any=(frozenset({"pcie_slot"}), frozenset({"weapon_slot"})), relations_any=(RelationPattern("equivalent_role", frozenset({"pcie_slot"}), frozenset({"weapon_slot"})),), minimum_score=0.45),
+    StructuralRule("BUILD_003", concepts_any=(frozenset({"cpu_socket"}), frozenset({"armour_slot"})), relations_any=(RelationPattern("equivalent_role", frozenset({"cpu_socket"}), frozenset({"armour_slot"})),), minimum_score=0.45),
+    StructuralRule("BUILD_004", concepts_any=(frozenset({"gpu"}), frozenset({"weapon"})), relations_any=(RelationPattern("equivalent_role", frozenset({"gpu"}), frozenset({"weapon"})),), minimum_score=0.45),
+    StructuralRule("BUILD_005", concepts_any=(frozenset({"cpu"}), frozenset({"armour"})), relations_any=(RelationPattern("equivalent_role", frozenset({"cpu"}), frozenset({"armour"})),), minimum_score=0.45),
+    StructuralRule("BUILD_006", concepts_any=(frozenset({"integration_capacity"}),), minimum_score=0.25),
+    StructuralRule("BUILD_007", concepts_any=(frozenset({"llm"}), frozenset({"active_skill"})), relations_any=(RelationPattern("equivalent_role", frozenset({"llm"}), frozenset({"active_skill"})),), minimum_score=0.45),
+    StructuralRule("BUILD_008", concepts_any=(frozenset({"support_runtime"}),), minimum_score=0.25),
+    StructuralRule("BUILD_009", concepts_any=(frozenset({"compatibility"}),), minimum_score=0.25),
+    StructuralRule("BUILD_010", concepts_any=(frozenset({"vram"}), frozenset({"reservation"})), relations_any=(RelationPattern("equivalent_role", frozenset({"vram"}), frozenset({"reservation"})), RelationPattern("consumes", frozenset({"llm", "support_runtime"}), frozenset({"vram"}))), minimum_score=0.45),
+    StructuralRule("BUILD_011", concepts_any=(frozenset({"repository"}),), minimum_score=0.25),
+    StructuralRule("BUILD_012", concepts_any=(frozenset({"complete_build"}),), minimum_score=0.25),
+    StructuralRule("BUILD_013", concepts_any=(frozenset({"delivery_proliferation"}),), minimum_score=0.25),
+    StructuralRule("BUILD_014", concepts_any=(frozenset({"premium_accelerator"}), frozenset({"mirror_item"})), relations_any=(RelationPattern("equivalent_role", frozenset({"premium_accelerator"}), frozenset({"mirror_item"})),), minimum_score=0.45),
+)
 
 
 def resolve_buildcraft_entries(text: str) -> list[BuildcraftMapping]:
-    """Return every explicitly or densely implied buildcraft mapping."""
-    normalized = _normalize(text)
-    if not normalized:
-        return []
-
+    """Return buildcraft mappings supported by concept and relation evidence."""
+    _, matches = resolve_rules(text, ALIASES, RULES)
     by_id = {mapping.mapping_id: mapping for mapping in BUILDCRAFT_MAPPINGS}
-    matches: list[BuildcraftMapping] = []
-    seen: set[str] = set()
-
-    def add(mapping_id: str) -> None:
-        if mapping_id not in seen:
-            matches.append(by_id[mapping_id])
-            seen.add(mapping_id)
-
-    for mapping in BUILDCRAFT_MAPPINGS:
-        if any(_trigger_matches(normalized, trigger) for trigger in mapping.triggers):
-            add(mapping.mapping_id)
-
-    # Recover the hierarchy from compressed founder shorthand.
-    if "pcie" in normalized:
-        add("BUILD_002")
-    if "gpu" in normalized or "accelerator" in normalized:
-        add("BUILD_004")
-    if "cpu socket" in normalized or "cpu slot" in normalized:
-        add("BUILD_003")
-    if "cpu" in normalized and any(word in normalized for word in ("armor", "armour", "body")):
-        add("BUILD_005")
-    if "vram" in normalized and any(word in normalized for word in ("mana", "reserve", "allocation")):
-        add("BUILD_010")
-    if "llm" in normalized or "model" in normalized:
-        if "gem" in normalized or "skill" in normalized:
-            add("BUILD_007")
-    if any(word in normalized for word in ("cuda", "pytorch", "pypi", "driver", "abi")):
-        add("BUILD_009")
-    if any(word in normalized for word in ("repo", "repository", "package")):
-        add("BUILD_011")
-    if "rtx pro 6000" in normalized or ("blackwell" in normalized and "96 gb" in normalized):
-        add("BUILD_014")
-
-    # A dense statement spanning three or more layers should preserve the
-    # complete slot -> item -> component -> reservation chain.
-    hierarchy_signals = sum(
-        signal in normalized
-        for signal in ("pcie", "gpu", "cpu", "llm", "gem", "vram", "cuda", "pytorch")
-    )
-    if hierarchy_signals >= 3:
-        if "pcie" in normalized:
-            add("BUILD_002")
-        if "gpu" in normalized:
-            add("BUILD_004")
-        if "cpu" in normalized:
-            add("BUILD_005")
-        if "llm" in normalized or "model" in normalized:
-            add("BUILD_007")
-        if "gem" in normalized or "mtp" in normalized or "drafter" in normalized:
-            add("BUILD_008")
-        if "vram" in normalized:
-            add("BUILD_010")
-
-    return matches
+    return [by_id[match.rule_id] for match in matches]
 
 
 def resolve_buildcraft_mappings(text: str) -> list[dict[str, object]]:
-    return [entry.to_fractal_mapping() for entry in resolve_buildcraft_entries(text)]
+    evidence, matches = resolve_rules(text, ALIASES, RULES)
+    by_id = {mapping.mapping_id: mapping for mapping in BUILDCRAFT_MAPPINGS}
+    output = []
+    for match in matches:
+        item = by_id[match.rule_id].to_fractal_mapping()
+        item["resolver_evidence"] = {
+            "score": match.score,
+            "reasons": list(match.evidence),
+            "concepts": sorted(evidence.concepts),
+            "relations": [list(relation) for relation in evidence.relations],
+        }
+        output.append(item)
+    return output
 
 
 def summarize_buildcraft_ontology(text: str) -> dict[str, object]:
-    entries = resolve_buildcraft_entries(text)
+    evidence, matches = resolve_rules(text, ALIASES, RULES)
     return {
         "ontology": "BUILDCRAFT_COMPUTE_ONTOLOGY",
-        "mapping_ids": [entry.mapping_id for entry in entries],
-        "layers": [entry.layer for entry in entries],
+        "resolver": "RELATION_AWARE_STRUCTURAL_IR_V1",
+        "mapping_ids": [match.rule_id for match in matches],
+        "scores": {match.rule_id: match.score for match in matches},
+        "concepts": sorted(evidence.concepts),
+        "relations": [list(relation) for relation in evidence.relations],
         "canonical_chain": [
             "motherboard/chassis topology -> equipment paper doll",
             "PCIe accelerator slot -> weapon slot",
