@@ -1,0 +1,42 @@
+domain: biology
+version: 1.0
+description: Biological organisms and systems.
+components:
+  - name: cell_membrane
+    function: regulate what enters and exits
+    criticality: high
+  - name: metabolism
+    function: convert resources to energy
+    criticality: high
+  - name: immune_system
+    function: detect and neutralize threats
+    criticality: high
+  - name: genetic_code
+    function: store and transmit instructions
+    criticality: high
+  - name: homeostasis_regulation
+    function: maintain internal equilibrium
+    criticality: high
+relationships:
+  - from: cell_membrane
+    to: immune_system
+    type: guards
+  - from: metabolism
+    to: homeostasis_regulation
+    type: feeds
+invariants:
+  - membrane must remain selectively permeable
+  - immune system must distinguish self from non-self
+failure_modes:
+  - name: cancer
+    medical_map: cancer
+    description: uncontrolled cell growth without resource feedback
+    indicators: [unregulated_mitosis, resource_capture]
+  - name: autoimmune
+    medical_map: autoimmune
+    description: immune system attacks healthy tissue
+    indicators: [self_targeting, inflammation]
+architecture_patterns:
+  - name: adaptive_immunity
+    medical_map: vaccination
+    description: memory-based defense against known threats

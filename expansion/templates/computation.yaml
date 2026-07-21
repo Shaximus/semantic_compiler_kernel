@@ -1,0 +1,49 @@
+domain: computation
+version: 1.0
+description: Software, networks, and information-processing systems.
+components:
+  - name: input_layer
+    function: receive and validate external data
+    criticality: high
+  - name: processing_core
+    function: transform data into decisions
+    criticality: high
+  - name: memory_store
+    function: persist state and history
+    criticality: high
+  - name: defense_boundary
+    function: detect and block threats
+    criticality: high
+  - name: output_layer
+    function: emit results and signals
+    criticality: medium
+relationships:
+  - from: input_layer
+    to: processing_core
+    type: feeds
+  - from: processing_core
+    to: memory_store
+    type: reads_writes
+  - from: defense_boundary
+    to: input_layer
+    type: guards
+invariants:
+  - input must be validated before processing
+  - memory must not be writable without integrity checks
+  - defense boundary must fail closed
+failure_modes:
+  - name: prompt_injection
+    medical_map: pathogen
+    description: malicious instruction overrides intended behavior
+    indicators: [unexpected_instruction_following, boundary_bypass]
+  - name: data_corruption
+    medical_map: inflammation
+    description: degraded input causes downstream stress
+    indicators: [error_cascades, validation_failures]
+architecture_patterns:
+  - name: defense_in_depth
+    medical_map: immune_system
+    description: layered boundaries with independent failure modes
+  - name: circuit_breaker
+    medical_map: quarantine
+    description: isolate failing component before cascade

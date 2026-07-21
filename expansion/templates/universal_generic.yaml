@@ -1,0 +1,37 @@
+domain: universal_generic
+version: 1.0
+description: Generic fallback for unmatched domains.
+components:
+  - name: boundary
+    function: separate system from environment
+    criticality: high
+  - name: processing
+    function: transform inputs to outputs
+    criticality: high
+  - name: memory
+    function: persist state
+    criticality: medium
+  - name: control
+    function: regulate behavior
+    criticality: high
+  - name: defense
+    function: detect and respond to threats
+    criticality: high
+relationships:
+  - from: boundary
+    to: processing
+    type: guards
+  - from: control
+    to: processing
+    type: regulates
+invariants:
+  - boundary must not be bypassed without control approval
+failure_modes:
+  - name: boundary_breach
+    medical_map: pathogen
+    description: external threat bypasses boundary
+    indicators: [unauthorized_access, integrity_loss]
+architecture_patterns:
+  - name: layered_defense
+    medical_map: immune_system
+    description: multiple independent defense layers
