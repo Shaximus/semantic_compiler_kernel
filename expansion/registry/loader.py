@@ -18,6 +18,7 @@ class DomainTemplate:
 TEMPLATE_DIR = Path(__file__).parent.parent / "templates"
 
 def load_templates(template_dir: Path | None = None) -> dict[str, DomainTemplate]:
+    """Load and validate all *.yaml domain templates from template_dir, keyed by domain."""
     template_dir = template_dir or TEMPLATE_DIR
     templates: dict[str, DomainTemplate] = {}
     for path in template_dir.glob("*.yaml"):
