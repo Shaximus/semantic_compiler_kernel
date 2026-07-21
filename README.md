@@ -4,10 +4,11 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 ## Status
 
-**Current release:** `V2.1.3` (canonical freeze)
+**Current release:** `V2.1.3` (canonical freeze) + `V2.2` medical-ontology decompression expansion
 
-- 67/67 tests passing
-- Schema version: `2.1.0`
+- 89/89 tests passing (67 frozen core + 22 expansion)
+- Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
+- Expansion decompression version: `2.2.0-rc1`
 - Manifest: `calibration_output/RELEASE_MANIFEST_V2_1_3.json`
 
 ## What it does
@@ -17,6 +18,33 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 3. **Gates** — security, boundaries, causality, measurement, corpus completeness, contradiction repair, missing-organ scope
 4. **Scoring** — mapping quality, assessment coverage, isomorphism quality
 5. **Dataset export** — schema-validated JSONL for SFT/DPO/contrastive training
+
+## V2.2 expansion — medical-ontology decompression
+
+The `expansion/` layer adds system decompression on top of the frozen V2.1.3
+core: given a `SemanticPacket`, `expansion.decompress()` reconstructs the
+whole system the input describes, diagnoses its failure modes in
+medical-ontology terms, and advises on treatment.
+
+- **16 domain templates** (`expansion/templates/`, via `expansion.registry`) —
+  biology, computation, construction, corporate, ecology, economic,
+  environmental, evolutionary, government, informational, law, medical,
+  military, organizational, reflexion, social
+- **Pathology taxonomy** (`expansion.pathology`) — structural pathologies
+  (boundary_breach, cancer, autoimmune, prompt_injection, data_corruption,
+  ...) mapped to medical diagnoses with evidence and confidence
+- **Isomorphism overlay** (`expansion.isomorphism`) — universal functional
+  graph with coverage ratios
+- **Reconstruction** (`expansion.reconstruction`) — missing-component
+  inference by cross-domain analogy plus scope-aware completeness assessment
+- **Architecture advisor** (`expansion.advisor`) — diagnosis, prescriptions,
+  architecture improvements, resilience training, prognosis
+- **V2.2 system-model schema** (`expansion/schemas/v2_2_system_model.schema.json`)
+  — every decompressed model is validated before return
+
+Calibration: `calibration_output/decompression_calibration_v2_2.jsonl`
+(80 rows, 8 categories × 10, 16 domains × 5, 100% schema-valid) with the full
+analysis in `calibration_output/DECOMPRESSION_CALIBRATION_REPORT_V2_2.md`.
 
 ## Quick start
 
@@ -29,6 +57,12 @@ PYTHONPATH=/home/shax/Apps python3 scripts/generate_calibration_corpus.py
 
 # Generate freeze artifacts
 PYTHONPATH=/home/shax/Apps python3 scripts/generate_v2_1_3_freeze_artifacts.py
+
+# Run the full suite incl. expansion (pytest-style tests; use the project venv)
+PYTHONPATH=/home/shax/Apps .venv/bin/python -m pytest tests -q
+
+# Build the V2.2 decompression calibration corpus
+PYTHONPATH=/home/shax/Apps .venv/bin/python scripts/build_decompression_calibration.py
 ```
 
 ## Layout
@@ -39,6 +73,7 @@ PYTHONPATH=/home/shax/Apps python3 scripts/generate_v2_1_3_freeze_artifacts.py
 - `registry/` — terms, cosmological constants, department mappings
 - `translation/` — fractal / cross-domain translation
 - `modes/` — operating modes (coherence, reality orientation, defense pathology)
+- `expansion/` — V2.2 medical-ontology decompression (templates, pathology, reconstruction, advisor, schema)
 - `schemas/` — JSON Schema for V2.1 dataset rows
 - `scripts/` — corpus generation, quarantine, freeze artifacts
 - `calibration_output/` — generated corpora, reports, release artifacts
@@ -53,3 +88,5 @@ PYTHONPATH=/home/shax/Apps python3 scripts/generate_v2_1_3_freeze_artifacts.py
 | SFT pilot train | `calibration_output/SFT_PILOT_DATASET_V1.jsonl` |
 | SFT pilot eval | `calibration_output/SFT_PILOT_EVALUATION_SET_V1.jsonl` |
 | DPO registry | `calibration_output/DPO_DIAGNOSTIC_REGISTRY.json` |
+| V2.2 decompression corpus | `calibration_output/decompression_calibration_v2_2.jsonl` |
+| V2.2 calibration report | `calibration_output/DECOMPRESSION_CALIBRATION_REPORT_V2_2.md` |
