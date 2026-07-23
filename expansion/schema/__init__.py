@@ -1,17 +1,21 @@
-"""Domain template validation."""
+"""Domain template validation (jsonschema, Draft 2020-12)."""
 import json
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 DOMAIN_TEMPLATE_SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "domain-template.schema.json"
+
+with open(DOMAIN_TEMPLATE_SCHEMA_PATH) as _f:
+    DOMAIN_TEMPLATE_SCHEMA = json.load(_f)
+
+_VALIDATOR = Draft202012Validator(DOMAIN_TEMPLATE_SCHEMA)
+
 
 def validate_domain_template(template: dict) -> list[str]:
     """Validate a domain template against the schema. Returns list of errors."""
     errors = []
-    required = ["domain", "version", "description", "components", "relationships", "invariants", "failure_modes", "architecture_patterns"]
-    for field in required:
-        if field not in template:
-            errors.append(f"missing required field: {field}")
-    for fm in template.get("failure_modes", []):
-        if "medical_map" not in fm:
-            errors.append(f"failure_mode {fm.get('name')} missing medical_map")
+    for e in _VALIDATOR.iter_errors(template):
+        path = ".".join(str(p) for p in e.absolute_path)
+        errors.append(f"{path}: {e.message}" if path else e.message)
     return errors

@@ -1,5 +1,5 @@
 """Scope-aware completeness assessment."""
-from expansion.registry.loader import DomainTemplate
+from semantic_compiler.expansion.registry.loader import DomainTemplate
 
 def assess_completeness(system_model: dict, template: DomainTemplate) -> str:
     """Return completeness scope: whole_system_claimed | fragmentary | unknown."""

@@ -5,7 +5,7 @@ import unittest
 class TestMedicalOntology(unittest.TestCase):
     def test_ontology_contains_core_concepts(self):
         try:
-            from expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY, get_concept
+            from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY, get_concept
         except ModuleNotFoundError:
             # unittest discovery binds `expansion` to tests/expansion; import via repo package
             from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY, get_concept

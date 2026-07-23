@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reflexion/schemas/v2_2_invariant_registry.schema.json",
+  "title": "V2.2 Corpus Report with Cross-Document Invariant Registry",
+  "type": "object",
+  "required": ["schema", "generated_at", "corpus", "documents", "invariant_registry"],
+  "properties": {
+    "schema": {"const": "reflexion.corpus.report.v1"},
+    "generated_at": {"type": "string"},
+    "corpus": {
+      "type": "object",
+      "required": ["document_count", "chunk_count", "documents"],
+      "properties": {
+        "document_count": {"type": "integer", "minimum": 0},
+        "chunk_count": {"type": "integer", "minimum": 0},
+        "documents": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/document_metadata"}
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["metadata", "chunk_count", "chunk_results"],
+        "properties": {
+          "metadata": {"$ref": "#/$defs/document_metadata"},
+          "chunk_count": {"type": "integer", "minimum": 0},
+          "chunk_results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["chunk_index", "start", "end", "signature_key"],
+              "properties": {
+                "chunk_index": {"type": "integer", "minimum": 0},
+                "start": {"type": "integer", "minimum": 0},
+                "end": {"type": "integer", "minimum": 0},
+                "decision": {"type": "string"},
+                "signature": {"$ref": "#/$defs/signature"},
+                "signature_key": {"type": "string"}
+              }
+            }
+          },
+          "distinct_signatures": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "invariant_registry": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/invariant"}
+    }
+  },
+  "$defs": {
+    "document_metadata": {
+      "type": "object",
+      "required": ["doc_id", "source_path", "captured_at", "evidence_tier"],
+      "properties": {
+        "doc_id": {"type": "string", "minLength": 1},
+        "source_path": {"type": ["string", "null"]},
+        "captured_at": {"type": "string"},
+        "evidence_tier": {
+          "enum": [
+            "PRIMARY_RECORD",
+            "PUBLISHED_RESEARCH",
+            "SELF_ASSESSED_ESTIMATE",
+            "AI_GENERATED_ASSESSMENT",
+            "MARKED_SPECULATION"
+          ]
+        },
+        "extra": {"type": "object"}
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["claim_types", "relationship_types", "populated_structure", "source_frames"],
+      "properties": {
+        "claim_types": {"type": "array", "items": {"type": "string"}},
+        "relationship_types": {"type": "array", "items": {"type": "string"}},
+        "populated_structure": {"type": "array", "items": {"type": "string"}},
+        "source_frames": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "supporting_location": {
+      "type": "object",
+      "required": ["doc_id", "chunk_index", "start", "end"],
+      "properties": {
+        "doc_id": {"type": "string"},
+        "chunk_index": {"type": "integer", "minimum": 0},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0}
+      }
+    },
+    "disconfirmation": {
+      "type": "object",
+      "required": ["test_id", "attack", "result"],
+      "properties": {
+        "test_id": {"type": "string"},
+        "attack": {"type": "string"},
+        "source_only_features": {"type": "array", "items": {"type": "string"}},
+        "target_only_features": {"type": "array", "items": {"type": "string"}},
+        "counterexample": {"type": ["string", "null"]},
+        "result": {"enum": ["SURVIVED", "WEAKENED", "FAILED", "UNTESTED"]},
+        "impact": {"type": "string"},
+        "search": {
+          "type": ["object", "null"],
+          "required": ["queries_used", "documents_searched", "searched_at", "state"],
+          "properties": {
+            "queries_used": {"type": "array", "items": {"type": "string"}},
+            "documents_searched": {"type": "array", "items": {"type": "string"}},
+            "searched_at": {"type": ["string", "null"]},
+            "state": {
+              "enum": [
+                "PRESENT_IN_CURRENT_CONTEXT",
+                "FOUND_IN_LINKED_CORPUS",
+                "NOT_FOUND_WITHIN_SEARCH_SCOPE",
+                "SEARCH_NOT_PERFORMED",
+                "SEARCH_UNAVAILABLE",
+                "ABSENT_FROM_VERSION_LOCKED_CORPUS"
+              ]
+            }
+          }
+        },
+        "note": {"type": "string"},
+        "evidence_tier": {"type": ["string", "null"]}
+      }
+    },
+    "derivation_event": {
+      "type": "object",
+      "required": ["subject_id", "derived_at", "exposed_to_parallel_at", "derived_before_exposure"],
+      "properties": {
+        "subject_id": {"type": "string"},
+        "derived_at": {"type": ["string", "null"]},
+        "exposed_to_parallel_at": {"type": ["string", "null"]},
+        "derived_before_exposure": {"type": ["boolean", "null"]},
+        "note": {"type": "string"}
+      }
+    },
+    "invariant": {
+      "type": "object",
+      "required": [
+        "invariant_id",
+        "description",
+        "signature",
+        "supporting",
+        "supporting_documents",
+        "confirmations",
+        "disconfirmations",
+        "evidence_tier",
+        "verdict",
+        "first_seen_at",
+        "last_seen_at",
+        "registered_at",
+        "derivation_event_log"
+      ],
+      "properties": {
+        "invariant_id": {"type": "string", "pattern": "^INV-[0-9]{4}$"},
+        "description": {"type": "string"},
+        "signature": {"$ref": "#/$defs/signature"},
+        "supporting": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/supporting_location"},
+          "minItems": 1
+        },
+        "supporting_documents": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        },
+        "confirmations": {"type": "integer", "minimum": 1},
+        "disconfirmations": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/disconfirmation"}
+        },
+        "evidence_tier": {
+          "enum": [
+            "PRIMARY_RECORD",
+            "PUBLISHED_RESEARCH",
+            "SELF_ASSESSED_ESTIMATE",
+            "AI_GENERATED_ASSESSMENT",
+            "MARKED_SPECULATION"
+          ]
+        },
+        "verdict": {"enum": ["HOLDS", "STRAINS", "UNRESOLVED"]},
+        "first_seen_at": {"type": "string"},
+        "last_seen_at": {"type": "string"},
+        "registered_at": {"type": "string"},
+        "derivation_event_log": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/derivation_event"}
+        }
+      }
+    }
+  }
+}

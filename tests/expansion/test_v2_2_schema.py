@@ -15,7 +15,7 @@ def _valid_model():
 
 
 def test_valid_system_model_passes():
-    from expansion.schema.v2_2_system_model import validate_system_model
+    from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
     model = {
         "domain": "computation",
         "decompression_version": "2.2.0-rc1",
@@ -30,7 +30,7 @@ def test_valid_system_model_passes():
 
 
 def test_missing_top_level_field_reported():
-    from expansion.schema.v2_2_system_model import validate_system_model
+    from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
     model = _valid_model()
     del model["advisor"]
     errors = validate_system_model(model)
@@ -38,7 +38,7 @@ def test_missing_top_level_field_reported():
 
 
 def test_missing_nested_fields_reported():
-    from expansion.schema.v2_2_system_model import validate_system_model
+    from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
     model = _valid_model()
     del model["universal_functional_graph"]["coverage_ratio"]
     del model["pathology_profile"]["medical_diagnoses"]
@@ -53,7 +53,7 @@ def test_missing_nested_fields_reported():
 
 def test_schema_constant_matches_json_contract():
     import json
-    from expansion.schema.v2_2_system_model import V2_2_SYSTEM_MODEL_SCHEMA, SCHEMA_PATH
+    from semantic_compiler.expansion.schema.v2_2_system_model import V2_2_SYSTEM_MODEL_SCHEMA, SCHEMA_PATH
     with open(SCHEMA_PATH) as f:
         on_disk = json.load(f)
     assert V2_2_SYSTEM_MODEL_SCHEMA == on_disk

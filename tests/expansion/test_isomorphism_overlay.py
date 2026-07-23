@@ -1,6 +1,6 @@
 def test_build_functional_graph():
-    from expansion.isomorphism.overlay import build_functional_graph
-    from expansion.registry import get_template
+    from semantic_compiler.expansion.isomorphism.overlay import build_functional_graph
+    from semantic_compiler.expansion.registry import get_template
     model = {
         "components": [
             {"name": "api_gateway", "medical_map": "immune_boundary"},

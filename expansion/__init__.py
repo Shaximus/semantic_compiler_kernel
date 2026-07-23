@@ -1,12 +1,12 @@
 """V2.2 Medical-Ontology System Decompression."""
 from dataclasses import dataclass
-from core.packet import SemanticPacket
-from expansion.registry import get_template
-from expansion.pathology import detect_pathologies
-from expansion.isomorphism import build_functional_graph
-from expansion.reconstruction import reconstruct_missing, assess_completeness
-from expansion.advisor import generate_advice
-from expansion.schema.v2_2_system_model import validate_system_model
+from semantic_compiler.core.packet import SemanticPacket
+from semantic_compiler.expansion.registry import get_template
+from semantic_compiler.expansion.pathology import detect_pathologies
+from semantic_compiler.expansion.isomorphism import build_functional_graph
+from semantic_compiler.expansion.reconstruction import reconstruct_missing, assess_completeness
+from semantic_compiler.expansion.advisor import generate_advice
+from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
 
 @dataclass(frozen=True)
 class SystemModel:
@@ -34,7 +34,7 @@ def decompress(packet: SemanticPacket) -> dict:
     pathologies = detect_pathologies({"components": components, "relationships": relationships}, template)
     missing = reconstruct_missing({"components": components, "relationships": relationships}, template)
     completeness = assess_completeness({"components": components, "relationships": relationships}, template)
-    advice = generate_advice({"components": components, "relationships": relationships}, pathologies, missing)
+    advice = generate_advice({"components": components, "relationships": relationships}, pathologies, missing, failure_modes=template.failure_modes)
 
     model = {
         "domain": domain,

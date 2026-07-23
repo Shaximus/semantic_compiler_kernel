@@ -1,6 +1,6 @@
 def test_decompress_produces_system_model():
-    from expansion import decompress
-    from core.packet import SemanticPacket
+    from semantic_compiler.expansion import decompress
+    from semantic_compiler.core.packet import SemanticPacket
     packet = SemanticPacket(raw_input="A firewall protects a network")
     model = decompress(packet)
     assert model["domain"]

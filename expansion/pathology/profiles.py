@@ -1,6 +1,6 @@
 """Detect pathologies in a system model."""
-from expansion.pathology.taxonomy import Pathology
-from expansion.registry.loader import DomainTemplate
+from semantic_compiler.expansion.pathology.taxonomy import Pathology
+from semantic_compiler.expansion.registry.loader import DomainTemplate
 
 def _tokens(text: str) -> set[str]:
     """Split a string into lowercase word tokens on whitespace and underscores."""
