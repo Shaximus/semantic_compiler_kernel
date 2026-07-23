@@ -9,8 +9,8 @@ REPO_DIR = SCRIPT_DIR.parent
 if str(REPO_DIR) not in sys.path:
     sys.path.insert(0, str(REPO_DIR))
 
-from expansion import decompress
-from core.packet import SemanticPacket
+from semantic_compiler.expansion import decompress
+from semantic_compiler.core.packet import SemanticPacket
 
 # 80 calibration samples: 8 categories x 10, distributed across the 16
 # non-generic domains (exactly 5 samples per domain).

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reflexion/schemas/v2_2_gem_build.schema.json",
+  "title": "V2.2 Gem-Decoded Inference-Architecture Build",
+  "type": "object",
+  "required": ["schema", "generated_at", "dialect", "raw_spec", "layers", "unmapped_components", "archetypes", "checks", "failure_flags", "verdict"],
+  "properties": {
+    "schema": {"const": "reflexion.gem_build.v1"},
+    "generated_at": {"type": "string"},
+    "dialect": {"enum": ["poe_native", "reflexion_native", "mixed", "unknown"]},
+    "raw_spec": {"type": "string"},
+    "layers": {
+      "type": "object",
+      "required": ["equipment", "active_skill", "support_gems", "auras", "anointments", "flasks"],
+      "properties": {
+        "equipment": {"type": "array", "items": {"$ref": "#/$defs/component"}},
+        "active_skill": {"anyOf": [{"$ref": "#/$defs/component"}, {"type": "null"}]},
+        "support_gems": {"type": "array", "items": {"$ref": "#/$defs/component"}},
+        "auras": {"type": "array", "items": {"$ref": "#/$defs/component"}},
+        "anointments": {"type": "array", "items": {"$ref": "#/$defs/component"}},
+        "flasks": {"type": "array", "items": {"$ref": "#/$defs/component"}}
+      },
+      "additionalProperties": false
+    },
+    "unmapped_components": {"type": "array", "items": {"type": "string"}},
+    "archetypes": {"type": "array", "items": {"$ref": "#/$defs/archetype"}},
+    "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+    "failure_flags": {"type": "array", "items": {"$ref": "#/$defs/failure_flag"}},
+    "verdict": {"enum": ["HOLDS", "STRAINS", "UNRESOLVED"]},
+    "params_used": {"type": "object"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "component": {
+      "type": "object",
+      "required": ["name", "layer", "mapped", "compute_analogue", "build_refs", "note"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "layer": {"enum": ["Equipment", "Active skill", "Support gem", "Aura", "Anointment", "Flask"]},
+        "mapped": {"type": "boolean"},
+        "canonical": {"type": "string"},
+        "compute_analogue": {"type": ["string", "null"]},
+        "build_refs": {"type": "array", "items": {"type": "string", "pattern": "^BUILD_[0-9]{3}$"}},
+        "note": {"type": "string"},
+        "scope": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "archetype": {
+      "type": "object",
+      "required": ["archetype_id", "name", "status", "confidence", "invariant", "matched_evidence", "missing_groups", "failure_families"],
+      "properties": {
+        "archetype_id": {"type": "string"},
+        "name": {"type": "string"},
+        "status": {"enum": ["IDENTIFIED", "ATTEMPTING"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "invariant": {"type": "string"},
+        "matched_evidence": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+        "missing_groups": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+        "failure_families": {"type": "array", "items": {"type": "string"}},
+        "reference_builds": {"type": "array", "items": {"type": "string"}},
+        "completion_layers": {"type": "array", "items": {"$ref": "#/$defs/completion_layer"}}
+      },
+      "additionalProperties": false
+    },
+    "completion_layer": {
+      "type": "object",
+      "required": ["layer_id", "name", "priority", "layer_type", "status", "poe_anchors", "matched_evidence", "inference_role"],
+      "properties": {
+        "layer_id": {"type": "string"},
+        "name": {"type": "string"},
+        "priority": {"type": "string"},
+        "layer_type": {"type": "string"},
+        "status": {"enum": ["PRESENT", "MISSING"]},
+        "poe_anchors": {"type": "array", "items": {"type": "string"}},
+        "matched_evidence": {"type": "array", "items": {"type": "string"}},
+        "inference_role": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["check_id", "status", "reason", "values"],
+      "properties": {
+        "check_id": {"type": "string"},
+        "status": {"enum": ["PASS", "WARN", "FAIL", "SKIP"]},
+        "reason": {"type": "string"},
+        "values": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "failure_flag": {
+      "type": "object",
+      "required": ["code", "families", "severity", "description", "trigger"],
+      "properties": {
+        "code": {"type": "string"},
+        "families": {"type": "array", "items": {"enum": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "ADAPA"]}},
+        "severity": {"enum": ["warn", "critical"]},
+        "description": {"type": "string"},
+        "trigger": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

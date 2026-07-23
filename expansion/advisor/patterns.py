@@ -1,5 +1,5 @@
 """Known-good architecture patterns."""
-from expansion.advisor.improvements import AdvisorSuggestion
+from semantic_compiler.expansion.advisor.improvements import AdvisorSuggestion
 
 KNOWN_PATTERNS: list[AdvisorSuggestion] = [
     AdvisorSuggestion(

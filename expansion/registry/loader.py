@@ -2,7 +2,7 @@
 import yaml
 from dataclasses import dataclass
 from pathlib import Path
-from expansion.schema import validate_domain_template
+from semantic_compiler.expansion.schema import validate_domain_template
 
 @dataclass(frozen=True)
 class DomainTemplate:

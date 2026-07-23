@@ -1,5 +1,5 @@
 """Domain template index and lookup."""
-from expansion.registry.loader import load_templates, DomainTemplate
+from semantic_compiler.expansion.registry.loader import load_templates, DomainTemplate
 
 _TEMPLATES: dict[str, DomainTemplate] | None = None
 

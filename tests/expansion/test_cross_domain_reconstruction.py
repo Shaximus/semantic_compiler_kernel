@@ -10,8 +10,8 @@ input text in `raw_input` (there is no `input_text` field). These tests use
 `raw_input=` verbatim text otherwise unchanged from the brief.
 """
 
-from expansion import decompress
-from core.packet import SemanticPacket
+from semantic_compiler.expansion import decompress
+from semantic_compiler.core.packet import SemanticPacket
 
 
 def test_biology_to_computation_reconstruction():
