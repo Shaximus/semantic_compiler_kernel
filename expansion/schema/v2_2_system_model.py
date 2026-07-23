@@ -1,31 +1,26 @@
-"""V2.2 system model schema validation."""
+"""V2.2 system model schema validation (jsonschema, Draft 2020-12)."""
 import json
 from pathlib import Path
+
+from jsonschema import Draft202012Validator
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "v2_2_system_model.schema.json"
 
 with open(SCHEMA_PATH) as _f:
     V2_2_SYSTEM_MODEL_SCHEMA = json.load(_f)
 
+_VALIDATOR = Draft202012Validator(V2_2_SYSTEM_MODEL_SCHEMA)
+
 
 def validate_system_model(model: dict) -> list[str]:
     """Validate a V2.2 system model. Returns list of errors.
 
-    Checks required top-level fields and nested required fields per
-    expansion/schemas/v2_2_system_model.schema.json (the contract).
+    Uses jsonschema Draft 2020-12 validation against
+    expansion/schemas/v2_2_system_model.schema.json (the contract), matching
+    the approach of core.dataset.validate_dataset_row.
     """
     errors = []
-    required = V2_2_SYSTEM_MODEL_SCHEMA["required"]
-    for field in required:
-        if field not in model:
-            errors.append(f"missing required field: {field}")
-    for section in ("universal_functional_graph", "pathology_profile", "reconstruction", "advisor"):
-        value = model.get(section)
-        if not isinstance(value, dict):
-            if section in model:
-                errors.append(f"{section} must be an object")
-            continue
-        for nested in V2_2_SYSTEM_MODEL_SCHEMA["properties"][section].get("required", []):
-            if nested not in value:
-                errors.append(f"missing required field: {section}.{nested}")
+    for e in _VALIDATOR.iter_errors(model):
+        path = ".".join(str(p) for p in e.absolute_path)
+        errors.append(f"{path}: {e.message}" if path else e.message)
     return errors
