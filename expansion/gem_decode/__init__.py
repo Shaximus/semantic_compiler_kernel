@@ -3,27 +3,14 @@ Gem → Inference executable translation mode (gem_decode).
 
 Decompiles a build specification written in PoE skill/support-gem language
 into an inference-architecture build sheet with executable checks.
-
-PoE gem language is specifically and accurately formatted — a fixed
-five-layer vocabulary with deterministic composition rules — making it one
-of the cleanest possible executable translation/decompression domains:
-
-- Equipment    → permanently installed hardware
-- Active skill → the primary payload (LLM weights)
-- Support gem  → execution mechanics (MTP = GMP; acceptance rate = accuracy rating)
-- Aura         → persistent modifier fields (BCC, doctrine, scheduler, ...)
-- Anointment   → certified portable doctrine overlays (oils = evidence tiers)
-- Flask        → temporary bounded burst modes (charges = concurrency budget)
-
-Public API: :func:`decode_build`.
 """
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+from semantic_compiler.expansion.gem_decode.archetypes import identify_archetypes
 from semantic_compiler.expansion.gem_decode.checks import (
     compute_verdict,
     run_cadence_checks,
@@ -46,41 +33,40 @@ class GemDecodeResult:
     """Everything a decoded build produces."""
 
     build: GemBuild
-    translated: dict[str, Any]          # layers + unmapped components
-    checks: list[dict[str, Any]]        # cadence/breakpoint results
-    flags: list[dict[str, Any]]         # failure-family flags
-    verdict: str                        # HOLDS | STRAINS | UNRESOLVED
-    sheet: str                          # human-readable markdown build sheet
-    json: dict[str, Any]                # schema-validated machine-readable record
+    translated: dict[str, Any]
+    archetypes: list[dict[str, Any]]
+    checks: list[dict[str, Any]]
+    flags: list[dict[str, Any]]
+    verdict: str
+    sheet: str
+    json: dict[str, Any]
 
 
 def decode_build(spec_text: str, params: Optional[dict[str, Any]] = None) -> GemDecodeResult:
-    """
-    Decode a gem-language build spec into an inference-architecture build sheet.
+    """Decode a gem-language build into an executable inference build sheet.
 
-    Parameters
-    ----------
-    spec_text:
-        The build specification, in either dialect (PoE-native gem chains or
-        Reflexion-native keyed sections).
-    params:
-        Optional numeric parameters for the executable cadence checks, e.g.
-        ``draft_rate``, ``verifier_acceptance_capacity``, ``prefetch_lead``,
-        ``decompression_latency``, ``transfer_latency``,
-        ``concurrent_sequences``, ``kv_vram_budget``, ``trigger_frequency``,
-        ``execution_recovery_rate``, ``flask_fanout``, ``draft_capacity``,
-        ``verifier_capacity``, ``network_throughput``, ``scheduler_slots``,
-        ``memory_capacity``, ``merge_bandwidth``; plus the behavioral toggles
-        ``budget_refilled_by_gated_activity`` and ``instruction_fidelity``.
-        Checks with missing parameters report SKIP, never a guessed PASS.
+    Missing numeric parameters remain SKIP rather than being guessed. Archetype
+    confidence describes structural resemblance, not measured performance.
     """
     params = dict(params or {})
     build = parse_build_spec(spec_text)
     translated = translate_build(build)
+    archetypes = identify_archetypes(build, translated)
     checks = run_cadence_checks(build, params)
     flags = run_failure_family_checks(build, translated, params)
     verdict = compute_verdict(checks, flags, translated["unmapped_components"])
     sheet = render_build_sheet(build, translated, checks, flags, verdict)
+    if archetypes:
+        lines = [sheet, "", "## Attempted build archetypes", ""]
+        for item in archetypes:
+            lines.append(
+                f"- **[{item['status']}] {item['name']}** — confidence "
+                f"{item['confidence']:.3f}; {item['invariant']}"
+            )
+            if item["missing_groups"]:
+                missing = [" / ".join(group) for group in item["missing_groups"]]
+                lines.append(f"  - Missing invariant groups: {'; '.join(missing)}")
+        sheet = "\n".join(lines)
 
     record: dict[str, Any] = {
         "schema": "reflexion.gem_build.v1",
@@ -89,6 +75,7 @@ def decode_build(spec_text: str, params: Optional[dict[str, Any]] = None) -> Gem
         "raw_spec": build.raw,
         "layers": translated["layers"],
         "unmapped_components": translated["unmapped_components"],
+        "archetypes": archetypes,
         "checks": checks,
         "failure_flags": flags,
         "verdict": verdict,
@@ -101,6 +88,7 @@ def decode_build(spec_text: str, params: Optional[dict[str, Any]] = None) -> Gem
     return GemDecodeResult(
         build=build,
         translated=translated,
+        archetypes=archetypes,
         checks=checks,
         flags=flags,
         verdict=verdict,
@@ -111,6 +99,7 @@ def decode_build(spec_text: str, params: Optional[dict[str, Any]] = None) -> Gem
 
 __all__ = [
     "decode_build",
+    "identify_archetypes",
     "GemDecodeResult",
     "GemBuild",
     "GemParseError",
