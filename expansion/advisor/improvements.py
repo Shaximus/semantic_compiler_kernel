@@ -1,7 +1,7 @@
 """Architecture improvement advisor."""
 from dataclasses import dataclass
-from expansion.pathology.taxonomy import Pathology
-from expansion.reconstruction.missing_components import MissingComponent
+from semantic_compiler.expansion.pathology.taxonomy import Pathology
+from semantic_compiler.expansion.reconstruction.missing_components import MissingComponent
 
 @dataclass(frozen=True)
 class AdvisorSuggestion:

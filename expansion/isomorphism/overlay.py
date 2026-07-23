@@ -1,6 +1,6 @@
 """Universal functional graph translation."""
 from dataclasses import dataclass
-from expansion.registry.loader import DomainTemplate
+from semantic_compiler.expansion.registry.loader import DomainTemplate
 
 @dataclass(frozen=True)
 class FunctionalGraph:

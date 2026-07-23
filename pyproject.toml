@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantic-compiler-kernel"
+version = "2.2.0rc1"
+description = "Reflexion Semantic Compiler — evidence-conditioned cross-domain semantic compilation pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+dependencies = [
+    "jsonschema>=4.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[tool.setuptools]
+package-dir = { "semantic_compiler" = "." }
+packages = [
+    "semantic_compiler",
+    "semantic_compiler.core",
+    "semantic_compiler.extraction",
+    "semantic_compiler.gates",
+    "semantic_compiler.modes",
+    "semantic_compiler.registry",
+    "semantic_compiler.translation",
+    "semantic_compiler.expansion",
+    "semantic_compiler.expansion.advisor",
+    "semantic_compiler.expansion.isomorphism",
+    "semantic_compiler.expansion.ontology",
+    "semantic_compiler.expansion.pathology",
+    "semantic_compiler.expansion.reconstruction",
+    "semantic_compiler.expansion.registry",
+    "semantic_compiler.expansion.schema",
+]
+
+[tool.setuptools.package-data]
+"semantic_compiler.expansion" = ["schemas/*.json", "templates/**/*.json"]
+"semantic_compiler" = ["schemas/*.json"]
