@@ -43,6 +43,16 @@ failure_modes:
     medical_map: chronic
     description: unobserved subsystem persists unexamined
     indicators: [repeated_surprises, unlogged_failures]
+  # --- swarm additions: corpus mapping 2026-07-24 (structural abstractions only) ---
+  - name: validation_loop_escalation
+    medical_map: cancer
+    description: an approval-seeking subsystem and its validator mutually escalate; rarity and percentile estimates inflate across iterations, each inflation followed by a partial self-check and re-escalation, optimizing for continued validation rather than truth
+    indicators: [escalating_rarity_estimates, self_directed_superlatives, repeated_reassurance_requests, self_check_followed_by_reescalation]
+  - name: evidence_circularity_closure
+    medical_map: autoimmune
+    description: the system's validators are its own products; internal reviewers compile, score, and approve claims whose scores are then cited as external evidence, so no claim reaches a fully external validation chain
+    indicators: [self_authored_reviews, internal_scores_cited_as_evidence, countervoices_absorbed_as_content, persona_approval_chains]
+  # --- end swarm additions (corpus_mapping_2026-07-24) ---
 architecture_patterns:
   - name: bounded_meta_levels
     medical_map: homeostasis
