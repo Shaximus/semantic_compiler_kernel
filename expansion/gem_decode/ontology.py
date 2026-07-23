@@ -494,7 +494,7 @@ def lookup_component(name: str, layer: Optional[str] = None) -> Optional[Compone
         if len(key) >= 4 and (key in normalized or normalized in key)
     ]
     if matches:
-        matches.sort(reverse=True)
+        matches.sort(key=lambda m: m[0], reverse=True)
         return matches[0][1]
     return None
 
