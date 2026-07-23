@@ -6,8 +6,8 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 **Current release:** `V2.1.3` (canonical freeze) + `V2.2` medical-ontology decompression expansion
 
-- 147/147 tests passing (67 frozen core + 80 expansion) via `python -m pytest tests`;
-  `python -m unittest discover` also runs clean (77 unittest-style tests; the
+- 179/179 tests passing (72 frozen core + 107 expansion) via `python -m pytest tests`;
+  `python -m unittest discover` also runs clean (82 unittest-style tests; the
   remaining expansion tests are pytest-style function tests)
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
 - Expansion decompression version: `2.2.0-rc1`
@@ -15,6 +15,9 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
   clone makes `semantic_compiler` importable everywhere — no `PYTHONPATH` hacks
 - Corpus orchestration + cross-document invariant registry in `expansion.corpus`
 - Buildcraft compute ontology available in `registry/` and `translation/`
+  (BUILD_001–018, incl. MTP = Greater Multiple Projectiles with
+  acceptance-rate = accuracy-rating invariant)
+- **Gem → inference executable translation mode** in `expansion.gem_decode`
 - Manifest: `calibration_output/RELEASE_MANIFEST_V2_1_3.json`
 
 ## What it does
@@ -87,6 +90,61 @@ cross-document **invariant registry** (all deterministic, no LLM calls):
   template failure modes (vaccination-style indicator drills, graduated load
   drills for reconstructed components).
 
+## Gem → inference executable translation (`expansion.gem_decode`)
+
+Decompiles a build specification written in PoE skill/support-gem language
+into an inference-architecture build sheet with executable checks. Gem
+language is a fixed five-layer vocabulary with deterministic composition
+rules — one of the cleanest possible executable translation domains:
+
+```text
+Equipment    → permanently installed hardware (case = character select, motherboard = race, GPU = weapon, CPU = body armour)
+Active skill → the primary payload (LLM weights = active skill gem)
+Support gem  → execution mechanics (CUDA/PyTorch/vLLM/MTP/cache/framework; MTP = GMP, acceptance rate = accuracy rating)
+Aura         → persistent modifier fields (BCC, doctrine, system prompt, KV reuse, scheduler, TokenRouter, Auris, world state)
+Anointment   → certified portable doctrine overlays (Calibrated Dissent etc.; oils = evidence tiers; no retraining)
+Flask        → temporary bounded burst modes (Dying Sun = auxiliary compute fan-out; charges = concurrency budget; fail-open)
+```
+
+- **Parser** — both dialects: PoE-native gem chains (`"Ice Nova + Cast on
+  Critical Strike + …; weapon: …; auras: …"`) and Reflexion-native keyed
+  sections (`"verifier: …; draft: …; supports: …"`). Unknown section keys
+  raise loudly instead of misclassifying silently.
+- **Translator** — maps every component onto its computational analogue via
+  the five-layer ontology, reusing BUILD_001–018 by reference (the frozen
+  registry is not edited). Position-aware: the auxiliary i9 is equipment but
+  plays the Dying Sun role in flask position. Output in two forms: a
+  founder-readable markdown build sheet and schema-validated JSON
+  (`expansion/schemas/v2_2_gem_build.schema.json`, Draft 2020-12).
+- **Executable checks** — the COGNITIVE_COSPRI_001 cadence law
+  (draft rate ≤ verifier acceptance capacity · prefetch lead ≥ decompression
+  + transfer latency · concurrent sequences ≤ KV/VRAM budget · trigger
+  frequency ≈ recovery rate · flask fan-out ≤ MIN of six capacities),
+  parameterizable with real numbers, emitting PASS/WARN/FAIL/SKIP with
+  reasons — a check with missing parameters is SKIP, never a guessed PASS.
+- **Failure-family flags** — composition pattern-matching against the A–T
+  breaker taxonomy (unscoped aura → N; trigger engine without cooldown → F;
+  proxy compute without authority cost → E/H Hateforge; budget refilled by
+  the activity it gates → E; acceptance-minting on rejected drafts →
+  "rejections must not pay"; high instruction fidelity without a
+  dissent/authority layer → ADAPA_RISK).
+- **Verdict** — HOLDS / STRAINS / UNRESOLVED per build.
+
+```python
+from semantic_compiler.expansion import decode_build
+
+result = decode_build(
+    "verifier: MiniMax M2.5; draft: Qwen draft; supports: MTP K=5, vLLM; "
+    "auras: BCC, TokenRouter; flask: auxiliary_i9; anointment: authority_gate",
+    params={"draft_rate": 4000, "verifier_acceptance_capacity": 5000},
+)
+print(result.sheet)     # founder-readable build sheet
+print(result.verdict)   # HOLDS | STRAINS | UNRESOLVED
+```
+
+Demo: `python scripts/decode_build_demo.py` decodes both dialect examples
+plus the COGNITIVE_COSPRI_001 fixture (tuned → HOLDS, overcapped → STRAINS).
+
 ## Buildcraft compute ontology
 
 The optional `BUILDCRAFT_COMPUTE_ONTOLOGY` formalizes Path of Exile buildcraft shorthand as guarded structural mappings:
@@ -153,7 +211,7 @@ print(report['invariant_registry'])
 - `registry/` — terms, cosmological constants, department mappings, buildcraft ontology
 - `translation/` — fractal / cross-domain translation and buildcraft shorthand resolution
 - `modes/` — operating modes (coherence, reality orientation, defense pathology)
-- `expansion/` — V2.2 medical-ontology decompression (templates, pathology, reconstruction, advisor, schema) plus corpus orchestration, evidence tiers, counter-mapping, derivation-order tracking, and verdict translation
+- `expansion/` — V2.2 medical-ontology decompression (templates, pathology, reconstruction, advisor, schema) plus corpus orchestration, evidence tiers, counter-mapping, derivation-order tracking, verdict translation, and the gem_decode executable translation mode
 - `schemas/` — JSON Schema for V2.1 dataset rows
 - `scripts/` — corpus generation, quarantine, freeze artifacts
 - `calibration_output/` — generated corpora, reports, release artifacts

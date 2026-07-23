@@ -7,6 +7,7 @@ from semantic_compiler.expansion.isomorphism import build_functional_graph
 from semantic_compiler.expansion.reconstruction import reconstruct_missing, assess_completeness
 from semantic_compiler.expansion.advisor import generate_advice
 from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
+from semantic_compiler.expansion.gem_decode import decode_build, GemDecodeResult
 
 @dataclass(frozen=True)
 class SystemModel:
