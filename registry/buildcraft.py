@@ -42,6 +42,7 @@ class BuildcraftMapping:
                 "Preserve relationship grammar; do not claim literal identity.",
                 "Classify software by deployed function, not artifact format alone.",
                 "Retain physical constraints: lanes, bandwidth, latency, thermals, drivers, power, and memory.",
+                STATIC_VS_DYNAMIC_GUARDRAIL,
             ],
             "scores": {
                 "structural_fit": self.confidence,
@@ -55,6 +56,19 @@ class BuildcraftMapping:
 COMMON_RESIDUALS = (
     "Path of Exile rules are designed abstractions; compute constraints are physical and measurable.",
     "A useful structural analogy does not make the compared substrates interchangeable.",
+)
+
+
+# Ontology-wide guardrail (founder note, 2026-07-23): PoE builds are static at
+# craft time while inference stacks reconfigure per request, and PoE damage
+# math is fully deterministic while hardware scheduling is not. Every mapping
+# in this registry preserves optimization STRUCTURE (multiplicative stacking,
+# diminishing returns, breakpoints) — never literal mechanics.
+STATIC_VS_DYNAMIC_GUARDRAIL = (
+    "PoE builds are static at craft time and PoE damage math is fully deterministic; "
+    "inference stacks reconfigure per request and hardware scheduling is not. "
+    "These mappings preserve optimization structure (multiplicative stacking, "
+    "diminishing returns, breakpoints), not literal mechanics."
 )
 
 
@@ -238,6 +252,63 @@ BUILDCRAFT_MAPPINGS: tuple[BuildcraftMapping, ...] = (
             "Market price and game rarity are rhetorical comparisons, not valuation models.",
             "Accelerator capability remains bounded by software support, power, cooling, bandwidth, and workload fit.",
         ), 0.95,
+    ),
+    # Founder eureka 2026-07-23 (BUILD_015-BUILD_018).
+    BuildcraftMapping(
+        "BUILD_015", "CHASSIS_PRESENTATION", "character selection screen",
+        "PC case / chassis as outward presentation of the build",
+        ("character selection screen", "character select screen", "character select", "pc case", "computer case", "case is the character selection"),
+        (
+            "the vessel chosen at creation frames everything equipped afterward",
+            "outward presentation communicates the build without changing its mechanics",
+            "form factor constrains which components, cooling, and layout configurations fit",
+        ),
+        (
+            "A character selection screen is a one-time irreversible choice; a case can be swapped without rebuilding the system.",
+            "Case aesthetics carry no performance effect; character presentation can carry mechanical identity.",
+        ), 0.90,
+    ),
+    BuildcraftMapping(
+        "BUILD_016", "IDENTITY_BASE", "race / base class",
+        "motherboard as the chassis of identity (socket types, inherent attributes, expansion ceilings)",
+        ("motherboard is the race", "motherboard race", "race and base class", "race / base class", "base class", "socket types", "expansion ceilings"),
+        (
+            "the base determines socket types: CPU socket, PCIe topology, and RAM channels",
+            "equipped items inherit constraints from the base rather than redefining it",
+            "gear upgrades stay bounded by the base's inherent attributes and expansion ceilings",
+        ),
+        (
+            "Race or base class is fixed at character creation; motherboards are replaceable hardware.",
+            "The motherboard is also physical topology (BUILD_001); this facet maps identity and ceilings, not layout.",
+        ), 0.92,
+    ),
+    BuildcraftMapping(
+        "BUILD_017", "SOFTWARE_COMPONENT", "Greater Multiple Projectiles support gem",
+        "MTP (multi-token prediction) speculative drafting",
+        ("multi-token prediction", "greater multiple projectiles", "gmp", "multi-projectile support", "multiple projectiles support", "acceptance rate is accuracy", "speculative decoding acceptance"),
+        (
+            "the support fires additional units at reduced per-unit effectiveness: GMP fires additional projectiles at reduced per-projectile damage; MTP drafts additional tokens at reduced per-token acceptance",
+            "net gain exists only while the hit rate holds: accuracy rating for projectiles, acceptance rate for drafted tokens",
+            "speculative-decoding acceptance rate plays the exact role of accuracy rating; both are the same breakpoint math",
+        ),
+        (
+            "GMP's damage penalty is a fixed multiplier; MTP acceptance is probabilistic and workload-dependent.",
+            "Projectile count is exact and simultaneous; drafted-token count and tree shape vary by implementation.",
+        ), 0.93,
+    ),
+    BuildcraftMapping(
+        "BUILD_018", "PREMIUM_ITEM", "Mirror-of-Kalandra-tier item",
+        "mirror-tier hardware (e.g., RTX PRO 6000 96GB-class flagship)",
+        ("mirror-tier gpu", "mirror tier gpu", "mirror-tier hardware", "mirror of kalandra", "mirror-of-kalandra", "mirror-tier item", "perfect roll", "no upgrade path"),
+        (
+            "the item sits at the ceiling of the current league/budget with no upgrade path",
+            "a perfect roll ends the optimization search for that slot",
+            "the rest of the build is planned around owning the ceiling item",
+        ),
+        (
+            "Mirror-tier rarity is an in-game economic construct; flagship hardware is expensive but purchasable.",
+            "Hardware ceilings move with each product generation; a mirrored item stays perfect within its league.",
+        ), 0.94,
     ),
 )
 

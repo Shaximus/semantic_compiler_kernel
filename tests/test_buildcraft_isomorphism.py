@@ -73,6 +73,58 @@ class BuildcraftOntologyTests(unittest.TestCase):
         self.assertIn("PCIe accelerator slot", chain)
         self.assertIn("VRAM occupancy", chain)
 
+    # --- Founder eureka 2026-07-23: BUILD_015-BUILD_018 ---
+
+    def test_pc_case_is_character_selection_screen(self) -> None:
+        entries = resolve_buildcraft_entries(
+            "The PC case is the character selection screen: the vessel chosen at creation."
+        )
+        self.assertIn("BUILD_015", {entry.mapping_id for entry in entries})
+
+    def test_motherboard_is_race_base_class(self) -> None:
+        entries = resolve_buildcraft_entries("The motherboard is the race, not the gear.")
+        ids = {entry.mapping_id for entry in entries}
+        self.assertIn("BUILD_016", ids)
+        mapping = get_buildcraft_mapping("BUILD_016")
+        assert mapping is not None
+        joined = " ".join(mapping.preserved_invariants).lower()
+        self.assertIn("socket types", joined)
+        self.assertIn("expansion ceilings", joined)
+
+    def test_mtp_is_multi_projectile_support(self) -> None:
+        mappings = resolve_buildcraft_mappings("MTP is literally multi-projectile support.")
+        ids = {mapping["mapping_id"] for mapping in mappings}
+        self.assertIn("BUILD_017", ids)
+        mtp = next(mapping for mapping in mappings if mapping["mapping_id"] == "BUILD_017")
+        self.assertFalse(mtp["identity_claim_allowed"])
+        self.assertEqual(mtp["mapping_class"], "STRUCTURAL_ANALOGY")
+        joined = " ".join(mtp["preserved_invariants"]).lower()
+        self.assertIn("acceptance rate", joined)
+        self.assertIn("accuracy rating", joined)
+        self.assertIn("breakpoint", joined)
+
+    def test_mirror_tier_gpu_is_mirror_of_kalandra(self) -> None:
+        entries = resolve_buildcraft_entries(
+            "A mirror-tier GPU like the RTX PRO 6000 96GB is a Mirror-of-Kalandra-tier item."
+        )
+        ids = {entry.mapping_id for entry in entries}
+        self.assertIn("BUILD_018", ids)
+        mapping = get_buildcraft_mapping("BUILD_018")
+        assert mapping is not None
+        joined = " ".join(mapping.preserved_invariants).lower()
+        self.assertIn("no upgrade path", joined)
+        self.assertIn("perfect roll", joined)
+
+    def test_static_vs_dynamic_guardrail_on_records(self) -> None:
+        for mapping_id in ("BUILD_015", "BUILD_016", "BUILD_017", "BUILD_018"):
+            mapping = get_buildcraft_mapping(mapping_id)
+            assert mapping is not None
+            guardrails = " ".join(mapping.to_fractal_mapping()["guardrails"]).lower()
+            self.assertIn("static at craft time", guardrails, mapping_id)
+            self.assertIn("optimization structure", guardrails, mapping_id)
+            self.assertIn("breakpoints", guardrails, mapping_id)
+            self.assertFalse(mapping.to_fractal_mapping()["identity_claim_allowed"], mapping_id)
+
 
 if __name__ == "__main__":
     unittest.main()
