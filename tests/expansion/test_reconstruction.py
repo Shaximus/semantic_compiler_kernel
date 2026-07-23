@@ -1,6 +1,6 @@
 def test_reconstruct_missing_components():
-    from expansion.reconstruction.missing_components import reconstruct_missing
-    from expansion.registry import get_template
+    from semantic_compiler.expansion.reconstruction.missing_components import reconstruct_missing
+    from semantic_compiler.expansion.registry import get_template
     model = {"components": [{"name": "input_layer"}], "relationships": []}
     template = get_template("computation")
     missing = reconstruct_missing(model, template)
@@ -9,8 +9,8 @@ def test_reconstruct_missing_components():
 
 
 def test_reconstruct_missing_nothing_when_complete():
-    from expansion.reconstruction.missing_components import reconstruct_missing
-    from expansion.registry import get_template
+    from semantic_compiler.expansion.reconstruction.missing_components import reconstruct_missing
+    from semantic_compiler.expansion.registry import get_template
     template = get_template("computation")
     model = {
         "components": [{"name": c["name"]} for c in template.components],
@@ -20,8 +20,8 @@ def test_reconstruct_missing_nothing_when_complete():
 
 
 def test_assess_completeness():
-    from expansion.reconstruction.completeness import assess_completeness
-    from expansion.registry import get_template
+    from semantic_compiler.expansion.reconstruction.completeness import assess_completeness
+    from semantic_compiler.expansion.registry import get_template
     template = get_template("computation")
     assert assess_completeness(
         {"components": [], "claims_complete_system": True}, template

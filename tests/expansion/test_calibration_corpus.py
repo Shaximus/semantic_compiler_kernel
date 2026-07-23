@@ -14,7 +14,7 @@ def test_calibration_corpus_builds():
 def test_calibration_corpus_category_coverage():
     """90 samples: 8 calibration categories, spread over the 18 domains."""
     from scripts.build_decompression_calibration import build_corpus
-    from expansion.registry import list_domains
+    from semantic_compiler.expansion.registry import list_domains
 
     corpus = build_corpus()
     assert len(corpus) == 90

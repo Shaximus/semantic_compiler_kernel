@@ -1,5 +1,5 @@
 def test_valid_template_passes():
-    from expansion.schema import validate_domain_template
+    from semantic_compiler.expansion.schema import validate_domain_template
     template = {
         "domain": "computation",
         "version": 1.0,
