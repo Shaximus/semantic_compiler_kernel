@@ -8,6 +8,17 @@ from semantic_compiler.expansion.reconstruction import reconstruct_missing, asse
 from semantic_compiler.expansion.advisor import generate_advice
 from semantic_compiler.expansion.schema.v2_2_system_model import validate_system_model
 from semantic_compiler.expansion.gem_decode import decode_build, GemDecodeResult
+from semantic_compiler.expansion.gem_forge import (
+    ForgeResult,
+    GemTranslation,
+    PoeGem,
+    SoftwareComponent,
+    forge_component,
+    load_gem_corpus,
+    load_gem_corpus_file,
+    translate_corpus,
+    translate_gem,
+)
 
 @dataclass(frozen=True)
 class SystemModel:
@@ -22,15 +33,12 @@ class SystemModel:
 
 def decompress(packet: SemanticPacket) -> dict:
     """Decompress a SemanticPacket into a V2.2 system model."""
-    # Infer domain from packet (simple heuristic; can be improved)
     domain = _infer_domain(packet)
     template = get_template(domain)
 
-    # Build system model from packet skeleton/relationships
     components = _extract_components(packet, template)
     relationships = _extract_relationships(packet)
 
-    # Build graph, detect pathologies, reconstruct, advise
     graph = build_functional_graph({"components": components, "relationships": relationships}, template)
     pathologies = detect_pathologies({"components": components, "relationships": relationships}, template)
     missing = reconstruct_missing({"components": components, "relationships": relationships}, template)
@@ -86,8 +94,6 @@ def decompress(packet: SemanticPacket) -> dict:
 
 def _infer_domain(packet: SemanticPacket) -> str:
     """Simple domain inference from packet text."""
-    # NOTE: frozen core SemanticPacket stores the input text in `raw_input`
-    # (there is no `input_text` field); heuristic otherwise per brief.
     text = (packet.raw_input or "").lower()
     if any(k in text for k in ["firewall", "network", "server", "api", "database"]):
         return "computation"
@@ -127,3 +133,20 @@ def _infer_medical_map(component_name: str) -> str:
         "homeostasis_regulation": "homeostasis_regulation",
     }
     return mapping.get(component_name, "unknown")
+
+
+__all__ = [
+    "SystemModel",
+    "decompress",
+    "decode_build",
+    "GemDecodeResult",
+    "PoeGem",
+    "SoftwareComponent",
+    "GemTranslation",
+    "ForgeResult",
+    "load_gem_corpus",
+    "load_gem_corpus_file",
+    "translate_gem",
+    "translate_corpus",
+    "forge_component",
+]
