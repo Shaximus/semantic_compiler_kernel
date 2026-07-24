@@ -165,7 +165,7 @@ _RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("REJECT_DEPENDENT_SUFFIX", ("dependent later tokens", "discard suffix", "invalidates later")),
     ("RECORD_RECEIPT", ("receipt", "provenance", "audit trail")),
     ("ROLLBACK_ON_FAILURE", ("rollback", "restore checkpoint")),
-    ("FAIL_CLOSED", ("fail closed", "default deny", "block on uncertainty")),
+    ("FAIL_CLOSED", ("fail closed", "fails closed", "default deny", "block on uncertainty")),
     ("ADAPT_PARAMETER", ("adaptive", "dynamically select", "controller", "auto tune", "autotune")),
 )
 
