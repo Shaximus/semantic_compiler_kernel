@@ -442,6 +442,7 @@ _CONVERTERS: tuple[Converter, ...] = (
     _annotation,
     _maximum_cap,
     _minion,
+    _charges,
     _damage_offense,
     _speed,
     _charges,
