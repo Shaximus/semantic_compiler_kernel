@@ -1,0 +1,89 @@
+{
+  "manifest_version": "2.3.0",
+  "semantic_compiler_version": "2.3.0",
+  "schema_version": "2.1.0",
+  "generated_at": "2026-07-24T00:05:00Z",
+  "freeze_date": "2026-07-23",
+  "git_commit": "c71d00b",
+  "freeze_authority": "Founder directive 2026-07-23 — final canon copy",
+  "supersedes": "V2.1.3 core + V2.2 expansion (RELEASE_MANIFEST_V2_1_3.json)",
+  "test_command": "python -m pytest tests -q && python -m unittest discover",
+  "test_result": "189/189 pytest OK; 82/82 unittest discover OK; fresh-clone pip install -e \".[test]\" verified identical",
+  "merged_pull_requests": {
+    "PR_4": {
+      "title": "mission readiness and invariant registry",
+      "merge_commit": "cc0998d",
+      "features": [
+        "setuptools packaging (pip install -e ., no PYTHONPATH hacks)",
+        "import normalization to semantic_compiler.* namespace",
+        "corpus orchestration + cross-document invariant registry (expansion.corpus)",
+        "evidence tiers (expansion.evidence_tiers)",
+        "counter-mapping population API (expansion.counter_mapping)",
+        "derivation-order tracking (expansion.derivation_order)",
+        "HOLDS/STRAINS/UNRESOLVED verdict translation (expansion.verdicts)",
+        "jsonschema Draft 2020-12 validation incl. invariant-registry schema",
+        "advisor prescriptions and resilience training content"
+      ]
+    },
+    "PR_6": {
+      "title": "gem_decode — Gem → Inference executable translation mode",
+      "merge_commit": "f8711bc",
+      "features": [
+        "dual-dialect gem-language parser (PoE-native + Reflexion-native)",
+        "five-layer ontology (Equipment/Active skill/Support gem/Aura/Anointment/Flask)",
+        "translated build sheet (markdown) + schema-validated JSON",
+        "executable cadence/breakpoint checks (COGNITIVE_COSPRI_001 cadence law)",
+        "failure-family flags (taxonomy A–T) + Adapa fixture",
+        "buildcraft mappings BUILD_015–018 (founder eureka 2026-07-23)"
+      ]
+    },
+    "PR_5": {
+      "title": "registry gap updates from 2026-07 corpus mapping (swarm)",
+      "merge_commit": "0163533",
+      "features": [
+        "CORPUS_GAP_NEGATIVE_SAMPLES (4 records incl. NEG_011 fabricated_citation_anchor)",
+        "2 new pathology failure modes (reflexion template)"
+      ]
+    },
+    "PR_7": {
+      "title": "deterministic build-archetype detection",
+      "merge_commit": "e3caa31",
+      "features": [
+        "IDENTIFIED vs ATTEMPTING archetype matcher (7 archetypes)",
+        "structural coverage confidence, matched evidence, missing invariant groups",
+        "reference builds + completion layers (PRESENT/MISSING)"
+      ],
+      "consolidation_fixes": "schema drift (reference_builds/completion_layers) + self-referential archetype matching repaired in 2fa0661"
+    },
+    "PR_3": {
+      "title": "relation-aware structural resolver + Rx skill decompression",
+      "merge_commit": "6c6ce2d",
+      "features": [
+        "structural IR resolver (concepts, typed relations, per-mapping scores)",
+        "two-layer buildcraft resolution (structural + trigger recall), BUILD_001–018",
+        "Rx /skill decompression mode (expansion.skill_decompression)"
+      ],
+      "consolidation_fixes": "clause-aware evidence extraction + structural/trigger coexistence repaired in ebf040e"
+    }
+  },
+  "not_merged": {
+    "PR_1": {
+      "title": "Kestrel Lab: three-cycle hardening experiment",
+      "reason": "own acceptance gate incomplete: calibration/freeze artifact regeneration and Logos wrapper review outstanding; branch kestrel/lab-3cycle left alive",
+      "regression_tests": "3/3 pass against merged main (verified 2026-07-24); suite 192/192 with branch merged (verification only, not merged)"
+    }
+  },
+  "feature_summary": [
+    "frozen V2.1.3 core pipeline (schema 2.1.0)",
+    "V2.2 medical-ontology decompression expansion",
+    "mission-readiness packaging + corpus orchestration + invariant registry",
+    "gem_decode executable translation + build-archetype detection",
+    "relation-aware structural resolver + Rx skill decompression",
+    "registry gap negative samples (corpus-gap discipline)",
+    "buildcraft ontology BUILD_001–018 with static-vs-dynamic guardrail"
+  ],
+  "approvals": {
+    "canon_consolidation": "Founder directive 2026-07-23",
+    "freeze": "Founder directive 2026-07-23 — final canon copy"
+  }
+}

@@ -4,21 +4,34 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 ## Status
 
-**Current release:** `V2.1.3` (canonical freeze) + `V2.2` medical-ontology decompression expansion
+**Current release:** `V2.3.0` (canon freeze, 2026-07-23) — supersedes V2.1.3 core + V2.2 expansion
 
-- 179/179 tests passing (72 frozen core + 107 expansion) via `python -m pytest tests`;
+- 189/189 tests passing via `python -m pytest tests`;
   `python -m unittest discover` also runs clean (82 unittest-style tests; the
   remaining expansion tests are pytest-style function tests)
+- Fresh-clone verified: `pip install -e ".[test]"` → same 189/189 + 82/82
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
-- Expansion decompression version: `2.2.0-rc1`
 - Packaged with `pyproject.toml` (setuptools): `pip install -e .` from a fresh
   clone makes `semantic_compiler` importable everywhere — no `PYTHONPATH` hacks
 - Corpus orchestration + cross-document invariant registry in `expansion.corpus`
 - Buildcraft compute ontology available in `registry/` and `translation/`
   (BUILD_001–018, incl. MTP = Greater Multiple Projectiles with
-  acceptance-rate = accuracy-rating invariant)
-- **Gem → inference executable translation mode** in `expansion.gem_decode`
-- Manifest: `calibration_output/RELEASE_MANIFEST_V2_1_3.json`
+  acceptance-rate = accuracy-rating invariant), resolved by a two-layer
+  relation-aware structural + trigger-recall resolver
+- **Gem → inference executable translation mode** in `expansion.gem_decode`,
+  with deterministic build-archetype detection (IDENTIFIED vs ATTEMPTING)
+- Registry gap updates from the 2026-07 corpus-mapping swarm
+  (CORPUS_GAP_NEGATIVE_SAMPLES incl. NEG_011 fabricated_citation_anchor,
+  2 new pathology failure modes)
+- Rx /skill decompression mode in `expansion.skill_decompression`
+- Manifest: `calibration_output/RELEASE_MANIFEST_V2_3_0.json`
+
+V2.3.0 consolidates (founder directive 2026-07-23): mission-readiness
+packaging, corpus orchestration, gem_decode, build-archetype detection,
+registry gap updates, and the structural resolver. PR #1 (Kestrel
+lab-3cycle) was evaluated and **not merged** — its own acceptance gate is
+incomplete (calibration-artifact regeneration + Logos wrapper review still
+open); its branch remains alive.
 
 ## What it does
 
