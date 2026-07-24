@@ -102,6 +102,15 @@ MECHANIC_PRIMITIVES = (
     "ROLLBACK_ON_FAILURE",
     "FAIL_CLOSED",
     "ADAPT_PARAMETER",
+    # Gate-5 mechanic-family additions (corpus coverage converters).
+    "SCALE_OUTPUT_EFFECTIVENESS",
+    "SCALE_QUALIFICATION_PROBABILITY",
+    "SCALE_CADENCE",
+    "MINT_SUCCESS_COUNTER",
+    "APPLY_DEFERRED_EFFECT",
+    "APPLY_STATE_MODIFIER",
+    "EXPAND_RESOURCE_POOL",
+    "CAP_CONCURRENCY",
 )
 
 RELATIONSHIP_TYPES = (
@@ -167,6 +176,15 @@ _RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("ROLLBACK_ON_FAILURE", ("rollback", "restore checkpoint")),
     ("FAIL_CLOSED", ("fail closed", "fails closed", "default deny", "block on uncertainty")),
     ("ADAPT_PARAMETER", ("adaptive", "dynamically select", "controller", "auto tune", "autotune")),
+    # Gate-5 mechanic-family additions (corpus coverage converters).
+    ("SCALE_OUTPUT_EFFECTIVENESS", ("output effectiveness",)),
+    ("SCALE_QUALIFICATION_PROBABILITY", ("qualification probability", "qualified-payload impact")),
+    ("SCALE_CADENCE", ("cadence",)),
+    ("MINT_SUCCESS_COUNTER", ("success counter", "qualification counter", "cadence counter", "resilience counter")),
+    ("APPLY_DEFERRED_EFFECT", ("deferred residual effect", "residual state effect")),
+    ("APPLY_STATE_MODIFIER", ("degraded-state modifier", "halted-state modifier", "amplified-susceptibility", "structural resilience", "avoidance probability", "rejection probability", "integrity buffer", "interruption threshold", "tolerance")),
+    ("EXPAND_RESOURCE_POOL", ("resource pool", "reserve buffer", "active budget")),
+    ("CAP_CONCURRENCY", ("concurrency cap",)),
 )
 
 _DOMAIN_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (

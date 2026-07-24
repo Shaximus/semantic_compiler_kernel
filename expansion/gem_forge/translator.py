@@ -80,7 +80,9 @@ def _supports_projectile_skills(line: str):
 
 def _critical_trigger(line: str):
     lower = line.casefold()
-    if "critical strike" not in lower and "cast on crit" not in lower:
+    # Trigger semantics only: pure crit-chance stat lines belong to the
+    # damage/qualification family, not the trigger controller.
+    if "cast on crit" not in lower and "trigger" not in lower and "when you deal a critical strike" not in lower:
         return None
     converted = line
     converted = re.sub(r"(?i)critical strike", "accepted qualification event", converted)
@@ -167,12 +169,257 @@ def _duration(line: str):
 
 def _area(line: str):
     lower = line.casefold()
-    if "area of effect" not in lower and "area" not in lower:
+    if "damage" in lower:
+        return None  # area-damage lines belong to the damage family
+    if "area of effect" not in lower and "area" not in lower and "radius" not in lower and "range" not in lower:
         return None
     primitive = "REDUCE_AREA_OR_SCOPE" if "less" in lower or "reduced" in lower else "INCREASE_AREA_OR_SCOPE"
     converted = re.sub(r"(?i)area of effect", "affected inference scope", line)
     converted = re.sub(r"(?i)area", "scope", converted)
+    converted = re.sub(r"(?i)radius", "scope radius", converted)
+    converted = re.sub(r"(?i)range", "scope range", converted)
     return converted, (primitive,)
+
+
+# ---------------------------------------------------------------------------
+# Gate-5 mechanic-family converters (acceptance-gate corpus coverage).
+# Ordered AFTER the swarm's specific converters so specialized translations
+# keep their wording; predicates are designed to stay disjoint where the
+# mechanics are genuinely different, and honest PARTIAL where they overlap.
+# ---------------------------------------------------------------------------
+
+def _annotation(line: str):
+    stripped = line.strip()
+    if stripped.startswith("[DNT]") or stripped.startswith("[UNUSED]") or stripped == "Not used":
+        return f"non-mechanical annotation — excluded from mechanics: {stripped}", ()
+    return None
+
+
+def _maximum_cap(line: str):
+    if not re.match(r"(?i)maximum \d+", line.strip()):
+        return None
+    converted = re.sub(r"(?i)^maximum (\d+)", r"Concurrency cap: \1", line.strip())
+    return converted, ("CAP_CONCURRENCY",)
+
+
+def _minion(line: str):
+    lower = line.casefold()
+    if not any(term in lower for term in ("minion", "golem", "spectre", "zombie", "skeleton", "animated guardian", "animated weapon")):
+        return None
+    converted = re.sub(r"(?i)minions?", "proxy workers", line)
+    converted = re.sub(r"(?i)(golem|spectre|zombie|skeleton)s?", r"proxy \1s", converted)
+    converted = re.sub(r"(?i)animated (guardian|weapon)", r"persistent proxy \1", converted)
+    converted = re.sub(r"(?i)damage", "Output Effectiveness", converted)
+    primitives = ["PROXY_EXECUTION"]
+    if "output effectiveness" in converted.casefold():
+        primitives.append("SCALE_OUTPUT_EFFECTIVENESS")
+    return converted, tuple(primitives)
+
+
+def _damage_offense(line: str):
+    lower = line.casefold()
+    if "damage" not in lower and "critical strike" not in lower and "accuracy" not in lower:
+        return None
+    # Disjointness: projectile/trigger lines are owned upstream; minion,
+    # ailment, and leech lines are owned by their own family converters.
+    if "projectile damage" in lower or "trigger" in lower or "cast on" in lower:
+        return None
+    if "minion" in lower or "leech" in lower:
+        return None
+    if any(term in lower for term in ("poison", "bleed", "ignite", "burn", "chill", "freeze", "shock", "ailment")):
+        return None
+    converted = re.sub(r"(?i)area damage", "Scoped Output Effectiveness", line)
+    primitives: list[str] = []
+    if "critical strike chance" in lower:
+        converted = re.sub(r"(?i)critical strike chance", "Qualification Probability", converted)
+        primitives.append("SCALE_QUALIFICATION_PROBABILITY")
+    if "critical strike multiplier" in lower:
+        converted = re.sub(r"(?i)critical strike multiplier", "Qualified-Payload Impact Multiplier", converted)
+        primitives.append("SCALE_QUALIFICATION_PROBABILITY")
+    if re.search(r"\bcritical strikes?\b", lower):
+        converted = re.sub(r"(?i)critical strikes?", "qualified payloads", converted)
+        primitives.append("SCALE_QUALIFICATION_PROBABILITY")
+    if re.search(r"\baccuracy\b", lower):
+        converted = re.sub(r"(?i)accuracy", "Proposal Alignment", converted)
+        primitives.append("GATE_BY_CONFIDENCE")
+    if "damage" in converted.casefold():
+        converted = re.sub(r"(?i)damage", "Output Effectiveness", converted)
+        primitives.append("SCALE_OUTPUT_EFFECTIVENESS")
+    return converted, tuple(dict.fromkeys(primitives))
+
+
+def _speed(line: str):
+    lower = line.casefold()
+    if "speed" not in lower or "cooldown" in lower:
+        return None
+    converted = re.sub(r"(?i)attack speed", "proposal cadence", line)
+    converted = re.sub(r"(?i)cast speed", "generation cadence", converted)
+    converted = re.sub(r"(?i)movement speed", "orchestration cadence", converted)
+    converted = re.sub(r"(?i)action speed", "execution cadence", converted)
+    converted = re.sub(r"(?i)speed", "cadence", converted)
+    return converted, ("SCALE_CADENCE",)
+
+
+def _charges(line: str):
+    lower = line.casefold()
+    if "charge" not in lower:
+        return None
+    converted = re.sub(r"(?i)power charges?", "qualification counters", line)
+    converted = re.sub(r"(?i)frenzy charges?", "cadence counters", converted)
+    converted = re.sub(r"(?i)endurance charges?", "resilience counters", converted)
+    converted = re.sub(r"(?i)charges?", "success counters", converted)
+    return converted, ("MINT_SUCCESS_COUNTER",)
+
+
+def _ailment(line: str):
+    lower = line.casefold()
+    if not any(term in lower for term in ("poison", "bleed", "ignite", "burn", "chill", "freeze", "shock", "ailment")):
+        return None
+    converted = line
+    for source, target in (
+        ("poison", "deferred residual effect"),
+        ("bleed", "deferred residual effect"),
+        ("bleeding", "deferred residual effect"),
+        ("ignite", "deferred residual effect"),
+        ("burning", "deferred residual effect"),
+        ("burn", "deferred residual effect"),
+        ("chill", "degraded-state modifier"),
+        ("freeze", "halted-state modifier"),
+        ("shock", "amplified-susceptibility modifier"),
+        ("ailments?", "residual state effects"),
+    ):
+        converted = re.sub(rf"(?i){source}", target, converted)
+    converted = re.sub(r"(?i)damage", "Output Effectiveness", converted)
+    primitives = ["APPLY_DEFERRED_EFFECT", "APPLY_STATE_MODIFIER"]
+    if "output effectiveness" in converted.casefold():
+        primitives.append("SCALE_OUTPUT_EFFECTIVENESS")
+    return converted, tuple(primitives)
+
+
+def _life_mana(line: str):
+    lower = line.casefold()
+    if not re.search(r"life|mana|energy shield|regenerat|leech|flask", lower):
+        return None
+    if "reservation" in lower:
+        return None  # owned by _reservation
+    converted = re.sub(r"(?i)energy shield", "protected reserve buffer", line)
+    converted = re.sub(r"(?i)maximum mana", "maximum active budget", converted)
+    converted = re.sub(r"(?i)mana", "active budget", converted)
+    converted = re.sub(r"(?i)maximum life", "maximum primary resource pool", converted)
+    converted = re.sub(r"(?i)life", "primary resource pool", converted)
+    converted = re.sub(r"(?i)regenerat\w*", "replenish", converted)
+    converted = re.sub(r"(?i)leech", "recoup", converted)
+    converted = re.sub(r"(?i)flask", "bounded burst reserve", converted)
+    return converted, ("EXPAND_RESOURCE_POOL", "RECOVER_RESOURCE")
+
+
+def _defense(line: str):
+    lower = line.casefold()
+    if not re.search(r"armour|evasion|block|resist|ward\b|stun threshold", lower):
+        return None
+    converted = re.sub(r"(?i)armour", "structural resilience", line)
+    converted = re.sub(r"(?i)evasion", "avoidance probability", converted)
+    converted = re.sub(r"(?i)block", "rejection probability", converted)
+    converted = re.sub(r"(?i)resist\w*", "tolerance", converted)
+    converted = re.sub(r"(?i)ward\b", "integrity buffer", converted)
+    converted = re.sub(r"(?i)stun threshold", "interruption threshold", converted)
+    return converted, ("APPLY_STATE_MODIFIER",)
+
+
+def _buff(line: str):
+    lower = line.casefold()
+    if "buff" not in lower:
+        return None
+    converted = re.sub(r"(?i)buff effect", "persistent modifier field effect", line)
+    converted = re.sub(r"(?i)buffs?", "persistent modifier fields", converted)
+    return converted, ("PERSISTENT_SHARED_MODIFIER",)
+
+
+_STAT_ID_LINE_RE = re.compile(r"^[a-z0-9_+%]+:\s*-?[\d.]+$")
+
+_STAT_ID_PATTERNS: tuple[tuple[str, str, str], ...] = (
+    (r"damage_\+?%|_dmg", "SCALE_OUTPUT_EFFECTIVENESS", "Output Effectiveness"),
+    (r"critical_strike_chance", "SCALE_QUALIFICATION_PROBABILITY", "Qualification Probability"),
+    (r"attack_speed|cast_speed|cooldown_speed|movement_speed|action_speed|_speed_\+?%", "SCALE_CADENCE", "execution cadence"),
+    (r"area_of_effect|radius", "INCREASE_AREA_OR_SCOPE", "affected inference scope"),
+    (r"duration", "EXTEND_DURATION", "state-retention duration"),
+    (r"reservation_efficiency", "REDUCE_RESERVATION", "Persistent-Service Reservation efficiency"),
+    (r"accuracy", "GATE_BY_CONFIDENCE", "Proposal Alignment"),
+    (r"maximum_life|life_\+?%|life_regen", "EXPAND_RESOURCE_POOL", "primary resource pool"),
+    (r"mana_\+?%|maximum_mana|mana_regen", "EXPAND_RESOURCE_POOL", "active budget"),
+    (r"energy_shield", "EXPAND_RESOURCE_POOL", "protected reserve buffer"),
+    (r"chance_to|_chance", "SCALE_QUALIFICATION_PROBABILITY", "event probability"),
+    (r"charge", "MINT_SUCCESS_COUNTER", "success counters"),
+    (r"minion|totem|golem", "PROXY_EXECUTION", "proxy workers"),
+    (r"poison|bleed|ignite|burn|chill|freeze|shock|ailment", "APPLY_DEFERRED_EFFECT", "residual state effects"),
+    (r"armour|evasion|block|resist|ward", "APPLY_STATE_MODIFIER", "defensive state modifiers"),
+    (r"cooldown", "APPLY_COOLDOWN", "execution recovery window"),
+    (r"cost|reservation", "INCREASE_EXECUTION_COST", "compute and reservation cost"),
+    # Gate-5 second pass: mechanic-flag and class-marker families.
+    (r"area_damage", "INCREASE_AREA_OR_SCOPE", "scoped-output class marker"),
+    (r"is_projectile|projectile", "EMIT_ADDITIONAL_CANDIDATES", "candidate-trajectory class marker"),
+    (r"deal_no_damage|no_damage", "FILTER_TARGETS", "no direct output effect (support-only payload)"),
+    (r"trigger", "TRIGGER_ON_EVENT", "trigger gating"),
+    (r"cast_on_|on_hit", "TRIGGER_ON_EVENT", "event-gated execution"),
+    (r"reflect", "APPLY_STATE_MODIFIER", "reflected-output immunity modifier"),
+    (r"pierce", "CHAIN_TO_NEW_TARGET", "trajectory pass-through"),
+    (r"nova", "INCREASE_AREA_OR_SCOPE", "radial fan-out"),
+    (r"trap|mine|summon|monster", "PROXY_EXECUTION", "proxy workers"),
+    (r"curse|mark|doom|hex", "TARGET_SPECIFIC_MODIFIER", "target-specific modifier"),
+    (r"pierce|arrow", "EMIT_ADDITIONAL_CANDIDATES", "candidate trajectories"),
+    (r"show_|display_|visual_|icon|dummy", "RECORD_RECEIPT", "presentation annotation (non-mechanical)"),
+)
+
+
+def _stat_id(line: str):
+    """Convert untranslated internal stat-id lines by mechanic family."""
+    match = re.match(r"^([a-z0-9_+%]+):\s*(-?[\d.]+)$", line.strip())
+    if not match:
+        return None
+    stat_id, value = match.group(1), match.group(2)
+    for pattern, primitive, label in _STAT_ID_PATTERNS:
+        if re.search(pattern, stat_id):
+            sign = "+" if not value.startswith("-") else ""
+            return (
+                f"internal stat `{stat_id}` → {sign}{value} modifier to {label}",
+                (primitive,),
+            )
+    # Boolean mechanic flags: preserve the flag verbatim without inventing
+    # family semantics. This is a faithful structural translation, not an
+    # equivalence claim.
+    if value in ("0", "1") and re.match(r"^(is_|base_|can_|cannot_|skill_|always_|ignores_|spell_|melee_|console_)", stat_id):
+        state = "ON" if value == "1" else "OFF"
+        return (
+            f"internal mechanic flag `{stat_id}` = {state} (flag preserved verbatim; family semantics not remapped)",
+            (),
+        )
+    return None
+
+
+def _curse(line: str):
+    lower = line.casefold()
+    if not any(term in lower for term in ("curse", "hex", "doom", "mark")):
+        return None
+    converted = re.sub(r"(?i)curses?", "target-specific modifier fields", line)
+    converted = re.sub(r"(?i)hexes?", "target-specific modifier fields", converted)
+    converted = re.sub(r"(?i)doom", "modifier intensity", converted)
+    converted = re.sub(r"(?i)marks?", "target-specific priority fields", converted)
+    return converted, ("TARGET_SPECIFIC_MODIFIER",)
+
+
+def _pierce_and_arrows(line: str):
+    lower = line.casefold()
+    converted = line
+    primitives: list[str] = []
+    if "pierce" in lower:
+        converted = re.sub(r"(?i)pierce", "pass through to", converted)
+        primitives.append("CHAIN_TO_NEW_TARGET")
+    if re.search(r"additional arrows?", lower):
+        converted = re.sub(r"(?i)additional arrows?", "additional candidate trajectories", converted)
+        primitives.append("EMIT_ADDITIONAL_CANDIDATES")
+    if not primitives:
+        return None
+    return converted, tuple(primitives)
 
 
 _CONVERTERS: tuple[Converter, ...] = (
@@ -191,6 +438,20 @@ _CONVERTERS: tuple[Converter, ...] = (
     _proxy,
     _duration,
     _area,
+    # Gate-5 mechanic-family converters (acceptance-gate coverage pass).
+    _annotation,
+    _maximum_cap,
+    _minion,
+    _damage_offense,
+    _speed,
+    _charges,
+    _ailment,
+    _life_mana,
+    _defense,
+    _buff,
+    _curse,
+    _pierce_and_arrows,
+    _stat_id,
 )
 
 
@@ -223,11 +484,16 @@ def translate_gem(gem: PoeGem) -> GemTranslation:
     unresolved: list[str] = []
 
     for source_line in source_lines:
-        matches: list[tuple[str, tuple[str, ...]]] = []
-        for converter in _CONVERTERS:
-            result = converter(source_line)
-            if result:
-                matches.append(result)
+        # Internal stat-id lines route exclusively to the stat-id converter:
+        # keyword converters must not double-match raw ids (false PARTIAL).
+        if _STAT_ID_LINE_RE.match(source_line.strip()):
+            matches = [result for result in (_stat_id(source_line),) if result]
+        else:
+            matches = []
+            for converter in _CONVERTERS:
+                result = converter(source_line)
+                if result:
+                    matches.append(result)
         if not matches:
             unresolved.append(source_line)
             line_pairs.append(LineTranslation(source_line, "UNRESOLVED — requires mechanic-specific converter", 0.0, "UNRESOLVED"))
