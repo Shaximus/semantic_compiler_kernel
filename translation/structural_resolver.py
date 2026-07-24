@@ -59,7 +59,6 @@ def normalize(text: str) -> str:
 
 def extract_evidence(text: str, aliases: Mapping[str, Iterable[str]]) -> StructuralEvidence:
     normalized = normalize(text)
-    tokens = normalized.split()
     concepts: set[str] = set()
     spans: dict[str, list[str]] = {}
 
@@ -93,21 +92,30 @@ def extract_evidence(text: str, aliases: Mapping[str, Iterable[str]]) -> Structu
         "linked": "links",
     }
 
-    concept_positions: dict[int, str] = {}
-    for index in range(len(tokens)):
-        for concept, phrases in aliases.items():
-            for phrase in phrases:
-                phrase_tokens = normalize(phrase).split()
-                if phrase_tokens and tokens[index:index + len(phrase_tokens)] == phrase_tokens:
-                    concept_positions[index] = concept
+    # Relations are extracted per clause. Splitting the raw text on clause
+    # boundaries BEFORE normalizing fixes two defects: sentence-final tokens
+    # kept their trailing "." ("reservation." never matched alias windows),
+    # and pairs were formed across ";" boundaries, producing spurious
+    # relations between unrelated clauses.
+    for clause in re.split(r"[.!?;\n]+", text):
+        tokens = normalize(clause).split()
+        if not tokens:
+            continue
+        concept_positions: dict[int, str] = {}
+        for index in range(len(tokens)):
+            for concept, phrases in aliases.items():
+                for phrase in phrases:
+                    phrase_tokens = normalize(phrase).split()
+                    if phrase_tokens and tokens[index:index + len(phrase_tokens)] == phrase_tokens:
+                        concept_positions[index] = concept
 
-    ordered = sorted(concept_positions.items())
-    for left_index, (left_pos, left_concept) in enumerate(ordered):
-        for right_pos, right_concept in ordered[left_index + 1:left_index + 4]:
-            between = tokens[left_pos + 1:right_pos]
-            relation = next((connectors[token] for token in between if token in connectors), None)
-            if relation:
-                relations.append((left_concept, relation, right_concept))
+        ordered = sorted(concept_positions.items())
+        for left_index, (left_pos, left_concept) in enumerate(ordered):
+            for right_pos, right_concept in ordered[left_index + 1:left_index + 4]:
+                between = tokens[left_pos + 1:right_pos]
+                relation = next((connectors[token] for token in between if token in connectors), None)
+                if relation:
+                    relations.append((left_concept, relation, right_concept))
 
     return StructuralEvidence(
         concepts=frozenset(concepts),
