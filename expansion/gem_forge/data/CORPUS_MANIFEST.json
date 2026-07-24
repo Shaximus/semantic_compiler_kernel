@@ -1,0 +1,25 @@
+{
+ "schema": "reflexion.gem_forge.corpus_manifest.v1",
+ "snapshot": "expansion/gem_forge/data/gem_corpus_snapshot.json",
+ "snapshot_sha256": "c3726bea92617f5c65c7db4d538d0e3aab8cbf6819e9bc676b93afc2dda9f0a7",
+ "gem_count": 1017,
+ "source": {
+  "repo": "https://github.com/brather1ng/RePoE",
+  "data_era": "RePoE master snapshot (last gems.json update 2022-08-23; approx. PoE 3.19/3.20-era data)",
+  "gems_json_commit": "157d1f33a1b32acaf6e552e714a28ee4610c4678",
+  "raw_inputs": {
+   "gems.json": "02033db7180b1a8eb32667e9be27d92743fff1b8ac834952c5cb10ddaf998205",
+   "stat_translations.json": "b6244aaec58a4cea4a7e85a3d3ff420b568617450900badebef03185f38b8a77"
+  },
+  "fetched_at": "2026-07-24T01:24:40.884075+00:00",
+  "fetch_policy": "one-time generation-time fetch; the compiler NEVER fetches at run time"
+ },
+ "rendering_decisions": [
+  "stat wording rendered at gem max level (per_level values aligned to static.stats ids)",
+  "RePoE stat-translation entries applied verbatim; 'ignore' formats skipped",
+  "quality stat values divided by 1000 (RePoE per-mille convention)",
+  "support-gem lines starting with 'Skills ' prefixed with 'Supported '"
+ ],
+ "generator": "scripts/build_gem_corpus_snapshot.py",
+ "generated_at": "2026-07-24T01:24:40.884094+00:00"
+}

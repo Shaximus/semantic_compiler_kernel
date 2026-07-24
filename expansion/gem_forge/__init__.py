@@ -9,9 +9,11 @@ Public operations:
   component and emit a composite or novel inference gem.
 """
 from semantic_compiler.expansion.gem_forge.corpus import (
+    CorpusPinError,
     dump_normalized_corpus,
     load_gem_corpus,
     load_gem_corpus_file,
+    load_pinned_corpus,
 )
 from semantic_compiler.expansion.gem_forge.forge import forge_component, match_component
 from semantic_compiler.expansion.gem_forge.models import (
@@ -43,6 +45,8 @@ __all__ = [
     "ForgeResult",
     "load_gem_corpus",
     "load_gem_corpus_file",
+    "load_pinned_corpus",
+    "CorpusPinError",
     "dump_normalized_corpus",
     "translate_gem",
     "translate_corpus",

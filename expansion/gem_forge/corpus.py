@@ -3,14 +3,28 @@
 The loader accepts either a normalized Gem Forge record list or RePoE-style JSON.
 No network access occurs inside the compiler: source snapshots are explicit inputs
 with provenance, so a league update cannot silently rewrite prior translations.
+
+The pinned corpus (``data/gem_corpus_snapshot.json`` +
+``data/CORPUS_MANIFEST.json``) is loaded via :func:`load_pinned_corpus`, which
+verifies the snapshot's SHA-256 against the manifest before parsing — a
+tampered or drifting snapshot fails closed.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Iterable
 
 from semantic_compiler.expansion.gem_forge.models import PoeGem
+
+DATA_DIR = Path(__file__).parent / "data"
+PINNED_SNAPSHOT_PATH = DATA_DIR / "gem_corpus_snapshot.json"
+PINNED_MANIFEST_PATH = DATA_DIR / "CORPUS_MANIFEST.json"
+
+
+class CorpusPinError(ValueError):
+    """The pinned snapshot is missing or fails hash verification."""
 
 
 def _as_text_lines(value: Any) -> tuple[str, ...]:
@@ -124,3 +138,35 @@ def load_gem_corpus_file(path: str | Path, *, source: str | None = None) -> tupl
 
 def dump_normalized_corpus(gems: Iterable[PoeGem]) -> list[dict[str, Any]]:
     return [gem.to_dict() for gem in gems]
+
+
+def load_pinned_corpus(
+    snapshot_path: str | Path | None = None,
+    manifest_path: str | Path | None = None,
+    *,
+    verify_hash: bool = True,
+) -> tuple[PoeGem, ...]:
+    """Load the vendored pinned corpus, verifying provenance first.
+
+    The manifest records the league/version pin, upstream source, and the
+    SHA-256 of the snapshot. With ``verify_hash`` (default), a snapshot
+    whose hash does not match the manifest fails closed with
+    :class:`CorpusPinError`. No network access ever occurs here.
+    """
+    snapshot = Path(snapshot_path) if snapshot_path else PINNED_SNAPSHOT_PATH
+    manifest = Path(manifest_path) if manifest_path else PINNED_MANIFEST_PATH
+    if not snapshot.exists():
+        raise CorpusPinError(f"pinned snapshot missing: {snapshot}")
+    if not manifest.exists():
+        raise CorpusPinError(f"corpus manifest missing: {manifest}")
+    with manifest.open("r", encoding="utf-8") as handle:
+        pin = json.load(handle)
+    if verify_hash:
+        expected = pin.get("snapshot_sha256")
+        actual = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+        if not expected or actual != expected:
+            raise CorpusPinError(
+                f"snapshot hash mismatch: manifest records {expected!r}, "
+                f"file hashes to {actual!r} — refusing unverified corpus"
+            )
+    return load_gem_corpus_file(snapshot, source=f"pinned:{pin.get('source', {}).get('data_era', 'unknown')}")
