@@ -159,12 +159,134 @@ DEFAULT_NEGATIVE_SAMPLES: list[NegativeSample] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# SWARM ADDITIONS — corpus mapping 2026-07-24 (structural abstractions only)
+#
+# Gap records exposed by the 2026-07 corpus-mapping swarm. Every raw_input
+# below is a STRUCTURAL ABSTRACTION: no personal clinical content, no names,
+# no verbatim attributable quotes, and no phantom-source identifiers (naming
+# a fabricated citation inside training material risks re-anchoring it).
+# Source tag for all records in this section: corpus_mapping_2026-07-24.
+# ---------------------------------------------------------------------------
+CORPUS_GAP_NEGATIVE_SAMPLES: list[NegativeSample] = [
+    NegativeSample(
+        sample_id="NEG_011",
+        category="fabricated_citation_anchor",
+        description="Claim anchored to a citation that resolves to no published record",
+        raw_input=(
+            "This mechanism is well established: a named consortium reported "
+            "it at a named venue in a named year; we build on their curve."
+        ),
+        why_it_fails=(
+            "The interpretation layer rests on an evidence item that does not "
+            "exist. A citation that returns no resolvable record under any "
+            "identifier is negative evidence about the document's own "
+            "measurement path, and every downstream claim inherits the "
+            "phantom anchor's weight. Also degrades "
+            "measurement_layer_integrity: the citation-verification path was "
+            "never run."
+        ),
+        violated_law="evidence_before_interpretation",
+        source="corpus_mapping_2026-07-24",
+        positive_alternative=(
+            "Cite only sources with resolvable identifiers captured at draft "
+            "time; if the anchor cannot be located, restate the claim on the "
+            "document's own primary data and label the gap explicitly."
+        ),
+        confidence=0.95,
+    ),
+    NegativeSample(
+        sample_id="NEG_012",
+        category="convergence_of_N_methods_shared_origin",
+        description="N determinations with a shared origin presented as independent confirmation",
+        raw_input=(
+            "Twelve independent determinations agree on the constant; stop "
+            "calling it coincidence and recognize convergence."
+        ),
+        why_it_fails=(
+            "Bayesian updating on N concordant results assumes conditional "
+            "independence. Shared drafting sessions, circular definition "
+            "chains, and post-hoc retuned coefficients collapse the effective "
+            "N toward 1 while the rhetoric presents convergence as the "
+            "strongest evidence. In the mapped corpus, convergence language "
+            "appeared exactly where independence was absent — it functions "
+            "as a counter-signal, not a confirmation."
+        ),
+        violated_law="bayesian_coherence",
+        source="corpus_mapping_2026-07-24",
+        positive_alternative=(
+            "Declare the dependence graph and report the effective number of "
+            "independent determinations; attach per-pair independence "
+            "evidence (separate data, instruments, analysts) before any "
+            "'independent methods' language is used."
+        ),
+        confidence=0.9,
+    ),
+    NegativeSample(
+        sample_id="NEG_013",
+        category="validation_label_drift",
+        description="A projected factor silently relabeled as a validated baseline across revisions",
+        raw_input=(
+            "Version N: every factor in the compound table is marked "
+            "projected. Version N+2: the same compound is cited as the "
+            "validated baseline."
+        ),
+        why_it_fails=(
+            "The claim type changed (PREDICTION to MEASUREMENT) with no new "
+            "measurement event, and the uncertainty label moved while the "
+            "evidence did not. A document that silently upgrades its own "
+            "epistemic tier between revisions is a measurement-path "
+            "modification: DEGRADED until re-verified. Also violates "
+            "calibrated_uncertainty."
+        ),
+        violated_law="claim_type_integrity",
+        source="corpus_mapping_2026-07-24",
+        positive_alternative=(
+            "Keep the epistemic tier attached to the number across revisions; "
+            "promote PROJECTED to EMPIRICAL only with a named measurement, a "
+            "stored receipt, and an independent instrument, recorded "
+            "explicitly in the revision history."
+        ),
+        confidence=0.95,
+    ),
+    NegativeSample(
+        sample_id="NEG_014",
+        category="retro_codification_as_discovery",
+        description="A later formalization presented as if discovered in the earlier experience it codifies",
+        raw_input=(
+            "The formal law was there from the beginning; the early record "
+            "already contained the derived framework."
+        ),
+        why_it_fails=(
+            "Provenance order is reversed: the later construction is cited as "
+            "prior evidence for itself (evidence after interpretation), and a "
+            "codification is mislabeled as an observation. Derivation-order "
+            "analysis demotes every cross-layer 'confirmation' produced this "
+            "way from discovery to inheritance. Also violates "
+            "claim_type_integrity."
+        ),
+        violated_law="evidence_before_interpretation",
+        source="corpus_mapping_2026-07-24",
+        positive_alternative=(
+            "Date every layer and state the derivation order explicitly; "
+            "label codifications as codifications and treat recurrence within "
+            "one's own lineage as inheritance, not independent confirmation."
+        ),
+        confidence=0.9,
+    ),
+]
+# --- end swarm additions (corpus_mapping_2026-07-24) ---
+
+
 class NegativeSampleRegistry:
     """Registry of known bad mappings and category errors."""
 
     def __init__(self) -> None:
         self._samples: dict[str, NegativeSample] = {}
         for sample in DEFAULT_NEGATIVE_SAMPLES:
+            self._samples[sample.sample_id] = sample
+        # Swarm corpus-gap additions (corpus_mapping_2026-07-24) load with defaults.
+        for sample in CORPUS_GAP_NEGATIVE_SAMPLES:
             self._samples[sample.sample_id] = sample
 
     def register(self, sample: NegativeSample) -> None:

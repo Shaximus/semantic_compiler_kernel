@@ -57,7 +57,24 @@
         "invariant": {"type": "string"},
         "matched_evidence": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
         "missing_groups": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
-        "failure_families": {"type": "array", "items": {"type": "string"}}
+        "failure_families": {"type": "array", "items": {"type": "string"}},
+        "reference_builds": {"type": "array", "items": {"type": "string"}},
+        "completion_layers": {"type": "array", "items": {"$ref": "#/$defs/completion_layer"}}
+      },
+      "additionalProperties": false
+    },
+    "completion_layer": {
+      "type": "object",
+      "required": ["layer_id", "name", "priority", "layer_type", "status", "poe_anchors", "matched_evidence", "inference_role"],
+      "properties": {
+        "layer_id": {"type": "string"},
+        "name": {"type": "string"},
+        "priority": {"type": "string"},
+        "layer_type": {"type": "string"},
+        "status": {"enum": ["PRESENT", "MISSING"]},
+        "poe_anchors": {"type": "array", "items": {"type": "string"}},
+        "matched_evidence": {"type": "array", "items": {"type": "string"}},
+        "inference_role": {"type": "string"}
       },
       "additionalProperties": false
     },

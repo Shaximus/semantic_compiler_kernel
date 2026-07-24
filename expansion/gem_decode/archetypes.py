@@ -277,15 +277,19 @@ _RULES: tuple[ArchetypeRule, ...] = (
 
 
 def _component_text(build: GemBuild, translated: dict[str, Any]) -> str:
+    # Evidence text is the spec's own component names plus their canonical
+    # ontology names. The translated compute_analogue/note/scope text is
+    # deliberately excluded: matching against our own analogue prose makes
+    # the matcher self-referential (e.g. the MTP analogue "drafts additional
+    # tokens" would spoof the draft/drafter group of the CoC cascade).
     terms: list[str] = [name.casefold() for _, name in build.all_components()]
     layers = translated.get("layers", {})
     for value in layers.values():
         records = value if isinstance(value, list) else ([value] if value else [])
         for record in records:
-            for key in ("canonical", "compute_analogue", "note", "scope"):
-                item = record.get(key)
-                if item:
-                    terms.append(str(item).casefold())
+            canonical = record.get("canonical")
+            if canonical:
+                terms.append(str(canonical).casefold())
     return " | ".join(terms)
 
 
