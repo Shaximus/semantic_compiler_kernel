@@ -4,12 +4,11 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 ## Status
 
-**Current release:** `V2.3.0` (canon freeze, 2026-07-23) — supersedes V2.1.3 core + V2.2 expansion
+**Current release:** `V3.0.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
 
-- 189/189 tests passing via `python -m pytest tests`;
+- 211/211 tests passing via `python -m pytest tests`;
   `python -m unittest discover` also runs clean (82 unittest-style tests; the
   remaining expansion tests are pytest-style function tests)
-- Fresh-clone verified: `pip install -e ".[test]"` → same 189/189 + 82/82
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
 - Packaged with `pyproject.toml` (setuptools): `pip install -e .` from a fresh
   clone makes `semantic_compiler` importable everywhere — no `PYTHONPATH` hacks
@@ -20,18 +19,21 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
   relation-aware structural + trigger-recall resolver
 - **Gem → inference executable translation mode** in `expansion.gem_decode`,
   with deterministic build-archetype detection (IDENTIFIED vs ATTEMPTING)
+- **Gem Forge** in `expansion.gem_forge` — all-gem inference translation over a
+  pinned, hash-verified 1,017-gem RePoE corpus (CONVERTED 73.9% of 7,688
+  lines), multi-gem composite synthesis with matcher floor (no degenerate
+  single-primitive composites), NOVEL-effect protection, and primitive
+  aliasing (`SHARE_STATE` → `PERSISTENT_SHARED_MODIFIER`)
 - Registry gap updates from the 2026-07 corpus-mapping swarm
   (CORPUS_GAP_NEGATIVE_SAMPLES incl. NEG_011 fabricated_citation_anchor,
   2 new pathology failure modes)
 - Rx /skill decompression mode in `expansion.skill_decompression`
-- Manifest: `calibration_output/RELEASE_MANIFEST_V2_3_0.json`
+- Manifest: `calibration_output/RELEASE_MANIFEST_V3_0_0.json`
 
-V2.3.0 consolidates (founder directive 2026-07-23): mission-readiness
+V3.0.0 consolidates (founder directive 2026-07-23): mission-readiness
 packaging, corpus orchestration, gem_decode, build-archetype detection,
-registry gap updates, and the structural resolver. PR #1 (Kestrel
-lab-3cycle) was evaluated and **not merged** — its own acceptance gate is
-incomplete (calibration-artifact regeneration + Logos wrapper review still
-open); its branch remains alive.
+registry gap updates, the structural resolver — and adds Gem Forge
+(PRs #4–#8). Manifest chain: V2_1_3 → V2_3_0 → V3_0_0.
 
 ## What it does
 

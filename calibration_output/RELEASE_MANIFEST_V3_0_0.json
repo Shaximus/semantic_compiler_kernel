@@ -1,0 +1,59 @@
+{
+  "manifest_version": "3.0.0",
+  "semantic_compiler_version": "3.0.0",
+  "schema_version": "2.1.0",
+  "generated_at": "2026-07-24T02:43:00Z",
+  "freeze_date": "2026-07-23",
+  "git_commit": "0412169",
+  "freeze_authority": "Founder directive 2026-07-23",
+  "supersedes": "V2.3.0 (RELEASE_MANIFEST_V2_3_0.json)",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json"
+  ],
+  "test_command": "python -m pytest tests -q && python -m unittest discover",
+  "test_result": "211/211 pytest OK; 82/82 unittest discover OK",
+  "merged_pull_requests": {
+    "PR_4": "mission readiness and invariant registry (packaging, corpus orchestration, evidence tiers, counter-mapping, derivation order, verdicts, jsonschema)",
+    "PR_6": "gem_decode — Gem → Inference executable translation mode (five-layer ontology, cadence checks, failure families, Adapa fixture)",
+    "PR_5": "registry gap updates (CORPUS_GAP_NEGATIVE_SAMPLES incl. NEG_011, 2 pathology failure modes)",
+    "PR_7": "deterministic build-archetype detection (IDENTIFIED vs ATTEMPTING)",
+    "PR_3": "relation-aware structural resolver + Rx skill decompression (two-layer structural + trigger recall)",
+    "PR_8": "Gem Forge — all-gem inference translation and composite software gems (Harriet acceptance gate executed; see below)"
+  },
+  "gem_forge": {
+    "taxonomy": "4-dimension orthogonal facets: deployment slots, capability domains, mechanic primitives, relationships",
+    "corpus": {
+      "snapshot": "expansion/gem_forge/data/gem_corpus_snapshot.json",
+      "manifest": "expansion/gem_forge/data/CORPUS_MANIFEST.json",
+      "source": "RePoE (brather1ng/RePoE), gems.json @ 157d1f33, data era 2022-08-23 (approx. PoE 3.19/3.20)",
+      "gem_count": 1017,
+      "pin_enforcement": "load_pinned_corpus verifies snapshot SHA-256 against manifest; fails closed on tampering; no runtime fetching"
+    },
+    "corpus_translation": {
+      "total_lines": 7688,
+      "CONVERTED": "5679 (73.9%)",
+      "PARTIAL": "1296 (16.9%)",
+      "UNRESOLVED": "713 (9.3%)"
+    },
+    "matcher_floor": "COMPOSITE requires >=2 shared mechanic primitives OR >=2 distinctive wording-evidence tokens; degenerate single-primitive collisions demote to NOVEL with primitives preserved",
+    "primitive_aliasing": "SHARE_STATE unified onto canonical PERSISTENT_SHARED_MODIFIER",
+    "novel_effect_policy": "PRESERVE_EXPLICITLY (nothing force-fit)"
+  },
+  "feature_summary": [
+    "frozen V2.1.3 core pipeline (schema 2.1.0)",
+    "V2.2 medical-ontology decompression expansion",
+    "mission-readiness packaging + corpus orchestration + invariant registry",
+    "gem_decode executable translation + build-archetype detection",
+    "gem_forge all-gem translation + composite synthesis with matcher floor",
+    "relation-aware structural resolver + Rx skill decompression",
+    "registry gap negative samples (corpus-gap discipline)",
+    "buildcraft ontology BUILD_001-018 with static-vs-dynamic guardrail"
+  ],
+  "approvals": {
+    "canon_consolidation": "Founder directive 2026-07-23",
+    "gem_forge_acceptance_gate": "Harriet gate executed 2026-07-23/24 (review, suite, pin, corpus counts, family converters, composite review, defect fixes)",
+    "freeze": "Founder directive 2026-07-23"
+  }
+}
