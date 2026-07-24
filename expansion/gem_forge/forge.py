@@ -1,6 +1,7 @@
 """Many-to-many software -> gem matching and synthetic gem generation."""
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from typing import Iterable
 
@@ -11,13 +12,17 @@ from semantic_compiler.expansion.gem_forge.models import (
     SoftwareComponent,
     SyntheticGem,
 )
-from semantic_compiler.expansion.gem_forge.taxonomy import extract_domains, extract_primitives
+from semantic_compiler.expansion.gem_forge.taxonomy import (
+    canonical_primitives,
+    extract_domains,
+    extract_primitives,
+)
 
 
 def _component_primitives(component: SoftwareComponent) -> tuple[str, ...]:
     explicit = tuple(component.traits)
     inferred = extract_primitives((component.name, component.description, *component.relationships, *component.capability_domains))
-    return tuple(dict.fromkeys((*explicit, *inferred)))
+    return canonical_primitives((*explicit, *inferred))
 
 
 def _component_domains(component: SoftwareComponent) -> tuple[str, ...]:
@@ -26,8 +31,62 @@ def _component_domains(component: SoftwareComponent) -> tuple[str, ...]:
     return tuple(dict.fromkeys((*explicit, *inferred)))
 
 
-def _score_match(component_primitives: set[str], translation: GemTranslation) -> GemMatch | None:
-    gem_primitives = set(translation.primitives)
+# --- Wording-level evidence (matcher floor, Harriet review DEFECT 1) -------
+
+_EVIDENCE_STOPWORDS = frozenset({
+    "with", "from", "that", "this", "into", "using", "have", "has", "are",
+    "you", "your", "and", "the", "for", "per", "when", "they", "them",
+    "support", "supported", "skills", "skill", "gems", "gem",
+    # Domain-generic infrastructure vocabulary: overlap on these words is
+    # not discriminating evidence — every inference component shares them.
+    "compute", "computes", "cost", "costs", "inference", "token", "tokens",
+    "additional", "effect", "effects", "reservation", "reservations",
+    "persistent", "service", "services", "modifier", "modifiers",
+    "increased", "reduced", "more", "less", "deal", "deals", "damage",
+    "output", "effectiveness", "execution", "capacity", "active",
+    "maximum", "nearby", "allies", "grant", "grants",
+})
+
+
+def _content_tokens(text: str) -> set[str]:
+    """Content tokens for wording evidence: camelCase-split, stopword-filtered."""
+    spaced = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", str(text))
+    tokens = set(re.findall(r"[a-z0-9]+", spaced.casefold()))
+    return {token for token in tokens if len(token) >= 4 and token not in _EVIDENCE_STOPWORDS}
+
+
+def _tokens_match(left: str, right: str) -> bool:
+    """Exact or simple singular/plural agreement."""
+    if left == right:
+        return True
+    return left.rstrip("s") == right.rstrip("s")
+
+
+def _wording_evidence(component_tokens: set[str], gem_tokens: set[str]) -> tuple[str, ...]:
+    return tuple(sorted(
+        left for left in component_tokens
+        if any(_tokens_match(left, right) for right in gem_tokens)
+    ))
+
+
+def _gem_tokens(translation: GemTranslation) -> set[str]:
+    parts = [
+        translation.poe_name,
+        translation.inference_name,
+        *translation.converted_wording,
+    ]
+    tokens: set[str] = set()
+    for part in parts:
+        tokens |= _content_tokens(part)
+    return tokens
+
+
+def _score_match(
+    component_primitives: set[str],
+    component_tokens: set[str],
+    translation: GemTranslation,
+) -> GemMatch | None:
+    gem_primitives = set(canonical_primitives(translation.primitives))
     overlap = component_primitives & gem_primitives
     if not overlap:
         return None
@@ -46,6 +105,7 @@ def _score_match(component_primitives: set[str], translation: GemTranslation) ->
             f"Matches {len(overlap)} mechanic primitive(s): {', '.join(sorted(overlap))}. "
             f"Score combines component coverage and gem-mechanic precision."
         ),
+        wording_evidence=_wording_evidence(component_tokens, _gem_tokens(translation)),
     )
 
 
@@ -57,13 +117,37 @@ def match_component(
     minimum_score: float = 0.18,
 ) -> tuple[GemMatch, ...]:
     primitives = set(_component_primitives(component))
+    tokens = _content_tokens(f"{component.name} {component.description}")
     matches = [
         match
         for translation in translations
-        if (match := _score_match(primitives, translation)) is not None and match.score >= minimum_score
+        if (match := _score_match(primitives, tokens, translation)) is not None and match.score >= minimum_score
     ]
     matches.sort(key=lambda item: (-item.score, item.gem_name.casefold(), item.gem_id))
     return tuple(matches[:top_n])
+
+
+def _floor_status(matches: tuple[GemMatch, ...]) -> dict:
+    """Matcher floor (Harriet review DEFECT 1).
+
+    A match set may only support COMPOSITE / high-confidence status when at
+    least one of:
+      (a) >= 2 matched mechanic primitives are shared between component and
+          source gem(s), or
+      (b) >= 2 wording-level evidence tokens overlap beyond the primitive set.
+    Single-primitive exact-set collisions fail the floor and must demote to
+    NOVEL with primitives preserved — never a force-fit composite.
+    """
+    shared_primitives: set[str] = set()
+    evidence: set[str] = set()
+    for match in matches:
+        shared_primitives.update(match.matched_primitives)
+        evidence.update(match.wording_evidence)
+    return {
+        "met": len(shared_primitives) >= 2 or len(evidence) >= 2,
+        "shared_primitives": sorted(shared_primitives),
+        "wording_evidence": sorted(evidence),
+    }
 
 
 def _synthetic_name(component: SoftwareComponent, matches: tuple[GemMatch, ...]) -> str:
@@ -91,10 +175,20 @@ def forge_component(
     domains = _component_domains(component)
     matches = match_component(component, translations, top_n=top_n)
 
+    floor = _floor_status(matches)
+    floor_met = floor["met"] if matches else False
+
     covered: set[str] = set()
-    for match in matches:
-        covered.update(match.matched_primitives)
+    if floor_met:
+        for match in matches:
+            covered.update(match.matched_primitives)
     novel = tuple(sorted(set(primitives) - covered))
+
+    if not floor_met and matches:
+        # Below the matcher floor the candidate matches are kept in the
+        # record for audit, but the composite demotes to NOVEL and every
+        # primitive is preserved as a novel effect — never force-fit.
+        novel = tuple(sorted(set(primitives)))
 
     wording: list[str] = []
     if "EMIT_ADDITIONAL_CANDIDATES" in primitives:
@@ -120,15 +214,19 @@ def forge_component(
     if not wording:
         wording.append("Modifies compatible inference operations according to its declared mechanic primitives.")
 
-    source_gems = tuple(match.gem_name for match in matches)
+    source_gems = tuple(match.gem_name for match in matches) if floor_met else ()
     synthetic = SyntheticGem(
-        name=_synthetic_name(component, matches),
+        name=_synthetic_name(component, matches) if floor_met else f"{component.name} Support",
         tags=tuple(dict.fromkeys((*component.deployment_slots, *domains))),
         supports=component.description,
         wording=tuple(wording),
         source_gems=source_gems,
         novel_effects=novel,
-        composition="COMPOSITE" if len(matches) > 1 else ("SINGLE_SOURCE" if matches else "NOVEL"),
+        composition=(
+            ("COMPOSITE" if len(matches) > 1 else "SINGLE_SOURCE")
+            if floor_met
+            else "NOVEL"
+        ),
     )
 
     record = {
@@ -138,6 +236,7 @@ def forge_component(
         "primitives": list(primitives),
         "capability_domains": list(domains),
         "matches": [match.to_dict() for match in matches],
+        "matcher_floor": floor,
         "synthetic_gem": synthetic.to_dict(),
         "epistemic_status": {
             "mapping": "STRUCTURAL_ANALOGY",

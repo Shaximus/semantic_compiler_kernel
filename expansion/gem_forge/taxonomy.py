@@ -132,6 +132,25 @@ RELATIONSHIP_TYPES = (
 )
 
 
+# Primitive vocabulary unification (Harriet review, gate item: DEFECT 2).
+# Component-side extraction and gem-side translation historically used two
+# names for the same mechanic; aliases map onto one canonical primitive so
+# matching compares mechanics, not spellings.
+PRIMITIVE_ALIASES: dict[str, str] = {
+    "SHARE_STATE": "PERSISTENT_SHARED_MODIFIER",
+}
+
+
+def canonical_primitive(name: str) -> str:
+    """Return the canonical form of a mechanic primitive name."""
+    return PRIMITIVE_ALIASES.get(name, name)
+
+
+def canonical_primitives(names: Iterable[str]) -> tuple[str, ...]:
+    """Canonicalize and de-duplicate a primitive sequence, preserving order."""
+    return tuple(dict.fromkeys(canonical_primitive(name) for name in names))
+
+
 _RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("EMIT_ADDITIONAL_CANDIDATES", ("additional projectile", "additional future token", "multiple projectile", "mtp", "fan out", "fan-out", "branch")),
     ("REDUCE_PER_CANDIDATE_EFFECTIVENESS", ("less projectile damage", "less damage", "reduced effectiveness", "acceptance-weighted")),

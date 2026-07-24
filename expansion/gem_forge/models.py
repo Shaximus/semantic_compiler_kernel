@@ -84,6 +84,7 @@ class GemMatch:
     matched_primitives: tuple[str, ...]
     uncovered_component_primitives: tuple[str, ...]
     explanation: str
+    wording_evidence: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
