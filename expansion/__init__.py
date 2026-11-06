@@ -1,4 +1,5 @@
 """V2.2 Medical-Ontology System Decompression."""
+import re
 from dataclasses import dataclass
 from semantic_compiler.core.packet import SemanticPacket
 from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY
