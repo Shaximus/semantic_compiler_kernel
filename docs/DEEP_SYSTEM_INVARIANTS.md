@@ -6,9 +6,9 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 
 | Domain | Template | Coverage |
 |---|---|---|
-| \`mobile_security\` | \`expansion/templates/mobile_security.yaml\` | Android Verified Boot, rollback and partition integrity, app signing and sandboxing, SELinux, permissions/IPC, FBE, KeyMint/TEE/StrongBox, authentication, attestation, optional pKVM/MTE, and update channels |
-| \`networking\` | \`expansion/templates/networking.yaml\` | Endpoint principle, routing, RPKI resource authorization, DNSSEC validation |
-| \`trust_chain\` | \`expansion/templates/trust_chain.yaml\` | Shared anchor, delegation, freshness, verifier, failure semantics, rollover, and scope pattern |
+| `mobile_security` | `expansion/templates/mobile_security.yaml` | Android Verified Boot, rollback and partition integrity, app signing and sandboxing, SELinux, permissions/IPC, FBE, KeyMint/TEE/StrongBox, authentication, attestation, optional pKVM/MTE, and update channels |
+| `networking` | `expansion/templates/networking.yaml` | Endpoint principle, routing, RPKI resource authorization, DNSSEC validation |
+| `trust_chain` | `expansion/templates/trust_chain.yaml` | Shared anchor, delegation, freshness, verifier, failure semantics, rollover, and scope pattern |
 
 ## Provenance rules
 
@@ -22,23 +22,23 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 
 | Tag | Source | URL |
 |---|---|---|
-| \`AOSP-VB\` | Android Open Source Project, Verified Boot | https://source.android.com/docs/security/features/verifiedboot and https://source.android.com/docs/security/features/verifiedboot/verified-boot |
-| \`AOSP-APP\` | AOSP, Application Sandbox and App Signing | https://source.android.com/docs/security/features and https://source.android.com/docs/security/overview/app-security |
-| \`AOSP-SEC\` | AOSP, Security overview and kernel security | https://source.android.com/docs/security/overview and https://source.android.com/docs/security/overview/kernel-security |
-| \`AOSP-SELINUX\` | AOSP, Security-Enhanced Linux in Android | https://source.android.com/docs/security/features/selinux |
-| \`AOSP-FBE\` | AOSP, File-based encryption | https://source.android.com/docs/security/features/encryption/file-based |
-| \`AOSP-KEYMINT\` | AOSP, Hardware-backed Keystore | https://source.android.com/docs/security/features/keystore |
-| \`AOSP-ATTEST\` | AOSP, Key and ID attestation | https://source.android.com/docs/security/features/keystore/attestation |
-| \`AOSP-AUTH\` | AOSP, Gatekeeper and Weaver authentication | https://source.android.com/docs/security/features/authentication/gatekeeper and https://source.android.com/docs/security/features/authentication/weaver and https://source.android.com/docs/security/features/authentication/rate-limiting |
-| \`AOSP-AVF\` | AOSP, Android Virtualization Framework security | https://source.android.com/docs/core/virtualization/security |
-| \`AOSP-MTE\` | AOSP, Arm Memory Tagging Extension configuration | https://source.android.com/docs/security/test/memory-safety/mte-configuration |
-| \`AOSP-MAINLINE\` | AOSP, Mainline modular system updates | https://source.android.com/docs/core/ota/modular-system |
-| \`RFC1958\` | RFC 1958, Architectural Principles of the Internet | https://www.rfc-editor.org/rfc/rfc1958 |
-| \`RFC4033\` | RFC 4033, DNS Security Introduction and Requirements | https://datatracker.ietf.org/doc/html/rfc4033 |
-| \`RFC6480\` | RFC 6480, An Infrastructure to Support Secure Internet Routing | https://datatracker.ietf.org/doc/html/rfc6480 |
-| \`UCSB-176C\` | UCSB CS176C, The Four Invariants | https://sites.cs.ucsb.edu/~arpitgupta/cs176c/spring26/assets/slides/week01_lecture02_four_invariants.html |
-| \`KNOX-WP\` | Samsung Knox security white paper, revision 1 | https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/assets/Knox-security-white-paper-r1.pdf |
-| \`KW-2016\` | Kanonov and Wool, Secure Containers in Android: the Samsung KNOX Case Study | https://arxiv.org/abs/1605.08567 |
+| `AOSP-VB` | Android Open Source Project, Verified Boot | https://source.android.com/docs/security/features/verifiedboot and https://source.android.com/docs/security/features/verifiedboot/verified-boot |
+| `AOSP-APP` | AOSP, Application Sandbox and App Signing | https://source.android.com/docs/security/features and https://source.android.com/docs/security/overview/app-security |
+| `AOSP-SEC` | AOSP, Security overview and kernel security | https://source.android.com/docs/security/overview and https://source.android.com/docs/security/overview/kernel-security |
+| `AOSP-SELINUX` | AOSP, Security-Enhanced Linux in Android | https://source.android.com/docs/security/features/selinux |
+| `AOSP-FBE` | AOSP, File-based encryption | https://source.android.com/docs/security/features/encryption/file-based |
+| `AOSP-KEYMINT` | AOSP, Hardware-backed Keystore | https://source.android.com/docs/security/features/keystore |
+| `AOSP-ATTEST` | AOSP, Key and ID attestation | https://source.android.com/docs/security/features/keystore/attestation |
+| `AOSP-AUTH` | AOSP, Gatekeeper and Weaver authentication | https://source.android.com/docs/security/features/authentication/gatekeeper and https://source.android.com/docs/security/features/authentication/weaver and https://source.android.com/docs/security/features/authentication/rate-limiting |
+| `AOSP-AVF` | AOSP, Android Virtualization Framework security | https://source.android.com/docs/core/virtualization/security |
+| `AOSP-MTE` | AOSP, Arm Memory Tagging Extension configuration | https://source.android.com/docs/security/test/memory-safety/mte-configuration |
+| `AOSP-MAINLINE` | AOSP, Mainline modular system updates | https://source.android.com/docs/core/ota/modular-system |
+| `RFC1958` | RFC 1958, Architectural Principles of the Internet | https://www.rfc-editor.org/rfc/rfc1958 |
+| `RFC4033` | RFC 4033, DNS Security Introduction and Requirements | https://datatracker.ietf.org/doc/html/rfc4033 |
+| `RFC6480` | RFC 6480, An Infrastructure to Support Secure Internet Routing | https://datatracker.ietf.org/doc/html/rfc6480 |
+| `UCSB-176C` | UCSB CS176C, The Four Invariants | https://sites.cs.ucsb.edu/~arpitgupta/cs176c/spring26/assets/slides/week01_lecture02_four_invariants.html |
+| `KNOX-WP` | Samsung Knox security white paper, revision 1 | https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/assets/Knox-security-white-paper-r1.pdf |
+| `KW-2016` | Kanonov and Wool, Secure Containers in Android: the Samsung KNOX Case Study | https://arxiv.org/abs/1605.08567 |
 
 ## Android precision corrections
 
