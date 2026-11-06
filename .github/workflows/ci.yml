@@ -1,0 +1,38 @@
+name: CI
+
+# Adapted from the Kestrel Lab workflow: run pytest and unittest on main pushes and PRs.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: semantic_compiler
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema pyyaml pytest
+      - name: Run full suite
+        working-directory: semantic_compiler
+        env:
+          PYTHONPATH: \${{ runner.temp }}
+        run: |
+          # The repository root is the package: make it importable as semantic_compiler.
+          ln -s "$GITHUB_WORKSPACE/semantic_compiler" "\${RUNNER_TEMP}/semantic_compiler"
+          python -m pytest tests -q
+          python -m unittest discover
