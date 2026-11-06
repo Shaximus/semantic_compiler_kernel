@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - main
+      - kestrel/v3
 
 permissions:
   contents: read
@@ -31,9 +32,9 @@ jobs:
       - name: Run full suite
         working-directory: semantic_compiler
         env:
-          PYTHONPATH: \${{ runner.temp }}
+          PYTHONPATH: ${{ runner.temp }}
         run: |
           # The repository root is the package: make it importable as semantic_compiler.
-          ln -s "$GITHUB_WORKSPACE/semantic_compiler" "\${RUNNER_TEMP}/semantic_compiler"
+          ln -s "$GITHUB_WORKSPACE/semantic_compiler" "${RUNNER_TEMP}/semantic_compiler"
           python -m pytest tests -q
           python -m unittest discover
