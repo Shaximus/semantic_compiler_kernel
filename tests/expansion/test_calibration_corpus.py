@@ -12,19 +12,19 @@ def test_calibration_corpus_builds():
 
 
 def test_calibration_corpus_category_coverage():
-    """105 samples: 8 calibration categories, spread over the 21 domains."""
+    """120 samples: 8 calibration categories, spread over the 24 non-generic domains."""
     from scripts.build_decompression_calibration import build_corpus
     from semantic_compiler.expansion.registry import list_domains
 
     corpus = build_corpus()
-    assert len(corpus) == 105
+    assert len(corpus) == 120
 
     categories = Counter(row["calibration_category"] for row in corpus)
     assert len(categories) == 8
     assert all(count >= 10 for count in categories.values())
 
     expected_domains = {d for d in list_domains() if d != "universal_generic"}
-    assert len(expected_domains) == 21
+    assert len(expected_domains) == 24
     covered_domains = {row["domain"] for row in corpus}
     assert covered_domains == expected_domains
 

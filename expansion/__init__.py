@@ -110,6 +110,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "chain of trust", "root of trust", "trust anchor", "remote attestation",
         "key attestation", "certificate chain", "verified delegation",
     )),
+    # Narrow on purpose: bare "path of exile" is not a keyword. Buildcraft and
+    # gem-decode use PoE shorthand for computation builds.
+    ("poe_chaos_inoculation", (
+        "chaos inoculation", "energy shield", "eldritch battery", "ghost reaver",
+    )),
     ("computation", ("firewall", "network", "server", "api", "database")),
     ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),
     ("medical", (

@@ -76,7 +76,8 @@ def test_new_vocabulary_does_not_capture_unrelated_words():
 def test_old_domain_patterns_remain_ordered_after_specific_domains():
     names = [name for name, _ in _DOMAIN_PATTERNS]
     assert names[:3] == list(NEW_DOMAINS)
-    assert names[3:6] == ["computation", "biology", "medical"]
+    assert names[3] == "poe_chaos_inoculation"
+    assert names[4:7] == ["computation", "biology", "medical"]
 
 
 def test_mobile_security_has_explicit_scope_and_optional_controls():
