@@ -35,7 +35,7 @@ def test_every_invariant_has_a_defined_source_tag():
         for invariant in get_template(domain).invariants:
             assert TRAILING_TAGS.search(invariant), (domain, invariant)
             for tag in TAG.findall(invariant):
-                row = next((line for line in doc_text.splitlines() if line.startswith(f"| \`{tag}\` |")), None)
+                row = next((line for line in doc_text.splitlines() if line.startswith(f"| `{tag}` |")), None)
                 assert row is not None, (domain, tag)
                 assert "http" in row
 
