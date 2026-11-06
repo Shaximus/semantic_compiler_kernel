@@ -32,7 +32,7 @@ All command results here came from a root shell on the phone. **None has been te
 
 This follows the kernel's predict-then-measure discipline. For each hypothesis, write the prediction first. Then capture the ring. Then label the result. Do not browse the phone hoping a pattern will appear.
 
-Full method body (organs, vitals, failure patterns, worked case 2026-11-06, report format) is maintained in the project folder artifact and in this file. Companion expansion templates: `android_connectivity.yaml` and `bluetooth.yaml`.
+(The complete method body — organs table, vitals, failure patterns with predict/falsify, worked case 2026-11-06 timeline, and report format — is the authoritative text from the project folder artifact ARK_ANDROID_DIAGNOSIS_METHOD_20261106.md. Companion expansion templates on this branch: `expansion/templates/android_connectivity.yaml` and `expansion/templates/bluetooth.yaml`.)
 
 ## 8. How to use the Semantic Compiler here
 
