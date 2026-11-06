@@ -1,6 +1,7 @@
 """V2.2 Medical-Ontology System Decompression."""
 from dataclasses import dataclass
 from semantic_compiler.core.packet import SemanticPacket
+from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY
 from semantic_compiler.expansion.registry import get_template
 from semantic_compiler.expansion.pathology import detect_pathologies
 from semantic_compiler.expansion.isomorphism import build_functional_graph
@@ -92,23 +93,60 @@ def decompress(packet: SemanticPacket) -> dict:
         raise ValueError(f"Invalid system model: {errors}")
     return model
 
+# Specific domains precede broad ones so Android and protocol vocabulary
+# cannot be swallowed by the generic computation router.
+_DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("mobile_security", (
+        "android", "knox", "trustzone", "bootloader", "selinux", "keystore",
+        "keymint", "verified boot", "secure boot", "secure world", "strongbox",
+        "gatekeeper", "weaver", "dm-verity", "vbmeta", "pKVM", "mte",
+    )),
+    ("networking", (
+        "bgp", "dns", "dnssec", "rpki", "tcp", "udp", "autonomous system",
+        "route origin authorization", "validating resolver",
+    )),
+    ("trust_chain", (
+        "chain of trust", "root of trust", "trust anchor", "remote attestation",
+        "key attestation", "certificate chain", "verified delegation",
+    )),
+    ("computation", ("firewall", "network", "server", "api", "database")),
+    ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),
+    ("medical", (
+        "patient", "hospital", "clinical", "clinician", "clinic", "surgery",
+        "surgeon", "diagnosis", "diagnosed", "prognosis", "triage", "nurse",
+        "physician", "doctor", "symptom", "sepsis",
+    )),
+)
+
+
+def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
+    return re.compile(
+        r"(?<![a-z])(?:" + "|".join(map(re.escape, keywords)) + r")(?:s|es)?(?![a-z])",
+        re.IGNORECASE,
+    )
+
+
+_DOMAIN_PATTERNS = tuple((domain, _keyword_pattern(words)) for domain, words in _DOMAIN_KEYWORDS)
+
+
 def _infer_domain(packet: SemanticPacket) -> str:
-    """Simple domain inference from packet text."""
-    text = (packet.raw_input or "").lower()
-    if any(k in text for k in ["firewall", "network", "server", "api", "database"]):
-        return "computation"
-    if any(k in text for k in ["cell", "organism", "immune", "metabolism"]):
-        return "biology"
+    """Infer a domain using ordered, whole-word vocabulary matching."""
+    text = packet.raw_input or ""
+    for domain, pattern in _DOMAIN_PATTERNS:
+        if pattern.search(text):
+            return domain
     return "universal_generic"
 
 def _extract_components(packet: SemanticPacket, template) -> list[dict]:
-    """Extract components from packet skeleton."""
+    """Extract components, honoring only canonical template medical concepts."""
     components = []
     for comp in template.components:
+        declared = comp.get("medical_map")
+        medical_map = declared if declared in MEDICAL_ONTOLOGY else _infer_medical_map(comp["name"])
         components.append({
             "name": comp["name"],
             "function": comp["function"],
-            "medical_map": _infer_medical_map(comp["name"]),
+            "medical_map": medical_map,
             "status": "inferred_by_analogy",
             "confidence": 0.6,
         })
@@ -132,7 +170,11 @@ def _infer_medical_map(component_name: str) -> str:
         "genetic_code": "memory_store",
         "homeostasis_regulation": "homeostasis_regulation",
     }
-    return mapping.get(component_name, "unknown")
+    if component_name in mapping:
+        return mapping[component_name]
+    if component_name in MEDICAL_ONTOLOGY:
+        return component_name
+    return "unknown"
 
 
 __all__ = [
