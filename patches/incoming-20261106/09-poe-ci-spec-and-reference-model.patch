@@ -1,0 +1,369 @@
+diff --git a/README.md b/README.md
+index 547c66c..9683b6f 100644
+--- a/README.md
++++ b/README.md
+@@ -6,7 +6,7 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
+ 
+ **Current release:** `V3.0.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
+ 
+-- 366 tests passing plus 4 expected failures (documented known gaps) via
++- 378 tests passing plus 4 expected failures (documented known gaps) via
+   `python -m pytest tests`; `python -m unittest discover` also runs clean
+   (151 unittest-style tests, the same 4 expected failures; the remaining
+   expansion tests are pytest-style function tests)
+@@ -70,7 +70,8 @@ medical-ontology terms, and advises on treatment.
+   `poe_chaos_inoculation` models the Path of Exile Chaos Inoculation keystone
+   (maximum life 1, immune to chaos damage, energy shield as the only buffer).
+   Its invariants name the game version they were sourced for and treat recharge
+-  numbers as patch-dependent; see
++  numbers as patch-dependent. `tests/expansion/test_poe_ci_reference_model.py` is a
++  toy state machine of the spec that checks the derived properties; see
+   [`docs/POE_CHAOS_INOCULATION_INVARIANTS.md`](docs/POE_CHAOS_INOCULATION_INVARIANTS.md).
+ - **Pathology taxonomy** (`expansion.pathology`) — structural pathologies
+   (boundary_breach, cancer, autoimmune, prompt_injection, data_corruption,
+diff --git a/docs/POE_CHAOS_INOCULATION_INVARIANTS.md b/docs/POE_CHAOS_INOCULATION_INVARIANTS.md
+index 0c8d257..e4f4cd5 100644
+--- a/docs/POE_CHAOS_INOCULATION_INVARIANTS.md
++++ b/docs/POE_CHAOS_INOCULATION_INVARIANTS.md
+@@ -74,6 +74,68 @@ template follows the same rule from the other side.
+ | Thresholds read the pre-override base while the lethal value stays at its floor | Systems where a display or safety value is overridden but derived limits should keep the original basis | That the PoE 2 0.5.0 note is a bug fix: a feature in one version, a defect in another |
+ | State the lost subsystems up front | Any irreversible trade-off decision | The exact list, which changes with each patch |
+ 
++## Specification and derived properties (author reasoning, not sourced)
++
++The section above is what the pages state. This section is the template author's
++decompression of it: a small specification and the properties that follow from it. None of
++it is a source claim, so none of it is in the template's `invariants` list. It is checked by
++an executable toy model, `tests/expansion/test_poe_ci_reference_model.py`.
++
++### The condition changes type
++
++A life build survives on margins: over time, recovery keeps up with damage. With life fixed
++at 1, survival becomes **for every damage event, damage to life is zero**. That is a rule
++about every event, not an average, which is why the whole build becomes a buffer.
++
++```
++State:   L = 1 (constant)   E in [0, E_max]   t_quiet = time since damage was last taken
++Event:   damage d of type τ
++route(d, τ):
++  τ ∈ Immune          → nothing happens; t_quiet is not reset
++  τ ∈ Bypass \ Immune → straight to L → death
++  otherwise           → E -= d · k(τ); any overflow below 0 → L → death
++  any damage taken    → t_quiet = 0
++
++Safety 1 (paths):    Bypass \ Immune = ∅
++Safety 2 (capacity): for every event, d · k(τ) < E just before it (current, not maximum)
++Refill:              E rises when t_quiet ≥ delay, or by converted recovery at any time
++Patch-dependent:     delay, rate, k(τ), E_max
++```
++
++### What follows
++
++1. **Safety 1 is the reference-monitor property.** Nothing reaches the protected pool
++   without passing the buffer, the same structure as the `trust_chain` domain. Chaos
++   immunity exists to close the PoE 1 bypass.
++2. **In PoE 2 (January 2025 rules) the bypass set is effectively empty under CI.** Poison is
++   chaos damage, so the immunity covers it. Bleeding is inflicted only by a hit that damages
++   life, and at life 1 that hit is already lethal, so bleeding is never the first cause of
++   death. The model checks this exhaustively over short sequences, and checks that it fails
++   if that one bleeding rule is removed. **That rule is the one to re-verify against PoE 2
++   0.5.x**; it rests on the January 2025 guide.
++3. **The real killer is a race, not a single event** (`spike_after_chip`). Chip damage keeps
++   resetting the delay, so the buffer stays below its maximum, then a hit the full buffer
++   would absorb overflows. In the model the same three hits kill with no gaps and are
++   survived with quiet gaps, and a thousand-fold faster recharge does not help.
++4. **Refill is measured by gaps between hits, not by rate.** Recharge runs only in quiet
++   time. Converted recovery (Ghost Reaver, Zealot's Oath, Eternal Youth) works during
++   combat, so it removes the quiet-time requirement rather than only adding recovery. The
++   model shows the chip-then-spike sequence survived with converted recovery alone.
++5. **Fixing a value turns every condition on it into a constant**
++   (`audit_predicates_on_fixed_value`). Low life is always false and full life always true:
++   some of these are dead code, some are permanent effects.
++6. **The threshold leak is a basis-versus-override bug.** Every calculation that reads the
++   overridden value must say whether it wants the override (1) or the original basis. The
++   PoE 2 0.5.0 note calls the leak a fix, so the designers treat it as a defect.
++
++### The medical mapping is approximate here
++
++The keystone component maps to `vaccination`. That is the nearest of the 17 canonical
++concepts, but it is a poor fit: vaccination trains a learned response, while CI removes
++the target the damage acts on, closer to a receptor knockout, and pays a large structural
++price for it. The ontology has no concept for immunity by removing the target. Adding one
++would change the ontology every template draws on, so it is left as an open decision.
++
+ ## What was not read or not established
+ 
+ * **The wikis could not be fetched.** poewiki.net and poe2wiki.net answer automated clients
+@@ -108,8 +170,10 @@ template follows the same rule from the other side.
+ * **`decompress` does not read the input's meaning.** Pathology detection compares the
+   template's own component names and concepts with the template's own failure-mode text
+   (`expansion/pathology/profiles.py`), so the five PoE calibration samples all produce the
+-  same six detected failure modes at confidence 0.6, whatever the sample says. The seventh,
+-  `self_inflicted_life_drain`, is not surfaced because no component shares a word with it.
++  same seven of the eight failure modes at confidence 0.6, whatever the sample says. The
++  eighth, `self_inflicted_life_drain`, is not surfaced because no component shares a word
++  with it. The toy model in `tests/expansion/test_poe_ci_reference_model.py` is the part
++  that does reason about specific damage sequences; it is a test, not wired into `decompress`.
+   This is the existing engine behavior for every template; the template was not reworded to
+   change it.
+ * No PoE 1 interaction testing was done; every claim is what a page states.
+diff --git a/expansion/templates/poe_chaos_inoculation.yaml b/expansion/templates/poe_chaos_inoculation.yaml
+index 393c779..a4b9221 100644
+--- a/expansion/templates/poe_chaos_inoculation.yaml
++++ b/expansion/templates/poe_chaos_inoculation.yaml
+@@ -28,11 +28,11 @@ components:
+     criticality: high
+     medical_map: vaccination
+   - name: recharge_regulator
+-    function: refills the buffer after a quiet period with no damage taken and restarts the delay whenever damage lands
++    function: refills the buffer only during quiet time (a period with no damage taken) and restarts the delay whenever damage lands, so refill depends on the gaps between hits rather than on elapsed time
+     criticality: high
+     medical_map: homeostasis
+   - name: recovery_converters
+-    function: turn life-based recovery (leech, regeneration, flask recovery) into buffer recovery because the life pool is only 1
++    function: turn life-based recovery (leech, regeneration, flask recovery) into buffer recovery because the life pool is only 1; unlike recharge it does not wait for quiet time
+     criticality: medium
+     medical_map: treatment
+   - name: threshold_calculator
+@@ -116,6 +116,13 @@ failure_modes:
+     medical_map: inflammation
+     description: a second protective mechanism sends the buffer to protect something else and leaves life exposed
+     indicators: [buffer_protects_mana, conflicting_keystone_pair, life_unprotected]
++  - name: spike_after_chip
++    medical_map: acute
++    description: >-
++      acute-on-chronic composite of recharge_starvation and oversized_hit_overflow: chip damage keeps
++      resetting the recharge delay so the buffer sits below its maximum, then a hit the full buffer
++      would have absorbed lands on the depleted buffer and overflows into the 1-life pool
++    indicators: [chip_damage_resets_recharge, buffer_below_max_at_spike, spike_below_max_above_current]
+ architecture_patterns:
+   - name: close_the_bypass_then_concentrate
+     medical_map: vaccination
+@@ -125,13 +132,16 @@ architecture_patterns:
+     description: reduce the pool whose depletion is fatal to a constant so scaling lives elsewhere
+   - name: regulated_reservoir_with_deadband
+     medical_map: homeostasis
+-    description: refill only after a quiet period and restart the clock on any new damage
++    description: refill only after a quiet period and restart the clock on any new damage; measure it by the distribution of gaps between hits against the delay, not by the refill rate
+   - name: convert_recovery_into_buffer
+     medical_map: treatment
+-    description: route every recovery mechanism into the buffer because the original pool cannot use it
++    description: route every recovery mechanism into the buffer because the original pool cannot use it; converted recovery works during combat, so it removes the quiet-time requirement rather than only adding recovery
+   - name: decouple_scaling_base_from_survival_value
+     medical_map: diagnosis
+     description: thresholds and scaling use the pre-override base while the lethal value stays at its floor
+   - name: explicit_subsystem_opt_out
+     medical_map: prognosis
+     description: state which mechanics are lost by the trade so the cost is known before committing
++  - name: audit_predicates_on_fixed_value
++    medical_map: diagnosis
++    description: fixing a variable turns every condition that reads it into a constant; list each one and decide whether it is dead code or a permanent effect (low life always false, full life always true)
+diff --git a/tests/expansion/test_deep_system_templates.py b/tests/expansion/test_deep_system_templates.py
+index 69d3c13..b2c354c 100644
+--- a/tests/expansion/test_deep_system_templates.py
++++ b/tests/expansion/test_deep_system_templates.py
+@@ -298,3 +298,20 @@ def test_poe_doc_states_the_guardrail_and_the_limits():
+                     "### What transfers to other systems, and what does not",
+                     "## What was not read or not established"):
+         assert heading in text, heading
++
++
++def test_poe_composite_failure_mode_names_its_parts():
++    modes = {fm["name"]: fm for fm in get_template(POE).failure_modes}
++    composite = modes["spike_after_chip"]
++    assert "recharge_starvation" in composite["description"]
++    assert "oversized_hit_overflow" in composite["description"]
++    assert {"recharge_starvation", "oversized_hit_overflow"} <= set(modes)
++
++
++def test_poe_refill_is_stated_in_terms_of_quiet_time():
++    template = get_template(POE)
++    regulator = next(c for c in template.components if c["name"] == "recharge_regulator")
++    assert "quiet time" in regulator["function"] and "gaps between hits" in regulator["function"]
++    patterns = {p["name"]: p["description"] for p in template.architecture_patterns}
++    assert "quiet-time requirement" in patterns["convert_recovery_into_buffer"]
++    assert "constant" in patterns["audit_predicates_on_fixed_value"]
+diff --git a/tests/expansion/test_poe_ci_reference_model.py b/tests/expansion/test_poe_ci_reference_model.py
+new file mode 100644
+index 0000000..b389d37
+--- /dev/null
++++ b/tests/expansion/test_poe_ci_reference_model.py
+@@ -0,0 +1,178 @@
++"""Executable reference model of the Chaos Inoculation spec (docs/POE_CHAOS_INOCULATION_INVARIANTS.md).
++
++This is a toy state machine, not the game. Its numbers (shield size, delay, rates, damage
++amounts) are illustrative integers chosen to make the cases small; they are NOT game values,
++which are patch-dependent and deliberately absent from the template. What the tests check is
++the *logic* of the sourced rules: given those rules, do the derived properties in the doc
++follow? A property that holds here holds for the game only as far as the rules encoded below
++match the game version they cite.
++
++Rules encoded, with the sources the template cites for them:
++* damage hits the buffer first; overflow reaches life (FANDOM-ES, MOBA-ES)
++* PoE 1: chaos damage ignores the buffer (FANDOM-ES, POEDB-CI)
++* PoE 2, January 2025 guide: chaos removes twice as much buffer; poison skips the buffer;
++  bleeding skips the buffer and is inflicted only by a hit that damages life (MOBA-ES)
++* recharge runs only after a delay with no damage taken; damage restarts the delay
++* Chaos Inoculation: life is 1 and chaos damage (poison included) is ignored (POEDB-CI)
++Not modeled: PoE 1 bleeding, thresholds, flasks, anything time-continuous.
++"""
++from __future__ import annotations
++
++import itertools
++from dataclasses import dataclass, field
++
++import pytest
++
++
++@dataclass(frozen=True)
++class Rules:
++    name: str
++    chaos_ignores_buffer: bool
++    chaos_buffer_factor: int
++    bleed_needs_life_damage: bool
++    models_bleed: bool
++
++
++POE1 = Rules("PoE 1", chaos_ignores_buffer=True, chaos_buffer_factor=1,
++             bleed_needs_life_damage=False, models_bleed=False)
++POE2_JAN_2025 = Rules("PoE 2 (January 2025 guide)", chaos_ignores_buffer=False, chaos_buffer_factor=2,
++                      bleed_needs_life_damage=True, models_bleed=True)
++# Counterfactual: the one PoE 2 rule the bleed derivation depends on, switched off.
++POE2_IF_BLEED_ON_ANY_HIT = Rules("counterfactual", chaos_ignores_buffer=False, chaos_buffer_factor=2,
++                                 bleed_needs_life_damage=False, models_bleed=True)
++
++
++@dataclass(frozen=True)
++class Character:
++    life: int
++    immune: frozenset = field(default_factory=frozenset)
++    buffer_max: int = 10
++    delay: int = 2          # quiet ticks before recharge starts (toy value)
++    recharge: int = 5       # buffer per quiet tick once the delay has passed (toy value)
++    converted: int = 0      # converted recovery per tick, independent of quiet time (toy value)
++
++
++CI = Character(life=1, immune=frozenset({"chaos"}))
++ONE_LIFE_NO_IMMUNITY = Character(life=1)
++LIFE_BUILD = Character(life=5)
++
++# An event is (quiet ticks before it, kind, amount).
++KINDS = ("hit", "chaos", "poison", "bleed_hit")
++
++
++def simulate(events, rules: Rules, char: Character):
++    """Return (alive, cause_of_death). Causes: 'overflow', 'bypass', 'bleed'."""
++    buffer = float(char.buffer_max)
++    life = float(char.life)
++    quiet = 10**6
++
++    def tick():
++        nonlocal buffer, quiet
++        quiet += 1
++        buffer += char.converted
++        if quiet >= char.delay:
++            buffer += char.recharge
++        buffer = min(buffer, char.buffer_max)
++
++    for gap, kind, amount in events:
++        for _ in range(gap):
++            tick()
++        cause = None
++        if kind in ("chaos", "poison") and "chaos" in char.immune:
++            tick()
++            continue  # no damage taken, so the recharge delay is not restarted
++        quiet = 0
++        if kind == "poison" or (kind == "chaos" and rules.chaos_ignores_buffer):
++            life -= amount
++            cause = "bypass"
++        elif kind == "chaos":
++            factor = rules.chaos_buffer_factor
++            if amount * factor <= buffer:
++                buffer -= amount * factor
++            else:
++                life -= amount - buffer / factor
++                buffer = 0.0
++                cause = "overflow"
++        else:  # hit or bleed_hit
++            overflow = max(0.0, amount - buffer)
++            buffer = max(0.0, buffer - amount)
++            if overflow:
++                life -= overflow
++                cause = "overflow"
++            if kind == "bleed_hit" and rules.models_bleed and life > 0:
++                if overflow or not rules.bleed_needs_life_damage:
++                    life -= amount  # bleeding skips the buffer
++                    cause = "bleed"
++        if life <= 0:
++            return False, cause
++        tick()
++    return True, None
++
++
++def all_sequences(max_len=3, gaps=(0, 3), amounts=(1, 4, 9)):
++    alphabet = list(itertools.product(gaps, KINDS, amounts))
++    for n in range(1, max_len + 1):
++        yield from itertools.product(alphabet, repeat=n)
++
++
++def causes(rules, char):
++    return {simulate(seq, rules, char)[1] for seq in all_sequences()} - {None}
++
++
++# --- Safety 1: every path to life goes through the buffer --------------------------------
++
++def test_poe1_ci_only_dies_by_overflow():
++    assert causes(POE1, CI) == {"overflow"}
++
++
++def test_poe1_one_life_without_immunity_dies_to_one_chaos_point_at_full_buffer():
++    # The reason the keystone pairs the two halves: without the immunity, the bypass is open.
++    assert simulate([(0, "chaos", 1)], POE1, ONE_LIFE_NO_IMMUNITY) == (False, "bypass")
++    assert simulate([(0, "chaos", 1)], POE1, CI) == (True, None)
++
++
++def test_poe2_ci_only_dies_by_overflow_so_bleeding_is_never_the_first_cause():
++    # Derived, not sourced: bleeding needs a hit that damages life, and at life 1 that hit is
++    # already lethal. Poison is chaos, so the immunity covers it.
++    assert causes(POE2_JAN_2025, CI) == {"overflow"}
++
++
++def test_the_bleed_derivation_is_not_vacuous():
++    # A character with real life can die to bleeding under the same rules ...
++    assert "bleed" in causes(POE2_JAN_2025, LIFE_BUILD)
++    # ... and CI can too if the "needs life damage" rule did not exist. That rule is the one to
++    # re-verify against PoE 2 0.5.x before relying on the derivation.
++    assert "bleed" in causes(POE2_IF_BLEED_ON_ANY_HIT, CI)
++
++
++# --- Safety 2 and refill: the race between chip damage and recharge ----------------------
++
++CHIP_THEN_SPIKE = [(0, "hit", 4), (0, "hit", 4), (0, "hit", 9)]
++SAME_HITS_SPACED = [(0, "hit", 4), (3, "hit", 4), (3, "hit", 9)]
++
++
++def test_spike_after_chip_kills_with_every_hit_below_the_maximum_buffer():
++    assert all(amount < CI.buffer_max for _gap, _kind, amount in CHIP_THEN_SPIKE)
++    assert simulate(CHIP_THEN_SPIKE, POE1, CI) == (False, "overflow")
++
++
++def test_the_same_hits_with_quiet_gaps_are_survived():
++    # Same damage, different spacing: refill depends on gaps between hits, not on the rate.
++    assert simulate(SAME_HITS_SPACED, POE1, CI) == (True, None)
++
++
++def test_faster_recharge_does_not_help_without_quiet_time():
++    fast = Character(life=1, immune=frozenset({"chaos"}), recharge=1000)
++    assert simulate(CHIP_THEN_SPIKE, POE1, fast) == (False, "overflow")
++
++
++def test_converted_recovery_removes_the_quiet_time_requirement():
++    leech = Character(life=1, immune=frozenset({"chaos"}), converted=4)
++    assert simulate(CHIP_THEN_SPIKE, POE1, leech) == (True, None)
++
++
++@pytest.mark.parametrize("rules", [POE1, POE2_JAN_2025], ids=lambda r: r.name)
++def test_a_single_hit_within_the_current_buffer_never_kills_ci(rules):
++    for amount in range(1, CI.buffer_max + 1):
++        assert simulate([(0, "hit", amount)], rules, CI) == (True, None)
++    assert simulate([(0, "hit", CI.buffer_max + 1)], rules, CI) == (False, "overflow")
