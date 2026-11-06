@@ -42,15 +42,16 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 
 ## Android precision corrections
 
-1. **Do not universalize Samsung Knox behavior.** The Knox warranty bit, device-specific fused state, Knox container behavior, and any key-gating consequences are OEM/product-specific. They are not generic Android components.
-2. **Do not universalize a kernel runtime monitor.** The cited 2016 Knox study describes a particular implementation and historical threat model. It is not proof that current AOSP devices all have a higher-privilege monitor.
-3. **Do not claim every verification failure has one consequence.** Verified Boot distinguishes boot-time failures from runtime dm-verity failures and defines recovery behavior. Device state and implementation policy matter.
-4. **Do not assume every Keystore key is hardware-backed.** Attestation distinguishes Software, TrustedEnvironment, and StrongBox security levels. A relying party must validate the challenge, certificate chain, boot state, and relevant authorization fields.
-5. **Do not overstate lock-screen throttling.** Gatekeeper exposes timeout-based throttling; Weaver can supply hardware-backed rate limiting where implemented. "Exponential backoff" is not a universal Android invariant.
-6. **Do not confuse APK signing with identity proof.** Signing binds package/update lineage to a key; it does not mean Android centrally validates the developer's legal identity.
-7. **Do not assume optional mitigations are active.** pKVM, StrongBox, MTE, and OEM-specific capabilities vary by hardware, Android release, and build configuration.
-8. **Do not collapse storage classes.** File-based encryption distinguishes Device Encrypted and Credential Encrypted storage; Direct Boot changes which data is available before user unlock.
-9. **Do not conflate update channels.** Mainline updates selected modules; OEM firmware, kernel, vendor, and full-platform patches remain separate coverage questions.
+1. **Preserve Verified Boot state semantics.** GREEN is OEM-root verified and locked; YELLOW is verified against a user-configured root; ORANGE is unlocked and unverified; RED indicates verification failure. A policy must not treat these states as interchangeable.
+2. **Do not universalize Samsung Knox behavior.** The Knox warranty bit, device-specific fused state, Knox container behavior, and any key-gating consequences are OEM/product-specific. They are not generic Android components.
+3. **Do not universalize a kernel runtime monitor.** The cited 2016 Knox study describes a particular implementation and historical threat model. It is not proof that current AOSP devices all have a higher-privilege monitor.
+4. **Do not claim every verification failure has one consequence.** Verified Boot distinguishes boot-time failures from runtime dm-verity failures and defines recovery behavior. Device state and implementation policy matter.
+5. **Do not assume every Keystore key is hardware-backed.** Attestation distinguishes Software, TrustedEnvironment, and StrongBox security levels. A relying party must validate the challenge, certificate chain, boot state, and relevant authorization fields.
+6. **Do not overstate lock-screen throttling.** Gatekeeper exposes timeout-based throttling; Weaver can supply hardware-backed rate limiting where implemented. "Exponential backoff" is not a universal Android invariant.
+7. **Do not confuse APK signing with identity proof.** Signing binds package/update lineage to a key; it does not mean Android centrally validates the developer's legal identity.
+8. **Do not assume optional mitigations are active.** pKVM, StrongBox, MTE, and OEM-specific capabilities vary by hardware, Android release, and build configuration.
+9. **Do not collapse storage classes.** File-based encryption distinguishes Device Encrypted and Credential Encrypted storage; Direct Boot changes which data is available before user unlock.
+10. **Do not conflate update channels.** Mainline updates selected modules; OEM firmware, kernel, vendor, and full-platform patches remain separate coverage questions.
 
 ## Deliberate scope limits
 
