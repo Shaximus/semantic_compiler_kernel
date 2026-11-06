@@ -6,7 +6,7 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 **Current release:** `V3.0.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
 
-- 211/211 tests passing via `python -m pytest tests`;
+- 350 pytest tests passing plus 4 documented expected failures via `python -m pytest tests -q`;
   `python -m unittest discover` also runs clean (82 unittest-style tests; the
   remaining expansion tests are pytest-style function tests)
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
@@ -50,10 +50,12 @@ core: given a `SemanticPacket`, `expansion.decompress()` reconstructs the
 whole system the input describes, diagnoses its failure modes in
 medical-ontology terms, and advises on treatment.
 
-- **16 domain templates** (`expansion/templates/`, via `expansion.registry`) —
+- **21 domain templates** (`expansion/templates/`, via `expansion.registry`) —
   biology, computation, construction, corporate, ecology, economic,
-  environmental, evolutionary, government, informational, law, medical,
-  military, organizational, reflexion, social
+  environmental, evolutionary, finance_economics, government, informational,
+  law, medical, military, mobile_security, networking, organizational,
+  psychology, reflexion, social, trust_chain, plus `universal_generic` fallback
+- **Deep-system security domains** — Android platform security, Internet routing/naming security, and cross-domain trust-chain invariants; source tags and known limits are documented in `docs/DEEP_SYSTEM_INVARIANTS.md`.
 - **Pathology taxonomy** (`expansion.pathology`) — structural pathologies
   (boundary_breach, cancer, autoimmune, prompt_injection, data_corruption,
   ...) mapped to medical diagnoses with evidence and confidence
