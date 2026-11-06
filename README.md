@@ -68,9 +68,12 @@ medical-ontology terms, and advises on treatment.
 - **V2.2 system-model schema** (`expansion/schemas/v2_2_system_model.schema.json`)
   — every decompressed model is validated before return
 
-Calibration: `calibration_output/decompression_calibration_v2_2.jsonl`
-(80 rows, 8 categories × 10, 16 domains × 5, 100% schema-valid) with the full
-analysis in `calibration_output/DECOMPRESSION_CALIBRATION_REPORT_V2_2.md`.
+Calibration baseline: `calibration_output/decompression_calibration_v2_2.jsonl`
+(80-row frozen baseline across the original 16 domains). The current builder,
+`scripts/build_decompression_calibration.py`, generates 105 samples across all
+21 domains, including the three deep-system domains; it writes the expanded
+corpus and summary to `calibration_output/decompression_calibration_v2_2.jsonl`
+and `calibration_output/calibration_report_v2_2.md`.
 
 ## V2.2 expansion — corpus mapping and mission readiness
 
