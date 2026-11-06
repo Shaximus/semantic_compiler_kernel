@@ -1,0 +1,164 @@
+domain: bluetooth
+version: 1.0
+description: >-
+  Android Bluetooth and BLE stack as a device-local radio domain: adapter
+  power and state, classic and LE roles, pairing and bonding, GATT client and
+  server paths, SCO/A2DP audio transport, and the separation between framework
+  policy, HAL, and controller firmware. Modeled for diagnosis parallel to
+  android_connectivity and mobile_security. Optional features (LE Audio,
+  multiple advertising, offload) are configuration- and hardware-dependent.
+  Do not assume a single universal Bluetooth security or power posture across
+  SoCs and OEMs. Source tags follow AOSP Bluetooth and Android Compatibility
+  definitions where stated; device-specific behavior requires measurement.
+components:
+  - name: bluetooth_adapter
+    function: exposes power, discoverability, and connectability state for the local controller
+    criticality: high
+    medical_map: homeostasis
+  - name: classic_profile_stack
+    function: implements BR/EDR profiles such as A2DP, HFP/HSP, AVRCP, and OPP through the framework and stack
+    criticality: high
+    medical_map: homeostasis
+  - name: le_controller
+    function: provides BLE advertising, scanning, and connection establishment under controller and host policy
+    criticality: high
+    medical_map: homeostasis
+  - name: bonding_and_pairing
+    function: performs pairing methods, stores link keys / LTK material, and manages bond state
+    criticality: high
+    medical_map: immune_system
+  - name: gatt_client
+    function: discovers services and characteristics and issues reads, writes, and notifications as a GATT client
+    criticality: medium
+    medical_map: diagnosis
+  - name: gatt_server
+    function: exposes local services and characteristics to remote GATT clients under app and system policy
+    criticality: medium
+    medical_map: diagnosis
+  - name: audio_transport
+    function: carries SCO/eSCO or A2DP (and optionally LE Audio) media and call audio between host and remote
+    criticality: high
+    medical_map: homeostasis
+  - name: permission_and_location_gate
+    function: mediates runtime Bluetooth and location-related permissions required for scan and connection on modern Android
+    criticality: high
+    medical_map: quarantine
+  - name: bluetooth_hal
+    function: bridges framework/stack to vendor HAL and controller firmware; version and capability vary by device
+    criticality: high
+    medical_map: quarantine
+  - name: controller_firmware
+    function: runs link-layer and baseband behavior on the Bluetooth controller; updatable on some platforms
+    criticality: high
+    medical_map: immune_system
+  - name: coexistence_policy
+    function: coordinates Bluetooth with Wi-Fi and cellular radios for shared antennas and spectrum
+    criticality: medium
+    medical_map: homeostasis
+  - name: background_scan_limits
+    function: applies OS and OEM limits on opportunistic and background LE scanning to control power and privacy
+    criticality: medium
+    medical_map: vaccination
+relationships:
+  - from: bluetooth_adapter
+    to: classic_profile_stack
+    type: enables
+  - from: bluetooth_adapter
+    to: le_controller
+    type: enables
+  - from: bonding_and_pairing
+    to: classic_profile_stack
+    type: authenticates_links_for
+  - from: bonding_and_pairing
+    to: le_controller
+    type: authenticates_links_for
+  - from: le_controller
+    to: gatt_client
+    type: carries_connections_for
+  - from: le_controller
+    to: gatt_server
+    type: carries_connections_for
+  - from: classic_profile_stack
+    to: audio_transport
+    type: provides
+  - from: permission_and_location_gate
+    to: le_controller
+    type: authorizes_scan_and_connect_for
+  - from: bluetooth_hal
+    to: controller_firmware
+    type: drives
+  - from: bluetooth_adapter
+    to: bluetooth_hal
+    type: depends_on
+  - from: coexistence_policy
+    to: bluetooth_adapter
+    type: constrains_airtime_of
+  - from: background_scan_limits
+    to: le_controller
+    type: rate_limits
+invariants:
+  - "Bluetooth adapter power and discoverability are distinct from bond state; a powered adapter may still refuse connections when not connectable or when bonds are missing [AOSP-BT]"
+  - "Pairing method and bond storage differ between BR/EDR and LE; do not treat a classic bond as proof of LE security or the reverse [AOSP-BT]"
+  - "On modern Android, BLE scanning and many connection paths require runtime permissions and, depending on use, location-related grants; absence of grants is a first-order failure mode [AOSP-BT][AOSP-PERM]"
+  - "GATT MTU, connection interval, and PHY are negotiated; assuming defaults without reading the active connection parameters misleads diagnosis [AOSP-BT]"
+  - "Audio path (SCO vs A2DP vs LE Audio) is profile- and device-dependent; a connected headset does not imply the expected transport is active [AOSP-BT]"
+  - "Controller firmware and HAL capability sets vary by SoC and OEM; optional features must be measured, not assumed universal [AOSP-BT]"
+  - "Background and opportunistic LE scan duty cycles are limited by the platform for power and privacy; continuous scanning is not a free resource [AOSP-BT]"
+  - "Coexistence with Wi-Fi can throttle or desense Bluetooth without a Bluetooth stack fault; measure both radios when airtime symptoms appear [device-dependent]"
+failure_modes:
+  - name: adapter_powered_but_unusable
+    medical_map: acute
+    description: adapter reports ON while discoverability, connectability, or HAL readiness is false
+    indicators: [state_on_not_connectable, hal_not_ready, airplane_or_policy_block]
+  - name: bond_mismatch_or_stale_key
+    medical_map: chronic
+    description: stored bond or link key no longer matches the remote or was cleared on one side only
+    indicators: [pairing_required_again, authentication_failure, bond_present_locally_absent_remotely]
+  - name: permission_denial_scan
+    medical_map: inflammation
+    description: scan or connect fails because Bluetooth or location-related runtime permissions are missing or revoked
+    indicators: [security_exception_on_scan, empty_scan_results_with_known_advertisers, permission_revoked]
+  - name: gatt_timeout_or_disconnect
+    medical_map: acute
+    description: GATT operations time out or the LE link drops under supervision timeout or host policy
+    indicators: [gatt_status_timeout, connection_supervision_timeout, unexpected_disconnect]
+  - name: audio_transport_mismatch
+    medical_map: chronic
+    description: profile is connected but the expected SCO/A2DP/LE Audio path is not the active transport
+    indicators: [profile_connected_no_audio, wrong_codec_or_path, sco_vs_a2dp_confusion]
+  - name: controller_firmware_defect
+    medical_map: pathogen
+    description: link-layer or baseband fault in controller firmware produces drops, desense, or failed pairing independent of host logic
+    indicators: [firmware_version_known_bad, recovers_after_firmware_update, host_logs_clean]
+  - name: coexistence_desense
+    medical_map: inflammation
+    description: Wi-Fi or cellular activity reduces Bluetooth airtime or SNR without a Bluetooth configuration error
+    indicators: [correlated_with_wifi_traffic, improves_with_wifi_off, shared_antenna_platform]
+  - name: background_scan_throttled
+    medical_map: vaccination
+    description: opportunistic or app background scan is limited by OS policy, producing sparse results that look like radio failure
+    indicators: [foreground_scan_works_background_sparse, app_standby_or_battery_restriction]
+  - name: privacy_address_rotation_confusion
+    medical_map: chronic
+    description: resolvable private addresses rotate and identity resolution fails, appearing as a new or missing device
+    indicators: [rpa_change_without_irk_match, bond_exists_but_device_looks_new]
+  - name: profile_service_crash_loop
+    medical_map: sepsis
+    description: a profile service or Bluetooth process restarts repeatedly, clearing transient state and bonds visibility
+    indicators: [bluetooth_process_restarts, service_connection_failures, bond_list_flaps]
+architecture_patterns:
+  - name: measure_adapter_then_profiles
+    medical_map: diagnosis
+    description: confirm adapter power, HAL readiness, and permissions before diagnosing profile or GATT failures
+  - name: separate_classic_and_le
+    medical_map: quarantine
+    description: treat BR/EDR bonds, profiles, and audio paths as distinct from LE advertising, GATT, and LE Audio
+  - name: permission_first
+    medical_map: immune_system
+    description: check runtime Bluetooth and location-related grants before interpreting empty scans as radio failure
+  - name: firmware_and_coexistence_in_scope
+    medical_map: homeostasis
+    description: include controller firmware version and Wi-Fi coexistence when link quality or drops are the complaint
+  - name: predict_before_dumpsys
+    medical_map: diagnosis
+    description: state what dumpsys bluetooth_manager / bluetooth_adapter and bugreport sections should show for each hypothesis before collecting them

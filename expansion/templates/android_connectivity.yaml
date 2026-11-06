@@ -1,0 +1,185 @@
+domain: android_connectivity
+version: 1.0
+description: >-
+  Device-side Android connectivity as measured on a concrete handset (Samsung
+  S26 Ultra / SM-S948W class, Android 17, KernelSU): radio registration and
+  data sessions, subscription and APN selection, USB gadget and tethering
+  state machines, policy routing and forwarding, carrier policy, usage
+  accounting, and the distinction between boot integrity and runtime root.
+  Companion to the Ark agent diagnosis method. Invariants and failure patterns
+  are written for prediction-before-measurement; medical_map labels are filing
+  categories only. Source tags follow docs/DEEP_SYSTEM_INVARIANTS.md where
+  applicable; device measurements are [MEASURED] on the reference handset.
+components:
+  - name: radio_registration
+    function: registers the active subscription with the cellular network and exposes technology and service state
+    criticality: high
+    medical_map: homeostasis
+  - name: data_session_apn
+    function: establishes and tracks data sessions by APN type (sp, ims, dun, etc.) with fail causes
+    criticality: high
+    medical_map: homeostasis
+  - name: subscription_resolver
+    function: maps logical slots, ports, subIds, and display names; selects default and active data subscription
+    criticality: high
+    medical_map: diagnosis
+  - name: carrier_policy_config
+    function: supplies carrier-config flags that gate tethering, APN editability, and related allowances
+    criticality: medium
+    medical_map: vaccination
+  - name: usb_gadget_link
+    function: binds USB functions (rndis, mtp, adb) to the UDC and records function and UEVENT changes
+    criticality: high
+    medical_map: homeostasis
+  - name: tether_state_machine
+    function: tracks tether interface state (TetheredState and peers), upstream selection, and lastError
+    criticality: high
+    medical_map: homeostasis
+  - name: downstream_host
+    function: holds the leased address and neighbor reachability of the tethered client
+    criticality: medium
+    medical_map: homeostasis
+  - name: policy_router
+    function: installs iif-based policy rules and upstream lookup tables for tethered traffic
+    criticality: high
+    medical_map: homeostasis
+  - name: forward_firewall
+    function: applies FORWARD and tether-control chains; final DROP should remain zero under healthy offload
+    criticality: high
+    medical_map: immune_system
+  - name: bpf_offload_path
+    function: programs per-flow BPF rules for tether forwarding where the platform supports them
+    criticality: medium
+    medical_map: homeostasis
+  - name: usage_accounting
+    function: meters interface and UID traffic (including tether uid=-5) for local policy; not the carrier bill
+    criticality: medium
+    medical_map: diagnosis
+  - name: carrier_quota
+    function: lives at the carrier; phone settings and netpolicy often cannot see the true remaining allowance
+    criticality: high
+    medical_map: diagnosis
+  - name: sms_intake_store
+    function: holds carrier and system SMS in DE and CE telephony databases; intake vs stored message split
+    criticality: medium
+    medical_map: diagnosis
+  - name: file_encryption_store
+    function: separates device-encrypted and credential-encrypted storage; Direct Boot and unlock state matter
+    criticality: high
+    medical_map: quarantine
+  - name: boot_integrity
+    function: reports verified-boot state, lock state, and warranty bit at boot time only
+    criticality: high
+    medical_map: immune_system
+  - name: runtime_root_layer
+    function: post-boot modules, service.d hooks, and privilege paths that are not described by boot state
+    criticality: high
+    medical_map: quarantine
+relationships:
+  - from: subscription_resolver
+    to: radio_registration
+    type: selects_active_subscription_for
+  - from: radio_registration
+    to: data_session_apn
+    type: enables
+  - from: carrier_policy_config
+    to: data_session_apn
+    type: constrains_apn_and_tether_allowance_of
+  - from: data_session_apn
+    to: tether_state_machine
+    type: provides_upstream_for
+  - from: usb_gadget_link
+    to: tether_state_machine
+    type: exposes_interface_for
+  - from: tether_state_machine
+    to: downstream_host
+    type: leases_and_tracks
+  - from: tether_state_machine
+    to: policy_router
+    type: requires_routes_from
+  - from: policy_router
+    to: forward_firewall
+    type: subject_to
+  - from: bpf_offload_path
+    to: forward_firewall
+    type: may_bypass_or_assist
+  - from: usage_accounting
+    to: carrier_quota
+    type: does_not_replace
+  - from: boot_integrity
+    to: runtime_root_layer
+    type: does_not_prove_absence_of
+  - from: file_encryption_store
+    to: sms_intake_store
+    type: scopes_availability_of
+invariants:
+  - "Slot, port, subId and display name are distinct; do not assume eSIM N equals logical slot N [MEASURED reference handset]"
+  - "The status-bar icon is not the radio; read dumpsys telephony.registry and network type properties, not the icon [MEASURED]"
+  - "A tethered session uses a separate APN type (commonly dun) and may use a different interface range than the phone's own data [MEASURED]"
+  - "Carrier quota and remaining allowance live at the carrier; empty Subscription plans or unlimited thresholds on the phone do not prove unlimited service [MEASURED]"
+  - "Verified boot green, locked flash, and warranty_bit=0 describe boot; they do not prove or disprove post-boot runtime root or modules [MEASURED]"
+  - "Dumpsys rings (usb, tethering, telephony.registry, isub) are finite and move; capture early [MEASURED]"
+  - "Read-only diagnosis until the owner approves a single change with undo; root goes through the fingerprint gate [operational rule]"
+  - "Never put IMEI, IMSI, ICCID, phone numbers or keys into reports or evidence bundles [operational rule]"
+  - "SELinux enforcing and verified-boot state are independent of whether KernelSU or service.d hooks are active after boot [MEASURED]"
+failure_modes:
+  - name: allowance_exhausted
+    medical_map: acute
+    description: carrier texts and usage show the plan is consumed; speed may be reduced or sessions may fail
+    indicators: [carrier_zero_remaining, throttle_or_reject_after_quota, account_page_confirms]
+  - name: self_inflicted_hook_fault
+    medical_map: autoimmune
+    description: failure traces to an owner-installed hook, disabled package, or service.d script whose timing matches the symptom
+    indicators: [hook_timing_matches, fault_clears_with_hook_disabled_one_at_a_time]
+  - name: measurement_artifact
+    medical_map: inflammation
+    description: the apparent fault disappears when measured through a second independent path or tool
+    indicators: [single_tool_only, disappears_under_independent_check]
+  - name: sim_mapping_confusion
+    medical_map: chronic
+    description: Settings UI, display name, and activeDataSubId disagree; diagnosis follows the wrong subscription
+    indicators: [settings_vs_activeDataSubId_mismatch, wrong_sub_blamed]
+  - name: usb_function_flap
+    medical_map: acute
+    description: USB function or UEVENT changes precede DUN or tether release
+    indicators: [usb_rhythm_before_dun_drop, function_change_correlated]
+  - name: upstream_session_loss
+    medical_map: acute
+    description: LOST_CONNECTION or network reject on the data session before tether errors
+    indicators: [session_fail_cause_before_tether_error, registration_drop]
+  - name: forwarding_block
+    medical_map: autoimmune
+    description: link and lease are healthy but upstream counters stay flat or an unexpected DROP rule hits
+    indicators: [downstream_reachable_upstream_flat, unexpected_forward_drop]
+  - name: runaway_diagnostic_burn
+    medical_map: cancer
+    description: diagnostic traffic (speed tests, bulk pulls) consumes the allowance being measured
+    indicators: [test_window_usage_spike, allowance_gone_after_diagnosis]
+  - name: restart_cascade
+    medical_map: sepsis
+    description: repeated reboots and toggles destroy the dumpsys rings and create secondary symptoms
+    indicators: [log_window_lost, new_symptoms_after_restart_storm]
+  - name: unaccounted_root_path
+    medical_map: metastasis
+    description: a change occurs through a root path that skips the fingerprint gate or outside known sessions
+    indicators: [root_action_without_session, gate_skipped]
+  - name: off_path_interference
+    medical_map: pathogen
+    description: effects track traffic content or port after the classes above are ruled out, in controlled comparison
+    indicators: [content_or_port_dependent, controlled_comparison_positive]
+architecture_patterns:
+  - name: predict_before_measure
+    medical_map: diagnosis
+    description: write what each hypothesis would show before running the corresponding dumpsys or file read
+  - name: separate_boot_from_runtime
+    medical_map: immune_system
+    description: treat verified-boot and lock state as boot facts; measure runtime root and hooks independently
+  - name: separate_phone_from_carrier
+    medical_map: diagnosis
+    description: never treat local netpolicy or Settings as the carrier quota of record
+  - name: one_change_with_undo
+    medical_map: physiotherapy
+    description: any treatment is a single variable, with before/after numbers and a written undo, owner-approved
+  - name: capture_the_ring
+    medical_map: homeostasis
+    description: dump the finite usb/tethering/telephony/isub rings early; they rotate
