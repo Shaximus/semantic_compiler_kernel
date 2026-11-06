@@ -1,7 +1,9 @@
 """Architecture improvement advisor."""
 from dataclasses import dataclass
+from semantic_compiler.expansion.ontology.medical_ontology import normalize_concept_name, resolve_concept
 from semantic_compiler.expansion.pathology.taxonomy import Pathology
 from semantic_compiler.expansion.reconstruction.missing_components import MissingComponent
+
 
 @dataclass(frozen=True)
 class AdvisorSuggestion:
@@ -13,9 +15,7 @@ class AdvisorSuggestion:
     domain_specific_translation: str
     estimated_impact: str
 
-# Deterministic remediation heuristics keyed by medical_map. Simple by design:
-# the medical ontology tells you the *class* of treatment, the template
-# failure mode supplies the specifics.
+
 _MEDICAL_MAP_REMEDIATION = {
     "pathogen": "isolate the input boundary and add validation filtering",
     "inflammation": "reduce error cascades; add input sanitation and circuit breakers",
@@ -26,7 +26,50 @@ _MEDICAL_MAP_REMEDIATION = {
     "processing_core": "simplify and re-verify the core transform path",
     "output_layer": "add output verification before emission",
 }
+_ONTOLOGY_REMEDIATION = {
+    "homeostasis": "define safe operating ranges and add alarms with automatic correction when a variable leaves them",
+    "cancer": "reintroduce regulatory feedback on the runaway growth: cap its resource use and make it justify its allocation",
+    "autoimmune": "narrow the defense mechanism's targeting so it stops acting on healthy components; add self-recognition checks",
+    "sepsis": "break the cascade: isolate failing components and add circuit breakers and bulkheads so local failure cannot become systemic",
+    "diagnosis": "instrument the failure surface and trace the fault to its root cause before changing anything",
+    "prognosis": "estimate the failure trajectory and set early-warning thresholds before the next degradation",
+    "treatment": "apply the smallest verified repair and confirm the failure indicators clear",
+    "vaccination": "harden against the known threat by rehearsing it in controlled drills",
+    "quarantine": "isolate the affected component and cut its links to the rest of the system until it is verified clean",
+    "metastasis": "cut the spread path: restrict privileges and lateral links from the origin component and audit what it already reached",
+    "remission": "keep monitoring after recovery; define relapse criteria and the rollback path",
+    "chronic": "schedule remediation of the persistent low-level dysfunction instead of working around it; track it with an owner",
+    "acute": "contain first: stop the spread, then restore service and investigate",
+    "physiotherapy": "reintroduce the restored component under graduated load, one step at a time",
+}
+_MEDICAL_MAP_REMEDIATION = {**_ONTOLOGY_REMEDIATION, **_MEDICAL_MAP_REMEDIATION}
 _DEFAULT_REMEDIATION = "remove the matched indicators and re-test the failure surface"
+
+
+def remediation_for(medical_map: str) -> str:
+    """Use exact key, tolerant/alias lookup, then a safe default."""
+    key = normalize_concept_name(medical_map)
+    if key in _MEDICAL_MAP_REMEDIATION:
+        return _MEDICAL_MAP_REMEDIATION[key]
+    concept = resolve_concept(medical_map)
+    if concept is not None and concept.name in _MEDICAL_MAP_REMEDIATION:
+        return _MEDICAL_MAP_REMEDIATION[concept.name]
+    return _DEFAULT_REMEDIATION
+
+
+_CRITICAL_COMPONENT_CONCEPTS = {
+    "homeostasis": "homeostasis",
+    "control": "homeostasis",
+    "defense": "immune_system",
+}
+
+
+def _critical_concept(function: str) -> str | None:
+    """Ontology concept represented by a critical missing component."""
+    for token in function.lower().replace("-", "_").split("_"):
+        if token in _CRITICAL_COMPONENT_CONCEPTS:
+            return _CRITICAL_COMPONENT_CONCEPTS[token]
+    return None
 
 
 def generate_advice(
@@ -35,14 +78,9 @@ def generate_advice(
     missing: list[MissingComponent],
     failure_modes: list[dict] | None = None,
 ) -> dict:
-    """Generate treatment-protocol advice from pathologies and missing components.
-
-    ``failure_modes`` (from the domain template) enriches prescriptions and
-    resilience drills with the template's own descriptions and indicators.
-    """
+    """Generate treatment-protocol advice from pathologies and missing components."""
     failure_modes = failure_modes or []
     fm_by_name = {fm.get("name"): fm for fm in failure_modes}
-
     advice = {
         "diagnosis": [],
         "prescriptions": [],
@@ -61,9 +99,8 @@ def generate_advice(
             domain_specific_translation=f"Detected {p.medical_map} pattern",
             estimated_impact="high" if p.confidence > 0.7 else "medium",
         ))
-
         fm = fm_by_name.get(p.name, {})
-        remediation = _MEDICAL_MAP_REMEDIATION.get(p.medical_map, _DEFAULT_REMEDIATION)
+        remediation = remediation_for(p.medical_map)
         indicators = fm.get("indicators", p.indicators)
         advice["prescriptions"].append(AdvisorSuggestion(
             kind="prescription",
@@ -72,14 +109,10 @@ def generate_advice(
             confidence=p.confidence,
             evidence=list(p.evidence),
             domain_specific_translation=(
-                f"Address indicators: {', '.join(indicators)}" if indicators
-                else remediation
+                f"Address indicators: {', '.join(indicators)}" if indicators else remediation
             ),
             estimated_impact="high" if p.confidence > 0.7 else "medium",
         ))
-
-        # Vaccination pattern: controlled exposure to the failure mode's
-        # indicators before they occur in production.
         if indicators:
             advice["resilience_training"].append(AdvisorSuggestion(
                 kind="resilience_training",
@@ -95,11 +128,12 @@ def generate_advice(
             ))
 
     for m in missing:
-        if m.function in ("homeostasis_regulation", "defense", "control"):
+        critical_concept = _critical_concept(m.function)
+        if critical_concept is not None:
             advice["architecture_improvements"].append(AdvisorSuggestion(
                 kind="architecture_improvement",
                 description=f"Add missing {m.function}",
-                medical_ontology_reference=m.function,
+                medical_ontology_reference=critical_concept,
                 confidence=m.confidence,
                 evidence=[f"inferred from {m.source_domain} template"],
                 domain_specific_translation=f"Introduce {m.function} component",
@@ -117,5 +151,4 @@ def generate_advice(
             domain_specific_translation=f"graduated load testing of {m.function}",
             estimated_impact="medium",
         ))
-
     return advice
