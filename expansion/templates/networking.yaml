@@ -1,0 +1,123 @@
+domain: networking
+version: 1.0
+description: >-
+  Internet-scale networked systems: endpoint responsibility, forwarding and
+  routing control planes, naming, RPKI resource authorization, and DNSSEC
+  authenticated naming. Source tags are defined in docs/DEEP_SYSTEM_INVARIANTS.md.
+components:
+  - name: end_host
+    function: implements application semantics and end-to-end reliability at the network edge
+    criticality: high
+    medical_map: homeostasis
+  - name: forwarding_plane
+    function: forwards datagrams while minimizing per-flow state in the network core
+    criticality: high
+  - name: routing_control_plane
+    function: distributes reachability and selects inter-domain paths
+    criticality: high
+  - name: naming_system
+    function: maps names to data and addresses
+    criticality: high
+  - name: resource_registry_hierarchy
+    function: allocates IP address and autonomous-system resources through delegated registries
+    criticality: medium
+  - name: resource_pki
+    function: binds public keys to allocated IP and AS resources and attests allocation, not identity
+    criticality: high
+    medical_map: immune_system
+  - name: route_origin_authorization
+    function: authorizes a specified AS to originate routes for specified prefixes
+    criticality: medium
+    medical_map: vaccination
+  - name: signed_zone_chain
+    function: links signed DNS zones to a configured trust anchor through DNSKEY and DS records
+    criticality: high
+    medical_map: immune_system
+  - name: validating_resolver
+    function: validates DNSSEC data and reports Secure, Insecure, Bogus, or Indeterminate
+    criticality: high
+    medical_map: diagnosis
+  - name: untrusted_repository
+    function: distributes signed routing objects and manifests over an untrusted channel
+    criticality: low
+relationships:
+  - from: end_host
+    to: forwarding_plane
+    type: sends_datagrams_through
+  - from: routing_control_plane
+    to: forwarding_plane
+    type: programs
+  - from: resource_registry_hierarchy
+    to: resource_pki
+    type: mirrored_by
+  - from: resource_pki
+    to: route_origin_authorization
+    type: signs
+  - from: route_origin_authorization
+    to: routing_control_plane
+    type: authorizes_origins_in
+  - from: untrusted_repository
+    to: resource_pki
+    type: distributes_objects_of
+  - from: naming_system
+    to: signed_zone_chain
+    type: secured_by
+  - from: signed_zone_chain
+    to: validating_resolver
+    type: validated_by
+  - from: validating_resolver
+    to: end_host
+    type: answers
+invariants:
+  - "functions that depend on endpoint knowledge belong at the endpoints where practical [RFC1958]"
+  - "state held inside the network core should be minimized and manually configured state kept small [RFC1958]"
+  - "the Internet is decentralized and transmission failures at some statistical rate are expected [RFC1958]"
+  - "simplicity, modularity, and scaling to very large numbers of networks are architectural goals [RFC1958]"
+  - "resource certificates bind keys to IP and AS resources and provide authorization, not identity [RFC6480]"
+  - "the RPKI certificate hierarchy mirrors resource allocation and is rooted in IANA [RFC6480]"
+  - "a route-origin authorization names the AS and prefixes it may originate [RFC6480]"
+  - "the repository is untrusted; signatures and manifests make unauthorized changes and stale replacement detectable [RFC6480]"
+  - "DNSSEC provides data-origin authentication, integrity, and authenticated denial of existence, not confidentiality or availability [RFC4033]"
+  - "DNSSEC validation follows a chain from a configured trust anchor through DNSKEY and DS records to the RRset [RFC4033]"
+  - "DNSSEC validation outcomes distinguish Secure, Insecure, Bogus, and Indeterminate [RFC4033]"
+failure_modes:
+  - name: route_origin_hijack
+    medical_map: pathogen
+    description: an AS originates a prefix without a valid authorization and attracts traffic
+    indicators: [unexpected_origin_as, prefix_without_authorization]
+  - name: bogus_dns_data_accepted
+    medical_map: pathogen
+    description: forged or altered naming data is trusted because validation is absent or bypassed
+    indicators: [unsigned_answer_trusted, validation_disabled]
+  - name: validation_window_lapse
+    medical_map: acute
+    description: expired signatures or broken rollover cause valid data to fail validation
+    indicators: [expired_signature, ds_dnskey_mismatch]
+  - name: routing_instability_cascade
+    medical_map: sepsis
+    description: a local routing fault propagates into wide reachability loss
+    indicators: [route_flap_storm, withdrawal_cascade]
+  - name: core_state_accumulation
+    medical_map: chronic
+    description: excessive per-flow or manual state in the core impedes scaling and recovery
+    indicators: [growing_core_state, manual_configuration_drift]
+  - name: scope_misread
+    medical_map: cancer
+    description: authorization or integrity claims are incorrectly expanded into identity, confidentiality, or availability guarantees
+    indicators: [authorization_read_as_identity, integrity_read_as_confidentiality]
+architecture_patterns:
+  - name: end_to_end_principle
+    medical_map: homeostasis
+    description: keep application intelligence at endpoints and the network core simple
+  - name: layered_modularity
+    medical_map: quarantine
+    description: independent layers keep failure domains separate
+  - name: signed_delegation_hierarchy
+    medical_map: immune_system
+    description: delegate bounded authority down a signed resource hierarchy
+  - name: pre_authorized_origins
+    medical_map: vaccination
+    description: publish route-origin authorizations before invalid announcements occur
+  - name: explicit_scope_statement
+    medical_map: diagnosis
+    description: state what authorization and integrity mechanisms do not guarantee
