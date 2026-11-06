@@ -1,0 +1,223 @@
+domain: mobile_security
+version: 1.1
+description: >-
+  Android platform security as a layered, device-dependent architecture:
+  hardware-rooted Verified Boot, rollback and partition integrity, application
+  identity and isolation, SELinux and permissions, file-based encryption,
+  KeyMint-backed key custody, user authentication, attestation, optional
+  protected VMs, memory-safety mitigations, and modular/security updates.
+  Android baseline controls are separated from optional OEM, SoC, release, and
+  device-specific capabilities. Invariants carry source tags defined in
+  docs/DEEP_SYSTEM_INVARIANTS.md.
+components:
+  - name: hardware_root_of_trust
+    function: device-specific hardware-protected key or measurement anchor from which the boot trust chain begins
+    criticality: high
+    medical_map: immune_system
+  - name: bootloader_state
+    function: records whether the bootloader is locked or unlocked and exposes the verified-boot trust state
+    criticality: high
+    medical_map: diagnosis
+  - name: verified_boot_chain
+    function: verifies boot stages and authenticated metadata before handing execution to the next stage
+    criticality: high
+    medical_map: immune_system
+  - name: rollback_protection
+    function: compares version indices against tamper-evident stored values and rejects disallowed downgrades
+    criticality: high
+    medical_map: vaccination
+  - name: verified_partition_integrity
+    function: verifies boot-time images and runtime reads from verified partitions using signed metadata and mechanisms such as dm-verity
+    criticality: high
+    medical_map: diagnosis
+  - name: app_signing_identity
+    function: binds an installed package and its authorized updates to a signing key; signing does not imply a central certificate authority verified the developer
+    criticality: high
+    medical_map: immune_system
+  - name: app_sandbox
+    function: isolates app processes and data using Linux UIDs and kernel-enforced process boundaries, with legacy shared-UID exceptions
+    criticality: high
+    medical_map: quarantine
+  - name: selinux_policy
+    function: applies mandatory access control to processes, including privileged and root processes, according to the device policy
+    criticality: high
+    medical_map: quarantine
+  - name: runtime_permission_gate
+    function: mediates access to protected capabilities through install-time, runtime, signature, role, and special-access permission mechanisms
+    criticality: medium
+    medical_map: homeostasis
+  - name: ipc_boundary
+    function: exposes controlled inter-process communication surfaces whose caller identity and authorization must be checked
+    criticality: high
+    medical_map: quarantine
+  - name: file_based_encryption
+    function: separates device-encrypted and credential-encrypted user data behind independently managed keys
+    criticality: high
+    medical_map: quarantine
+  - name: keymint_keystore
+    function: creates and uses cryptographic keys under declared software, TEE, or StrongBox security levels and authorization constraints
+    criticality: high
+    medical_map: immune_system
+  - name: secure_execution_environment
+    function: provides an isolated TEE or secure element for supported security-sensitive operations; availability and assurance vary by device
+    criticality: high
+    medical_map: quarantine
+  - name: credential_authenticator
+    function: verifies lock-screen credentials in a protected environment and rate-limits repeated failures using implementation-defined timeouts
+    criticality: medium
+    medical_map: homeostasis
+  - name: key_attestation
+    function: returns a certificate-backed description of key properties and selected device state, bound to a verifier-provided challenge
+    criticality: medium
+    medical_map: diagnosis
+  - name: protected_virtual_machine
+    function: optionally isolates supported workloads using the Android Virtualization Framework and pKVM-backed memory ownership controls
+    criticality: medium
+    medical_map: quarantine
+  - name: memory_safety_mitigation
+    function: optionally applies compiler, allocator, sanitizer, and hardware mechanisms such as MTE to reduce memory-corruption risk
+    criticality: medium
+    medical_map: vaccination
+  - name: modular_update_channel
+    function: updates selected modular system components outside the full OS release cycle where device and partner support exists
+    criticality: medium
+    medical_map: physiotherapy
+  - name: security_patch_lifecycle
+    function: delivers and integrates platform, kernel, vendor, and component fixes according to OEM and device support commitments
+    criticality: high
+    medical_map: prognosis
+relationships:
+  - from: hardware_root_of_trust
+    to: verified_boot_chain
+    type: anchors
+  - from: bootloader_state
+    to: verified_boot_chain
+    type: qualifies_trust_state_of
+  - from: verified_boot_chain
+    to: rollback_protection
+    type: constrains
+  - from: verified_boot_chain
+    to: verified_partition_integrity
+    type: authenticates_metadata_for
+  - from: app_signing_identity
+    to: app_sandbox
+    type: binds_package_to
+  - from: app_sandbox
+    to: selinux_policy
+    type: constrained_by
+  - from: runtime_permission_gate
+    to: ipc_boundary
+    type: authorizes_sensitive_calls_through
+  - from: file_based_encryption
+    to: keymint_keystore
+    type: protects_key_lifecycle_with
+  - from: credential_authenticator
+    to: keymint_keystore
+    type: gates_auth_bound_key_use
+  - from: secure_execution_environment
+    to: keymint_keystore
+    type: may_host_hardware_backing_for
+  - from: hardware_root_of_trust
+    to: key_attestation
+    type: anchors_attestation_chain_for
+  - from: verified_boot_chain
+    to: key_attestation
+    type: contributes_device_state_to
+  - from: protected_virtual_machine
+    to: verified_boot_chain
+    type: depends_on_authenticated_pvm_images
+  - from: memory_safety_mitigation
+    to: app_sandbox
+    type: reduces_memory_corruption_risk_within
+  - from: modular_update_channel
+    to: security_patch_lifecycle
+    type: delivers_selected_fixes_for
+invariants:
+  - "Verified Boot establishes a chain from a hardware-protected root through the bootloader to boot and other verified partitions; each stage authenticates the next before handoff [AOSP-VB]"
+  - "rollback protection tracks accepted versions, commonly per partition, and rejects versions below stored rollback indices; implementation details are device-specific [AOSP-VB]"
+  - "boot-time and runtime verification failures have distinct recovery behavior; do not model every integrity error as the same universal halt condition [AOSP-VB]"
+  - "bootloader lock state and verified-boot state are material trust inputs; an unlocked or non-verified device must not be represented as equivalent to a locked verified device [AOSP-VB][AOSP-ATTEST]"
+  - "Android assigns apps distinct Linux UIDs and uses the kernel application sandbox; shared UID is a legacy exception and is deprecated for newer Android targets [AOSP-APP]"
+  - "APK signing establishes package signing identity and update continuity, not universal CA-backed proof of the human or organization behind the developer key [AOSP-APP]"
+  - "SELinux uses default-deny mandatory access control and Android's AOSP policy is enforcing; SELinux constraints also apply to processes with root or superuser privileges [AOSP-SELINUX]"
+  - "permission grants, app identity, UID isolation, SELinux policy, and IPC authorization are separate controls; none substitutes for the others [AOSP-APP][AOSP-SELINUX]"
+  - "devices launching with Android 10 or higher are required to use file-based encryption; credential-encrypted data is unavailable until the relevant user is unlocked, while device-encrypted data supports Direct Boot [AOSP-FBE]"
+  - "hardware-backed Keystore is conditional: KeyMint security level distinguishes software, TEE, and StrongBox enforcement, and callers must verify the attestation evidence rather than assume hardware backing [AOSP-KEYMINT][AOSP-ATTEST]"
+  - "key attestation includes a caller-supplied challenge and certificate-backed claims; a verifier must validate the challenge, certificate chain, security level, boot state, and policy-relevant fields [AOSP-ATTEST]"
+  - "Gatekeeper throttles failed credential attempts using secure timeouts; Weaver may provide hardware-backed rate limiting where implemented; exponential backoff is not a universal platform invariant [AOSP-AUTH]"
+  - "pKVM is an optional platform capability: it is designed to protect protected-VM confidentiality and integrity, while the host can still influence guest availability and supply-chain actors remain trusted [AOSP-AVF]"
+  - "MTE is configurable independently for kernel and userspace; Android does not mandate one universal device configuration, so its presence and enforcement must be measured per build [AOSP-MTE]"
+  - "Mainline updates selected modular components outside the normal Android release cycle; it does not replace OEM firmware, kernel, or full-platform security update obligations [AOSP-MAINLINE]"
+  - "the platform security model is defense in depth, not proof of invulnerability: a kernel compromise can undermine controls that depend on kernel integrity [AOSP-SEC]"
+failure_modes:
+  - name: rollback_policy_gap
+    medical_map: pathogen
+    description: an older vulnerable image is accepted because rollback metadata or enforcement is missing, stale, or misconfigured
+    indicators: [older_image_boots, rollback_index_not_advanced, rollback_check_disabled]
+  - name: verified_boot_state_misread
+    medical_map: chronic
+    description: an unlocked, orange, yellow, or otherwise non-verified state is interpreted as equivalent to a locked verified boot state
+    indicators: [bootloader_unlocked, verified_boot_state_not_verified, attestation_policy_ignores_boot_state]
+  - name: partition_integrity_gap
+    medical_map: acute
+    description: a boot or runtime partition is outside the expected verification coverage or verification errors are mishandled
+    indicators: [unverified_partition_loaded, dm_verity_error_ignored, vbmeta_chain_incomplete]
+  - name: sandbox_boundary_escape
+    medical_map: metastasis
+    description: a vulnerability or over-broad identity grant permits one app to access another app's protected resources
+    indicators: [cross_uid_data_read, unintended_shared_uid, unauthorized_binder_access]
+  - name: mandatory_access_control_weakening
+    medical_map: autoimmune
+    description: SELinux is permissive, disabled, or over-broad policy grants defeat intended process confinement
+    indicators: [selinux_permissive, broad_allow_rule, unconfined_service]
+  - name: permission_overgrant
+    medical_map: cancer
+    description: a package receives capabilities beyond its functional need or a sensitive IPC path omits authorization checks
+    indicators: [unnecessary_runtime_permission, exported_component_without_permission, caller_identity_not_checked]
+  - name: credential_encryption_scope_error
+    medical_map: chronic
+    description: device-encrypted and credential-encrypted data are confused, or sensitive data is placed in an inappropriate storage class
+    indicators: [sensitive_data_in_device_encrypted_storage, ce_data_assumed_available_before_unlock, encryption_exception_without_policy]
+  - name: software_key_misrepresented_as_hardware
+    medical_map: pathogen
+    description: a relying party trusts a key as hardware-backed without checking attestation security level and device state
+    indicators: [security_level_not_checked, software_enforced_claim_treated_as_hardware, attestation_chain_unverified]
+  - name: attestation_replay_or_misvalidation
+    medical_map: acute
+    description: stale, mismatched, or untrusted attestation evidence is accepted
+    indicators: [challenge_mismatch, certificate_chain_unverified, stale_attestation_accepted]
+  - name: credential_throttle_bypass
+    medical_map: pathogen
+    description: repeated credential attempts evade the authenticator's persistent timeout or failure counter
+    indicators: [failure_counter_rollback, timeout_not_enforced, insecure_throttle_state]
+  - name: runtime_kernel_compromise
+    medical_map: sepsis
+    description: a kernel-level compromise undermines sandboxing, SELinux enforcement, or other controls that depend on kernel integrity
+    indicators: [kernel_privilege_escalation, selinux_policy_bypass, cross_process_memory_access]
+  - name: optional_mitigation_assumed_present
+    medical_map: chronic
+    description: an optional mitigation such as MTE or pKVM is assumed to be active without checking device, build, and configuration support
+    indicators: [mte_support_not_detected, pvm_feature_not_available, mitigation_mode_not_verified]
+  - name: update_coverage_gap
+    medical_map: inflammation
+    description: a device misses applicable platform, vendor, kernel, or modular security fixes
+    indicators: [security_patch_level_stale, vendor_patch_missing, mainline_component_outdated]
+architecture_patterns:
+  - name: verified_boot_with_explicit_state
+    medical_map: immune_system
+    description: authenticate the boot chain and carry lock and verification state into every relying-party decision
+  - name: least_privilege_process_confinement
+    medical_map: quarantine
+    description: combine per-app UIDs, SELinux domains, permission checks, and authorized IPC
+  - name: split_credential_storage
+    medical_map: physiotherapy
+    description: keep pre-unlock device data separate from credential-gated user data
+  - name: attested_key_security_level
+    medical_map: diagnosis
+    description: verify the challenge, chain, boot state, and actual software, TEE, or StrongBox security level before relying on a key
+  - name: optional_capability_negotiation
+    medical_map: homeostasis
+    description: detect per-device support and runtime configuration before depending on pKVM, MTE, or OEM-specific protections
+  - name: layered_patch_delivery
+    medical_map: vaccination
+    description: track OS, kernel, vendor, and modular component updates as distinct but coordinated maintenance channels
