@@ -136,7 +136,7 @@ invariants:
   - "Verified Boot establishes a chain from a hardware-protected root through the bootloader to boot and other verified partitions; each stage authenticates the next before handoff [AOSP-VB]"
   - "rollback protection tracks accepted versions, commonly per partition, and rejects versions below stored rollback indices; implementation details are device-specific [AOSP-VB]"
   - "boot-time and runtime verification failures have distinct recovery behavior; do not model every integrity error as the same universal halt condition [AOSP-VB]"
-  - "bootloader lock state and verified-boot state are material trust inputs; an unlocked or non-verified device must not be represented as equivalent to a locked verified device [AOSP-VB][AOSP-ATTEST]"
+  - "bootloader lock state and verified-boot state are material trust inputs: GREEN is OEM-root verified and locked, YELLOW is verified with a user-configured root, ORANGE is unlocked and unverified, and RED indicates verification failure; these states must not be collapsed [AOSP-VB][AOSP-ATTEST]"
   - "Android assigns apps distinct Linux UIDs and uses the kernel application sandbox; shared UID is a legacy exception and is deprecated for newer Android targets [AOSP-APP]"
   - "APK signing establishes package signing identity and update continuity, not universal CA-backed proof of the human or organization behind the developer key [AOSP-APP]"
   - "SELinux uses default-deny mandatory access control and Android's AOSP policy is enforcing; SELinux constraints also apply to processes with root or superuser privileges [AOSP-SELINUX]"
