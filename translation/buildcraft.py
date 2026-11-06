@@ -13,17 +13,24 @@ Resolution is two-layered and deterministic:
 """
 from __future__ import annotations
 
+from functools import lru_cache
 import re
 
 from semantic_compiler.registry.buildcraft import BUILDCRAFT_MAPPINGS, BuildcraftMapping
 from semantic_compiler.translation.structural_resolver import (
     RelationPattern,
     StructuralRule,
+    negated_rule_ids,
     resolve_rules,
 )
 
 
 ALIASES = {
+    # BUILD_001 (equipment paper doll <-> motherboard/chassis topology). This
+    # concept previously did not exist and BUILD_001 was keyed on
+    # ``complete_build`` (a copy of BUILD_012), so any "complete build" text
+    # resolved the topology mapping.
+    "topology": ("paper doll", "equipment paper doll", "character sheet", "motherboard topology", "chassis topology"),
     "pcie_slot": ("pcie", "pcie slot", "pcie slots", "accelerator slot"),
     "weapon_slot": ("weapon slot", "weapon slots", "weapon sockets", "weapon links"),
     "gpu": ("gpu", "gpus", "accelerator", "graphics card"),
@@ -57,7 +64,7 @@ ALIASES = {
 
 
 RULES = (
-    StructuralRule("BUILD_001", concepts_any=(frozenset({"complete_build"}),), minimum_score=0.25),
+    StructuralRule("BUILD_001", concepts_any=(frozenset({"topology"}),), minimum_score=0.25),
     StructuralRule("BUILD_002", concepts_any=(frozenset({"pcie_slot"}), frozenset({"weapon_slot"})), relations_any=(RelationPattern("equivalent_role", frozenset({"pcie_slot"}), frozenset({"weapon_slot"})),), minimum_score=0.45),
     StructuralRule("BUILD_003", concepts_any=(frozenset({"cpu_socket"}), frozenset({"armour_slot"})), relations_any=(RelationPattern("equivalent_role", frozenset({"cpu_socket"}), frozenset({"armour_slot"})),), minimum_score=0.45),
     StructuralRule("BUILD_004", concepts_any=(frozenset({"gpu"}), frozenset({"weapon"})), relations_any=(RelationPattern("equivalent_role", frozenset({"gpu"}), frozenset({"weapon"})),), minimum_score=0.45),
@@ -66,7 +73,10 @@ RULES = (
     StructuralRule("BUILD_007", concepts_any=(frozenset({"llm"}), frozenset({"active_skill"})), relations_any=(RelationPattern("equivalent_role", frozenset({"llm"}), frozenset({"active_skill"})),), minimum_score=0.45),
     StructuralRule("BUILD_008", concepts_any=(frozenset({"support_runtime"}),), minimum_score=0.25),
     StructuralRule("BUILD_009", concepts_any=(frozenset({"compatibility"}),), minimum_score=0.25),
-    StructuralRule("BUILD_010", concepts_any=(frozenset({"vram"}), frozenset({"reservation"})), relations_any=(RelationPattern("equivalent_role", frozenset({"vram"}), frozenset({"reservation"})), RelationPattern("consumes", frozenset({"llm", "support_runtime"}), frozenset({"vram"}))), minimum_score=0.45),
+    # minimum_score is 0.40 (not 0.45): the second pattern ("<llm|support> consumes
+    # vram") can only ever co-occur with the vram concept group (0.15) and its
+    # relation (0.25) = 0.40, so at 0.45 that pattern was unreachable dead code.
+    StructuralRule("BUILD_010", concepts_any=(frozenset({"vram"}), frozenset({"reservation"})), relations_any=(RelationPattern("equivalent_role", frozenset({"vram"}), frozenset({"reservation"})), RelationPattern("consumes", frozenset({"llm", "support_runtime"}), frozenset({"vram"}))), minimum_score=0.40),
     StructuralRule("BUILD_011", concepts_any=(frozenset({"repository"}),), minimum_score=0.25),
     StructuralRule("BUILD_012", concepts_any=(frozenset({"complete_build"}),), minimum_score=0.25),
     StructuralRule("BUILD_013", concepts_any=(frozenset({"delivery_proliferation"}),), minimum_score=0.25),
@@ -89,9 +99,53 @@ def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", normalized).strip()
 
 
+@lru_cache(maxsize=None)
+def _word_pattern(phrase: str) -> re.Pattern[str]:
+    """Compile a whole-word matcher that still tolerates plural/past suffixes.
+
+    The legacy trigger layer used raw substring tests, so "abi" matched
+    "capability"/"probability", "repo" matched "report", "gem" matched
+    "management", and "mana" matched "management". Anchoring on token
+    boundaries removes those false positives while ``(s|es|d|ed)`` keeps the
+    recall the substring test provided for "gpus", "drivers", "repos",
+    "reserved" and similar.
+    """
+    return re.compile(rf"(?<![a-z0-9]){re.escape(_normalize(phrase))}(?:s|es|d|ed)?(?![a-z0-9])")
+
+
+def _has(normalized: str, phrase: str) -> bool:
+    return _word_pattern(phrase).search(normalized) is not None
+
+
+_SLOT_CONCEPTS = ("pcie_slot", "weapon_slot", "cpu_socket", "armour_slot")
+
+
+@lru_cache(maxsize=1)
+def _slot_phrase_pattern() -> re.Pattern[str]:
+    phrases = sorted(
+        {_normalize(phrase) for concept in _SLOT_CONCEPTS for phrase in ALIASES[concept]},
+        key=len,
+        reverse=True,
+    )
+    return re.compile(
+        r"(?<![a-z0-9])(?:" + "|".join(re.escape(p) for p in phrases) + r")(?:s|es)?(?![a-z0-9])"
+    )
+
+
+def _mask_slot_phrases(normalized: str) -> str:
+    """Blank out slot phrases before item-level recall signals run.
+
+    "accelerator slot" is a slot (BUILD_002), not the accelerator item
+    (BUILD_004), and "body armour slot" is a slot (BUILD_003), not the armour
+    item (BUILD_005). Item-level fallback signals therefore read the masked
+    text so a slot sentence does not also assert its item.
+    """
+    return _slot_phrase_pattern().sub(" ", normalized)
+
+
 def _trigger_matches(text: str, trigger: str) -> bool:
     normalized_trigger = _normalize(trigger)
-    return bool(normalized_trigger and normalized_trigger in text)
+    return bool(normalized_trigger and _has(text, normalized_trigger))
 
 
 def _trigger_ids(normalized: str) -> list[str]:
@@ -102,49 +156,57 @@ def _trigger_ids(normalized: str) -> list[str]:
         if mapping_id not in ids:
             ids.append(mapping_id)
 
+    def has(phrase: str) -> bool:
+        return _has(normalized, phrase)
+
+    items = _mask_slot_phrases(normalized)
+
+    def has_item(phrase: str) -> bool:
+        return _has(items, phrase)
+
     for mapping in BUILDCRAFT_MAPPINGS:
         if any(_trigger_matches(normalized, trigger) for trigger in mapping.triggers):
             add(mapping.mapping_id)
 
     # Recover the hierarchy from compressed founder shorthand.
-    if "pcie" in normalized:
+    if has("pcie"):
         add("BUILD_002")
-    if "gpu" in normalized or "accelerator" in normalized:
+    if has_item("gpu") or has_item("accelerator"):
         add("BUILD_004")
-    if "cpu socket" in normalized or "cpu slot" in normalized:
+    if has("cpu socket") or has("cpu slot"):
         add("BUILD_003")
-    if "cpu" in normalized and any(word in normalized for word in ("armor", "armour", "body")):
+    if has_item("cpu") and any(has_item(word) for word in ("armor", "armour", "body")):
         add("BUILD_005")
-    if "vram" in normalized and any(word in normalized for word in ("mana", "reserve", "allocation")):
+    if has("vram") and any(has(word) for word in ("mana", "reserve", "allocation")):
         add("BUILD_010")
-    if "llm" in normalized or "model" in normalized:
-        if "gem" in normalized or "skill" in normalized:
+    if has("llm") or has("model"):
+        if has("gem") or has("skill"):
             add("BUILD_007")
-    if any(word in normalized for word in ("cuda", "pytorch", "pypi", "driver", "abi")):
+    if any(has(word) for word in ("cuda", "pytorch", "pypi", "driver", "abi")):
         add("BUILD_009")
-    if any(word in normalized for word in ("repo", "repository", "package")):
+    if any(has(word) for word in ("repo", "repository", "repositories", "package")):
         add("BUILD_011")
-    if "rtx pro 6000" in normalized or ("blackwell" in normalized and "96 gb" in normalized):
+    if has("rtx pro 6000") or (has("blackwell") and has("96 gb")):
         add("BUILD_014")
 
     # A dense statement spanning three or more layers should preserve the
     # complete slot -> item -> component -> reservation chain.
     hierarchy_signals = sum(
-        signal in normalized
+        has_item(signal) if signal in ("gpu", "cpu") else has(signal)
         for signal in ("pcie", "gpu", "cpu", "llm", "gem", "vram", "cuda", "pytorch")
     )
     if hierarchy_signals >= 3:
-        if "pcie" in normalized:
+        if has("pcie"):
             add("BUILD_002")
-        if "gpu" in normalized:
+        if has_item("gpu"):
             add("BUILD_004")
-        if "cpu" in normalized:
+        if has_item("cpu"):
             add("BUILD_005")
-        if "llm" in normalized or "model" in normalized:
+        if has("llm") or has("model"):
             add("BUILD_007")
-        if "gem" in normalized or "mtp" in normalized or "drafter" in normalized:
+        if has("gem") or has("mtp") or has("drafter"):
             add("BUILD_008")
-        if "vram" in normalized:
+        if has("vram"):
             add("BUILD_010")
 
     return ids
@@ -179,20 +241,28 @@ def resolve_buildcraft_entries(text: str) -> list[BuildcraftMapping]:
 def resolve_buildcraft_mappings(text: str) -> list[dict[str, object]]:
     evidence, matches = resolve_rules(text, ALIASES, RULES)
     scores = {match.rule_id: match for match in matches}
+    denied = negated_rule_ids(RULES, evidence)
     output = []
     for entry in resolve_buildcraft_entries(text):
         item = entry.to_fractal_mapping()
         match = scores.get(entry.mapping_id)
-        item["resolver_evidence"] = (
-            {
-                "score": match.score,
-                "reasons": list(match.evidence),
-                "concepts": sorted(evidence.concepts),
-                "relations": [list(relation) for relation in evidence.relations],
-            }
-            if match is not None
-            else {"score": None, "reasons": ["trigger_phrase_match"], "concepts": sorted(evidence.concepts), "relations": [list(relation) for relation in evidence.relations]}
-        )
+        if match is not None:
+            reasons = list(match.evidence)
+            score = match.score
+        else:
+            # Trigger-recall match. If the source text explicitly denies the
+            # relation ("a GPU is not a weapon") the mapping is still surfaced
+            # (the denial is exactly its residual), but the evidence says so.
+            reasons = ["trigger_phrase_match"]
+            if entry.mapping_id in denied:
+                reasons.append("relation_negated_in_source")
+            score = None
+        item["resolver_evidence"] = {
+            "score": score,
+            "reasons": reasons,
+            "concepts": sorted(evidence.concepts),
+            "relations": [list(relation) for relation in evidence.relations],
+        }
         output.append(item)
     return output
 

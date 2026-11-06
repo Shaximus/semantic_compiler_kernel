@@ -21,6 +21,7 @@ Global Law: UNIVERSAL_FRACTAL_INVARIANCE
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from semantic_compiler.core.types import (
@@ -242,26 +243,177 @@ def map_all_departments(
     return mappings
 
 
-# Reverse keyword index: concrete implementation terms -> FunctionalDepartment.
-# Built from the universal isomorphism table plus common synonyms.
+# ---------------------------------------------------------------------------
+# Scale vocabulary
+# ---------------------------------------------------------------------------
+
+# Single source of truth for "which scale does this frame name belong to".
+# ``core.pipeline._infer_system_scale`` and ``map_fractal_similarity`` used to
+# keep separate, divergent copies. The frame detector emits names such as
+# "biology", "computation", "organizational", "economic" and "reflexion", but
+# the keyword table in ``map_fractal_similarity`` matched none of them, so almost
+# every frame pair silently produced zero fractal mappings.
+FRAME_TO_SCALE: dict[str, str] = {
+    # Biology / human
+    "biology": "human",
+    "human": "human",
+    "body": "human",
+    "biological": "human",
+    "medical": "human",
+    # Computing
+    "computation": "computer",
+    "computer": "computer",
+    "software": "computer",
+    "hardware": "computer",
+    # Society / organizational
+    "organizational": "society",
+    "society": "society",
+    "government": "society",
+    "national": "society",
+    "civilization": "society",
+    "economic": "society",
+    "economy": "society",
+    # Cosmology / physics
+    "cosmological": "cosmos",
+    "cosmos": "cosmos",
+    "physics": "cosmos",
+    # Cellular
+    "cellular": "cellular",
+    "cell": "cellular",
+    # AI / LLM
+    "reflexion": "llm",
+    "ai": "llm",
+    "model": "llm",
+    "llm": "llm",
+    "transformer": "llm",
+    "neural": "llm",
+}
+
+# Legacy free-text keyword fallback for frame names not in FRAME_TO_SCALE.
+_SCALE_KEYWORDS: dict[str, list[str]] = {
+    "human": ["human", "body", "brain", "biological", "medical"],
+    "llm": ["llm", "model", "ai", "transformer", "neural", "claude", "gemini"],
+    "society": ["society", "government", "nation", "civilization", "economy"],
+    "computer": ["computer", "software", "hardware", "system", "network"],
+    "cosmos": ["cosmos", "universe", "cosmological", "physics", "quantum"],
+    "cellular": ["cell", "cellular", "dna", "gene", "protein"],
+}
+
+
+def scale_for_frame(frame: str | None) -> str | None:
+    """Resolve a frame/target name to a canonical scale, or None."""
+    if not frame:
+        return None
+    key = frame.strip().rstrip("?").lower()
+    if key in FRAME_TO_SCALE:
+        return FRAME_TO_SCALE[key]
+    for scale_name, keywords in _SCALE_KEYWORDS.items():
+        # Whole-word match: "ai" must not match "chain" or "domain".
+        if any(re.search(rf"(?<![a-z]){re.escape(kw)}(?![a-z])", key) for kw in keywords):
+            return scale_name
+    return None
+
+
+def _legacy_scale_for_frame(frame: str) -> str | None:
+    """V3.0.0 behaviour: substring keyword match, last matching scale wins."""
+    lowered = frame.lower()
+    scale = None
+    for scale_name, keywords in _SCALE_KEYWORDS.items():
+        if any(kw in lowered for kw in keywords):
+            scale = scale_name
+    return scale
+
+
+# ---------------------------------------------------------------------------
+# Department presence detection
+# ---------------------------------------------------------------------------
+#
+# Maps free text to the functional departments it gives evidence for. Earlier
+# versions substring-matched every word of the raw input against every
+# implementation string, so function words ("in", "of", "to") and the system's
+# own name ("cell" in "A cell has a nucleus") marked most departments PRESENT,
+# which defeated missing-organ detection whenever raw text was supplied. On the
+# shipped labeled benchmark that cost 16 of 82 absences (recall 0.805).
+#
+# Evidence, strongest first (all matching is whole-token, plural-folded):
+#   1. Phrase evidence: a table segment of the department at the ACTIVE scale
+#      ("attention mechanism", "trained weights", "cell membrane") appears as a
+#      contiguous phrase. A phrase shared by several departments is evidence
+#      for each of them. A one-word segment counts only if no other department
+#      lists that word at this scale.
+#   2. Curated synonyms (scale independent): "terminator" -> DELETION, ...
+#   3. Token evidence for words left over: a word that several departments list
+#      resolves to the FIRST-listed department at the scale (PROCESSOR is
+#      listed first). This keeps "A society has a government" from also
+#      marking SUBCONSCIOUS, whose table entry is also "Government".
+#   4. Never evidence: function words, generic table words, the system's own
+#      name at the active scale, and anything inside a negation window
+#      ("no CPU", "without a firewall").
+
+_STOPWORDS = frozenset(
+    "the and per toward with from into via of to in or is as by at on it an be no not "
+    "for a are was were has have had there their its this that these those which what "
+    "who but if then than so such can will would could should may might must also only "
+    "just very more most some any all each other both one two three include includes "
+    "included including contain contains consist consists system systems function "
+    "functions state states information process processes mechanism structure layer "
+    "level data unit part parts type types kind kinds".split()
+)
+
+# Words that name the system itself at a given scale; mentioning the system is
+# not evidence that any particular organ exists.
+_SCALE_SELF_TOKENS: dict[str, frozenset[str]] = {
+    "human": frozenset({"human", "body", "person"}),
+    "llm": frozenset({"llm", "model", "ai"}),
+    "society": frozenset({"society", "societie"}),
+    "computer": frozenset({"computer", "machine"}),
+    "cosmos": frozenset({"cosmos", "universe"}),
+    "cellular": frozenset({"cell", "cellular"}),
+    "quantum": frozenset({"quantum"}),
+}
+
+_NEGATORS = frozenset({
+    "no", "not", "without", "lacks", "lack", "lacking", "missing", "absent",
+    "never", "nor", "neither", "nothing", "cannot",
+})
+_NEGATION_RESET = frozenset({"but", "however", "although", "though", "yet", "while", "whereas"})
+_NEGATION_WINDOW = 4
+
+# Two-letter table tokens that are real acronyms (everything else needs 3+ letters).
+_SHORT_TOKENS = frozenset({"os", "gc"})
+
+_TOKEN_RE = re.compile(r"[a-z]+(?:-[a-z]+)*")
+_SEGMENT_SPLIT_RE = re.compile(r"\s*(?:/|\+|→|,|;|—)\s*")
+
+
+def _stem(token: str) -> str:
+    """Cheap plural folding: kidneys->kidney, antibodies->antibody, weights->weight."""
+    if len(token) > 4 and token.endswith("ies"):
+        return token[:-3] + "y"
+    if len(token) > 3 and token.endswith("s") and not token.endswith(("ss", "us")):
+        return token[:-1]
+    return token
+
+
+def _usable_token(token: str) -> bool:
+    if token in _STOPWORDS:
+        return False
+    return len(token) >= 3 or token in _SHORT_TOKENS
+
+
+# Curated single-word synonyms -> FunctionalDepartment.
 _KEYWORD_TO_DEPARTMENT: dict[str, FunctionalDepartment] = {}
+# Curated multi-word / hyphenated synonyms.
+_PHRASE_TO_DEPARTMENT: dict[str, FunctionalDepartment] = {}
+# scale -> list of (department, segment tokens, is_head) from the table, in table order.
+_SEGMENTS: dict[str, list[tuple[FunctionalDepartment, tuple[str, ...], bool]]] = {}
+# scale -> head token -> departments listing it, in table order.
+_HEAD_TOKEN_DEPARTMENTS: dict[str, dict[str, list[FunctionalDepartment]]] = {}
 
 
 def _build_keyword_index() -> dict[str, FunctionalDepartment]:
-    """Build a keyword index from implementation strings and common synonyms."""
+    """Build the curated synonym indexes (single words returned; phrases populated)."""
     index: dict[str, FunctionalDepartment] = {}
-    import re
-
-    # Extract keywords from isomorphism table implementation strings.
-    for dept, scale_map in UNIVERSAL_ISOMORPHISM.items():
-        for impl in scale_map.values():
-            if not impl or impl == "Unknown":
-                continue
-            # Keep short meaningful tokens (2+ chars) from implementation strings.
-            for token in re.findall(r"[a-z]{2,}", impl.lower()):
-                if token in {"the", "and", "per", "toward", "with", "from", "into", "via"}:
-                    continue
-                index[token] = dept
 
     # Common synonyms that the table strings may not cover directly.
     extra: dict[tuple[str, ...], FunctionalDepartment] = {
@@ -276,19 +428,175 @@ def _build_keyword_index() -> dict[str, FunctionalDepartment]:
         ("speech", "spoken", "spoken words", "output", "enacted", "api response", "protein"): FunctionalDepartment.SPEECH_OUTPUT,
         ("metabolism", "digestive", "digestion", "food", "energy", "power", "electricity", "mitochondria", "atp"): FunctionalDepartment.ENERGY_INTAKE,
         ("reproductive", "reproduction", "education", "teaching", "training", "clone", "division", "mitosis"): FunctionalDepartment.REPRODUCTION,
-        ("death", "apoptosis", "forgetting", "retirement", "termination", "deletion", "loss"): FunctionalDepartment.DELETION,
+        # "terminator"/"terminate"/"retire" cover agentive and verb forms of the
+        # table's "termination"/"retirement" ("process terminator", "model retired").
+        ("death", "apoptosis", "forgetting", "retirement", "retire", "retired", "termination",
+         "terminator", "terminate", "deletion", "loss"): FunctionalDepartment.DELETION,
         ("consciousness", "experience", "qualia", "civilization", "culture", "application", "phenotype"): FunctionalDepartment.APPLICATION,
         ("homeostasis", "overhead", "bureaucracy", "administrative", "swap", "maintenance"): FunctionalDepartment.RENDERING_OVERHEAD,
         ("working memory", "attention span", "context window", "ram", "cache", "density"): FunctionalDepartment.INFORMATION_DENSITY,
     }
     for keywords, dept in extra.items():
         for kw in keywords:
-            index[kw.lower()] = dept
-
+            kw = kw.lower()
+            if " " in kw or "-" in kw:
+                _PHRASE_TO_DEPARTMENT[kw] = dept
+            else:
+                index[kw] = dept
     return index
 
 
+def _segment_tokens(text: str) -> tuple[str, ...]:
+    return tuple(_stem(tok) for tok in _TOKEN_RE.findall(text.lower()))
+
+
+def _build_table_index() -> None:
+    """Split every implementation string into head and gloss segments, per scale.
+
+    "Hawking radiation (information escaping storage)" has the head segment
+    "hawking radiation" and the gloss segment "information escaping storage".
+    Only head words may act as single-token evidence; a gloss is explanatory
+    prose, so only its multi-word phrases count.
+    """
+    for dept, scale_map in UNIVERSAL_ISOMORPHISM.items():
+        for scale, impl in scale_map.items():
+            if not impl or impl == "Unknown":
+                continue
+            head, _, rest = impl.partition("(")
+            gloss = rest.rsplit(")", 1)[0] if rest else ""
+            segments = _SEGMENTS.setdefault(scale, [])
+            head_tokens = _HEAD_TOKEN_DEPARTMENTS.setdefault(scale, {})
+            for is_head, chunk in ((True, head), (False, gloss)):
+                for part in _SEGMENT_SPLIT_RE.split(chunk):
+                    tokens = _segment_tokens(part)
+                    if not tokens:
+                        continue
+                    segments.append((dept, tokens, is_head))
+                    if is_head:
+                        for token in tokens:
+                            if _usable_token(token):
+                                owners = head_tokens.setdefault(token, [])
+                                if dept not in owners:
+                                    owners.append(dept)
+
+
 _KEYWORD_TO_DEPARTMENT = _build_keyword_index()
+_build_table_index()
+
+
+def _tokens_with_negation(sentence: str) -> list[tuple[str, bool]]:
+    """Tokenize a sentence, flagging tokens inside a negation window."""
+    tokens: list[tuple[str, bool]] = []
+    remaining = 0
+    for token in _TOKEN_RE.findall(sentence):
+        if token in _NEGATORS:
+            remaining = _NEGATION_WINDOW
+            tokens.append((token, False))
+        elif token in _NEGATION_RESET:
+            remaining = 0
+            tokens.append((token, False))
+        elif remaining > 0:
+            remaining -= 1
+            tokens.append((token, True))
+        else:
+            tokens.append((token, False))
+    return tokens
+
+
+def _find_phrase(tokens: list[str | None], phrase: tuple[str, ...]) -> list[int]:
+    """Start indexes where ``phrase`` occurs contiguously in ``tokens``."""
+    width = len(phrase)
+    return [
+        start
+        for start in range(len(tokens) - width + 1)
+        if all(tokens[start + k] == phrase[k] for k in range(width))
+    ]
+
+
+def _curated_phrase_tokens() -> dict[tuple[str, ...], FunctionalDepartment]:
+    return {
+        tuple(_stem(part) for part in re.split(r"[ ]", phrase)): dept
+        for phrase, dept in _PHRASE_TO_DEPARTMENT.items()
+    }
+
+
+_CURATED_PHRASES = _curated_phrase_tokens()
+
+
+def _sentence_departments(sentence: str, scale: str, self_tokens: frozenset[str]) -> set[str]:
+    tagged = _tokens_with_negation(sentence)
+    if not tagged:
+        return set()
+
+    # Hyphenated words ("chain-of-thought") stay whole; negated tokens become
+    # None so they can never start or complete a match.
+    surface: list[str | None] = [None if negated else _stem(tok) for tok, negated in tagged]
+    consumed = [False] * len(surface)
+    found: set[str] = set()
+
+    def claim(start: int, width: int, dept: FunctionalDepartment) -> None:
+        found.add(dept.name)
+        for k in range(start, start + width):
+            consumed[k] = True
+
+    # 1. Table-segment phrases at the active scale. Segments are tried against
+    #    the surface text and against the text with the system's own name
+    #    removed, so "membrane receptors" matches the segment "cell membrane
+    #    receptors" and "cell membrane" matches "cell membrane".
+    stripped_index = [i for i, tok in enumerate(surface) if tok is not None and tok not in self_tokens]
+    stripped = [surface[i] for i in stripped_index]
+    heads_by_token = _HEAD_TOKEN_DEPARTMENTS.get(scale, {})
+    for dept, tokens, _is_head in _SEGMENTS.get(scale, ()):
+        if len(tokens) == 1:
+            token = tokens[0]
+            owners = heads_by_token.get(token, ())
+            distinctive = len(owners) == 1 and owners[0] == dept
+            if not distinctive or not _usable_token(token) or token in self_tokens:
+                continue
+            for start in _find_phrase(surface, tokens):
+                claim(start, 1, dept)
+            continue
+        for start in _find_phrase(surface, tokens):
+            claim(start, len(tokens), dept)
+        reduced = tuple(tok for tok in tokens if tok not in self_tokens)
+        if len(reduced) >= 2 and reduced != tokens:
+            for start in _find_phrase(stripped, reduced):
+                for k in range(start, start + len(reduced)):
+                    consumed[stripped_index[k]] = True
+                found.add(dept.name)
+
+    # 2. Curated multi-word synonyms.
+    for tokens, dept in _CURATED_PHRASES.items():
+        for start in _find_phrase(surface, tokens):
+            claim(start, len(tokens), dept)
+
+    # 3. Remaining words: curated single-word synonyms, then table head words.
+    for index, token in enumerate(surface):
+        if token is None or consumed[index]:
+            continue
+        raw = tagged[index][0]
+        if token in self_tokens or not _usable_token(raw) or not _usable_token(token):
+            continue
+        curated = _KEYWORD_TO_DEPARTMENT.get(raw) or _KEYWORD_TO_DEPARTMENT.get(token)
+        if curated is not None:
+            found.add(curated.name)
+        owners = heads_by_token.get(token)
+        if owners:
+            # First-listed department at this scale wins an ambiguous word.
+            found.add(owners[0].name)
+        if "-" in raw:
+            for part in raw.split("-"):
+                part_token = _stem(part)
+                if part_token in self_tokens or not _usable_token(part):
+                    continue
+                curated = _KEYWORD_TO_DEPARTMENT.get(part) or _KEYWORD_TO_DEPARTMENT.get(part_token)
+                if curated is not None:
+                    found.add(curated.name)
+                part_owners = heads_by_token.get(part_token)
+                if part_owners:
+                    found.add(part_owners[0].name)
+
+    return found
 
 
 def _map_present_to_departments(
@@ -297,39 +605,19 @@ def _map_present_to_departments(
     raw_text: str | None = None,
 ) -> set[str]:
     """
-    Map raw extracted terms (actors/flows) to functional departments using
-    the isomorphism table and keyword synonyms. Also scans the raw input text
-    so that list-like descriptions do not require perfect skeleton extraction.
+    Map raw extracted terms (actors/flows) and the raw input text to functional
+    departments they give evidence for at ``scale``. See the rules above.
     """
     departments: set[str] = set()
+    self_tokens = _SCALE_SELF_TOKENS.get(scale, frozenset())
 
-    terms = list(present)
+    texts = [t for t in present if isinstance(t, str)]
     if raw_text:
-        import re
-        # Add individual content words from the raw text as candidate terms.
-        terms.extend(re.findall(r"[a-z]{2,}", raw_text.lower()))
+        texts.append(raw_text)
 
-    for term in terms:
-        term_lower = term.lower()
-        term_words = set(term_lower.split())
-
-        # Direct keyword match.
-        if term_lower in _KEYWORD_TO_DEPARTMENT:
-            departments.add(_KEYWORD_TO_DEPARTMENT[term_lower].name)
-
-        # Multi-word keyword match.
-        for keyword, dept in _KEYWORD_TO_DEPARTMENT.items():
-            if " " in keyword and keyword in term_lower:
-                departments.add(dept.name)
-
-        # Match against implementation strings for the current scale.
-        for dept in FunctionalDepartment:
-            impl = UNIVERSAL_ISOMORPHISM.get(dept, {}).get(scale, "")
-            if not impl or impl == "Unknown":
-                continue
-            impl_lower = impl.lower()
-            if term_lower in impl_lower or any(word in impl_lower for word in term_words):
-                departments.add(dept.name)
+    for text in texts:
+        for sentence in re.split(r"[.;!?\n]+", text.lower()):
+            departments |= _sentence_departments(sentence, scale, self_tokens)
 
     return departments
 
@@ -408,11 +696,27 @@ def _organ_implication(department: str, state: str, scale: str, expected_impl: s
     )
 
 
-def map_fractal_similarity(packet: Any, registry: Any = None) -> list[dict[str, Any]]:
+def map_fractal_similarity(
+    packet: Any,
+    registry: Any = None,
+    *,
+    resolve_frames: bool = False,
+) -> list[dict[str, Any]]:
     """
     Build fractal mappings for a packet.
 
     Citation: v1.0 Spec Section 8, step 4
+
+    ``resolve_frames=False`` (default) keeps the shipped V3.0.0 behaviour: frame
+    names are matched against a free-text keyword table, which in practice
+    matches almost none of the names the frame detector emits ("computation",
+    "organizational", "reflexion", ...), so most packets get no mappings.
+
+    ``resolve_frames=True`` resolves frame names through ``FRAME_TO_SCALE``. It is
+    opt-in because it changes frozen-core output: the mappings it produces carry
+    lower-case scale names ("human", "society") that the frozen dataset schema
+    2.1.0 enum rejects, so enabling it requires a schema-aware translation step
+    first (see the V3.0.0 review report).
     """
     if hasattr(packet, "source_frames"):
         source_frames = packet.source_frames
@@ -426,27 +730,12 @@ def map_fractal_similarity(packet: Any, registry: Any = None) -> list[dict[str, 
     # For each source-target pair, try to map departments
     for source in source_frames:
         for target in target_systems:
-            # Check if they correspond to known scales
-            scale_keywords = {
-                "human": ["human", "body", "brain", "biological", "medical"],
-                "llm": ["llm", "model", "ai", "transformer", "neural", "claude", "gemini"],
-                "society": ["society", "government", "nation", "civilization", "economy"],
-                "computer": ["computer", "software", "hardware", "system", "network"],
-                "cosmos": ["cosmos", "universe", "cosmological", "physics", "quantum"],
-                "cellular": ["cell", "cellular", "dna", "gene", "protein"],
-            }
-
-            source_scale = None
-            target_scale = None
-
-            source_lower = source.lower()
-            target_lower = target.lower()
-
-            for scale_name, keywords in scale_keywords.items():
-                if any(kw in source_lower for kw in keywords):
-                    source_scale = scale_name
-                if any(kw in target_lower for kw in keywords):
-                    target_scale = scale_name
+            if resolve_frames:
+                source_scale = scale_for_frame(source)
+                target_scale = scale_for_frame(target)
+            else:
+                source_scale = _legacy_scale_for_frame(source)
+                target_scale = _legacy_scale_for_frame(target)
 
             if source_scale and target_scale and source_scale != target_scale:
                 dept_mappings = map_all_departments(source_scale, target_scale)
