@@ -102,6 +102,14 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "keymint", "verified boot", "secure boot", "secure world", "strongbox",
         "gatekeeper", "weaver", "dm-verity", "vbmeta", "pKVM", "mte",
     )),
+    # Handset companions. "android" stays on mobile_security; these phrases
+    # are the connectivity and radio terms that do not belong there.
+    ("android_connectivity", (
+        "apn", "tethering", "rndis",
+    )),
+    ("bluetooth", (
+        "bluetooth", "ble", "gatt", "a2dp",
+    )),
     ("networking", (
         "bgp", "dns", "dnssec", "rpki", "tcp", "udp", "autonomous system",
         "route origin authorization", "validating resolver",

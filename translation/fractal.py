@@ -247,12 +247,12 @@ def map_all_departments(
 # Scale vocabulary
 # ---------------------------------------------------------------------------
 
-# Single source of truth for "which scale does this frame name belong to".
-# ``core.pipeline._infer_system_scale`` and ``map_fractal_similarity`` used to
-# keep separate, divergent copies. The frame detector emits names such as
-# "biology", "computation", "organizational", "economic" and "reflexion", but
-# the keyword table in ``map_fractal_similarity`` matched none of them, so almost
-# every frame pair silently produced zero fractal mappings.
+# Mirrors the frozen table in core.pipeline._infer_system_scale.
+# map_fractal_similarity reads it only when resolve_frames=True. The default
+# path, which core.pipeline calls, still uses the legacy keyword table.
+# The frame detector emits names such as "biology", "computation",
+# "organizational", "economic" and "reflexion", which that legacy table
+# misses, so the default path still produces no mappings for those pairs.
 FRAME_TO_SCALE: dict[str, str] = {
     # Biology / human
     "biology": "human",

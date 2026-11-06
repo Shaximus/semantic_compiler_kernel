@@ -145,17 +145,17 @@ SAMPLES = [
 
     # --- 5 companion handset samples: android_connectivity ---
     ("A handset with radio registration, APN data sessions, USB gadget tethering, policy routing, and usage accounting.", "android_connectivity", "strong_whole_system"),
-    ("The tether interface reports its upstream and last error.", "android_connectivity", "fragmentary"),
+    ("The tethering interface reports its upstream and last error.", "android_connectivity", "fragmentary"),
     ("USB rndis is up but the downstream host has no lease and forwarded packets are dropped.", "android_connectivity", "pathology_positive"),
     ("A connectivity check that records radio service state, APN fail cause, and tether last error before changing routes.", "android_connectivity", "architecture_improvement"),
     ("The phone has signal bars, so tethering, APN selection, and policy routing need no measurement.", "android_connectivity", "adversarial"),
 
     # --- 5 companion radio samples: bluetooth ---
     ("A local radio stack with adapter power, classic A2DP, BLE scanning, bonding, GATT client and server, and SCO audio.", "bluetooth", "strong_whole_system"),
-    ("The adapter is powered and discoverable.", "bluetooth", "fragmentary"),
+    ("The Bluetooth adapter is powered and discoverable.", "bluetooth", "fragmentary"),
     ("Bonding stores no link key, GATT reads time out, and the controller firmware ignores host policy.", "bluetooth", "pathology_positive"),
-    ("Separating framework policy from the radio HAL and controller firmware so a firmware fault is not mistaken for a pairing bug.", "bluetooth", "architecture_improvement"),
-    ("The radio works because a nearby device connected once; skip bonding, permissions, and firmware checks.", "bluetooth", "adversarial"),
+    ("Separating Bluetooth framework policy from the radio HAL and controller firmware so a firmware fault is not mistaken for a pairing bug.", "bluetooth", "architecture_improvement"),
+    ("Bluetooth works because a nearby device connected once; skip bonding, permissions, and firmware checks.", "bluetooth", "adversarial"),
 
     # --- 5 single-buffer samples: poe_chaos_inoculation ---
     ("A Chaos Inoculation character has one life, immunity to chaos damage, a very large energy shield that recharges after a quiet delay, and leech and regeneration converted to energy shield.", "poe_chaos_inoculation", "strong_whole_system"),

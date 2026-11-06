@@ -32,6 +32,8 @@ TRAILING_TAGS = re.compile(r"(?:\[[A-Z0-9-]+\])+$")
 # domains that are not part of the pre-review calibration set.
 ROUTER_SPECIFIC = (
     "mobile_security",
+    "android_connectivity",
+    "bluetooth",
     "networking",
     "trust_chain",
     "poe_chaos_inoculation",
