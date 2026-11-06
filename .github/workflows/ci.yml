@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - kestrel/v3
   pull_request:
     branches:
       - main
