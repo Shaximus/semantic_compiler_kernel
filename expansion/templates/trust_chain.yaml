@@ -1,0 +1,115 @@
+domain: trust_chain
+version: 1.0
+description: >-
+  Cross-domain chain-of-trust pattern shared by Android Verified Boot,
+  hardware-backed key attestation, DNSSEC, and the RPKI: a configured anchor,
+  authenticated delegation, freshness, explicit verification outcomes, and
+  bounded claims. Source tags are defined in docs/DEEP_SYSTEM_INVARIANTS.md.
+components:
+  - name: trust_anchor
+    function: configured root of verification outside the verified subject's authority
+    criticality: high
+    medical_map: immune_system
+  - name: delegation_link
+    function: authenticated step that delegates bounded authority from a parent to a child
+    criticality: high
+    medical_map: immune_system
+  - name: verifier
+    function: validates each link and evidence object before relying on it
+    criticality: high
+    medical_map: diagnosis
+  - name: freshness_guard
+    function: rejects stale, replayed, expired, or rolled-back evidence
+    criticality: high
+    medical_map: vaccination
+  - name: failure_policy
+    function: defines the consequence of invalid, missing, or indeterminate verification
+    criticality: high
+    medical_map: quarantine
+  - name: state_record
+    function: retains relevant monotonic or auditable evidence of security-state changes
+    criticality: medium
+    medical_map: prognosis
+  - name: rollover_procedure
+    function: replaces keys and signed objects while preserving a verifiable transition
+    criticality: medium
+    medical_map: physiotherapy
+  - name: scope_statement
+    function: states the guarantees and non-guarantees of the chain
+    criticality: medium
+    medical_map: homeostasis
+  - name: untrusted_channel
+    function: carries objects without being trusted for their integrity or authenticity
+    criticality: low
+relationships:
+  - from: trust_anchor
+    to: delegation_link
+    type: authorizes
+  - from: delegation_link
+    to: verifier
+    type: validated_by
+  - from: freshness_guard
+    to: verifier
+    type: constrains
+  - from: verifier
+    to: failure_policy
+    type: reports_outcome_to
+  - from: untrusted_channel
+    to: verifier
+    type: delivers_objects_to
+  - from: rollover_procedure
+    to: trust_anchor
+    type: replaces_keys_of
+  - from: scope_statement
+    to: verifier
+    type: bounds_claims_of
+invariants:
+  - "verification begins at an explicitly configured or hardware-protected trust anchor [AOSP-VB][AOSP-ATTEST][RFC4033][RFC6480]"
+  - "each delegated link is authenticated before the relying party accepts the child object [AOSP-VB][RFC4033][RFC6480]"
+  - "freshness is mechanism-specific: rollback indices, verifier challenges, and signature validity windows solve different replay and rollback problems [AOSP-VB][AOSP-ATTEST][RFC4033]"
+  - "verification outcomes must preserve meaningful distinctions such as verified, unverified, invalid, and indeterminate rather than collapsing all states into success [RFC4033]"
+  - "a failed verification must follow the relying system's explicit policy; do not assume every protocol or device has the same fail-closed behavior [AOSP-VB][RFC4033]"
+  - "the channel is not the trust anchor; signatures and authenticated metadata provide integrity across untrusted transport [RFC6480]"
+  - "attestation claims are only as strong as their certificate chain, security level, challenge freshness, and verified device state [AOSP-ATTEST]"
+  - "a chain's authority is bounded: RPKI resource authorization is not identity, and DNSSEC does not provide confidentiality or availability [RFC6480][RFC4033]"
+failure_modes:
+  - name: anchor_compromise
+    medical_map: sepsis
+    description: the root key or root measurement is compromised and invalidates trust below it
+    indicators: [anchor_key_leaked, root_measurement_untrusted]
+  - name: unverified_delegation
+    medical_map: pathogen
+    description: a child object is accepted without authenticating the parent-to-child link
+    indicators: [unsigned_delegation, certificate_chain_not_checked]
+  - name: stale_evidence_accepted
+    medical_map: acute
+    description: replayed, expired, or rolled-back evidence is accepted
+    indicators: [challenge_reused, expired_signature_accepted, old_rollback_index_accepted]
+  - name: fail_open_on_error
+    medical_map: metastasis
+    description: missing or invalid evidence is treated as verified
+    indicators: [verification_error_ignored, missing_evidence_treated_as_success]
+  - name: scope_overclaim
+    medical_map: cancer
+    description: a narrow integrity or authorization claim is mistaken for a broader guarantee
+    indicators: [integrity_claimed_as_confidentiality, authorization_claimed_as_identity]
+  - name: rollover_gap
+    medical_map: chronic
+    description: key or object replacement creates a period where no valid chain can be established
+    indicators: [old_key_revoked_early, replacement_not_validated]
+architecture_patterns:
+  - name: anchored_chain_of_verification
+    medical_map: immune_system
+    description: authenticate every delegation link back to an explicit trust anchor
+  - name: anti_replay_freshness
+    medical_map: vaccination
+    description: use monotonic counters, fresh challenges, or validity windows appropriate to the protocol
+  - name: explicit_failure_semantics
+    medical_map: quarantine
+    description: define and test behavior for invalid, missing, and indeterminate evidence
+  - name: make_before_break_rollover
+    medical_map: physiotherapy
+    description: validate replacement keys and objects before retiring the old chain
+  - name: bounded_authority
+    medical_map: homeostasis
+    description: constrain each credential and claim to its stated resources and purpose
