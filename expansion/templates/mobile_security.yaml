@@ -156,8 +156,8 @@ failure_modes:
     indicators: [older_image_boots, rollback_index_not_advanced, rollback_check_disabled]
   - name: verified_boot_state_misread
     medical_map: chronic
-    description: an unlocked, orange, yellow, or otherwise non-verified state is interpreted as equivalent to a locked verified boot state
-    indicators: [bootloader_unlocked, verified_boot_state_not_verified, attestation_policy_ignores_boot_state]
+    description: unlocked (ORANGE), user-root-verified (YELLOW), or failed (RED) state is collapsed into OEM-root-verified locked (GREEN) state, or the distinction is ignored by relying-party policy
+    indicators: [bootloader_unlocked, yellow_state_treated_as_green, failed_state_accepted, attestation_policy_ignores_boot_state]
   - name: partition_integrity_gap
     medical_map: acute
     description: a boot or runtime partition is outside the expected verification coverage or verification errors are mishandled
