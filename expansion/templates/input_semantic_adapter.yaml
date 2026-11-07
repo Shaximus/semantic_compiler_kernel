@@ -1,0 +1,76 @@
+domain: input_semantic_adapter
+version: 1.0
+description: >-
+  Cross-architecture input abstraction and protocol transmutation engine. Maps
+  abstract human and programmatic intent (navigation, primary action, secondary action,
+  media control, pairing handshake) across heterogeneous physical and transport layers:
+  PlayStation (Cross/Circle/Square/Triangle), Xbox (A/B/X/Y), USB HID Boot & Composite
+  Keyboards (Usage Page 0x07), USB HID Consumer Control (Usage Page 0x0C), Bluetooth
+  LE GATT profiles (HOGP / Whisperplay / AFT BLE), and Cloudflare Worker / RPC relays.
+  Enforces isomorphic layout equivalence while decoupling physical presentation from
+  underlying target hardware and OS event loops.
+
+components:
+  - name: semantic_intent_resolver
+    function: decodes high-level operator intent (CONFIRM, CANCEL, HOME, PLAY_PAUSE, PAIR_SYNC) into abstract action tuples
+    criticality: high
+    medical_map: nervous_system
+
+  - name: controller_layout_transformer
+    function: provides bijective geometric and functional translation between disparate physical key matrices (e.g., PS dualshock to Xbox ABXY to Fire TV D-Pad)
+    criticality: high
+    medical_map: musculoskeletal_system
+
+  - name: hid_usage_page_arbiter
+    function: routes keystrokes between Generic Desktop / Keyboard (Page 0x07) and Consumer Control (Page 0x0C), ensuring media and navigation keys generate valid OS KeyEvents
+    criticality: high
+    medical_map: homeostasis
+
+  - name: transport_bridge_adapter
+    function: encapsulates translated scancodes into target wire protocols (USB ConfigFS gadget, BLE HOGP, Cloudflare Worker full-duplex WebSocket RPC)
+    criticality: high
+    medical_map: circulatory_system
+
+  - name: protocol_gate_interceptor
+    function: identifies and satisfies vendor-specific setup barriers (e.g., Fire OS OOBE Bluetooth remote pairing mandates vs wired HID fallbacks)
+    criticality: high
+    medical_map: immune_system
+
+isomorphisms:
+  - source_domain: playstation_hid
+    target_domain: xbox_hid
+    mappings:
+      - source: CROSS (0x01)
+        target: A (0x01)
+        semantic_intent: CONFIRM_PRIMARY
+      - source: CIRCLE (0x02)
+        target: B (0x02)
+        semantic_intent: CANCEL_BACK
+      - source: SQUARE (0x03)
+        target: X (0x03)
+        semantic_intent: AUX_ACTION_1
+      - source: TRIANGLE (0x04)
+        target: Y (0x04)
+        semantic_intent: AUX_ACTION_2
+      - source: PS_HOME (0x05)
+        target: XBOX_GUIDE (0x05)
+        semantic_intent: NAV_HOME
+
+  - source_domain: standard_keyboard_hid
+    target_domain: fire_os_remote
+    mappings:
+      - source: KEY_ENTER (0x28, Page 0x07)
+        target: DPAD_CENTER (0x28, Page 0x07)
+        semantic_intent: CONFIRM_PRIMARY
+      - source: KEY_BACKSPACE (0x2a) / KEY_ESC (0x29)
+        target: CONSUMER_BACK (0x0224, Page 0x0C)
+        semantic_intent: CANCEL_BACK
+      - source: KEY_SPACE (0x2c, Page 0x07)
+        target: MEDIA_PLAY_PAUSE (0x00cd, Page 0x0C)
+        semantic_intent: PLAY_PAUSE_TRIGGER
+      - source: KEY_MOVE_HOME (0x4a, Page 0x07)
+        target: CONSUMER_HOME (0x0223, Page 0x0C)
+        semantic_intent: NAV_HOME
+      - source: BLE_PAIR_REQUEST
+        target: WHISPERPLAY_BLE_ADV
+        semantic_intent: OOBE_REMOTE_PAIR_HANDSHAKE
