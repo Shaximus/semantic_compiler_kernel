@@ -102,6 +102,14 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "keymint", "verified boot", "secure boot", "secure world", "strongbox",
         "gatekeeper", "weaver", "dm-verity", "vbmeta", "pKVM", "mte",
     )),
+    # Handset companions. "android" stays on mobile_security; these phrases
+    # are the connectivity and radio terms that do not belong there.
+    ("android_connectivity", (
+        "apn", "tethering", "rndis",
+    )),
+    ("bluetooth", (
+        "bluetooth", "ble", "gatt", "a2dp",
+    )),
     ("networking", (
         "bgp", "dns", "dnssec", "rpki", "tcp", "udp", "autonomous system",
         "route origin authorization", "validating resolver",
@@ -109,6 +117,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("trust_chain", (
         "chain of trust", "root of trust", "trust anchor", "remote attestation",
         "key attestation", "certificate chain", "verified delegation",
+    )),
+    # Narrow on purpose: bare "path of exile" is not a keyword. Buildcraft and
+    # gem-decode use PoE shorthand for computation builds.
+    ("poe_chaos_inoculation", (
+        "chaos inoculation", "energy shield", "eldritch battery", "ghost reaver",
     )),
     ("computation", ("firewall", "network", "server", "api", "database")),
     ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),

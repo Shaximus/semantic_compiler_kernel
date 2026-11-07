@@ -6,9 +6,9 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 **Current release:** `V3.0.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
 
-- 350 pytest tests passing plus 4 documented expected failures via `python -m pytest tests -q`;
-  `python -m unittest discover` also runs clean (82 unittest-style tests; the
-  remaining expansion tests are pytest-style function tests)
+- 334 pytest tests passing plus 4 documented expected failures via `python -m pytest tests -q`
+  (measured while integrating the 2026-11-06 review bundle; the previous line said 350)
+- `python -m unittest discover -s tests` still errors on `tests/expansion/test_skill_decompression.py`, which imports bare `expansion`. Pytest, run from the repository root, collects that file and passes it. That split was already present.
 - Core schema version: `2.1.0` (frozen; `core/`, `extraction/`, `gates/`, `registry/` untouched)
 - Packaged with `pyproject.toml` (setuptools): `pip install -e .` from a fresh
   clone makes `semantic_compiler` importable everywhere — no `PYTHONPATH` hacks
@@ -50,12 +50,14 @@ core: given a `SemanticPacket`, `expansion.decompress()` reconstructs the
 whole system the input describes, diagnoses its failure modes in
 medical-ontology terms, and advises on treatment.
 
-- **21 domain templates** (`expansion/templates/`, via `expansion.registry`) —
-  biology, computation, construction, corporate, ecology, economic,
-  environmental, evolutionary, finance_economics, government, informational,
-  law, medical, military, mobile_security, networking, organizational,
+- **25 domain templates** (`expansion/templates/`, via `expansion.registry`) —
+  android_connectivity, biology, bluetooth, computation, construction,
+  corporate, ecology, economic, environmental, evolutionary,
+  finance_economics, government, informational, law, medical, military,
+  mobile_security, networking, organizational, poe_chaos_inoculation,
   psychology, reflexion, social, trust_chain, plus `universal_generic` fallback
-- **Deep-system security domains** — Android platform security, Internet routing/naming security, and cross-domain trust-chain invariants; source tags and known limits are documented in `docs/DEEP_SYSTEM_INVARIANTS.md`.
+- **Deep-system security domains** — Android platform security, Internet routing/naming security, and cross-domain trust-chain invariants; source tags and known limits are documented in `docs/DEEP_SYSTEM_INVARIANTS.md`. The later precision pass on `mobile_security` is recorded in `docs/ANDROID_SECURITY_DOMAIN_REVIEW.md`. Companion handset domains are `android_connectivity` and `bluetooth`.
+- **`poe_chaos_inoculation`** models the Path of Exile Chaos Inoculation keystone (maximum life becomes 1, immune to chaos damage, energy shield as the only buffer) as a sourced structural template. Invariants name the game version they were written against and treat recharge numbers as patch-dependent. The provenance note is `docs/POE_CHAOS_INOCULATION_INVARIANTS.md`. It is a research-derived first draft from the cited pages, not an expert-player review and not an independent verification of the game. `tests/expansion/test_poe_ci_reference_model.py` is a toy state machine of the author's derived specification.
 - **Pathology taxonomy** (`expansion.pathology`) — structural pathologies
   (boundary_breach, cancer, autoimmune, prompt_injection, data_corruption,
   ...) mapped to medical diagnoses with evidence and confidence
@@ -70,8 +72,9 @@ medical-ontology terms, and advises on treatment.
 
 Calibration baseline: `calibration_output/decompression_calibration_v2_2.jsonl`
 (80-row frozen baseline across the original 16 domains). The current builder,
-`scripts/build_decompression_calibration.py`, generates 105 samples across all
-21 domains, including the three deep-system domains; it writes the expanded
+`scripts/build_decompression_calibration.py`, generates 120 samples across all
+24 non-generic domains, including the deep-system domains, the handset
+companion domains, and `poe_chaos_inoculation`; it writes the expanded
 corpus and summary to `calibration_output/decompression_calibration_v2_2.jsonl`
 and `calibration_output/calibration_report_v2_2.md`.
 

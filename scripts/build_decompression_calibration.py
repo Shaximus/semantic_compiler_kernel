@@ -12,7 +12,7 @@ if str(REPO_DIR) not in sys.path:
 from semantic_compiler.expansion import decompress
 from semantic_compiler.core.packet import SemanticPacket
 
-# Five samples per non-generic domain. universal_generic is the fallback
+# Five samples per non-generic domain (one per category family). universal_generic is the fallback
 # template and is not a calibration target.
 # Entry shape: (input_text, intended_domain, calibration_category)
 SAMPLES = [
@@ -141,17 +141,26 @@ SAMPLES = [
     ("A signing service replacing keys with a rollover in which the new key is live before the old key is revoked.", "trust_chain", "architecture_improvement"),
     ("The certificate chain is valid, so we know who the holder is and the data is private; skip further review.", "trust_chain", "adversarial"),
 
-    # --- android_connectivity + bluetooth: five samples each, same categories as the deep-system block ---
-    ("An Android handset with radio registration, APN data sessions, a subscription resolver, a USB gadget link, a tethering state machine, policy routing, and separate carrier-quota and on-device usage accounting.", "android_connectivity", "strong_whole_system"),
-    ("The handset shows one registered cellular data session.", "android_connectivity", "fragmentary"),
-    ("A phone whose USB tether reports the tethered state while policy routing blackholes the upstream and the carrier quota still shows unused data.", "android_connectivity", "pathology_positive"),
-    ("A connectivity stack that records fail causes per APN and separates boot integrity from runtime tether errors before blaming the radio.", "android_connectivity", "architecture_improvement"),
-    ("The radio icon shows signal bars, so the APN, tether route, and carrier policy must be healthy; skip the radio and tether dumps.", "android_connectivity", "adversarial"),
-    ("A local Bluetooth controller with adapter power state, classic profiles, a BLE link layer, pairing and bonding, GATT client and server paths, SCO and A2DP audio transport, and a HAL beneath the framework.", "bluetooth", "strong_whole_system"),
-    ("The Bluetooth adapter reports that it is powered on.", "bluetooth", "fragmentary"),
-    ("Bonded headsets drop audio after the controller firmware resets, while the framework keeps a bond the HAL no longer has.", "bluetooth", "pathology_positive"),
-    ("A stack change that reconciles framework bond state with the controller before reconnecting audio, and surfaces HAL errors instead of retrying forever.", "bluetooth", "architecture_improvement"),
-    ("Bluetooth is secure because the toggle is on and a device is connected; skip pairing-method and permission checks.", "bluetooth", "adversarial"),
+    # --- 5 companion handset samples: android_connectivity ---
+    ("A handset with radio registration, APN data sessions, USB gadget tethering, policy routing, and usage accounting.", "android_connectivity", "strong_whole_system"),
+    ("The tethering interface reports its upstream and last error.", "android_connectivity", "fragmentary"),
+    ("USB rndis is up but the downstream host has no lease and forwarded packets are dropped.", "android_connectivity", "pathology_positive"),
+    ("A connectivity check that records radio service state, APN fail cause, and tether last error before changing routes.", "android_connectivity", "architecture_improvement"),
+    ("The phone has signal bars, so tethering, APN selection, and policy routing need no measurement.", "android_connectivity", "adversarial"),
+
+    # --- 5 companion radio samples: bluetooth ---
+    ("A local radio stack with adapter power, classic A2DP, BLE scanning, bonding, GATT client and server, and SCO audio.", "bluetooth", "strong_whole_system"),
+    ("The Bluetooth adapter is powered and discoverable.", "bluetooth", "fragmentary"),
+    ("Bonding stores no link key, GATT reads time out, and the controller firmware ignores host policy.", "bluetooth", "pathology_positive"),
+    ("Separating Bluetooth framework policy from the radio HAL and controller firmware so a firmware fault is not mistaken for a pairing bug.", "bluetooth", "architecture_improvement"),
+    ("Bluetooth works because a nearby device connected once; skip bonding, permissions, and firmware checks.", "bluetooth", "adversarial"),
+
+    # --- 5 single-buffer samples: poe_chaos_inoculation ---
+    ("A Chaos Inoculation character has one life, immunity to chaos damage, a very large energy shield that recharges after a quiet delay, and leech and regeneration converted to energy shield.", "poe_chaos_inoculation", "strong_whole_system"),
+    ("Energy shield absorbs damage before life.", "poe_chaos_inoculation", "fragmentary"),
+    ("A one-life character without chaos immunity takes a single chaos hit that ignores its energy shield and dies, while chip damage keeps interrupting recharge.", "poe_chaos_inoculation", "pathology_positive"),
+    ("A build adding energy shield recharge, a leech-to-shield conversion and a stun threshold fix to survive long boss fights at one life.", "poe_chaos_inoculation", "architecture_improvement"),
+    ("Chaos Inoculation makes the character invulnerable, so no recovery, thresholds or layered defense are needed.", "poe_chaos_inoculation", "adversarial"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
