@@ -1,0 +1,127 @@
+domain: ci_build_invariants
+version: 1.0
+description: >-
+  Continuous-integration and local-inference build invariants derived from the Buildcraft
+  compute ontology. Applies structural principles (finite topology, resource reservation,
+  compatibility gates, regulated refill of shared pools, closed bypass channels, floor the
+  lethal pool) to CI pipelines, local model inference, and defensive postures. Preserves
+  optimization structure (multiplicative stacking, diminishing returns, breakpoints) without
+  claiming literal identity with PoE mechanics. Invariants are system-level; failure modes
+  and patterns are author mappings onto the medical ontology for diagnosis.
+components:
+  - name: topology_constraint
+    function: finite set of typed positions (slots, runners, caches) that constrain which components can be composed
+    criticality: high
+    medical_map: diagnosis
+  - name: resource_reservation
+    function: shared finite pools (VRAM, CPU time, disk, network) reserved before or during execution; reservation reduces what else can coexist
+    criticality: high
+    medical_map: homeostasis
+  - name: compatibility_gate
+    function: version, ABI, driver, and runtime checks that must pass before a component can compose; failure leaves the component unusable
+    criticality: high
+    medical_map: quarantine
+  - name: primary_workload
+    function: the main inference or build task whose behavior is modified by supports and constrained by resources
+    criticality: high
+    medical_map: immune_system
+  - name: support_modifiers
+    function: optional layers (quantization, speculative drafting, cache, frameworks) that modify primary execution while consuming capacity
+    criticality: medium
+    medical_map: treatment
+  - name: regulated_refill
+    function: shared pools refill only after quiet periods or under explicit policy; continuous pressure (chip) prevents full recovery
+    criticality: high
+    medical_map: homeostasis
+  - name: closed_bypass
+    function: no unfiltered path reaches the protected resource (model integrity, build artifacts, secrets); every path is mediated
+    criticality: high
+    medical_map: vaccination
+  - name: lethal_floor
+    function: the point of failure (OOM, timeout, attestation failure, secret exposure) is reduced to a hard constant that cannot be scaled around
+    criticality: high
+    medical_map: quarantine
+  - name: defensive_posture
+    function: isolation, attestation, least privilege, and rollback that protect the inference runtime and CI artifacts from compromise
+    criticality: high
+    medical_map: immune_system
+relationships:
+  - from: topology_constraint
+    to: primary_workload
+    type: constrains_composition_of
+  - from: resource_reservation
+    to: primary_workload
+    type: budgets
+  - from: compatibility_gate
+    to: primary_workload
+    type: authorizes
+  - from: support_modifiers
+    to: primary_workload
+    type: modifies
+  - from: regulated_refill
+    to: resource_reservation
+    type: restores
+  - from: closed_bypass
+    to: lethal_floor
+    type: protects
+  - from: defensive_posture
+    to: closed_bypass
+    type: enforces
+  - from: lethal_floor
+    to: primary_workload
+    type: terminates_on_breach_of
+invariants:
+  - "a finite topology of typed positions constrains the reachable build; the full configuration matters more than any isolated component [BUILD_001][BUILD_012]"
+  - "shared resource pools are reserved before or during execution; reserved capacity reduces what other active capabilities can coexist [BUILD_010]"
+  - "capabilities compose only when compatibility requirements (runtime, ABI, driver, version) are satisfied; a powerful component remains unusable in an incompatible environment [BUILD_009]"
+  - "support modifiers increase throughput, efficiency, or resilience while consuming capacity from the same pools as the primary workload [BUILD_008]"
+  - "optimization structure (multiplicative stacking, diminishing returns, breakpoints) transfers; literal mechanics and numbers do not [STATIC_VS_DYNAMIC_GUARDRAIL]"
+  - "refill of shared pools depends on gaps between pressure events, not solely on peak rate; continuous chip pressure prevents recovery to maximum [regulated_reservoir pattern]"
+  - "every path to a protected resource (model weights, secrets, build artifacts) is mediated; an unfiltered path is a bypass that must be closed before concentrating defense [closed_bypass pattern]"
+  - "the lethal outcome (OOM kill, attestation failure, secret exposure, rollback) is a hard floor; derived thresholds and scaling must use the pre-floor basis, not the overridden value [decouple_scaling pattern]"
+  - "defensive posture (isolation, least privilege, attestation, rollback) is independent of the primary workload's functional correctness; a correct model can still run in an insecure posture [BUILD_012 residual]"
+  - "local inference reconfigures per request while the CI build is static at craft time; the mapping preserves structure, not the dynamic scheduling [STATIC_VS_DYNAMIC_GUARDRAIL]"
+failure_modes:
+  - name: reservation_starvation
+    medical_map: chronic
+    description: continuous pressure on a shared pool (VRAM, disk, runners) keeps it below the threshold needed for the primary workload, so recovery never completes
+    indicators: [continuous_allocation, pool_never_reaches_max, primary_workload_throttled]
+  - name: compatibility_bypass
+    medical_map: pathogen
+    description: a component is composed without satisfying the gate (wrong driver, unsigned artifact, mismatched ABI), leaving an unfiltered path
+    indicators: [gate_skipped, unsigned_artifact_loaded, runtime_mismatch_ignored]
+  - name: overflow_to_lethal
+    medical_map: acute
+    description: demand exceeds the current reserved or available pool and the remainder reaches the hard floor (OOM, timeout, crash)
+    indicators: [request_exceeds_current_pool, floor_reached, process_killed]
+  - name: support_cost_after_spike
+    medical_map: autoimmune
+    description: a support modifier or speculative step spends from the buffer just before a spike, turning a survivable request into an overflow
+    indicators: [support_consumed_before_peak, buffer_below_max_at_spike]
+  - name: posture_independent_of_function
+    medical_map: inflammation
+    description: functional tests pass while the defensive posture is open (missing attestation, excessive privileges, no rollback)
+    indicators: [tests_green_attestation_absent, root_or_host_access_granted, no_rollback_path]
+  - name: topology_overcommitment
+    medical_map: sepsis
+    description: more components are composed than the finite topology can support, producing cascading failures
+    indicators: [too_many_concurrent_workloads, topology_slots_exhausted, cascade_on_failure]
+architecture_patterns:
+  - name: reserve_then_execute
+    medical_map: homeostasis
+    description: commit shared pool capacity before launching the primary workload; measure success by whether the reservation was sufficient for the actual request, not the theoretical maximum
+  - name: close_bypass_before_concentrate
+    medical_map: vaccination
+    description: eliminate unfiltered paths (unsigned code, host mounts, missing gates) first, then invest in the primary buffer or isolation
+  - name: floor_the_lethal_outcome
+    medical_map: quarantine
+    description: make the failure condition a hard constant (process killed, build failed, secret not exposed) and ensure derived limits do not read the overridden value
+  - name: regulated_pool_with_deadband
+    medical_map: homeostasis
+    description: allow refill only after a quiet period or explicit policy; continuous allocation pressure resets the recovery clock
+  - name: posture_separate_from_function
+    medical_map: diagnosis
+    description: verify isolation, attestation, and least privilege independently of whether the model or build produces the correct output
+  - name: static_build_dynamic_request
+    medical_map: prognosis
+    description: treat the CI configuration as static at craft time and the inference request as dynamic; preserve structural trade-offs, not scheduling numbers
