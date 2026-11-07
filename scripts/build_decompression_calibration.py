@@ -168,6 +168,20 @@ SAMPLES = [
     ("An inductive charging pad that loses most of its power when the receiver sits a few centimetres off axis, while a metal coin in the gap heats up.", "wireless_power", "pathology_positive"),
     ("A charger that measures its coupling coefficient and resonator Q at the real gap, retunes, and shuts down when foreign objects or exposure limits are detected.", "wireless_power", "architecture_improvement"),
     ("A Tesla coil proves wireless charging can power a fleet from ambient radio waves, so no power source, distance, or efficiency figure is needed.", "wireless_power", "adversarial"),
+
+    # --- 5 financial attribution samples: epistemic_ledger_verification ---
+    ("A financial settlement system verifying app store subscriptions against external bank statements, stored value gift card balances, and payment rail clearing ledgers.", "epistemic_ledger_verification", "strong_whole_system"),
+    ("The external bank ledger records cleared debits and account balances.", "epistemic_ledger_verification", "fragmentary"),
+    ("An agent reads a cached DPAN token from app preferences and claims card settlement, while the bank ledger shows zero debits and a negative balance.", "epistemic_ledger_verification", "pathology_positive"),
+    ("Auditing financial claims by decoupling app store license entitlement records from payment rail clearing and checking the primary stored balance ledger first.", "epistemic_ledger_verification", "architecture_improvement"),
+    ("A credit card token is present in local XML preferences, so the bank account was definitely charged; skip reading bank statements.", "epistemic_ledger_verification", "adversarial"),
+
+    # --- 5 carrier core quota samples: quota_bypass_mechanics ---
+    ("A cellular charging architecture with an Online Charging System, IMSI subscriber bindings, asynchronous rating queues, and UPF credit control enforcement.", "quota_bypass_mechanics", "strong_whole_system"),
+    ("The carrier Online Charging System tracks data allowance quotas and threshold warning messages.", "quota_bypass_mechanics", "fragmentary"),
+    ("A new eSIM provisioning event generates an unmapped IMSI that temporarily bypasses the carrier quota clamp until batch rating catches up and imposes a hard throttle.", "quota_bypass_mechanics", "pathology_positive"),
+    ("Modeling carrier OCS rating latency to separate batch-rated threshold notifications from instantaneous radio interface throughput during SIM switches.", "quota_bypass_mechanics", "architecture_improvement"),
+    ("The phone downloaded data after a SIM switch, so the secondary profile has unlimited free data; skip analyzing core quota desynchronization.", "quota_bypass_mechanics", "adversarial"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")

@@ -1,0 +1,63 @@
+domain: epistemic_ledger_verification
+version: 1.0
+description: >-
+  Validation of financial, settlement, and transactional claims against
+  authoritative external bank ledgers, payment rail clearinghouses, and stored
+  value ledgers rather than local client-side configuration tokens or default preferences.
+components:
+  - name: external_bank_ledger
+    function: authoritative source of truth for debited funds and completed settlement transactions
+    criticality: high
+    medical_map: homeostasis
+  - name: stored_value_ledger
+    function: pre-existing Google Play balance, gift card, or promotional credits consumed before card rails
+    criticality: high
+    medical_map: homeostasis
+  - name: dpan_token_preference
+    function: client-side cached token indicating registered card capability, not actual execution of settlement
+    criticality: low
+    medical_map: diagnosis
+  - name: payment_rail_clearing
+    function: Mastercard/Visa network interchange and authorization requests (0100/0200 MT) confirming card debit
+    criticality: high
+    medical_map: immune_system
+  - name: purchase_entitlement_record
+    function: app store license record (e.g. library.db) granting subscription access independent of payment route
+    criticality: medium
+    medical_map: diagnosis
+relationships:
+  - from: external_bank_ledger
+    to: payment_rail_clearing
+    type: records_cleared_debits_from
+  - from: stored_value_ledger
+    to: purchase_entitlement_record
+    type: funds_entitlement_without_card_rail
+  - from: dpan_token_preference
+    to: external_bank_ledger
+    type: does_not_prove_settlement_on
+invariants:
+  - "A DPAN token in a preference file does not prove settlement. Only the external bank ledger proves settlement."
+  - "Presence of an active subscription in library.db proves entitlement grant, not card debit."
+  - "Google Play exhausts stored balance (gift cards) before dispatching authorization to secondary card rails."
+  - "An external bank ledger with zero corresponding debits strictly falsifies claims of card settlement."
+failure_modes:
+  - name: false_settlement_attribution
+    medical_map: inflammation
+    description: assuming the default payment method was used without verifying the external bank balance or history
+    indicators:
+      - dpan_token_in_xml
+      - bank_ledger_zero_charges
+      - uncorrelated_entitlement
+  - name: stored_balance_blindspot
+    medical_map: acute
+    description: overlooking pre-existing app store gift card balances or promotional credit as the primary funding source
+    indicators:
+      - play_balance_ignored
+      - client_preference_conflation
+architecture_patterns:
+  - name: trace_to_authoritative_ledger
+    medical_map: diagnosis
+    description: correlate every claimed financial debit with an explicit line item on the issuing bank statement or raw ledger
+  - name: separate_entitlement_from_funding
+    medical_map: quarantine
+    description: treat app store license validity and merchant clearing as separate decoupled layers
