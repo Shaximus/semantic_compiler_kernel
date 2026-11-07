@@ -182,6 +182,13 @@ SAMPLES = [
     ("A new eSIM provisioning event generates an unmapped IMSI that temporarily bypasses the carrier quota clamp until batch rating catches up and imposes a hard throttle.", "quota_bypass_mechanics", "pathology_positive"),
     ("Modeling carrier OCS rating latency to separate batch-rated threshold notifications from instantaneous radio interface throughput during SIM switches.", "quota_bypass_mechanics", "architecture_improvement"),
     ("The phone downloaded data after a SIM switch, so the secondary profile has unlimited free data; skip analyzing core quota desynchronization.", "quota_bypass_mechanics", "adversarial"),
+
+    # --- 5 cross-architecture input samples: input_semantic_adapter ---
+    ("A cross-architecture input adapter mapping operator intents through a controller layout transformer, a HID usage page arbiter, and a composite gadget bridge to satisfy target OS setup protocol gates.", "input_semantic_adapter", "strong_whole_system"),
+    ("The controller layout transformer converts PlayStation symbol buttons to Xbox layout codes.", "input_semantic_adapter", "fragmentary"),
+    ("A USB keyboard device sends Enter on Usage Page 0x07 to an Android setup wizard that ignores it because the protocol gate requires Consumer Control Play/Pause or BLE remote pairing.", "input_semantic_adapter", "pathology_positive"),
+    ("Configuring a composite USB gadget exposing concurrent Keyboard and Consumer Control interfaces to bridge media triggers across vendor setup boundaries.", "input_semantic_adapter", "architecture_improvement"),
+    ("The TV responded to a backspace key, so any random USB keyboard can bypass mandatory manufacturer Bluetooth pairing gates without protocol adaptation.", "input_semantic_adapter", "adversarial"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
