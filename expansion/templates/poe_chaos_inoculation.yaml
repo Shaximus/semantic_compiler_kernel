@@ -1,5 +1,5 @@
 domain: poe_chaos_inoculation
-version: 1.0
+version: 1.1
 description: >-
   Single-buffer defense in Path of Exile (PoE 1 and PoE 2): the Chaos Inoculation keystone sets
   maximum life to 1 and grants immunity to chaos damage, so survival rests on an energy shield
@@ -7,7 +7,8 @@ description: >-
   designed game rules, versioned by patch; the template preserves their structure, not their
   numbers. Invariants carry source tags defined in docs/POE_CHAOS_INOCULATION_INVARIANTS.md and
   name the game version they were sourced for (PoE 1, PoE 2 or both); failure modes and patterns are template-author
-  mappings.
+  mappings. Second pass (2026-11-06) adds resource costs paid from the buffer and item-granted
+  conditional bypass clauses.
 components:
   - name: chaos_inoculation_keystone
     function: one indivisible trade that sets maximum life to 1 and grants immunity to chaos damage
@@ -43,6 +44,12 @@ components:
     function: mechanics that need a life pool and stop working, such as low-life effects, life flasks and life-cost skills
     criticality: medium
     medical_map: quarantine
+  - name: resource_costs
+    function: skill costs and reservations paid from a pool; costs paid in life are excluded by the trade, while costs paid in energy shield draw down the buffer itself
+    criticality: medium
+  - name: bypass_clauses
+    function: item or modifier clauses that route part of a hit around the buffer, sometimes only while the buffer is already low, independent of damage type
+    criticality: high
 relationships:
   - from: chaos_inoculation_keystone
     to: lethal_pool
@@ -71,6 +78,12 @@ relationships:
   - from: recovery_converters
     to: energy_shield_pool
     type: feeds
+  - from: resource_costs
+    to: energy_shield_pool
+    type: draws_down
+  - from: bypass_clauses
+    to: damage_ordering_rule
+    type: adds_exception_to
 invariants:
   - "the keystone is one trade: maximum life becomes 1 and the character becomes immune to chaos damage, with neither half available alone (PoE 1 and PoE 2) [POEDB-CI][MOBA-ES]"
   - "damage is dealt to energy shield first and reaches life only once energy shield is depleted, with bypass exceptions (PoE 1 and PoE 2) [FANDOM-ES][MOBA-ES]"
@@ -87,6 +100,13 @@ invariants:
   - "effects that spend or require life are excluded: Arrogance Support stops affected skills being cast and Midnight Bargain cannot be used with the keystone (PoE 1) [POEDB-CI]"
   - "Blood Rage's life degeneration is not exempted, and since 2.0.0 it is physical damage rather than chaos (PoE 1) [POEDB-CI]"
   - "Eldritch Battery makes energy shield protect mana instead of life, so it conflicts with a keystone whose only protection is the buffer over life (PoE 1 and PoE 2 early access) [FANDOM-EB][SKEEDA-CI]"
+  - "the current PoE 1 keystone text is only Maximum Life becomes 1 and Immune to Chaos Damage; earlier versions also granted an energy shield bonus that was changed and then removed, so the trade is the stable part and the bonus was a tunable (PoE 1) [FANDOM-CI]"
+  - "life reductions apply before Chaos Inoculation resets life to 1, so the override is the last step of the life calculation (PoE 1) [FANDOM-CI]"
+  - "reserving life is an excluded subsystem: Blood Magic makes skills reserve life, and its interaction with the keystone was patched to remove a bugged death state (PoE 1) [FANDOM-CI]"
+  - "the buffer can take over a life-based scaling job: Valyrium makes stun threshold based on energy shield instead of life (PoE 1) [FANDOM-CI]"
+  - "bypass channels are not only damage types: before a PoE 2 0.5.x change the Runemastered Revered Vestments let a share of hit damage bypass energy shield while energy shield was below half, and that clause was replaced [FEXTRA-POE2-050]"
+  - "recharge has two separately tuned parameters, the delay before it starts and the rate once it runs: PoE 2 0.5.0 moved many modifiers from recharge rate to faster start and lowered both [FEXTRA-POE2-050]"
+  - "energy shield can be spent as a skill cost: PoE 2 0.5.x fixed skills that cost a percentage of maximum energy shield being unusable [FEXTRA-POE2-050]"
 failure_modes:
   - name: oversized_hit_overflow
     medical_map: acute
@@ -95,7 +115,7 @@ failure_modes:
   - name: unclosed_bypass_channel
     medical_map: pathogen
     description: damage that ignores the buffer reaches the lethal pool directly because immunity covers only one damage type
-    indicators: [damage_ignores_energy_shield, bleed_or_poison_with_buffer_down, non_chaos_bypass]
+    indicators: [damage_ignores_energy_shield, bleed_or_poison_with_buffer_down, non_chaos_bypass, item_granted_bypass]
   - name: recharge_starvation
     medical_map: chronic
     description: sustained chip damage keeps restarting the delay so the buffer never refills
@@ -123,6 +143,21 @@ failure_modes:
       resetting the recharge delay so the buffer sits below its maximum, then a hit the full buffer
       would have absorbed lands on the depleted buffer and overflows into the 1-life pool
     indicators: [chip_damage_resets_recharge, buffer_below_max_at_spike, spike_below_max_above_current]
+  - name: conditional_bypass_clause
+    medical_map: pathogen
+    description: >-
+      an item or modifier clause routes part of a hit around the buffer only while the buffer is
+      already low, so the bypass opens exactly when the buffer has least margin and a hit the
+      remaining buffer would have absorbed reaches the 1-life pool; chaos immunity does not close it
+    indicators: [bypass_when_buffer_low, item_granted_bypass, hit_below_current_buffer_kills]
+  - name: buffer_spent_as_cost
+    medical_map: autoimmune
+    description: skill costs paid in energy shield draw down the only defense layer, so a hit the unspent buffer would have absorbed overflows into the 1-life pool
+    indicators: [energy_shield_cost_skill, buffer_below_max_after_cast, spike_after_cast]
+  - name: post_override_reduction
+    medical_map: metastasis
+    description: a life reduction applied after the override to 1 instead of before it would take the lethal pool to zero, an ordering bug in the life calculation
+    indicators: [reduction_after_override, life_below_one, death_without_damage]
 architecture_patterns:
   - name: close_the_bypass_then_concentrate
     medical_map: vaccination
@@ -145,3 +180,12 @@ architecture_patterns:
   - name: audit_predicates_on_fixed_value
     medical_map: diagnosis
     description: fixing a variable turns every condition that reads it into a constant; list each one and decide whether it is dead code or a permanent effect (low life always false, full life always true)
+  - name: apply_the_floor_last
+    medical_map: quarantine
+    description: apply the override to the fatal pool after every other modifier, so no reduction can act on the floor value
+  - name: audit_bypass_clauses_not_only_damage_types
+    medical_map: diagnosis
+    description: list every item and modifier clause that routes damage around the buffer, including clauses that switch on only when the buffer is low; immunity to one damage type closes one channel, not all of them
+  - name: budget_buffer_spending_against_spikes
+    medical_map: prognosis
+    description: treat any cost paid from the buffer as damage the build chose to take; the margin that matters is the current buffer after costs, not the maximum
