@@ -1,0 +1,158 @@
+domain: wireless_power
+version: 1.0
+description: >-
+  Wireless power transfer as an energy-budget domain: time-varying magnetic and
+  electric fields (Maxwell-Faraday induction, Biot-Savart near field), Tesla's
+  rotating magnetic field and resonant transformer, strongly coupled magnetic
+  resonance, radiative far-field transfer and rectenna harvesting, and the
+  receiving-side power electronics and battery. The governing constraint is
+  that delivered power equals coupled field energy times conversion
+  efficiency, and near-field coupling collapses with distance relative to coil
+  size. Tesla's claims of efficient long-range transmission through the Earth
+  or atmosphere (Colorado Springs, Wardenclyffe) were not demonstrated as a
+  practical power-delivery method and are recorded here as historical claims,
+  not mechanisms. Figures are order-of-magnitude and design-dependent;
+  device-specific behavior requires measurement.
+components:
+  - name: transmitter_driver
+    function: converts DC or mains power to the high-frequency AC that drives the transmit coil or antenna
+    criticality: high
+    medical_map: homeostasis
+  - name: transmit_resonator
+    function: LC resonant primary (coil plus capacitance) that sets operating frequency f = 1/(2*pi*sqrt(LC)) and builds field amplitude through Q
+    criticality: high
+    medical_map: homeostasis
+  - name: magnetic_near_field
+    function: carries energy between coils by flux linkage; magnetic dipole field falls roughly as 1/r^3 so coupling is strong only within about a coil diameter
+    criticality: high
+    medical_map: homeostasis
+  - name: rotating_field_stage
+    function: polyphase quadrature or three-phase coil drive that produces a rotating magnetic field, the basis of the induction motor and of multi-axis charging pads
+    criticality: medium
+    medical_map: homeostasis
+  - name: receive_resonator
+    function: tuned secondary coil that couples flux into usable voltage; tuning to the transmitter frequency sets how much of the field it captures
+    criticality: high
+    medical_map: homeostasis
+  - name: far_field_radiator
+    function: antenna and rectenna path for radiative transfer, obeying inverse-square spreading and regulatory emission limits
+    criticality: medium
+    medical_map: homeostasis
+  - name: rectifier_and_regulator
+    function: converts received AC to regulated DC and matches load impedance to maximize transfer
+    criticality: high
+    medical_map: homeostasis
+  - name: battery_and_charge_controller
+    function: stores received energy and governs charge current, voltage, and thermal limits
+    criticality: high
+    medical_map: homeostasis
+  - name: alignment_and_coupling_sensing
+    function: detects relative position and coupling coefficient k so the system can retune, adjust power, or refuse to transmit
+    criticality: high
+    medical_map: diagnosis
+  - name: foreign_object_detection
+    function: detects metal or living tissue in the field, where eddy currents cause heating, and cuts power
+    criticality: high
+    medical_map: immune_system
+  - name: exposure_limit_gate
+    function: enforces human field-exposure and emission limits such as ICNIRP guidelines and regional radio rules
+    criticality: high
+    medical_map: quarantine
+  - name: communication_and_authentication
+    function: in-band or out-of-band link where receiver reports power demand and the standard checks that the receiver is authorized
+    criticality: medium
+    medical_map: immune_system
+relationships:
+  - from: transmitter_driver
+    to: transmit_resonator
+    type: excites
+  - from: transmit_resonator
+    to: magnetic_near_field
+    type: generates
+  - from: rotating_field_stage
+    to: magnetic_near_field
+    type: shapes_direction_of
+  - from: magnetic_near_field
+    to: receive_resonator
+    type: couples_energy_into
+  - from: far_field_radiator
+    to: rectifier_and_regulator
+    type: delivers_radiated_power_to
+  - from: receive_resonator
+    to: rectifier_and_regulator
+    type: feeds
+  - from: rectifier_and_regulator
+    to: battery_and_charge_controller
+    type: charges
+  - from: alignment_and_coupling_sensing
+    to: transmitter_driver
+    type: retunes_or_limits
+  - from: foreign_object_detection
+    to: transmitter_driver
+    type: can_shut_down
+  - from: exposure_limit_gate
+    to: transmitter_driver
+    type: bounds_output_of
+  - from: communication_and_authentication
+    to: transmitter_driver
+    type: requests_power_from
+invariants:
+  - "Time-varying magnetic flux induces electromotive force; wireless power transfer is Faraday induction (curl E = -dB/dt) and cannot deliver energy that is not first supplied to the transmitter [MAXWELL]"
+  - "Delivered power is bounded by input power times efficiency; no passive coil arrangement creates net energy, so a charging claim must name the power source and the end-to-end efficiency [THERMO]"
+  - "Magnetic near-field coupling falls steeply with distance relative to coil diameter; practical inductive transfer works over centimetres for small coils and degrades quickly beyond about one coil diameter [BIOT-SAVART]"
+  - "Maximum link efficiency depends on the figure of merit U = k*sqrt(Q1*Q2): efficiency rises toward 1 only as k*Q grows, which is why high-Q resonators extend range but never remove the distance limit [COUPLED-MODE]"
+  - "Strongly coupled magnetic resonance has been demonstrated at metre scale at tens of watts and tens of percent efficiency (Kurs et al., Science 2007); that result is a lab demonstration with large coils, not a basis for ambient charging of vehicles [KURS-2007]"
+  - "A rotating magnetic field arises when orthogonal coils are driven with currents 90 degrees (two-phase) or 120 degrees (three-phase) apart; it moves a conductive rotor or steers coupling, and it is a field-geometry technique, not an additional energy source [TESLA-US381968]"
+  - "A Tesla coil is a resonant air-core transformer; its high secondary voltage comes from resonant build-up at matched primary and secondary frequencies, and the energy delivered at a distance in air is dominated by radiated and dissipated loss, not by efficient far transfer [TESLA-COIL]"
+  - "Far-field radiative transfer obeys inverse-square spreading; ambient radio-frequency harvesting yields microwatts to milliwatts, enough for sensors and not for hundreds of watt-hours of vehicle battery [FRIIS]"
+  - "Metal and tissue in the field absorb energy through eddy currents and dielectric loss and heat up; foreign-object detection and exposure limits are required safety functions, not optional features [ICNIRP][QI-SPEC]"
+  - "Tesla's proposals for efficient long-range transmission through the Earth or ionosphere were not demonstrated as a practical power system; treat them as historical claims requiring independent measurement [HISTORICAL-UNVALIDATED]"
+failure_modes:
+  - name: coupling_collapse_with_distance
+    medical_map: acute
+    description: transfer efficiency drops sharply when range or misalignment exceeds the near-field design envelope
+    indicators: [efficiency_falls_with_gap, power_drops_when_offset, k_below_design_value]
+  - name: detuning_and_frequency_splitting
+    medical_map: chronic
+    description: resonant frequency drifts or splits in the over-coupled regime, so the system transmits off-resonance and loses efficiency
+    indicators: [two_resonance_peaks, power_peaks_at_wrong_gap, temperature_drift_of_lc_values]
+  - name: foreign_object_heating
+    medical_map: sepsis
+    description: metal or tissue in the field heats by eddy-current and dielectric loss and may damage the device or injure
+    indicators: [localized_temperature_rise, unexplained_power_draw, metal_object_in_gap]
+  - name: exposure_limit_violation
+    medical_map: inflammation
+    description: field strength or emission exceeds human-exposure or radio-regulatory limits
+    indicators: [field_above_reference_level, emission_outside_allocated_band, shielding_missing]
+  - name: unsupported_free_energy_claim
+    medical_map: pathogen
+    description: a system is described as charging with no power source, no coupling geometry, or no efficiency figure, violating the energy budget
+    indicators: [no_named_energy_source, ambient_rf_claimed_to_charge_large_battery, no_efficiency_or_distance_stated]
+  - name: ambient_harvest_underpower
+    medical_map: chronic
+    description: radio-frequency harvesting is expected to charge a load far above its microwatt-to-milliwatt yield
+    indicators: [load_power_exceeds_harvest, battery_not_gaining_charge, rectenna_output_microwatt_scale]
+  - name: rectifier_and_load_mismatch
+    medical_map: acute
+    description: receiver impedance does not match the load, wasting received power in reflection and heat
+    indicators: [reflected_power_high, rectifier_overheats, voltage_collapses_under_load]
+  - name: unauthorized_receiver_drain
+    medical_map: pathogen
+    description: an unauthenticated or rogue receiver draws power from a transmitter that does not verify identity
+    indicators: [power_drawn_without_handshake, unknown_receiver_id, no_authentication_step]
+architecture_patterns:
+  - name: state_the_energy_budget_first
+    medical_map: diagnosis
+    description: name the power source, the coupling geometry, the distance, and the end-to-end efficiency before accepting any charging claim
+  - name: measure_k_and_q
+    medical_map: diagnosis
+    description: measure coupling coefficient and resonator Q at the real gap to predict efficiency from U = k*sqrt(Q1*Q2) before building
+  - name: foreign_object_and_exposure_in_scope
+    medical_map: immune_system
+    description: include foreign-object detection, thermal cutoff, and exposure limits in the design, not as later additions
+  - name: near_field_for_power_far_field_for_data
+    medical_map: quarantine
+    description: use magnetic near-field coupling for energy and keep far-field radio for signalling, since far-field power transfer is inverse-square limited
+  - name: separate_historical_claim_from_mechanism
+    medical_map: vaccination
+    description: tag unvalidated historical claims as claims and carry only demonstrated mechanisms into the design

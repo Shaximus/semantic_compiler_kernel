@@ -37,6 +37,7 @@ ROUTER_SPECIFIC = (
     "networking",
     "trust_chain",
     "poe_chaos_inoculation",
+    "wireless_power",
 )
 SAMPLE_DOMAINS_OUTSIDE_LEGACY_CHECK = ROUTER_SPECIFIC + (
     "android_connectivity",
