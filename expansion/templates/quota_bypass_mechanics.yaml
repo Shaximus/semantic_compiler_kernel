@@ -1,0 +1,64 @@
+domain: quota_bypass_mechanics
+version: 1.0
+description: >-
+  Analysis of mobile carrier Online Charging System (OCS), Diameter Gy/Ro interfaces,
+  and Policy and Charging Enforcement Function (PCEF/UPF) quota state machines during
+  multi-SIM and eSIM provisioning events.
+components:
+  - name: online_charging_system
+    function: carrier real-time rating and credit control engine tracking account allowances and quota grants
+    criticality: high
+    medical_map: homeostasis
+  - name: imsi_identity_binding
+    function: subscriber identity mapping that binds physical/eSIM credentials to a subscriber account and bucket
+    criticality: high
+    medical_map: diagnosis
+  - name: provisioning_event_engine
+    function: generates and downloads new eUICC profiles resulting in new IMSI allocations
+    criticality: medium
+    medical_map: vaccination
+  - name: pcef_traffic_enforcer
+    function: Packet Core UPF/PGW enforcement point applying Diameter Credit-Control-Answer rate clamps
+    criticality: high
+    medical_map: immune_system
+  - name: asynchronous_rating_queue
+    function: batch processing pipeline calculating rating groups and threshold breaches retroactively
+    criticality: medium
+    medical_map: homeostasis
+relationships:
+  - from: provisioning_event_engine
+    to: imsi_identity_binding
+    type: allocates_unmapped_imsi
+  - from: imsi_identity_binding
+    to: online_charging_system
+    type: temporarily_desynchronizes_quota_lookup
+  - from: asynchronous_rating_queue
+    to: pcef_traffic_enforcer
+    type: pushes_delayed_quota_exhaustion_clamp
+invariants:
+  - "A new IMSI provisioning event forces a quota state desync in the carrier core."
+  - "The time between OCS threshold warning SMS messages reflects batch rating latency, not air-interface throughput."
+  - "When an unmapped IMSI attaches, the carrier core defaults to open session admission before account linkage settles."
+  - "Modem slot switching triggers RIL re-attachment that temporarily evades stale PCEF traffic enforcement rules."
+failure_modes:
+  - name: oc_quota_desync
+    medical_map: acute
+    description: the OCS retroactively rates a download and clamps the line in real-time, disconnected from physical throughput
+    indicators:
+      - throughput_math_contradiction
+      - burst_warning_sms
+      - retroactive_batch_lag
+  - name: imsi_account_unbinding
+    medical_map: autoimmune
+    description: provisioning a secondary eSIM profile introduces a delay in binding the new IMSI to the subscriber quota bucket
+    indicators:
+      - unassigned_msisdn
+      - secondary_imsi_created
+      - transient_data_restoration
+architecture_patterns:
+  - name: model_batch_rating_latency
+    medical_map: diagnosis
+    description: evaluate carrier quota warnings against OCS batch intervals rather than instantaneous bandwidth
+  - name: isolate_core_policy_from_baseband
+    medical_map: quarantine
+    description: separate local Qualcomm RIL modem state from carrier-side Diameter and PCRF session states

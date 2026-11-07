@@ -1,0 +1,86 @@
+domain: input_semantic_adapter
+version: 1.0
+description: >-
+  Cross-architecture input abstraction and protocol transmutation engine. Maps
+  abstract human and programmatic intent (navigation, primary action, secondary action,
+  media control, pairing handshake) across heterogeneous physical and transport layers:
+  PlayStation (Cross/Circle/Square/Triangle), Xbox (A/B/X/Y), USB HID Boot & Composite
+  Keyboards (Usage Page 0x07), USB HID Consumer Control (Usage Page 0x0C), Bluetooth
+  LE GATT profiles (HOGP / Whisperplay / AFT BLE), and Cloudflare Worker / RPC relays.
+  Enforces isomorphic layout equivalence while decoupling physical presentation from
+  underlying target hardware and OS event loops.
+
+components:
+  - name: semantic_intent_resolver
+    function: decodes high-level operator intent (CONFIRM, CANCEL, HOME, PLAY_PAUSE, PAIR_SYNC) into abstract action tuples
+    criticality: high
+    medical_map: homeostasis
+
+  - name: controller_layout_transformer
+    function: provides bijective geometric and functional translation between disparate physical key matrices
+    criticality: high
+    medical_map: homeostasis
+
+  - name: hid_usage_page_arbiter
+    function: routes keystrokes between Generic Desktop / Keyboard (Page 0x07) and Consumer Control (Page 0x0C)
+    criticality: high
+    medical_map: homeostasis
+
+  - name: transport_bridge_adapter
+    function: encapsulates translated scancodes into target wire protocols (USB ConfigFS gadget, BLE HOGP, Cloudflare Worker RPC)
+    criticality: high
+    medical_map: diagnosis
+
+  - name: protocol_gate_interceptor
+    function: identifies and satisfies vendor-specific setup barriers (Fire OS OOBE Bluetooth remote pairing mandates)
+    criticality: high
+    medical_map: quarantine
+
+relationships:
+  - from: semantic_intent_resolver
+    to: controller_layout_transformer
+    type: translates_intent_with
+  - from: controller_layout_transformer
+    to: hid_usage_page_arbiter
+    type: selects_usage_page_for
+  - from: hid_usage_page_arbiter
+    to: transport_bridge_adapter
+    type: feeds_encoded_frames_to
+  - from: transport_bridge_adapter
+    to: protocol_gate_interceptor
+    type: negotiates_handshake_with
+  - from: protocol_gate_interceptor
+    to: semantic_intent_resolver
+    type: signals_gate_status_to
+
+invariants:
+  - "Every physical input action has an isomorphic representation in the abstract semantic intent space [CANONICAL-INPUT]"
+  - "USB HID keyboard scancodes on Usage Page 0x07 cannot generate Consumer Control events without explicit descriptor support [HID-SPEC]"
+  - "Device setup wizards enforcing Bluetooth handshakes ignore generic wired keystrokes unless explicitly bridged at the protocol layer [OOBE-GATE]"
+  - "Physical layout transformations must preserve reflexive bijective mapping to prevent control inversion [ISOMORPHISM]"
+  - "Cloudflare RPC bridges require full-duplex session state preservation across edge worker invocations [STATE-CONTINUITY]"
+
+failure_modes:
+  - name: usage_page_mismatch
+    medical_map: acute
+    description: key events dispatched on Usage Page 0x07 fail to trigger Consumer Control handlers on target OS
+    indicators: [keystroke_received_but_ignored, backspace_works_enter_fails, missing_media_keyevent]
+  - name: protocol_gate_rejection
+    medical_map: quarantine
+    description: host OS setup wizard strictly requires BLE advertising handshake, rejecting wired HID inputs
+    indicators: [stuck_on_pairing_screen, tap_to_pair_persists, missing_ble_gatt_service]
+  - name: layout_inversion
+    medical_map: chronic
+    description: transposition errors during controller geometry remapping invert confirm and cancel semantics
+    indicators: [cross_mapped_to_cancel, circle_mapped_to_confirm, navigation_faults]
+
+architecture_patterns:
+  - name: composite_hid_gadget
+    medical_map: homeostasis
+    description: Linux ConfigFS USB gadget exposing both Page 0x07 (Keyboard) and Page 0x0C (Consumer Devices) concurrently
+  - name: ble_gatt_whisperplay_bridge
+    medical_map: diagnosis
+    description: Userspace BLE advertisement generator spoofing Fire TV remote handshake packets
+  - name: edge_worker_rpc_relay
+    medical_map: homeostasis
+    description: Cloudflare Durable Object maintaining bidirectional state synchronization between mobile nodes and target endpoints
