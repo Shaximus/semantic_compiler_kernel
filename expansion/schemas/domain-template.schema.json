@@ -14,7 +14,8 @@
         "properties": {
           "name": {"type": "string"},
           "function": {"type": "string"},
-          "criticality": {"enum": ["low", "medium", "high"]}
+          "criticality": {"enum": ["low", "medium", "high"]},
+          "medical_map": {"type": "string"}
         }
       }
     },

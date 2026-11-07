@@ -6,10 +6,13 @@ import unittest
 
 from semantic_compiler.registry.buildcraft import BUILDCRAFT_MAPPINGS, get_buildcraft_mapping
 from semantic_compiler.translation.buildcraft import (
+    ALIASES,
+    RULES,
     resolve_buildcraft_entries,
     resolve_buildcraft_mappings,
     summarize_buildcraft_ontology,
 )
+from semantic_compiler.translation.structural_resolver import resolve_rules
 
 
 class BuildcraftOntologyTests(unittest.TestCase):
@@ -124,6 +127,78 @@ class BuildcraftOntologyTests(unittest.TestCase):
             self.assertIn("optimization structure", guardrails, mapping_id)
             self.assertIn("breakpoints", guardrails, mapping_id)
             self.assertFalse(mapping.to_fractal_mapping()["identity_claim_allowed"], mapping_id)
+
+
+class BuildcraftResolverRegressionTests(unittest.TestCase):
+    """Regressions for the 2026-11 resolver review.
+
+    Each test pins a defect that was reproduced against the shipped V3.0.0
+    resolver before it was repaired.
+    """
+
+    @staticmethod
+    def _structural_ids(text: str) -> set[str]:
+        _, matches = resolve_rules(text, ALIASES, RULES)
+        return {match.rule_id for match in matches}
+
+    @staticmethod
+    def _final_ids(text: str) -> set[str]:
+        return {entry.mapping_id for entry in resolve_buildcraft_entries(text)}
+
+    def test_slot_sentences_resolve_slot_mappings_not_item_mappings(self) -> None:
+        # Previously "CPU socket is the body armour slot" structurally resolved
+        # BUILD_005 (CPU is armour) and "accelerator slot is the weapon slot"
+        # resolved BUILD_004 (GPU is weapon): the longer slot alias was
+        # overwritten by the item alias it contained.
+        self.assertEqual(self._structural_ids("PCIe slots are weapon slots."), {"BUILD_002"})
+        self.assertEqual(self._structural_ids("The CPU socket is the body armour slot."), {"BUILD_003"})
+        self.assertEqual(self._structural_ids("The accelerator slot is the weapon slot."), {"BUILD_002"})
+
+    def test_slot_sentences_do_not_assert_their_item_through_fallback(self) -> None:
+        self.assertEqual(self._final_ids("The CPU socket is the body armour slot."), {"BUILD_003"})
+        self.assertEqual(self._final_ids("The accelerator slot is the weapon slot."), {"BUILD_002"})
+
+    def test_complete_build_does_not_resolve_topology(self) -> None:
+        # BUILD_001 was keyed on the same concept as BUILD_012.
+        ids = self._final_ids("This is a complete build.")
+        self.assertIn("BUILD_012", ids)
+        self.assertNotIn("BUILD_001", ids)
+        self.assertIn(
+            "BUILD_001",
+            self._final_ids("The motherboard topology is the equipment paper doll."),
+        )
+
+    def test_trigger_layer_respects_word_boundaries(self) -> None:
+        # "abi" in capability/probability, "repo" in report, "gem" in management.
+        for text in (
+            "The new capability improves probability estimates.",
+            "The quarterly report is due Friday.",
+            "The management model is strong.",
+        ):
+            self.assertEqual(self._final_ids(text), set(), text)
+
+    def test_trigger_layer_keeps_plural_and_inflected_recall(self) -> None:
+        ids = self._final_ids("Several GPUs reserved VRAM; the drivers and repos matter.")
+        self.assertTrue({"BUILD_004", "BUILD_010", "BUILD_009", "BUILD_011"}.issubset(ids), ids)
+
+    def test_negated_relation_is_not_structural_support(self) -> None:
+        for text in ("A GPU is not a weapon.", "The GPU isn't a weapon."):
+            self.assertNotIn("BUILD_004", self._structural_ids(text), text)
+            mappings = {m["mapping_id"]: m for m in resolve_buildcraft_mappings(text)}
+            self.assertIn(
+                "relation_negated_in_source",
+                mappings["BUILD_004"]["resolver_evidence"]["reasons"],
+                text,
+            )
+
+    def test_non_equivalence_relation_is_not_equivalence_evidence(self) -> None:
+        self.assertNotIn("BUILD_007", self._structural_ids("The LLM uses an active skill."))
+
+    def test_vram_reservation_resolves_structurally(self) -> None:
+        # BUILD_010 has two alternative relation patterns; neither could reach
+        # the threshold on its own before the fix.
+        self.assertIn("BUILD_010", self._structural_ids("VRAM allocation is mana reservation."))
+        self.assertIn("BUILD_010", self._structural_ids("The LLM and MTP consume VRAM."))
 
 
 if __name__ == "__main__":

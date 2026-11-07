@@ -1,0 +1,147 @@
+domain: poe_chaos_inoculation
+version: 1.0
+description: >-
+  Single-buffer defense in Path of Exile (PoE 1 and PoE 2): the Chaos Inoculation keystone sets
+  maximum life to 1 and grants immunity to chaos damage, so survival rests on an energy shield
+  buffer, a regulated recharge, converted recovery and a closed bypass channel. These are
+  designed game rules, versioned by patch; the template preserves their structure, not their
+  numbers. Invariants carry source tags defined in docs/POE_CHAOS_INOCULATION_INVARIANTS.md and
+  name the game version they were sourced for (PoE 1, PoE 2 or both); failure modes and patterns are template-author
+  mappings.
+components:
+  - name: chaos_inoculation_keystone
+    function: one indivisible trade that sets maximum life to 1 and grants immunity to chaos damage
+    criticality: high
+    medical_map: vaccination
+  - name: lethal_pool
+    function: the life pool whose depletion is death, reduced to a constant of 1 so any damage reaching it is fatal
+    criticality: high
+  - name: energy_shield_pool
+    function: the buffer that absorbs damage before it can reach the lethal pool
+    criticality: high
+    medical_map: immune_system
+  - name: damage_ordering_rule
+    function: routes damage to the buffer first and to the lethal pool only after the buffer is depleted, except for damage that bypasses the buffer
+    criticality: high
+  - name: chaos_immunity
+    function: full immunity to chaos damage, the damage type that ignores the buffer
+    criticality: high
+    medical_map: vaccination
+  - name: recharge_regulator
+    function: refills the buffer only during quiet time (a period with no damage taken) and restarts the delay whenever damage lands, so refill depends on the gaps between hits rather than on elapsed time
+    criticality: high
+    medical_map: homeostasis
+  - name: recovery_converters
+    function: turn life-based recovery (leech, regeneration, flask recovery) into buffer recovery because the life pool is only 1; unlike recharge it does not wait for quiet time
+    criticality: medium
+    medical_map: treatment
+  - name: threshold_calculator
+    function: derives stun and ailment thresholds from life before the override to 1, so life modifiers still scale them
+    criticality: medium
+    medical_map: prognosis
+  - name: excluded_subsystems
+    function: mechanics that need a life pool and stop working, such as low-life effects, life flasks and life-cost skills
+    criticality: medium
+    medical_map: quarantine
+relationships:
+  - from: chaos_inoculation_keystone
+    to: lethal_pool
+    type: sets_to_one
+  - from: chaos_inoculation_keystone
+    to: chaos_immunity
+    type: grants
+  - from: chaos_inoculation_keystone
+    to: excluded_subsystems
+    type: disables
+  - from: chaos_inoculation_keystone
+    to: threshold_calculator
+    type: leaves_life_basis_to
+  - from: damage_ordering_rule
+    to: energy_shield_pool
+    type: routes_damage_first_to
+  - from: energy_shield_pool
+    to: lethal_pool
+    type: protects
+  - from: chaos_immunity
+    to: damage_ordering_rule
+    type: closes_bypass_of
+  - from: recharge_regulator
+    to: energy_shield_pool
+    type: refills
+  - from: recovery_converters
+    to: energy_shield_pool
+    type: feeds
+invariants:
+  - "the keystone is one trade: maximum life becomes 1 and the character becomes immune to chaos damage, with neither half available alone (PoE 1 and PoE 2) [POEDB-CI][MOBA-ES]"
+  - "damage is dealt to energy shield first and reaches life only once energy shield is depleted, with bypass exceptions (PoE 1 and PoE 2) [FANDOM-ES][MOBA-ES]"
+  - "chaos damage ignores energy shield in PoE 1, so a character whose only life is 1 is exposed to it unless it is immune [FANDOM-ES][FANDOM-EB][POEDB-CI]"
+  - "in PoE 2 (January 2025 guide) chaos damage removes twice as much energy shield, and poison and bleeding damage skip energy shield and hit life directly [MOBA-ES]"
+  - "in PoE 2 (January 2025 guide) a hit must deal damage to life to inflict bleeding, so an intact buffer blocks it, and chaos immunity leaves poison with no damage to deal [MOBA-ES]"
+  - "energy shield recharge starts only after a delay with no damage taken, and any new damage interrupts it and restarts the delay (PoE 1 and PoE 2) [FANDOM-ES][MOBA-ES]"
+  - "recharge numbers are patch-dependent while the delay-rate-interrupt structure persists: PoE 1 halved the recharge rate in 3.5.0 and PoE 2 lowered many faster-start and recharge-rate modifiers in 0.5.0 (notes dated 2026-06-08) [FANDOM-EB][POE2-PATCH-0-5-0]"
+  - "stun and ailment chance and duration are based on life before the override to 1, so life modifiers still reduce stun and ailment effects (PoE 1) [POEDB-CI]"
+  - "PoE 2 patch 0.5.0 fixed the override of maximum life to one incorrectly affecting the calculation of stun and ailment thresholds [POE2-PATCH-0-5-0]"
+  - "low-life effects never trigger and full-life effects always trigger, because life is always 100 percent of 1 (PoE 1) [POEDB-CI]"
+  - "life recovery cannot help a pool of 1, so recovery must be converted to the buffer: Ghost Reaver turns life leech into energy shield and Zealot's Oath turns life regeneration into energy shield in PoE 1, and in PoE 2 early access Eternal Youth lets life flasks restore energy shield [POEDB-CI][SKEEDA-CI][POE-FORUM-ES]"
+  - "chaos resistance reduction and penetration have no effect on a chaos-immune character (PoE 1) [POEDB-CI]"
+  - "effects that spend or require life are excluded: Arrogance Support stops affected skills being cast and Midnight Bargain cannot be used with the keystone (PoE 1) [POEDB-CI]"
+  - "Blood Rage's life degeneration is not exempted, and since 2.0.0 it is physical damage rather than chaos (PoE 1) [POEDB-CI]"
+  - "Eldritch Battery makes energy shield protect mana instead of life, so it conflicts with a keystone whose only protection is the buffer over life (PoE 1 and PoE 2 early access) [FANDOM-EB][SKEEDA-CI]"
+failure_modes:
+  - name: oversized_hit_overflow
+    medical_map: acute
+    description: a single hit larger than the buffer leaves a remainder that reaches the 1-life pool and kills outright
+    indicators: [hit_exceeds_buffer, buffer_not_full_at_hit, overflow_reaches_life]
+  - name: unclosed_bypass_channel
+    medical_map: pathogen
+    description: damage that ignores the buffer reaches the lethal pool directly because immunity covers only one damage type
+    indicators: [damage_ignores_energy_shield, bleed_or_poison_with_buffer_down, non_chaos_bypass]
+  - name: recharge_starvation
+    medical_map: chronic
+    description: sustained chip damage keeps restarting the delay so the buffer never refills
+    indicators: [constant_incoming_damage, recharge_never_starts, buffer_trending_down]
+  - name: recovery_source_loss
+    medical_map: sepsis
+    description: the single converted recovery path is removed or nerfed and the whole defense collapses with it
+    indicators: [recovery_converter_removed, patch_changed_recovery, no_independent_refill]
+  - name: override_value_leak
+    medical_map: metastasis
+    description: the overridden life value of 1 leaks into a calculation that should use the original base, such as stun thresholds
+    indicators: [threshold_computed_from_one, immune_to_stun_by_accident, always_stunned]
+  - name: self_inflicted_life_drain
+    medical_map: autoimmune
+    description: the character's own life-cost or degeneration effects drain the only life it has
+    indicators: [life_cost_skill_used, degeneration_effect_active, life_reserved]
+  - name: buffer_redirected_from_life
+    medical_map: inflammation
+    description: a second protective mechanism sends the buffer to protect something else and leaves life exposed
+    indicators: [buffer_protects_mana, conflicting_keystone_pair, life_unprotected]
+  - name: spike_after_chip
+    medical_map: acute
+    description: >-
+      acute-on-chronic composite of recharge_starvation and oversized_hit_overflow: chip damage keeps
+      resetting the recharge delay so the buffer sits below its maximum, then a hit the full buffer
+      would have absorbed lands on the depleted buffer and overflows into the 1-life pool
+    indicators: [chip_damage_resets_recharge, buffer_below_max_at_spike, spike_below_max_above_current]
+architecture_patterns:
+  - name: close_the_bypass_then_concentrate
+    medical_map: vaccination
+    description: make the one channel that ignores the buffer harmless, then put all defense into the buffer
+  - name: floor_the_lethal_pool
+    medical_map: quarantine
+    description: reduce the pool whose depletion is fatal to a constant so scaling lives elsewhere
+  - name: regulated_reservoir_with_deadband
+    medical_map: homeostasis
+    description: refill only after a quiet period and restart the clock on any new damage; measure it by the distribution of gaps between hits against the delay, not by the refill rate
+  - name: convert_recovery_into_buffer
+    medical_map: treatment
+    description: route every recovery mechanism into the buffer because the original pool cannot use it; converted recovery works during combat, so it removes the quiet-time requirement rather than only adding recovery
+  - name: decouple_scaling_base_from_survival_value
+    medical_map: diagnosis
+    description: thresholds and scaling use the pre-override base while the lethal value stays at its floor
+  - name: explicit_subsystem_opt_out
+    medical_map: prognosis
+    description: state which mechanics are lost by the trade so the cost is known before committing
+  - name: audit_predicates_on_fixed_value
+    medical_map: diagnosis
+    description: fixing a variable turns every condition that reads it into a constant; list each one and decide whether it is dead code or a permanent effect (low life always false, full life always true)
