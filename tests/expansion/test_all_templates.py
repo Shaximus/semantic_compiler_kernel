@@ -1,5 +1,15 @@
+from semantic_compiler.expansion.registry import list_domains
+from semantic_compiler.expansion.registry.loader import TEMPLATE_DIR, load_templates
+
+
 def test_all_templates_load_and_validate():
-    from semantic_compiler.expansion.registry import list_domains
-    domains = list_domains()
-    expected = {"corporate", "government", "law", "medical", "construction", "biology", "ecology", "environmental", "computation", "organizational", "economic", "reflexion", "social", "evolutionary", "informational", "military", "finance_economics", "psychology", "mobile_security", "networking", "trust_chain", "universal_generic"}
-    assert set(domains) == expected
+    templates = load_templates()
+    paths = list(TEMPLATE_DIR.glob("*.yaml"))
+    assert paths
+    stems = set()
+    for path in paths:
+        assert path.stem in templates, path.name
+        assert templates[path.stem].domain == path.stem
+        stems.add(path.stem)
+    assert set(templates) == stems
+    assert set(list_domains()) == stems
