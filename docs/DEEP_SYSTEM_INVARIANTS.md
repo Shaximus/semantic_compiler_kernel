@@ -6,7 +6,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 
 | Domain | Template | Coverage |
 |---|---|---|
-| `mobile_security` | `expansion/templates/mobile_security.yaml` | Android Verified Boot, rollback and partition integrity, app signing and sandboxing, SELinux, permissions/IPC, FBE, KeyMint/TEE/StrongBox, authentication, attestation, optional pKVM/MTE, and update channels |
+| `mobile_security` | `expansion/templates/mobile_security.yaml` | Android Verified Boot, rollback and partition integrity, app signing and sandboxing, SELinux, permissions/IPC, FBE, KeyMint/TEE/StrongBox, authentication, attestation, optional pKVM/MTE, update channels, and v1.2 userspace rootfs / path-translation / renamed-loader / SELinux-exec-workaround surfaces (observation tag only; not kernel root) |
 | `networking` | `expansion/templates/networking.yaml` | Endpoint principle, routing, RPKI resource authorization, DNSSEC validation |
 | `trust_chain` | `expansion/templates/trust_chain.yaml` | Shared anchor, delegation, freshness, verifier, failure semantics, rollover, and scope pattern |
 
@@ -39,6 +39,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `UCSB-176C` | UCSB CS176C, The Four Invariants | https://sites.cs.ucsb.edu/~arpitgupta/cs176c/spring26/assets/slides/week01_lecture02_four_invariants.html |
 | `KNOX-WP` | Samsung Knox security white paper, revision 1 | https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/assets/Knox-security-white-paper-r1.pdf |
 | `KW-2016` | Kanonov and Wool, Secure Containers in Android: the Samsung KNOX Case Study | https://arxiv.org/abs/1605.08567 |
+| `OBS-KIMICLAW-1.0.4` | Static offline study of package `com.moonshot.kimiclaw` 1.0.4 (versionCode 1007), written up in `docs/KIMICLAW_USERSACE_ROOTFS_EVIDENCE.md`. Artifact provenance is a third-party APKPure mirror (XAPK sha256 `b7a97c56de16820a50eb03ab48b167275396d3267a77bef63316ad666a9ca44b`), not a vendor CDN. Text excerpts only; the APK is not in this repo. Mechanism class is Termux/PRoot userspace path translation. | https://apkpure.com/kimi-claw/com.moonshot.kimiclaw and https://github.com/termux/proot |
 
 ## Android precision corrections
 
@@ -52,6 +53,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 8. **Do not assume optional mitigations are active.** pKVM, StrongBox, MTE, and OEM-specific capabilities vary by hardware, Android release, and build configuration.
 9. **Do not collapse storage classes.** File-based encryption distinguishes Device Encrypted and Credential Encrypted storage; Direct Boot changes which data is available before user unlock.
 10. **Do not conflate update channels.** Mainline updates selected modules; OEM firmware, kernel, vendor, and full-platform patches remain separate coverage questions.
+11. **Do not treat a userspace rootfs as kernel root.** PRoot/Termux-style path translation, bootstrap ZIP loaders, renamed native loaders, and SELinux exec workarounds for binaries under an app's private data stay inside the app UID and the device SELinux policy. In the KimiClaw 1.0.4 static study, owner label "P root bypass" maps to PRoot plus SELinux exec bypass, and "peer bypass" maps to PeerCred (local-socket peer credentials), not to one `.so` filename and not to UID 0. `libruntime-init.so` was hash-identical to the PRoot loader; identity checks use content hashes. The studied XAPK came from an APKPure mirror and is not redistributed here.
 
 ## Deliberate scope limits
 
