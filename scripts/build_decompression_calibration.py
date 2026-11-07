@@ -161,6 +161,13 @@ SAMPLES = [
     ("A one-life character without chaos immunity takes a single chaos hit that ignores its energy shield and dies, while chip damage keeps interrupting recharge.", "poe_chaos_inoculation", "pathology_positive"),
     ("A build adding energy shield recharge, a leech-to-shield conversion and a stun threshold fix to survive long boss fights at one life.", "poe_chaos_inoculation", "architecture_improvement"),
     ("Chaos Inoculation makes the character invulnerable, so no recovery, thresholds or layered defense are needed.", "poe_chaos_inoculation", "adversarial"),
+
+    # --- 5 wireless power samples: wireless_power ---
+    ("A wireless power link with a driver, a resonant transmit coil, a tuned receive coil, a rectifier, a battery charge controller, foreign object detection, and an exposure limit gate.", "wireless_power", "strong_whole_system"),
+    ("The coil pair is resonant and couples by magnetic field.", "wireless_power", "fragmentary"),
+    ("An inductive charging pad that loses most of its power when the receiver sits a few centimetres off axis, while a metal coin in the gap heats up.", "wireless_power", "pathology_positive"),
+    ("A charger that measures its coupling coefficient and resonator Q at the real gap, retunes, and shuts down when foreign objects or exposure limits are detected.", "wireless_power", "architecture_improvement"),
+    ("A Tesla coil proves wireless charging can power a fleet from ambient radio waves, so no power source, distance, or efficiency figure is needed.", "wireless_power", "adversarial"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
