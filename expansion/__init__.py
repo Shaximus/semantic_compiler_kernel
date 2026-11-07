@@ -123,6 +123,13 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("poe_chaos_inoculation", (
         "chaos inoculation", "energy shield", "eldritch battery", "ghost reaver",
     )),
+    # Wireless power transfer. Phrases only: bare "tesla" (a car company) and
+    # bare "charging" or "wireless" are not keywords.
+    ("wireless_power", (
+        "wireless power", "wireless charging", "wireless charger", "inductive charging",
+        "inductive coupling", "resonant coupling", "magnetic resonance",
+        "rotating magnetic field", "tesla coil", "rectenna", "wardenclyffe",
+    )),
     ("computation", ("firewall", "network", "server", "api", "database")),
     ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),
     ("medical", (

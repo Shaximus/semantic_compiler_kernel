@@ -50,12 +50,12 @@ core: given a `SemanticPacket`, `expansion.decompress()` reconstructs the
 whole system the input describes, diagnoses its failure modes in
 medical-ontology terms, and advises on treatment.
 
-- **25 domain templates** (`expansion/templates/`, via `expansion.registry`) —
+- **26 domain templates** (`expansion/templates/`, via `expansion.registry`) —
   android_connectivity, biology, bluetooth, computation, construction,
   corporate, ecology, economic, environmental, evolutionary,
   finance_economics, government, informational, law, medical, military,
   mobile_security, networking, organizational, poe_chaos_inoculation,
-  psychology, reflexion, social, trust_chain, plus `universal_generic` fallback
+  psychology, reflexion, social, trust_chain, wireless_power, plus `universal_generic` fallback
 - **Deep-system security domains** — Android platform security, Internet routing/naming security, and cross-domain trust-chain invariants; source tags and known limits are documented in `docs/DEEP_SYSTEM_INVARIANTS.md`. The later precision pass on `mobile_security` is recorded in `docs/ANDROID_SECURITY_DOMAIN_REVIEW.md`. Companion handset domains are `android_connectivity` and `bluetooth`.
 - **`poe_chaos_inoculation`** models the Path of Exile Chaos Inoculation keystone (maximum life becomes 1, immune to chaos damage, energy shield as the only buffer) as a sourced structural template. Invariants name the game version they were written against and treat recharge numbers as patch-dependent. The provenance note is `docs/POE_CHAOS_INOCULATION_INVARIANTS.md`. It is a research-derived first draft from the cited pages, not an expert-player review and not an independent verification of the game. `tests/expansion/test_poe_ci_reference_model.py` is a toy state machine of the author's derived specification.
 - **Pathology taxonomy** (`expansion.pathology`) — structural pathologies
