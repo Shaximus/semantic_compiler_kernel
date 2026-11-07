@@ -1,10 +1,11 @@
 # Single-buffer defense: the Path of Exile Chaos Inoculation invariant
 
-Added 2026-11-06 as one domain template in `expansion/templates/`:
+Added 2026-11-06 as one domain template in `expansion/templates/`, and expanded the same day
+in a second pass (see "Changelog" at the end):
 
 | Domain | File | What it models |
 |---|---|---|
-| `poe_chaos_inoculation` | `poe_chaos_inoculation.yaml` | The Chaos Inoculation keystone (maximum life becomes 1, immune to chaos damage) and the defense built on top of it: an energy shield buffer, a delay-then-refill recharge, converted recovery, a closed bypass channel, and the mechanics the trade switches off |
+| `poe_chaos_inoculation` | `poe_chaos_inoculation.yaml` | The Chaos Inoculation keystone (maximum life becomes 1, immune to chaos damage) and the defense built on top of it: an energy shield buffer, a delay-then-refill recharge, converted recovery, a closed bypass channel, and the mechanics the trade switches off. Second pass adds resource costs paid from the buffer and conditional item-granted bypass clauses. |
 
 ## The invariant in one paragraph
 
@@ -14,7 +15,9 @@ that pool is the energy shield buffer, and the one damage type that ignores the 
 PoE 1 (chaos) is made harmless by the immunity that comes with the keystone. Everything else in
 the build is then a statement about that buffer: how big it is, how it refills, what recovery
 is converted into it, which mechanics still scale off the *old* life value, and which
-mechanics are lost because they need a life pool.
+mechanics are lost because they need a life pool. A second pass adds that costs can be paid
+from the buffer itself and that item clauses can open additional bypass channels that switch
+on when the buffer is low.
 
 ## How to read the provenance
 
@@ -41,6 +44,8 @@ mechanics are lost because they need a life pool.
 | `SKEEDA-CI` | Sportskeeda, Path of Exile 2 Chaos Inoculation explained (undated, early access) | https://www.sportskeeda.com/mmo/path-exile-2-chaos-inoculation-explained |
 | `POE2-PATCH-0-5-0` | Mobalytics, Path of Exile 2 patch 0.5.0 notes (dated 2026-06-08) | https://mobalytics.gg/poe-2/guides/0-5-patch-notes |
 | `POE-FORUM-ES` | pathofexile.com forum thread on energy shield and life flasks (January 28-30, 2025) | https://www.pathofexile.com/forum/view-thread/3711951/page/2 |
+| `FANDOM-CI` | Path of Exile fandom wiki (PoE 1), Chaos Inoculation keystone page: keystone text, mechanics notes and version history (read 2026-11-06; the page shows no last-edited date) | https://pathofexile.fandom.com/wiki/Chaos_Inoculation |
+| `FEXTRA-POE2-050` | Fextralife Path of Exile 2 wiki, Patch Notes 0.5.x (0.5.0 through 0.5.5; page last edited 2026-09-22, read 2026-11-06) | https://pathofexile2.wiki.fextralife.com/Patch_Notes_050 |
 
 ## Structure versus literal mechanics (the guardrail)
 
@@ -127,6 +132,21 @@ Patch-dependent:     delay, rate, k(τ), E_max
 6. **The threshold leak is a basis-versus-override bug.** Every calculation that reads the
    overridden value must say whether it wants the override (1) or the original basis. The
    PoE 2 0.5.0 note calls the leak a fix, so the designers treat it as a defect.
+7. **Immunity closes a channel, not every channel** (`conditional_bypass_clause`). The
+   pre-0.5.x Runemastered Revered Vestments clause shows that an item can open a bypass that
+   has nothing to do with damage type. Because it switched on only below half buffer, it
+   opened exactly when the margin was smallest. In the model, a hit the remaining buffer
+   would absorb kills through the clause, and Safety 1 fails for CI under both rule sets once
+   the clause is equipped. Safety 1 is therefore a property of the whole equipment set, not
+   of the keystone.
+8. **A cost paid from the buffer is damage the build chose to take**
+   (`buffer_spent_as_cost`). Safety 2 reads the *current* buffer, so a cost paid just before a
+   spike turns an absorbed hit into overflow. The model shows this whether or not paying the
+   cost restarts the recharge delay; that rule was not found in any source read, and the model
+   shows it only matters once there is quiet time to refill.
+9. **The floor is applied last** (`apply_the_floor_last`). `FANDOM-CI` states that life
+   reductions apply before the reset to 1. The failure mode `post_override_reduction` is
+   the author's statement of what that ordering prevents; it is not a reported bug.
 
 ### The medical mapping is approximate here
 
@@ -150,6 +170,22 @@ would change the ontology every template draws on, so it is left as an open deci
 * **PoE 2 mechanics rest on a January 2025 guide** (early access). The 0.5.0 patch notes
   (June 2026) were read for the recharge-modifier change and the threshold fix only. The
   January 2025 claims about chaos, poison and bleeding were not re-verified against 0.5.x.
+  **Second pass:** the full Fextralife 0.5.x page (0.5.0 through 0.5.5, the current patch,
+  which that wiki dates to September 4, 2026) was read for Chaos Inoculation, chaos, poison
+  and bleeding interactions with energy shield, the life override, Eternal Youth and
+  Eldritch Battery. None of those rules is changed in those notes. That is the *absence of a
+  change in patch notes*, not a positive confirmation of the January 2025 rules, so the
+  bleeding derivation in property 2 still rests on `MOBA-ES`. An official-forum thread from
+  December 2024 (https://www.pathofexile.com/forum/view-thread/3643766) has players
+  disagreeing about exactly these rules and no developer reply; it is not cited.
+* **Release-date disagreement.** `POE2-PATCH-0-5-0` is dated 2026-06-08 on Mobalytics, while
+  the Fextralife patch-notes index gives the 0.5.0 release as May 29, 2026. The tag keeps the
+  date of the page it cites.
+* **PoE 1 currency (second pass).** The official 3.27.0 content update notes (October 23,
+  2025) mention none of Chaos Inoculation, energy shield recharge, Ghost Reaver, Zealot's
+  Oath or Eldritch Battery. The poedb 3.28.0 page was read up to its last 1,469 characters
+  and contained none of them either. No 3.28.x hotfix notes were read, so the PoE 1
+  invariants are current as of those pages, not verified against the latest hotfix.
 * **Version coverage per tag:** `POEDB-CI` is PoE 1 only. `MOBA-ES`, `SKEEDA-CI` and
   `POE2-PATCH-0-5-0` are PoE 2. `FANDOM-ES` and `FANDOM-EB` are PoE 1. The Sportskeeda page
   states the Eldritch Battery anti-synergy for PoE 2, and says a life flask can still restore
@@ -170,9 +206,10 @@ would change the ontology every template draws on, so it is left as an open deci
 * **`decompress` does not read the input's meaning.** Pathology detection compares the
   template's own component names and concepts with the template's own failure-mode text
   (`expansion/pathology/profiles.py`), so the five PoE calibration samples all produce the
-  same seven of the eight failure modes at confidence 0.6, whatever the sample says. The
-  eighth, `self_inflicted_life_drain`, is not surfaced because no component shares a word
-  with it. The toy model in `tests/expansion/test_poe_ci_reference_model.py` is the part
+  same ten of the eleven failure modes at confidence 0.6, whatever the sample says (measured
+  after the second pass; it was seven of eight before). The one left out,
+  `self_inflicted_life_drain`, is still not surfaced even with the new `resource_costs`
+  component; the component text was not reworded to force a match. The toy model in `tests/expansion/test_poe_ci_reference_model.py` is the part
   that does reason about specific damage sequences; it is a test, not wired into `decompress`.
   This is the existing engine behavior for every template; the template was not reworded to
   change it.
@@ -196,3 +233,26 @@ would change the ontology every template draws on, so it is left as an open deci
   `chronic`, `sepsis`, `metastasis`, `autoimmune`, `inflammation`). `detect_pathologies`
   treats a shared concept as direct evidence (0.75), so an overlap would raise a failure
   mode's confidence for reasons unrelated to the input. A test enforces the separation.
+
+## Changelog
+
+* **2026-11-06, first version.** Template, this note, contract tests and the toy reference
+  model.
+* **2026-11-06, second pass (expansion).**
+  * Sources: added `FANDOM-CI` (PoE 1 keystone page) and `FEXTRA-POE2-050` (PoE 2 0.5.x notes).
+  * Invariants: seven added (15 to 22): the stable keystone text and the removed energy shield
+    bonus, life reductions before the override, Blood Magic as an excluded subsystem,
+    Valyrium moving stun threshold to energy shield, an item-granted bypass clause, delay and
+    rate as separately tuned parameters, and energy shield as a skill cost.
+  * Components: `resource_costs` and `bypass_clauses`, with edges `draws_down` and
+    `adds_exception_to`. Neither has a `medical_map`, so both decompress as `unknown`.
+  * Failure modes: `conditional_bypass_clause`, `buffer_spent_as_cost`,
+    `post_override_reduction`; `unclosed_bypass_channel` gained the indicator
+    `item_granted_bypass`.
+  * Patterns: `apply_the_floor_last`, `audit_bypass_clauses_not_only_damage_types`,
+    `budget_buffer_spending_against_spikes`.
+  * Reference model: an item bypass clause and an `es_cost` event, with six new tests;
+    derived properties 7 to 9 above.
+  * Not changed: router keywords, schema, ontology, frozen paths (`core/`, `registry/`).
+  * Deliberately not added: analogies from fiction. The template is sourced game rules; a
+    cross-domain analogy belongs in a separate note, not in `invariants`.
