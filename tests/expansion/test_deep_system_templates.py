@@ -75,10 +75,13 @@ def test_new_vocabulary_does_not_capture_unrelated_words():
 
 def test_old_domain_patterns_remain_ordered_after_specific_domains():
     names = [name for name, _ in _DOMAIN_PATTERNS]
-    assert names[0] == "mobile_security"
-    assert names[1:3] == ["android_connectivity", "bluetooth"]
-    assert names[3:8] == ["networking", "trust_chain", "poe_chaos_inoculation", "wireless_power", "reward_hijacking"]
-    assert names[8:11] == ["computation", "biology", "medical"]
+    # Narrow protocol and platform vocabularies route first.
+    assert names[:9] == [
+        "input_semantic_adapter", "trust_chain", "mobile_security", "android_connectivity",
+        "bluetooth", "networking", "poe_chaos_inoculation", "wireless_power", "reward_hijacking",
+    ]
+    # The broad legacy routers stay last; clinical terms precede generic biology.
+    assert names[-3:] == ["computation", "medical", "biology"]
 
 
 def test_mobile_security_has_explicit_scope_and_optional_controls():

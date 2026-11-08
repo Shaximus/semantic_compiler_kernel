@@ -110,26 +110,35 @@ def test_gem_decode_poe_build_spec_still_routes_as_before():
     assert _infer_domain(packet(POE_NATIVE_SPEC)) == "universal_generic"
 
 
-def test_new_vocabulary_does_not_move_preexisting_calibration_samples():
+def test_every_calibration_sample_routes_to_its_labeled_domain():
+    """The router must place every calibration sample on its labeled domain."""
     from scripts.build_decompression_calibration import SAMPLES
 
-    legacy = [(domain, pattern) for domain, pattern in _DOMAIN_PATTERNS if domain not in ROUTER_SPECIFIC]
-    assert [domain for domain, _pattern in legacy] == ["computation", "biology", "medical"]
+    wrong = [(text, intended, _infer_domain(packet(text)))
+             for text, intended, _category in SAMPLES
+             if _infer_domain(packet(text)) != intended]
+    assert wrong == []
 
-    def legacy_infer(text: str) -> str:
-        lowered = text.lower()
-        for domain, pattern in legacy:
-            if pattern.search(lowered):
-                return domain
-        return "universal_generic"
 
-    moved = [
-        (text, legacy_infer(text), _infer_domain(packet(text)))
-        for text, intended, _category in SAMPLES
-        if intended not in SAMPLE_DOMAINS_OUTSIDE_LEGACY_CHECK
-        and legacy_infer(text) != _infer_domain(packet(text))
-    ]
-    assert moved == []
+def test_every_domain_is_reachable_by_its_own_calibration_samples():
+    """No registered domain may be inert: all 5 of its samples must route to it."""
+    from collections import Counter
+
+    from scripts.build_decompression_calibration import SAMPLES
+    from semantic_compiler.expansion.registry import list_domains
+
+    routed = Counter(intended for text, intended, _category in SAMPLES
+                     if _infer_domain(packet(text)) == intended)
+    short = {d: routed[d] for d in list_domains()
+             if d != "universal_generic" and routed[d] != 5}
+    assert short == {}
+
+
+def test_analogy_routes_on_its_subject():
+    assert _infer_domain(packet("The self-checking loop works like an immune system.")) == "reflexion"
+    assert _infer_domain(packet("A network firewall is like a cell membrane")) == "computation"
+    # Without domain vocabulary in the subject, the whole sentence decides.
+    assert _infer_domain(packet("It works like an immune system.")) == "biology"
 
 
 def test_decompress_poe_uses_template_components():

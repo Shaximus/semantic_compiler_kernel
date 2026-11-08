@@ -97,6 +97,19 @@ def decompress(packet: SemanticPacket) -> dict:
 # Specific domains precede broad ones so Android and protocol vocabulary
 # cannot be swallowed by the generic computation router.
 _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    # HID / controller translation. Its phrases are narrower than "android" or
+    # "bluetooth", so it routes first.
+    ("input_semantic_adapter", (
+        "hid usage", "usage page", "consumer control", "usb keyboard",
+        "composite usb gadget", "controller layout", "input adapter", "gamepad",
+    )),
+    # Named chain-of-trust phrases outrank the Android vocabulary they often
+    # mention (bootloader). "remote attestation" stays Android-side.
+    ("trust_chain", (
+        "chain of trust", "root of trust", "trust anchor",
+        "key attestation", "certificate chain", "verified delegation",
+        "signing service", "key rollover", "verifies the signature",
+    )),
     ("mobile_security", (
         "android", "knox", "trustzone", "bootloader", "selinux", "keystore",
         "keymint", "verified boot", "secure boot", "secure world", "strongbox",
@@ -112,11 +125,8 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     )),
     ("networking", (
         "bgp", "dns", "dnssec", "rpki", "tcp", "udp", "autonomous system",
-        "route origin authorization", "validating resolver",
-    )),
-    ("trust_chain", (
-        "chain of trust", "root of trust", "trust anchor", "remote attestation",
-        "key attestation", "certificate chain", "verified delegation",
+        "route origin authorization", "route authorization", "validating resolver",
+        "unauthorized origin", "prefix hijack",
     )),
     # Narrow on purpose: bare "path of exile" is not a keyword. Buildcraft and
     # gem-decode use PoE shorthand for computation builds.
@@ -129,6 +139,7 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "wireless power", "wireless charging", "wireless charger", "inductive charging",
         "inductive coupling", "resonant coupling", "magnetic resonance",
         "rotating magnetic field", "tesla coil", "rectenna", "wardenclyffe",
+        "coupling coefficient", "resonator", "coil pair",
     )),
     # Reinforcement and reward-hijacking vocabulary. Phrases only: bare
     # "reward" or "addiction" are too broad to route on.
@@ -138,13 +149,86 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "wireheading", "reward tampering", "incentive salience", "reinforcement learning",
         "rlhf", "reference policy", "dopamine",
     )),
-    ("computation", ("firewall", "network", "server", "api", "database")),
-    ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),
+    # Domains below previously had no router vocabulary and were reachable only
+    # by explicit name. Phrases are the domain's own vocabulary; order resolves
+    # overlaps (specific settlement and quota terms before generic banking,
+    # ecology before environmental, social before military).
+    ("quota_bypass_mechanics", (
+        "online charging system", "ocs", "imsi", "esim", "sim switch", "quota",
+        "data allowance", "credit control", "upf",
+    )),
+    ("epistemic_ledger_verification", (
+        "ledger", "bank statement", "settlement", "dpan", "card token",
+        "credit card token", "gift card", "app store",
+    )),
+    ("finance_economics", (
+        "central bank", "commercial bank", "bank", "capital market", "regulator",
+        "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
+    )),
+    ("economic", (
+        "economy", "inflation", "labor market", "supply chain", "trade balance",
+        "fiscal policy", "hedge fund", "pricing", "currency", "recession",
+    )),
+    ("psychology", (
+        "mind", "remember", "trauma", "therapy", "threat detector", "anxiety",
+        "defense mechanism", "cognition", "emotion",
+    )),
+    ("reflexion", (
+        "reflexion", "self-checking", "self-check", "checks its own", "its own output",
+        "its own suggestion", "review pipeline", "audit stage", "external evaluation",
+        "self-correction",
+    )),
+    ("informational", (
+        "knowledge platform", "information ecosystem", "indexing", "ingestion", "ingest",
+        "document archive", "records platform", "recommendation feedback", "retrieval",
+        "misinformation",
+    )),
+    ("corporate", (
+        "corporate", "corporation", "executive board", "board of directors", "payroll",
+        "legal department", "ownership structure", "family business", "shareholder",
+    )),
+    ("organizational", (
+        "middle management", "reporting line", "coordination meeting", "weekly meeting",
+        "open-source project", "maintainer", "org chart", "feedback channel",
+    )),
+    ("government", (
+        "government", "legislature", "ministry", "bureaucracy", "agency", "permitting",
+        "constitutional", "election", "public service",
+    )),
+    ("law", (
+        "court", "legal system", "precedent", "contract", "legal review", "jurisdiction",
+        "litigation", "appeal",
+    )),
+    ("social", (
+        "neighborhood", "neighbor", "community", "group chat", "friends", "social norm",
+    )),
+    ("military", (
+        "military", "radar", "command structure", "logistics command", "coast guard",
+        "navy", "perimeter", "patrol", "intelligence warning",
+    )),
+    ("construction", (
+        "building", "foundation", "load-bearing", "crane", "beam", "hvac", "plumbing",
+        "floor plan", "structural reinforcement", "built structure",
+    )),
+    ("ecology", (
+        "ecosystem", "food web", "invasive species", "predator", "herbivore",
+        "mycorrhizal", "endangered species", "pond", "algal", "algae",
+    )),
+    ("environmental", (
+        "watershed", "groundwater", "eutrophication", "runoff", "wetland", "storm surge",
+        "climate change", "water utility", "dead zone", "sediment",
+    )),
+    ("evolutionary", (
+        "evolution", "natural selection", "selection pressure", "genetic drift", "gene flow",
+        "speciation", "inbreeding", "niche", "selective breeding", "selective-breeding",
+    )),
+    ("computation", ("firewall", "network", "server", "api", "database", "monolith", "garbage collector", "software")),
     ("medical", (
         "patient", "hospital", "clinical", "clinician", "clinic", "surgery",
         "surgeon", "diagnosis", "diagnosed", "prognosis", "triage", "nurse",
-        "physician", "doctor", "symptom", "sepsis",
+        "physician", "doctor", "symptom", "sepsis", "autoimmune",
     )),
+    ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism", "mitochondria", "atp", "microbiome", "synthetic biology", "virus", "genome")),
 )
 
 
@@ -158,13 +242,31 @@ def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
 _DOMAIN_PATTERNS = tuple((domain, _keyword_pattern(words)) for domain, words in _DOMAIN_KEYWORDS)
 
 
-def _infer_domain(packet: SemanticPacket) -> str:
-    """Infer a domain using ordered, whole-word vocabulary matching."""
-    text = packet.raw_input or ""
+# "X is like Y", "X works like Y", "X acts as Y": X is the system being
+# described; Y is the analogy source. Route on X first.
+_ANALOGY_MARKER = re.compile(r"\b(?:like|acts as|act as|as if)\b", re.IGNORECASE)
+
+
+def _route_text(text: str) -> str:
     for domain, pattern in _DOMAIN_PATTERNS:
         if pattern.search(text):
             return domain
     return "universal_generic"
+
+
+def _infer_domain(packet: SemanticPacket) -> str:
+    """Infer a domain using ordered, whole-word vocabulary matching.
+
+    For analogies the subject clause (before the marker) decides the domain;
+    the full text is used only when the subject carries no domain vocabulary.
+    """
+    text = packet.raw_input or ""
+    marker = _ANALOGY_MARKER.search(text)
+    if marker:
+        subject_domain = _route_text(text[:marker.start()])
+        if subject_domain != "universal_generic":
+            return subject_domain
+    return _route_text(text)
 
 def _extract_components(packet: SemanticPacket, template) -> list[dict]:
     """Extract components, honoring only canonical template medical concepts."""

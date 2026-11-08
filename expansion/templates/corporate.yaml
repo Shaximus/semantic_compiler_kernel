@@ -8,9 +8,11 @@ components:
   - name: legal_compliance
     function: boundary enforcement and risk mitigation
     criticality: high
+    medical_map: immune_system
   - name: hr_department
     function: personnel homeostasis and culture
     criticality: medium
+    medical_map: homeostasis
   - name: market_operations
     function: revenue generation and growth
     criticality: high

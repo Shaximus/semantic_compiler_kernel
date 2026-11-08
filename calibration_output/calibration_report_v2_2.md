@@ -3,7 +3,7 @@
 - Total samples: 145
 - Categories: 8 (minimum 10 each)
 - Domains covered: 29
-- Samples with detected pathologies: 145
+- Samples with detected pathologies: 125
 
 ## Samples per category
 
