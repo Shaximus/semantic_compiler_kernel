@@ -41,6 +41,7 @@ ROUTER_SPECIFIC = (
     "epistemic_ledger_verification",
     "quota_bypass_mechanics",
     "input_semantic_adapter",
+    "reward_hijacking",
 )
 SAMPLE_DOMAINS_OUTSIDE_LEGACY_CHECK = ROUTER_SPECIFIC + (
     "android_connectivity",

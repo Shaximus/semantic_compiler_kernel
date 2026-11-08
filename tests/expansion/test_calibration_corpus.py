@@ -42,7 +42,7 @@ def test_calibration_corpus_category_coverage():
     # Rows added with this integration must actually decompress into the
     # domain they are labeled with. Older rows keep the historical contract
     # that the stored label and the router can differ.
-    wired = {"android_connectivity", "bluetooth", "poe_chaos_inoculation"}
+    wired = {"android_connectivity", "bluetooth", "poe_chaos_inoculation", "reward_hijacking"}
     for row in corpus:
         if row["domain"] in wired:
             assert _infer_domain(SemanticPacket(raw_input=row["input_text"])) == row["domain"]
