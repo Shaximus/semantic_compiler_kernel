@@ -1,20 +1,20 @@
 # Decompression Calibration Report V2.2
 
-- Total samples: 140
+- Total samples: 145
 - Categories: 8 (minimum 10 each)
-- Domains covered: 28
-- Samples with detected pathologies: 140
+- Domains covered: 29
+- Samples with detected pathologies: 145
 
 ## Samples per category
 
-- adversarial: 20
-- architecture_improvement: 22
+- adversarial: 21
+- architecture_improvement: 23
 - boundary_case: 10
 - cross_domain_analogy: 12
-- fragmentary: 22
-- pathology_positive: 22
+- fragmentary: 23
+- pathology_positive: 23
 - privacy_restricted: 10
-- strong_whole_system: 22
+- strong_whole_system: 23
 
 ## Samples per domain
 
@@ -43,6 +43,7 @@
 - psychology: 5
 - quota_bypass_mechanics: 5
 - reflexion: 5
+- reward_hijacking: 5
 - social: 5
 - trust_chain: 5
 - wireless_power: 5

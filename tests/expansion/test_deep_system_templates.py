@@ -77,8 +77,8 @@ def test_old_domain_patterns_remain_ordered_after_specific_domains():
     names = [name for name, _ in _DOMAIN_PATTERNS]
     assert names[0] == "mobile_security"
     assert names[1:3] == ["android_connectivity", "bluetooth"]
-    assert names[3:7] == ["networking", "trust_chain", "poe_chaos_inoculation", "wireless_power"]
-    assert names[7:10] == ["computation", "biology", "medical"]
+    assert names[3:8] == ["networking", "trust_chain", "poe_chaos_inoculation", "wireless_power", "reward_hijacking"]
+    assert names[8:11] == ["computation", "biology", "medical"]
 
 
 def test_mobile_security_has_explicit_scope_and_optional_controls():

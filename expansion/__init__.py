@@ -130,6 +130,14 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "inductive coupling", "resonant coupling", "magnetic resonance",
         "rotating magnetic field", "tesla coil", "rectenna", "wardenclyffe",
     )),
+    # Reinforcement and reward-hijacking vocabulary. Phrases only: bare
+    # "reward" or "addiction" are too broad to route on.
+    ("reward_hijacking", (
+        "reward hacking", "reward hijacking", "reward channel", "reward signal",
+        "reward model", "reward function", "prediction error", "specification gaming",
+        "wireheading", "reward tampering", "incentive salience", "reinforcement learning",
+        "rlhf", "reference policy", "dopamine",
+    )),
     ("computation", ("firewall", "network", "server", "api", "database")),
     ("biology", ("cell", "organism", "immune", "immunity", "immunology", "metabolism")),
     ("medical", (

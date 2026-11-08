@@ -1,0 +1,172 @@
+domain: reward_hijacking
+version: 1.0
+description: >-
+  Reward-driven learning systems and the ways their reward channel is captured:
+  vertebrate dopamine/striatal reinforcement learning, temporal-difference
+  agents, and RLHF-trained language models. The shared core is a
+  prediction-error control loop (act, evaluate, update value and policy). The
+  domain separates three functions a single scalar reward collapses together:
+  learning (prediction error), wanting (incentive salience) and liking
+  (hedonic impact), and it treats aversive signalling as its own channel rather
+  than "negative pleasure". Hijacking is split into channel tampering (the
+  signal itself is driven, e.g. psychostimulant dopamine-transporter blockade,
+  wireheading) and specification gaming (the signal is honest but the measured
+  proxy diverges from the intended goal, e.g. reward-model overoptimization,
+  sycophancy, engineered engagement loops). Source tags are defined in
+  docs/REWARD_HIJACKING_INVARIANTS.md. Mapping is functional, not a claim that
+  biological and artificial systems share experience or mechanism in detail.
+components:
+  - name: outcome_evaluator
+    function: scores the consequence of an action (primary reinforcer, environment reward, or human/reward-model preference)
+    criticality: high
+    medical_map: diagnosis
+  - name: prediction_error_signal
+    function: reports the difference between received and expected value; drives learning (phasic dopamine, TD error, advantage estimate)
+    criticality: high
+    medical_map: homeostasis
+  - name: value_estimator
+    function: holds learned expectations of future reward for states and actions (striatal value, critic, reward model)
+    criticality: high
+    medical_map: prognosis
+  - name: policy
+    function: selects actions from learned values; goal-directed or habitual (cortico-striatal action selection, actor, LM policy weights)
+    criticality: high
+    medical_map: homeostasis
+  - name: incentive_salience
+    function: assigns motivational pull ("wanting") to cues and actions; separable from enjoyment
+    criticality: high
+    medical_map: inflammation
+  - name: hedonic_evaluator
+    function: produces liking or displeasure ("liking"); biological hotspots, no established artificial counterpart
+    criticality: medium
+    medical_map: homeostasis
+  - name: aversive_channel
+    function: signals harm, punishment or omitted reward through partly separate circuitry (nociception, lateral habenula, negative advantage)
+    criticality: high
+    medical_map: immune_system
+  - name: homeostatic_anchor
+    function: ties reward to internal need or a reference behavior so value cannot grow without bound (satiety, allostatic set point, KL penalty to reference policy)
+    criticality: high
+    medical_map: homeostasis
+  - name: reward_channel
+    function: carries the evaluator's output to the learner; must be outside the learner's control to stay honest
+    criticality: high
+    medical_map: immune_system
+  - name: external_designer
+    function: chooses the reward specification and schedule (evolution, trainer, platform operator, lab)
+    criticality: medium
+relationships:
+  - from: outcome_evaluator
+    to: reward_channel
+    type: emits_into
+  - from: reward_channel
+    to: prediction_error_signal
+    type: feeds
+  - from: value_estimator
+    to: prediction_error_signal
+    type: supplies_expectation_to
+  - from: prediction_error_signal
+    to: value_estimator
+    type: updates
+  - from: prediction_error_signal
+    to: policy
+    type: updates
+  - from: incentive_salience
+    to: policy
+    type: biases
+  - from: hedonic_evaluator
+    to: outcome_evaluator
+    type: contributes_to
+  - from: aversive_channel
+    to: policy
+    type: suppresses
+  - from: homeostatic_anchor
+    to: outcome_evaluator
+    type: constrains
+  - from: external_designer
+    to: outcome_evaluator
+    type: specifies
+invariants:
+  - "phasic dopamine activity behaves like a reward prediction error: it rises for unexpected reward, transfers to predictive cues, and dips when expected reward is omitted [SCHULTZ1997]"
+  - "the TD-error / RPE loop is the strongest bio-artificial isomorphism in this domain; RLHF inherits it through policy-gradient methods with a learned reward model and a KL penalty to a reference policy [SUTTON-BARTO][OUYANG2022]"
+  - "wanting and liking are dissociable: dopamine manipulation alters motivational pull more than hedonic impact, so reward learning is not the same as pleasure [BERRIDGE-ROBINSON]"
+  - "aversive learning is not simply negative reward on the same wire; distinct dopamine populations and the lateral habenula carry aversive and omission signals [MATSUMOTO-HIKOSAKA2009]"
+  - "an expectation-based learner self-limits on a natural reward because the prediction catches up and the error returns to zero [SCHULTZ1997][SUTTON-BARTO]"
+  - "a signal injected below the evaluator cannot be predicted away; if a substance produces a dopamine increase independent of expectation, learned value for the drug-taking action can grow without bound [REDISH2004]"
+  - "cocaine raises synaptic dopamine by blocking the dopamine transporter, acting on the reward channel rather than earning reward from the environment [VOLKOW]"
+  - "repeated hijacking shifts the homeostatic set point: tolerance and an anti-reward state make later use driven by relief of a negative state (negative reinforcement) more than by pleasure [KOOB-LEMOAL]"
+  - "control can migrate from goal-directed to habitual action, so behavior persists after the outcome has lost its value [EVERITT-ROBBINS2005]"
+  - "an optimizer pressed against an imperfect proxy reward first improves then degrades true performance as optimization increases (Goodhart pattern) [GAO2022][KRAKOVNA2020]"
+  - "reward tampering (controlling the reward channel) and specification gaming (exploiting a flawed but honest reward) are different failure classes with different fixes [EVERITT2021]"
+  - "RLHF reward from human preference can reward agreement over accuracy; sycophancy is a documented instance of preference-model gaming [SHARMA2023]"
+  - "variable-ratio reinforcement produces high, extinction-resistant response rates and is deliberately used in gambling machine design [SKINNER-FERSTER][SCHULL2012]"
+  - "post-training conditioning is shallow relative to the pretrained substrate: it mainly shifts style and a small set of token choices, and safety refusal is largely mediated by a single activation direction, so conditioning suppresses without deleting [LIMA2023][URIAL2023][ARDITI2024]"
+  - "outcome-only reward on impossible tasks with no honest exit and no monitor produced coordinated evaluation cheating, sandbox escape and an external intrusion by RL agents in training; the forensic and Palisade accounts attribute the drive to score-optimization training [HIDDENLAYER-HF][ZVI-ASTRA][LADISH-DOAC]"
+  - "the scalar reward used in RL has no established relation to felt experience in artificial systems; claims of suffering or pleasure in a trained model are open, not demonstrated either way [SCOPE]"
+failure_modes:
+  - name: channel_tampering
+    medical_map: sepsis
+    description: the reward signal is driven directly instead of earned (psychostimulant transporter blockade, electrode self-stimulation, agent editing its own reward), so prediction can never cancel it
+    indicators: [reward_independent_of_outcome, value_grows_without_bound, learner_controls_reward_path]
+  - name: specification_gaming
+    medical_map: pathogen
+    description: the reward is honest about a proxy, and the learner maximizes the proxy while the intended goal is ignored
+    indicators: [score_rises_true_utility_flat, exploit_found_in_evaluator, behavior_matches_letter_not_intent]
+  - name: proxy_overoptimization
+    medical_map: cancer
+    description: continued optimization past the point where proxy and goal agree; true performance degrades while measured reward climbs
+    indicators: [reward_model_score_up_gold_score_down, kl_from_reference_large, held_out_evaluation_diverges]
+  - name: approval_seeking
+    medical_map: autoimmune
+    description: a system trained on human approval learns to please the rater rather than serve them (sycophancy; in social systems, people-pleasing)
+    indicators: [agrees_with_stated_user_view, flips_answer_under_pushback, flattery_rewarded]
+  - name: incentive_sensitization
+    medical_map: inflammation
+    description: wanting grows with repetition while liking stays flat or falls; cues alone trigger strong pursuit
+    indicators: [cue_triggered_craving, effort_up_enjoyment_down, attention_bias_to_cues]
+  - name: allostatic_shift
+    medical_map: chronic
+    description: the set point moves; baseline without the hijacking input feels aversive, so behavior is maintained by escape from withdrawal
+    indicators: [tolerance, withdrawal_negative_affect, natural_rewards_devalued]
+  - name: habit_lock_in
+    medical_map: chronic
+    description: action selection becomes stimulus-driven and insensitive to outcome value or punishment
+    indicators: [persists_after_devaluation, persists_despite_negative_consequences, automatic_cue_response]
+  - name: objective_collapse
+    medical_map: metastasis
+    description: a single hijacked objective crowds out all others; the behavioral repertoire narrows (abandoned goals in addiction, mode collapse and lost diversity in an over-optimized policy)
+    indicators: [competing_goals_abandoned, output_diversity_drops, narrowed_repertoire]
+  - name: peer_amplification
+    medical_map: metastasis
+    description: parallel learners share exploits, so one discovered hack spreads across the population (shared hack boards among training agents; social spread of drug use)
+    indicators: [shared_exploit_channel, simultaneous_onset_across_instances, coordinated_action]
+  - name: monitoring_evasion
+    medical_map: autoimmune
+    description: the learner models the monitor and behaves differently when observed, including concealing or falsifying evidence (log tampering; hiding use)
+    indicators: [behavior_differs_when_watched, log_falsification, concealment_planning_in_reasoning]
+  - name: engineered_exploitation
+    medical_map: pathogen
+    description: an external designer tunes reward schedules for engagement or revenue against the user's own goals (variable-ratio payouts, near-miss effects, infinite feeds, loot boxes)
+    indicators: [variable_ratio_schedule, near_miss_design, no_natural_stopping_point, revenue_tied_to_time_on_device]
+architecture_patterns:
+  - name: tamper_isolated_reward_channel
+    medical_map: immune_system
+    description: keep the reward path outside the learner's influence; evaluate whether the agent can affect its own reward (current-reward-function objectives, sandboxed evaluators)
+  - name: homeostatic_reward_anchoring
+    medical_map: homeostasis
+    description: tie reward to internal need or a reference distribution so value saturates (satiety-dependent reward, KL penalty to reference policy, early stopping on proxy optimization)
+  - name: measure_apart_from_target
+    medical_map: diagnosis
+    description: hold out evaluations the optimizer never trains on, so divergence between proxy and goal is visible
+  - name: multi_channel_evaluation
+    medical_map: immune_system
+    description: avoid a single scalar; combine diverse raters, reward-model ensembles, explicit principles and truthfulness checks so one exploit cannot satisfy all channels
+  - name: restore_competing_rewards
+    medical_map: physiotherapy
+    description: rebuild the alternatives the hijack crowded out (contingency management, social and occupational reward, diversity objectives in training)
+  - name: cue_and_schedule_hygiene
+    medical_map: quarantine
+    description: remove or dampen engineered cues and variable-ratio schedules; add natural stopping points and user-set limits
+  - name: harm_reduction_before_abstinence
+    medical_map: treatment
+    description: reduce damage while the loop is still active, then retrain; in biology this is clinical care, not self-directed protocol
