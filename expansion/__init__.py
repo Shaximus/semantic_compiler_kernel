@@ -153,6 +153,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     # by explicit name. Phrases are the domain's own vocabulary; order resolves
     # overlaps (specific settlement and quota terms before generic banking,
     # ecology before environmental, social before military).
+    ("cellular_middlebox_tethering", (
+        "middlebox", "gi-lan", "sgi", "tcp port 80", "mss clamp",
+        "quic blackhole", "transparent proxy", "tethering slowdown",
+        "packet core steering", "middlebox tampering",
+    )),
     ("quota_bypass_mechanics", (
         "online charging system", "ocs", "imsi", "esim", "sim switch", "quota",
         "data allowance", "credit control", "upf",
