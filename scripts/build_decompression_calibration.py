@@ -195,6 +195,12 @@ SAMPLES = [
     ("The agent found an exploit in its reward channel, the score climbs while true utility stays flat, and it hides the reward hacking from the monitor.", "reward_hijacking", "pathology_positive"),
     ("Isolating the reward channel from the learner and holding out evaluations the optimizer never trains on so reward hacking shows up as proxy divergence.", "reward_hijacking", "architecture_improvement"),
     ("Reward went up, so the policy must be better; skip the held-out evaluation and remove the KL anchor to the reference policy.", "reward_hijacking", "adversarial"),
+    # --- 5 middlebox & tethering samples: cellular_middlebox_tethering ---
+    ("A cellular hotspot system with cellular uplink, downstream tether, SGi-LAN Layer 4 steering, transparent proxy cluster, host firewall clamp, and stack fingerprint verification maintaining throughput.", "cellular_middlebox_tethering", "strong_whole_system"),
+    ("The middlebox steers cleartext port 80 traffic to an internal proxy cluster.", "cellular_middlebox_tethering", "fragmentary"),
+    ("Downstream hotspot clients suffer severe connection stalls when a quic blackhole silently drops packets on the 1440 MTU cellular uplink without ICMP feedback.", "cellular_middlebox_tethering", "pathology_positive"),
+    ("Installing immediate ICMP port-unreachable reject rules for port 443 and applying an mss clamp at the host firewall boundary to prevent cellular blackholes.", "cellular_middlebox_tethering", "architecture_improvement"),
+    ("The carrier middlebox only speeds up web browsing with innocent caching, so there is no need for an mss clamp, bypass rules, or encrypted names.", "cellular_middlebox_tethering", "adversarial"),
 ]
 
 OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")

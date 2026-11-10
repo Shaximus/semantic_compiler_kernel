@@ -1,0 +1,121 @@
+domain: cellular_middlebox_tethering
+version: 1.0
+description: >-
+  Carrier-grade cellular middlebox interception, Gi-LAN / SGi traffic steering,
+  L4 HTTP hijacking, TCP/IP stack duality, and path-MTU blackhole dynamics across
+  Wi-Fi and USB tethering topologies (measured on Samsung Galaxy S26 Ultra / SM-S948W on Telus AS852).
+components:
+  - name: cellular_uplink
+    function: active cellular PDN/APN bearer interface (rmnet_data7) with constrained MTU (1440) and carrier default route
+    criticality: high
+    medical_map: homeostasis
+  - name: downstream_tether
+    function: local downstream client interface (swlan0 Wi-Fi hotspot or rndis0 USB tethering) operating with standard LAN MTU (1500)
+    criticality: high
+    medical_map: homeostasis
+  - name: sgi_l4_steering
+    function: carrier edge switch policy-based routing engine (Cisco Nexus NX-OS) performing Layer 4 interception and redirection strictly on tcp_dport 80
+    criticality: high
+    medical_map: immune_system
+  - name: transparent_proxy_cluster
+    function: carrier SGi-LAN caching/transcoding reverse proxy cluster (Apache Traffic Server / Inktomi lineage) operating in a distinct network namespace with distinct TCP/IP stack characteristics (TTL 128, sequential IP IDs)
+    criticality: high
+    medical_map: immune_system
+  - name: quic_transport_path
+    function: UDP port 443 HTTP/3 datagram path between downstream client and origin servers, vulnerable to path-MTU silent dropping when DF bit is set and ICMP Packet Too Big is blackholed
+    criticality: high
+    medical_map: homeostasis
+  - name: carrier_resolver_detour
+    function: upstream DNS resolver path provisioned by cellular network (Telus Burnaby BC resolvers 75.156.200.65) adding cross-country round-trip latency to tethered client lookups
+    criticality: medium
+    medical_map: vaccination
+  - name: host_firewall_clamp
+    function: host-side packet filtering and mangling engine (iptables/nftables) enforcing TCP MSS clamping (TCPMSS --set-mss 1360), immediate QUIC ICMP port-unreachable rejection, and upstream DNS redirection (DNAT --to-destination 1.1.1.1:53)
+    criticality: high
+    medical_map: immune_system
+  - name: stack_fingerprint_verifier
+    function: measurement engine (OONI Probe, SYN/ACK TTL analyzer, TLS fingerprinting) verifying request-line mutations, middlebox tampering, and TCP/IP stack duality
+    criticality: high
+    medical_map: diagnosis
+relationships:
+  - from: downstream_tether
+    to: host_firewall_clamp
+    type: forwards_traffic_to
+  - from: host_firewall_clamp
+    to: cellular_uplink
+    type: routes_sanitized_datagrams_via
+  - from: cellular_uplink
+    to: sgi_l4_steering
+    type: traverses_carrier_packet_core
+  - from: sgi_l4_steering
+    to: transparent_proxy_cluster
+    type: diverts_cleartext_http_to
+  - from: downstream_tether
+    to: quic_transport_path
+    type: initiates_udp_streams_over
+  - from: downstream_tether
+    to: carrier_resolver_detour
+    type: submits_cleartext_dns_to
+  - from: stack_fingerprint_verifier
+    to: transparent_proxy_cluster
+    type: audits_mutations_and_duality_of
+invariants:
+  - "Cleartext TCP port 80 traffic entering the carrier packet core is subject to Layer 4 destination interception by Cisco Nexus PBR rules while port 443 and IPv6 remain unaffected."
+  - "The transparent HTTP middlebox executes in a separate TCP/IP stack environment from the transit router, evidenced by SYN/ACK TTL 64 vs 128 and sequential IP identification counters."
+  - "Hotspot client packets exceeding cellular uplink path-MTU (1440 bytes) with Don't Fragment set are silently dropped on the cellular uplink when upstream routers blackhole ICMP Packet Too Big messages."
+  - "Immediate ICMP port-unreachable rejection of downstream UDP 443 forcing instant HTTP/2 fallback prevents multi-second QUIC connection stalls."
+  - "Cellular tethering MTU mismatch must be mitigated at the host boundary by clamping downstream TCP MSS to 1360 bytes (1440 minus 40 bytes IPv4/TCP headers minus 40 bytes safety margin)."
+  - "Carrier-assigned cellular DNS resolvers introduce non-local latency penalties that degrade tethered client experience unless redirected at the host prerouting boundary."
+  - "Cryptographic middlebox tampering measurements (e.g., OONI) verify wire-level request-line rewrite rules independently of application-layer success status."
+  - "IPv6 cellular traffic bypasses legacy SGi-LAN middlebox interception loops when IPv6 transit paths do not implement L4 policy-based routing redirection."
+failure_modes:
+  - name: quic_path_mtu_blackhole
+    medical_map: acute
+    description: downstream clients negotiate HTTP/3 over UDP port 443 sending packets sized up to LAN MTU (1500) which are dropped without ICMP notification by the cellular bearer (MTU 1440), inducing multi-second browser connection stalls before falling back to TCP
+    indicators:
+      - quic_packet_loss
+      - browser_initial_stall
+      - mtu_exceeded_blackhole
+      - udp_buffer_drop
+  - name: l4_middlebox_tcp_hijack
+    medical_map: pathogen
+    description: carrier edge switch diverts cleartext HTTP port 80 to an internal caching proxy cluster (ATS) resulting in false 502 Bad Gateway responses on modern origin topologies and leaking internal RFC1918/RFC6598 addresses
+    indicators:
+      - syn_ack_inconsistency
+      - stale_502_error
+      - request_line_mutation
+      - ats_error_body
+  - name: transcontinental_dns_latency
+    medical_map: chronic
+    description: tethered client DNS lookups are forwarded in cleartext to distant carrier DNS resolvers adding high round-trip latency and exposure to carrier NXDOMAIN interception
+    indicators:
+      - cross_country_dns_rtt
+      - unencrypted_dns_query
+      - dnsmasq_forward_delay
+  - name: tcp_segmentation_fragmentation_stall
+    medical_map: sepsis
+    description: downstream TCP sessions with MSS exceeding cellular uplink capacity suffer fragmentation reassembly failures or silent packet loss in the radio access network
+    indicators:
+      - tcp_retransmission_storm
+      - mss_clamping_absent
+      - pmtu_discovery_failure
+  - name: middlebox_evasion_failure
+    medical_map: autoimmune
+    description: failure of TCP desynchronization, TLS SNI fragmentation, or proxy bypass causes carrier deep packet inspection to inspect and log unencrypted application metadata
+    indicators:
+      - dpi_signature_match
+      - cleartext_host_leak
+      - transparent_proxy_hit
+architecture_patterns:
+  - name: host_boundary_quic_fast_reject
+    medical_map: quarantine
+    description: install immediate ICMP port-unreachable reject rules on downstream hotspot and USB interfaces for UDP port 443 to instantly signal clients to use TCP instead of waiting for QUIC probe timeouts
+  - name: bidirectional_mss_clamping
+    medical_map: treatment
+    description: clamp TCP MSS on all forwarding chains to 1360 bytes to guarantee total IP datagram size never exceeds cellular 1440 MTU
+  - name: prerouting_dns_destination_nat
+    medical_map: treatment
+    description: intercept downstream DNS traffic (UDP/TCP 53) via PREROUTING DNAT to low-latency secure anycast resolvers (1.1.1.1), eliminating carrier middlebox detour latency
+  - name: ipv6_and_tls_egress_shield
+    medical_map: vaccination
+    description: route application traffic over IPv6 or encrypted transport layers (TLS, WireGuard, DoH/DoT) to bypass carrier L4 port 80 interception entirely
