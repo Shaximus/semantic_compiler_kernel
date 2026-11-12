@@ -1,0 +1,15 @@
+45fd9913dc05cf9baf36aa83611fe59e4f0167a2eeea79e23e7935fd797209de  83928  lib/arm64-v8a/libEncryptorP.so  -> evidence/native/libs/libEncryptorP.so
+41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6  10096  lib/arm64-v8a/libandroidx.graphics.path.so  -> evidence/native/libs/libandroidx.graphics.path.so
+43b6240e73969b75d190059a6361679f2873a3fe03a601b9c6e1f46e5e5b9b55  117136  lib/arm64-v8a/libapminsighta.so  -> evidence/native/libs/libapminsighta.so
+0f466ba58f46bd3a863c2be72d1769747ad10bdd821b6b4024af3100b07ada1c  133800  lib/arm64-v8a/libapminsightb.so  -> evidence/native/libs/libapminsightb.so
+1fb0ac2959033eaa53f8fa440b3c8f355929083de27df609f452712f92e9e98d  7592  lib/arm64-v8a/libbackup-crypto.so  -> evidence/native/libs/libbackup-crypto.so
+4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4  1292904  lib/arm64-v8a/libc++_shared.so  -> evidence/native/libs/libc++_shared.so
+f1d77b1ecf7321e590368679df85bd3fcab8dea614049bc1b8296a110048aa34  9400  lib/arm64-v8a/libcompat-v2.so  -> evidence/native/libs/libcompat-v2.so
+31494063717f1e594b6a30795255164a0dafb5abdb1cbafe4375988448c50b84  7384  lib/arm64-v8a/libflipped.so  -> evidence/native/libs/libflipped.so
+6efd4d1a7961760866a4a1211c284f6039644198f57d2f7670463c9c42e6ca92  919208  lib/arm64-v8a/liblocal-socket.so  -> evidence/native/libs/liblocal-socket.so
+5f0c89a75672ac6436d978d8f755968923c4d06db40c073bb3af4a3847bb2f87  586640  lib/arm64-v8a/libmmkv.so  -> evidence/native/libs/libmmkv.so
+531a2d2a2215f002ba3d5690ecebfd4a9753d6ebe21d57017c222d231098dd4d  5050312  lib/arm64-v8a/librive-android.so  -> evidence/native/libs/librive-android.so
+44ef39c1e1a18c09f6e4c4b5d6f8bba82d30596598bd155ec162d05c5122ff04  18136  lib/arm64-v8a/libruntime-init.so  -> evidence/native/libs/libruntime-init.so
+a698ef94b38db65f6868473e96c495579ac4cd9c5b818ac326e0854b6c3a84fb  47188920  lib/arm64-v8a/libtermux-bootstrap.so  -> evidence/native/libs/libtermux-bootstrap.so
+8d7c8311499c63b04311c13adac58c65dbb9f37d6c16fd83f8c67fb358d8f24c  13736  lib/arm64-v8a/libtermux.so  -> evidence/native/libs/libtermux.so
+17bb7fbc27b6cb315cef86e1cbf4474a384d27ae14f6a1f08a5e164c34f2a19b  133832  lib/arm64-v8a/libvolc_log.so  -> evidence/native/libs/libvolc_log.so

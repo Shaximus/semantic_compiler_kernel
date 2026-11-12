@@ -11,8 +11,9 @@ from semantic_compiler.expansion.registry import get_template, list_domains, loa
 
 NEW_DOMAINS = ("mobile_security", "networking", "trust_chain")
 DOC = Path(__file__).resolve().parents[2] / "docs" / "DEEP_SYSTEM_INVARIANTS.md"
-TAG = re.compile(r"\[([A-Z0-9-]+)\]")
-TRAILING_TAGS = re.compile(r"(?:\[[A-Z0-9-]+\])+$")
+# Observation tags may carry a dotted artifact version, e.g. [OBS-KIMICLAW-1.0.4].
+TAG = re.compile(r"\[([A-Z0-9.-]+)\]")
+TRAILING_TAGS = re.compile(r"(?:\[[A-Z0-9.-]+\])+$")
 
 
 def packet(text: str) -> SemanticPacket:

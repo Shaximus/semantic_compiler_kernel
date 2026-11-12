@@ -1,5 +1,5 @@
 domain: mobile_security
-version: 1.1
+version: 1.2
 description: >-
   Android platform security as a layered, device-dependent architecture:
   hardware-rooted Verified Boot, rollback and partition integrity, application
@@ -8,7 +8,10 @@ description: >-
   protected VMs, memory-safety mitigations, and modular/security updates.
   Android baseline controls are separated from optional OEM, SoC, release, and
   device-specific capabilities. Invariants carry source tags defined in
-  docs/DEEP_SYSTEM_INVARIANTS.md.
+  docs/DEEP_SYSTEM_INVARIANTS.md. Userspace rootfs runtimes (Termux/PRoot-style),
+  path-translation shims, bootstrap blob loaders, and SELinux exec workarounds
+  are modeled as agent-host surfaces that remain under app UID and SELinux
+  constraints and must not be conflated with kernel privilege escalation.
 components:
   - name: hardware_root_of_trust
     function: device-specific hardware-protected key or measurement anchor from which the boot trust chain begins
@@ -86,6 +89,26 @@ components:
     function: delivers and integrates platform, kernel, vendor, and component fixes according to OEM and device support commitments
     criticality: high
     medical_map: prognosis
+  - name: userspace_rootfs_runtime
+    function: bundles a Linux userland (Termux/PRoot-style) inside an Android app and translates path/syscall views so guest processes see a chroot-like rootfs without elevating the Android app UID to root
+    criticality: high
+    medical_map: quarantine
+  - name: path_translation_shim
+    function: intercepts libc path and exec families (for example execve/stat via dlsym-resolved real symbols) to rewrite guest paths into app-private prefix paths
+    criticality: high
+    medical_map: quarantine
+  - name: bootstrap_blob_loader
+    function: JNI entry that materializes an embedded archive (ZIP blob) into the app files directory to seed the userspace rootfs
+    criticality: medium
+    medical_map: physiotherapy
+  - name: selinux_exec_workaround
+    function: scripted or loader-assisted bypass of SELinux restrictions on executing binaries from app data paths; distinct from disabling SELinux or gaining UID 0
+    criticality: medium
+    medical_map: homeostasis
+  - name: renamed_native_loader_alias
+    function: ships a known helper (for example PRoot loader) under an APK lib soname that does not match upstream naming, requiring hash identity checks
+    criticality: medium
+    medical_map: diagnosis
 relationships:
   - from: hardware_root_of_trust
     to: verified_boot_chain
@@ -132,6 +155,27 @@ relationships:
   - from: modular_update_channel
     to: security_patch_lifecycle
     type: delivers_selected_fixes_for
+  - from: bootstrap_blob_loader
+    to: userspace_rootfs_runtime
+    type: materializes
+  - from: path_translation_shim
+    to: userspace_rootfs_runtime
+    type: rewrites_paths_for
+  - from: renamed_native_loader_alias
+    to: userspace_rootfs_runtime
+    type: may_stage_loader_for
+  - from: selinux_exec_workaround
+    to: userspace_rootfs_runtime
+    type: enables_exec_within
+  - from: userspace_rootfs_runtime
+    to: app_sandbox
+    type: remains_constrained_by_uid_of
+  - from: userspace_rootfs_runtime
+    to: selinux_policy
+    type: still_subject_to
+  - from: path_translation_shim
+    to: app_sandbox
+    type: must_not_escape
 invariants:
   - "Verified Boot establishes a chain from a hardware-protected root through the bootloader to boot and other verified partitions; each stage authenticates the next before handoff [AOSP-VB]"
   - "rollback protection tracks accepted versions, commonly per partition, and rejects versions below stored rollback indices; implementation details are device-specific [AOSP-VB]"
@@ -149,6 +193,11 @@ invariants:
   - "MTE is configurable independently for kernel and userspace; Android does not mandate one universal device configuration, so its presence and enforcement must be measured per build [AOSP-MTE]"
   - "Mainline updates selected modular components outside the normal Android release cycle; it does not replace OEM firmware, kernel, or full-platform security update obligations [AOSP-MAINLINE]"
   - "the platform security model is defense in depth, not proof of invulnerability: a kernel compromise can undermine controls that depend on kernel integrity [AOSP-SEC]"
+  - "userspace rootfs runtimes (PRoot/Termux-style) translate paths and syscalls inside the app UID; their presence is not evidence of Android kernel privilege escalation or Magisk-style root [OBS-KIMICLAW-1.0.4]"
+  - "path-translation shims that export execve/stat families via dlsym remain inside the calling process sandbox unless a separate privilege-escalation flaw exists [OBS-KIMICLAW-1.0.4]"
+  - "SELinux exec workarounds for running binaries from app-private paths are distinct from SELinux permissive/disabled device policy and must not be labeled as root exploits [OBS-KIMICLAW-1.0.4]"
+  - "native libraries may rename or re-ship loaders (hash-identical to upstream PRoot loader under a new soname); identity checks must use content hashes, not filenames alone [OBS-KIMICLAW-1.0.4]"
+  - "keyword hits for bypass or peer in DEX require exact-string classification (SELinux exec bypass, HiddenApiBypass, PeerCred, street-type bypass) before threat labeling [OBS-KIMICLAW-1.0.4]"
 failure_modes:
   - name: rollback_policy_gap
     medical_map: pathogen
@@ -202,6 +251,22 @@ failure_modes:
     medical_map: inflammation
     description: a device misses applicable platform, vendor, kernel, or modular security fixes
     indicators: [security_patch_level_stale, vendor_patch_missing, mainline_component_outdated]
+  - name: proot_misread_as_root_exploit
+    medical_map: chronic
+    description: analysts treat bundled PRoot/Termux bootstrap or SELinux exec bypass markers as proof of malicious Android root or kernel privilege escalation
+    indicators: [libproot_or_bin_proot_treated_as_rootkit, selinux_exec_bypass_labeled_as_root, no_uid_escape_evidence]
+  - name: path_shim_assumed_sandbox_escape
+    medical_map: chronic
+    description: execve/stat interposition is assumed to cross app UID boundaries without evidence of a separate sandbox escape
+    indicators: [compat_execve_shim_present, cross_uid_claim_without_evidence]
+  - name: renamed_loader_identity_miss
+    medical_map: acute
+    description: a remapped soname (for example libruntime-init.so) conceals a known loader because filename-only allowlists or denylists are used
+    indicators: [soname_mismatch_same_hash, loader_hash_not_checked]
+  - name: dex_bypass_keyword_overclaim
+    medical_map: chronic
+    description: DEX string search for bypass or peer is reported as a single peer-bypass mechanism without classifying SELinux exec, HiddenApi, PeerCred, or benign hits
+    indicators: [bypass_keyword_uncategorized, peercred_conflated_with_bypass]
 architecture_patterns:
   - name: verified_boot_with_explicit_state
     medical_map: immune_system
@@ -221,3 +286,9 @@ architecture_patterns:
   - name: layered_patch_delivery
     medical_map: vaccination
     description: track OS, kernel, vendor, and modular component updates as distinct but coordinated maintenance channels
+  - name: openclaw_on_android_userspace_host
+    medical_map: quarantine
+    description: host OpenClaw or Linux agent workloads inside an app-private Termux and PRoot rootfs on a spare Android device, keeping the UID sandbox while expanding userspace capability
+  - name: hash_identify_remapped_natives
+    medical_map: diagnosis
+    description: identify critical natives by content hash and ELF exports/imports, not by marketing names or soname alone
