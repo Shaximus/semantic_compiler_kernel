@@ -4,7 +4,7 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
 
 ## Status
 
-**Current release:** `V3.0.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
+**Current release:** `V3.1.0` (canon freeze, 2026-07-23) — supersedes V2.3.0
 
 - 334 pytest tests passing plus 4 documented expected failures via `python -m pytest tests -q`
   (measured while integrating the 2026-11-06 review bundle; the previous line said 350)
@@ -28,12 +28,12 @@ A semantic compilation and isomorphism-analysis pipeline that converts raw natur
   (CORPUS_GAP_NEGATIVE_SAMPLES incl. NEG_011 fabricated_citation_anchor,
   2 new pathology failure modes)
 - Rx /skill decompression mode in `expansion.skill_decompression`
-- Manifest: `calibration_output/RELEASE_MANIFEST_V3_0_0.json`
+- Manifest: `calibration_output/RELEASE_MANIFEST_V3.1.0.json`
 
-V3.0.0 consolidates (founder directive 2026-07-23): mission-readiness
+V3.1.0 consolidates (founder directive 2026-07-23): mission-readiness
 packaging, corpus orchestration, gem_decode, build-archetype detection,
 registry gap updates, the structural resolver — and adds Gem Forge
-(PRs #4–#8). Manifest chain: V2_1_3 → V2_3_0 → V3_0_0.
+(PRs #4–#8). Manifest chain: V2_1_3 → V2_3_0 → V3.1.0.
 
 ## What it does
 
