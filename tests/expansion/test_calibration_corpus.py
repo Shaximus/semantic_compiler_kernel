@@ -57,6 +57,7 @@ def test_calibration_corpus_category_coverage():
         "capability_isolation",
         "formal_verification",
         "sovereign_local_mesh",
+        "ci_build_invariants",
     }
     for row in corpus:
         if row["domain"] in wired:

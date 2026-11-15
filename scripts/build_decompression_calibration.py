@@ -271,6 +271,13 @@ SAMPLES = [
     ("Split-horizon overlay queries leak upstream while stale peer device identity keys fracture the overlay mesh after rotation.", "sovereign_local_mesh", "pathology_positive"),
     ("Anchoring device identity in hardware enclaves and combining direct local failover with deterministic CRDT offline-first sync heals partitions cleanly.", "sovereign_local_mesh", "architecture_improvement"),
     ("Routing private overlay mesh hostnames through public carrier resolvers is just as private as split-horizon lookup over Tailscale.", "sovereign_local_mesh", "adversarial"),
+
+    # --- 5 Buildcraft-derived CI/inference build invariant samples: ci_build_invariants ---
+    ("A ci pipeline enforces topology constraint, compatibility gate, resource reservation, regulated refill, closed bypass, lethal floor, and defensive posture.", "ci_build_invariants", "strong_whole_system"),
+    ("The compatibility gate validates runtime ABI checks before composing support modifiers on the ci build.", "ci_build_invariants", "fragmentary"),
+    ("Continuous allocation triggers reservation starvation while a compatibility bypass leaves an unfiltered path beside green tests.", "ci_build_invariants", "pathology_positive"),
+    ("Maintaining posture separate from function and closing bypasses first prevents topology overcommitment under concurrent requests.", "ci_build_invariants", "architecture_improvement"),
+    ("A green ci pipeline functional suite guarantees defensive posture and prevents lethal floor OOM kills even with unmediated bypasses.", "ci_build_invariants", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

@@ -231,6 +231,12 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "split-horizon", "local inference gateway", "offline-first sync",
         "air-gapped mesh",
     )),
+    ("ci_build_invariants", (
+        "ci build", "ci pipeline", "reservation starvation",
+        "compatibility bypass", "compatibility gate", "topology overcommitment",
+        "regulated refill", "lethal floor", "defensive posture",
+        "posture separate from function", "support modifiers",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",

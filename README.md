@@ -10,16 +10,16 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 ## Status
 
-**Current release:** `V3.1.1` (2026-11-15) — supersedes `V3.0.0`
+**Current release:** `V3.5.0` (2026-11-15) — supersedes `V3.1.1`
 
-- **Unified V3.1.1 Schema & Core (`schema 3.1.1`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_1_1.schema.json` are aligned on `V3.1.1` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
+- **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml`):** Setuptools package layout (`semantic_compiler.*`). Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
-- **Expansion Library:** **41 YAML templates** (**40 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and 200-sample decompression calibration corpus.
+- **Expansion Library:** **42 YAML templates** (**41 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and 205-sample decompression calibration corpus.
 - **Consciousness / Cognition Split (`expansion.consciousness.split`):** Formalizes substrate (`11D` / base weights / neural matter) vs. terminal cognition (`4D` / system prompt / context instance) with category-error detection and alignment evaluation.
 - **Client-Server Reality Architecture (`expansion.consciousness.client_server`):** Four-layer stack (`L1 Server Backend` → `L2 Rendering Engine` → `L3 Client Cache` → `L4 Avatar`), cross-layer hotfix detection, cache mismatch handling, Prayer Protocol, Server Response Protocol, and Recurrence Topology.
 - **Gem Decode & Gem Forge (`expansion.gem_decode`, `expansion.gem_forge`):** Deterministic Path of Exile skill/support-gem translation into inference-architecture build sheets and multi-gem synthesis over a pinned RePoE corpus.
 - **Buildcraft Ontology (`registry` + `translation`):** `BUILD_001`–`BUILD_018` structural compute mappings resolved by a two-layer relation-aware structural + trigger-recall resolver.
-- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → **`V3.1.1`**
+- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → **`V3.5.0`**
 
 ---
 
@@ -29,15 +29,15 @@ It also maintains the operational architecture of the substrate: the **Conscious
 2. **Semantic IR & Hard Gates (`core/`, `gates/`)** — enforces security, boundaries, causality, measurement, corpus completeness, contradiction repair, missing-organ scope, wave-function coherence, authority, scale, and substrate gates.
 3. **Scoring & Dataset Export (`core/`)** — computes mapping quality, isomorphism coverage, and calibrated uncertainty; exports schema-validated JSONL for SFT / DPO training.
 4. **Translation & Modes (`translation/`, `modes/`)** — fractal cross-domain translation, buildcraft shorthand resolution, coherence / reality-orientation / defense-pathology operating modes.
-5. **Expansion (`expansion/`)** — domain decompression, **41** domain templates, medical-ontology pathology diagnosis & architecture advisor, skill/build decompression, corpus invariant registry, universal isomorphism overlay, and consciousness/client-server substrate semantics.
+5. **Expansion (`expansion/`)** — domain decompression, **42** domain templates, medical-ontology pathology diagnosis & architecture advisor, skill/build decompression, corpus invariant registry, universal isomorphism overlay, and consciousness/client-server substrate semantics.
 
 ---
 
-## Domain Coverage (41 Templates)
+## Domain Coverage (42 Templates)
 
-`expansion/templates/` contains **40 concrete domain templates** plus `universal_generic`:
+`expansion/templates/` contains **41 concrete domain templates** plus `universal_generic`:
 
-- **AI, Agentic, Verification & Distributed Systems:** `kv_cache_inference` *(PagedAttention, RadixAttention, prefill-decode disaggregation, attention sinks)*, `speculative_decoding` *(draft/target rejection sampling, tree attention, atomic KV rollback)*, `distributed_consensus` *(Raft/Paxos quorums, fencing tokens, split-brain & lease hazards)*, `agentic_tool_orchestration` *(JSON-schema tool dispatch, bounded execution budgets, MCP isolation, reentrancy guards)*, `formal_verification` *(TLA+/SMT proof obligations, loop invariants, counterexample refinement, fail-closed timeout handling)*, `reward_hijacking`, `reflexion`, `computation`, `informational`
+- **AI, Agentic, Verification & Distributed Systems:** `kv_cache_inference` *(PagedAttention, RadixAttention, prefill-decode disaggregation, attention sinks)*, `speculative_decoding` *(draft/target rejection sampling, tree attention, atomic KV rollback)*, `distributed_consensus` *(Raft/Paxos quorums, fencing tokens, split-brain & lease hazards)*, `agentic_tool_orchestration` *(JSON-schema tool dispatch, bounded execution budgets, MCP isolation, reentrancy guards)*, `formal_verification` *(TLA+/SMT proof obligations, loop invariants, counterexample refinement, fail-closed timeout handling)*, `ci_build_invariants` *(Buildcraft CI/local-inference topology constraints, pre-execution reservation, compatibility gates, closed bypasses)*, `reward_hijacking`, `reflexion`, `computation`, `informational`
 - **Substrate, Reality & Cognitive Architecture:** `consciousness_cognition`, `client_server_reality`, `input_semantic_adapter`, `psychology`
 - **Mobile, Telecom, Mesh & Security Systems:** `android_connectivity`, `mobile_security`, `capability_isolation` *(object capabilities, CHERI/Capsicum/seccomp attenuation, confused-deputy prevention)*, `sovereign_local_mesh` *(Tailscale/wireproxy userspace WireGuard tunnels, split-horizon resolution, CRDT offline convergence)*, `trust_chain`, `remote_attestation` *(RFC 9334 RATS Attester/Verifier/Relying Party, freshness nonces, TOCTOU bounds)*, `cellular_middlebox_tethering`, `quota_bypass_mechanics`, `epistemic_ledger_verification`, `networking`, `bluetooth`, `wireless_power`
 - **Game / Defense Mechanics:** `poe_chaos_inoculation`
@@ -200,10 +200,10 @@ print(report['invariant_registry'])
 
 ```text
 semantic_compiler_kernel/
-├── core/                 # Pipeline, types, scoring, audit, dataset export (V3.1.1)
+├── core/                 # Pipeline, types, scoring, audit, dataset export (V3.5.0)
 ├── extraction/           # Skeleton, relationships, claims, evidence, frames
 ├── gates/                # Hard logical gates & repair logic
-├── registry/             # Terms, constants, departments, buildcraft ontology (V3.1.1)
+├── registry/             # Terms, constants, departments, buildcraft ontology (V3.5.0)
 ├── translation/          # Fractal translation + structural resolver
 ├── modes/                # Operating modes (coherence, reality orientation, defense pathology)
 ├── expansion/            # Domain decompression, gem_decode/forge, corpus, advisor
@@ -212,9 +212,9 @@ semantic_compiler_kernel/
 │   ├── gem_forge/        # Multi-gem synthesis + pinned RePoE corpus
 │   ├── isomorphism/      # Universal functional graph & overlay
 │   ├── pathology/        # Failure taxonomy & medical-ontology detector
-│   ├── templates/        # 37 domain YAML templates (36 domains + universal_generic)
+│   ├── templates/        # 42 domain YAML templates (41 domains + universal_generic)
 │   └── schemas/          # Expansion system model & invariant registry schemas
-├── schemas/              # Core dataset JSON schemas (V3.1.1 primary + V2.1.0 legacy)
+├── schemas/              # Core dataset JSON schemas (V3.5.0 primary + V3.1.1/V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
 ├── calibration_output/   # Generated corpora, release manifests, reports
 ├── docs/                 # Provenance docs, invariants, review reports
@@ -228,6 +228,7 @@ semantic_compiler_kernel/
 
 | Artifact | Path |
 |---|---|
+| Release manifest (V3.5.0) | `calibration_output/RELEASE_MANIFEST_V3_5_0.json` |
 | Release manifest (V3.1.1) | `calibration_output/RELEASE_MANIFEST_V3_1_1.json` |
 | Release manifest (V3.0.0) | `calibration_output/RELEASE_MANIFEST_V3_0_0.json` |
 | Known limitations | `calibration_output/KNOWN_LIMITATIONS_V2_1_3.md` |
