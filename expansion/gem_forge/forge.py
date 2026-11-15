@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone
+from functools import lru_cache
 from typing import Iterable
 
 from semantic_compiler.expansion.gem_forge.models import (
@@ -48,37 +49,43 @@ _EVIDENCE_STOPWORDS = frozenset({
 })
 
 
+_CAMEL_SPLIT_RE = re.compile(r"(?<=[a-z])(?=[A-Z])")
+_ALNUM_TOKEN_RE = re.compile(r"[a-z0-9]+")
+
+
 def _content_tokens(text: str) -> set[str]:
     """Content tokens for wording evidence: camelCase-split, stopword-filtered."""
-    spaced = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", str(text))
-    tokens = set(re.findall(r"[a-z0-9]+", spaced.casefold()))
+    spaced = _CAMEL_SPLIT_RE.sub(" ", str(text))
+    tokens = set(_ALNUM_TOKEN_RE.findall(spaced.casefold()))
     return {token for token in tokens if len(token) >= 4 and token not in _EVIDENCE_STOPWORDS}
 
 
-def _tokens_match(left: str, right: str) -> bool:
-    """Exact or simple singular/plural agreement."""
-    if left == right:
-        return True
-    return left.rstrip("s") == right.rstrip("s")
-
-
-def _wording_evidence(component_tokens: set[str], gem_tokens: set[str]) -> tuple[str, ...]:
+def _wording_evidence(component_tokens: set[str], gem_tokens: frozenset[str] | set[str]) -> tuple[str, ...]:
+    gem_stems = {right.rstrip("s") for right in gem_tokens}
     return tuple(sorted(
         left for left in component_tokens
-        if any(_tokens_match(left, right) for right in gem_tokens)
+        if left in gem_tokens or left.rstrip("s") in gem_stems
     ))
 
 
-def _gem_tokens(translation: GemTranslation) -> set[str]:
-    parts = [
+@lru_cache(maxsize=2048)
+def _cached_gem_tokens(
+    poe_name: str,
+    inference_name: str,
+    converted_wording: tuple[str, ...],
+) -> frozenset[str]:
+    tokens: set[str] = set()
+    for part in (poe_name, inference_name, *converted_wording):
+        tokens |= _content_tokens(part)
+    return frozenset(tokens)
+
+
+def _gem_tokens(translation: GemTranslation) -> frozenset[str]:
+    return _cached_gem_tokens(
         translation.poe_name,
         translation.inference_name,
-        *translation.converted_wording,
-    ]
-    tokens: set[str] = set()
-    for part in parts:
-        tokens |= _content_tokens(part)
-    return tokens
+        tuple(translation.converted_wording),
+    )
 
 
 def _score_match(

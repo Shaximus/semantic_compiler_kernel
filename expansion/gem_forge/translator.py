@@ -10,7 +10,12 @@ import re
 from typing import Callable
 
 from semantic_compiler.expansion.gem_forge.models import GemTranslation, LineTranslation, PoeGem
-from semantic_compiler.expansion.gem_forge.taxonomy import extract_domains, extract_primitives, normalize_text
+from semantic_compiler.expansion.gem_forge.taxonomy import (
+    extract_domains,
+    extract_primitives,
+    extract_primitives_and_domains,
+    normalize_text,
+)
 
 
 Converter = Callable[[str], tuple[str, tuple[str, ...]] | None]
@@ -506,8 +511,7 @@ def translate_gem(gem: PoeGem) -> GemTranslation:
         line_pairs.append(LineTranslation(source_line, converted, confidence, status, primitives))
 
     all_parts = (gem.name, gem.description, *gem.tags, *source_lines, *converted_lines)
-    primitives = extract_primitives(all_parts)
-    domains = extract_domains(all_parts)
+    primitives, domains = extract_primitives_and_domains(all_parts)
     return GemTranslation(
         gem_id=gem.gem_id,
         poe_name=gem.name,

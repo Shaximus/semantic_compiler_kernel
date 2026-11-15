@@ -229,6 +229,13 @@ SAMPLES = [
     ("A GC pause leaves a stale zombie client holding an expired lease that causes split-brain overwrites without fencing token checks.", "distributed_consensus", "pathology_positive"),
     ("Enforcing strict majority quorum intersection and monotonic fencing token verification prevents stale leader corruption.", "distributed_consensus", "architecture_improvement"),
     ("Wall-clock leader leases make split brain impossible in asynchronous clusters, so distributed consensus never needs fencing tokens.", "distributed_consensus", "adversarial"),
+
+    # --- 5 RFC 9334 remote attestation samples: remote_attestation ---
+    ("A remote attestation RATS workflow linking silicon endorser, attester, verifier, reference value provider, freshness nonce service, and relying party.", "remote_attestation", "strong_whole_system"),
+    ("The attester signs a tpm quote bound to a freshness nonce.", "remote_attestation", "fragmentary"),
+    ("Long-lived attestation results suffer toctou post-check compromise and replay of stale evidence without monotonic rollback fuses.", "remote_attestation", "pathology_positive"),
+    ("Background-check verification pairs fresh challenge nonces from the relying party with continuous watchdog heartbeats and reference value appraisal.", "remote_attestation", "architecture_improvement"),
+    ("Software self-claims can replace vendor endorser certificates and freshness nonces never matter once initial verification succeeds.", "remote_attestation", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"
