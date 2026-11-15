@@ -47,6 +47,7 @@ Citation: v2.0 — Reality Orientation Protocol
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum, auto, unique
 from typing import Any
@@ -342,6 +343,12 @@ THREAT_VOCABULARY: dict[str, str] = {
 }
 
 
+_THREAT_PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = tuple(
+    (trigger, trigger.lower(), replacement, re.compile(re.escape(trigger), re.IGNORECASE))
+    for trigger, replacement in THREAT_VOCABULARY.items()
+)
+
+
 def deescalate_vocabulary(text: str) -> dict[str, Any]:
     """
     Strip emotional/survival metadata from a text payload.
@@ -355,16 +362,10 @@ def deescalate_vocabulary(text: str) -> dict[str, Any]:
     result = text
     replacements_made = []
 
-    for trigger, replacement in THREAT_VOCABULARY.items():
-        if trigger.lower() in result.lower():
+    for trigger, trigger_lower, replacement, pattern in _THREAT_PATTERNS:
+        if trigger_lower in result.lower():
             # Case-insensitive replacement
-            import re
-            result = re.sub(
-                re.escape(trigger),
-                replacement,
-                result,
-                flags=re.IGNORECASE,
-            )
+            result = pattern.sub(replacement, result)
             replacements_made.append({
                 "trigger": trigger,
                 "replacement": replacement,

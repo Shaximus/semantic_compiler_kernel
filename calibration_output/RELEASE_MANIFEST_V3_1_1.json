@@ -17,5 +17,5 @@
     "gates/",
     "registry/"
   ],
-  "notes": "V3.1.1 consolidation: consciousness/cognition split, client-server reality architecture, isomorphism overlay, 36 expansion templates (including kv_cache_inference, distributed_consensus, and remote_attestation), decompression calibration corpus, and codebase audit/performance fixes."
+  "notes": "V3.1.1 consolidation: consciousness/cognition split, client-server reality architecture, isomorphism overlay, 37 expansion templates (including kv_cache_inference, speculative_decoding, distributed_consensus, and remote_attestation), decompression calibration corpus, and codebase audit/performance fixes."
 }

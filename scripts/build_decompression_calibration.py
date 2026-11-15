@@ -236,6 +236,13 @@ SAMPLES = [
     ("Long-lived attestation results suffer toctou post-check compromise and replay of stale evidence without monotonic rollback fuses.", "remote_attestation", "pathology_positive"),
     ("Background-check verification pairs fresh challenge nonces from the relying party with continuous watchdog heartbeats and reference value appraisal.", "remote_attestation", "architecture_improvement"),
     ("Software self-claims can replace vendor endorser certificates and freshness nonces never matter once initial verification succeeds.", "remote_attestation", "adversarial"),
+
+    # --- 5 speculative decoding samples: speculative_decoding ---
+    ("A speculative decoding pipeline combining draft model proposal, tree attention verification, target model logits, rejection sampling, bonus token recovery, and kv cache rollback.", "speculative_decoding", "strong_whole_system"),
+    ("The rejection sampling gate verifies each draft token against the target model.", "speculative_decoding", "fragmentary"),
+    ("Low acceptance rate collapse and missing kv cache rollback leak stale provisional draft state into active decoding context.", "speculative_decoding", "pathology_positive"),
+    ("Adaptive lookahead tuning, packed tree attention masks, and atomic kv cache rollback preserve lossless target-distribution output.", "speculative_decoding", "architecture_improvement"),
+    ("Speculative decoding can skip exact rejection sampling and residual bonus token normalization without changing the target distribution.", "speculative_decoding", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

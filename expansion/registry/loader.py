@@ -21,8 +21,8 @@ def load_templates(template_dir: Path | None = None) -> dict[str, DomainTemplate
     """Load and validate all *.yaml domain templates from template_dir, keyed by domain."""
     template_dir = template_dir or TEMPLATE_DIR
     templates: dict[str, DomainTemplate] = {}
-    for path in template_dir.glob("*.yaml"):
-        data = yaml.safe_load(path.read_text())
+    for path in sorted(template_dir.glob("*.yaml")):
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
         errors = validate_domain_template(data)
         if errors:
             raise ValueError(f"Invalid template {path}: {errors}")

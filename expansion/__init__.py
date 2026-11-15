@@ -187,6 +187,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "ledger", "bank statement", "settlement", "dpan", "card token",
         "credit card token", "gift card", "app store",
     )),
+    ("speculative_decoding", (
+        "speculative decoding", "draft model", "target model", "rejection sampling",
+        "tree attention", "kv cache rollback", "acceptance rate", "bonus token",
+        "eagle", "specinfer", "draft token",
+    )),
     ("kv_cache_inference", (
         "kv cache", "kv-cache", "kv block", "pagedattention", "paged attention",
         "radixattention", "radix attention", "radix prefix", "attention sink",
