@@ -90,8 +90,8 @@ Both `/root/.gitconfig` and `/home/claude/.gitconfig` are configured with:
    - **Cellular Quota Invariant (`separate_phone_from_carrier`):** The owner's cellular allowance is metered and may be $0. Never run throughput tests (`iperf3`, `speedtest`), bulk package downloads, or large git pushes over mobile data without explicit owner approval.
    - **Dumpsys Ring Invariant (`capture_the_ring`):** Dumpsys rings rotate rapidly; capture them early to persistent disk files before they scroll.
 7. **Frozen Directory Policy:**
-   - In repositories with frozen contracts (such as `semantic_compiler_kernel` where `core/` and `registry/` are designated frozen), do **not** modify frozen paths without an explicit user waiver.
-   - Isolate compatibility layers in wrappers (e.g. `compat.py`) or separate modules.
+   - In repositories with explicitly frozen contracts, do **not** modify frozen paths without an explicit user waiver. (Note: for `semantic_compiler_kernel`, the legacy V2.1.0/V3.0.0 freeze on `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/` was lifted in V3.1.1; all layers are live and aligned at schema `3.1.1`.)
+   - Isolate compatibility layers in wrappers (e.g. `compat.py`) or separate modules when operating under a freeze.
 8. **Pre-commit Integrity Verification:**
    - Always run test suites and linters before committing.
    - Run `git apply --check` before applying external patches.

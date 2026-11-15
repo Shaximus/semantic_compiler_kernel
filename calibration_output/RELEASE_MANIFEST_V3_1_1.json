@@ -1,8 +1,8 @@
 {
   "manifest_version": "3.1.1",
   "semantic_compiler_version": "3.1.1",
-  "schema_version": "2.1.0",
-  "generated_at": "2026-11-15T00:00:00Z",
+  "schema_version": "3.1.1",
+  "generated_at": "2026-11-15T16:50:00Z",
   "git_commit": "main-v3.1.1-sync",
   "manifest_chain": [
     "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
@@ -11,11 +11,6 @@
     "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
     "calibration_output/RELEASE_MANIFEST_V3_1_1.json"
   ],
-  "frozen_modules": [
-    "core/",
-    "extraction/",
-    "gates/",
-    "registry/"
-  ],
-  "notes": "V3.1.1 consolidation: consciousness/cognition split, client-server reality architecture, isomorphism overlay, 37 expansion templates (including kv_cache_inference, speculative_decoding, distributed_consensus, and remote_attestation), decompression calibration corpus, and codebase audit/performance fixes."
+  "frozen_modules": [],
+  "notes": "V3.1.1 full alignment: lifted legacy V2.1.0/V3.0.0 freeze across core/, extraction/, gates/, registry/, and schemas/; upgraded Logos dataset schema to 3.1.1 (logos_semantic_training_sample_v3_1_1.schema.json); moved decision-derivative refresh and sensitive input/SFT redaction directly into core/pipeline.py and core/dataset.py; aligned packet/registry versions to 3.1.1; includes consciousness/cognition split, client-server reality architecture, isomorphism overlay, 37 expansion templates, decompression calibration corpus, and codebase audit/performance fixes."
 }

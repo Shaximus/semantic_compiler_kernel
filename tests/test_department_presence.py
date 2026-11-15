@@ -105,8 +105,7 @@ class ScaleResolutionTests(unittest.TestCase):
         self.assertLessEqual(set(FRAME_TO_SCALE.values()), table_scales)
 
     def test_frame_table_has_not_drifted_from_the_pipeline_copy(self) -> None:
-        # core.pipeline._infer_system_scale keeps its own copy of this table because
-        # core/ is under the V3.0.0 freeze. Keep the two identical.
+        # Keep core.pipeline._infer_system_scale in sync with FRAME_TO_SCALE.
         from semantic_compiler.core.packet import SemanticPacket
         from semantic_compiler.core.pipeline import _infer_system_scale
 

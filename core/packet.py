@@ -1,10 +1,10 @@
 """
-Reflexion Semantic Compiler v2.0.0 — Universal Semantic Packet
+Reflexion Semantic Compiler V3.1.1 — Universal Semantic Packet
 
 The canonical data structure that flows through the entire compilation pipeline.
 Every field corresponds to a stage in the master pipeline (Section 8).
 
-v2.0 extends the v1.0 packet with fractal_mappings, wave_function_coherence,
+v2.0+ extends the v1.0 packet with fractal_mappings, wave_function_coherence,
 cosmological_anchors, reality_orientation state, and privacy sensitivity.
 
 Citation: v1.0 Spec Section 6 — Universal Semantic Packet v1.0
@@ -28,6 +28,9 @@ from semantic_compiler.core.types import (
     WaveFunctionState,
 )
 from semantic_compiler.core.semantic_ir import SemanticIR
+
+
+COMPILER_VERSION = "3.1.1"
 
 
 @dataclass
@@ -57,7 +60,7 @@ class SemanticPacket:
 
     # --- Identity ---
     compiler: str = "Reflexion Semantic Compiler"
-    version: str = "2.0.0"
+    version: str = COMPILER_VERSION
     packet_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     mode: Optional[CompilerMode] = None
     active_submodes: list[CompilerMode] = field(default_factory=list)

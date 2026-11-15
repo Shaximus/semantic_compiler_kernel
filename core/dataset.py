@@ -1,14 +1,11 @@
 """
-Reflexion Semantic Compiler v2.0.0 — Logos Dataset Row V2.1 Exporter
+Reflexion Semantic Compiler V3.1.1 — Logos Dataset Row V3.1.1 Exporter
 
 Canonical dataset-row builder aligned with:
-    LOGOS SEMANTIC DATASET PROTOCOL V2.1
+    LOGOS SEMANTIC DATASET PROTOCOL V3.1.1
 
 Produces the versioned training-data envelope used by SFT, DPO,
 contrastive learning, retrieval, isomorphism judging, and repair models.
-
-Citation: /home/shax/Downloads/LOGOS_SEMANTIC_DATASET_PROTOCOL_V2_1.md
-Citation: /home/shax/Downloads/logos_semantic_training_sample_v2_1.schema.json
 """
 
 from __future__ import annotations
@@ -22,6 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from semantic_compiler.core.packet import COMPILER_VERSION
 from semantic_compiler.core.types import (
     CompilerMode,
     DatasetTier,
@@ -36,8 +34,17 @@ from semantic_compiler.core.types import (
 # Constants
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "2.1.0"
+SCHEMA_VERSION = COMPILER_VERSION
 EXTRACTOR_VERSION = "skeleton-np-v2"
+_REDACTED_PLACEHOLDER = "[REDACTED — structural derivative only]"
+
+_FRACTAL_SCALE_ALIASES: dict[str, str] = {
+    "HUMAN": "AGENT",
+    "SOCIETY": "CIVILIZATIONAL",
+    "COMPUTER": "COMPONENT",
+    "LLM": "PROCESS",
+    "COSMOS": "COSMOLOGICAL",
+}
 
 _LOGOS_SAMPLE_ID_PREFIX = "LOGOS:SAMPLE"
 
@@ -105,9 +112,16 @@ def _scale_name(scale: Any) -> str | None:
         return None
     if isinstance(scale, ScaleType):
         return scale.name
-    if isinstance(scale, str):
-        return scale.upper()
-    return str(scale).upper()
+    upper = scale.upper() if isinstance(scale, str) else str(scale).upper()
+    return _FRACTAL_SCALE_ALIASES.get(upper, upper)
+
+
+def _is_redacted(packet: Any) -> bool:
+    """Return True if packet privacy sensitivity requires input text redaction."""
+    return getattr(packet, "privacy_sensitivity", None) in (
+        PrivacySensitivity.SENSITIVE,
+        PrivacySensitivity.CRITICAL,
+    )
 
 
 def _mapping_class_name(mc: Any) -> str:
@@ -231,6 +245,7 @@ def _classify_tier(packet: Any) -> DatasetTier:
 
 def _build_provenance(packet: Any) -> dict[str, Any]:
     ctx = packet.source_context
+    redacted = _is_redacted(packet)
     evidence_chain: list[dict[str, Any]] = []
     for ev in packet.evidence_inventory:
         if not isinstance(ev, dict):
@@ -238,7 +253,7 @@ def _build_provenance(packet: Any) -> dict[str, Any]:
         evidence_chain.append({
             "evidence_id": ev.get("evidence_id", f"ev-{uuid.uuid4().hex[:8]}"),
             "source_type": ev.get("source_type", "TRANSCRIPT"),
-            "content": ev.get("content", ev.get("excerpt", "")),
+            "content": _REDACTED_PLACEHOLDER if redacted else ev.get("content", ev.get("excerpt", "")),
             "directness": str(ev.get("directness", "DERIVED")).upper(),
             "confidence": float(ev.get("confidence", 0.5)),
             "source_path": ev.get("source_path"),
@@ -264,9 +279,10 @@ def _build_provenance(packet: Any) -> dict[str, Any]:
 
 
 def _build_claims(packet: Any) -> list[dict[str, Any]]:
-    """Normalize packet claim_types and SemanticIR claims into V2.1 claim list."""
+    """Normalize packet claim_types and SemanticIR claims into canonical claim list."""
     claims: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
+    redacted = _is_redacted(packet)
 
     # Prefer claim_types from extraction
     for i, ct in enumerate(packet.claim_types):
@@ -274,7 +290,7 @@ def _build_claims(packet: Any) -> list[dict[str, Any]]:
             cid = ct.get("claim_id") or f"claim-{i}"
             claims.append({
                 "claim_id": cid,
-                "content": ct.get("content", packet.raw_input or ""),
+                "content": _REDACTED_PLACEHOLDER if redacted else ct.get("content", packet.raw_input or ""),
                 "claim_type": str(ct.get("claim_type", "OBSERVATION")).upper(),
                 "confidence": float(ct.get("confidence", 0.5)),
                 "scale": _scale_name(ct.get("scale")),
@@ -291,7 +307,7 @@ def _build_claims(packet: Any) -> list[dict[str, Any]]:
                 continue
             claims.append({
                 "claim_id": cid,
-                "content": c.get("content", packet.raw_input or ""),
+                "content": _REDACTED_PLACEHOLDER if redacted else c.get("content", packet.raw_input or ""),
                 "claim_type": str(c.get("claim_type", "OBSERVATION")).upper(),
                 "confidence": float(c.get("confidence", 0.5)),
                 "scale": _scale_name(c.get("scale")),
@@ -302,7 +318,7 @@ def _build_claims(packet: Any) -> list[dict[str, Any]]:
     if not claims and packet.raw_input:
         claims.append({
             "claim_id": "claim-0",
-            "content": packet.raw_input,
+            "content": _REDACTED_PLACEHOLDER if redacted else packet.raw_input,
             "claim_type": "OBSERVATION",
             "confidence": 0.5,
             "scale": None,
@@ -316,16 +332,16 @@ def _build_claims(packet: Any) -> list[dict[str, Any]]:
 def _build_input(packet: Any) -> dict[str, Any]:
     # Preserve immutable raw input, but redact literal text for sensitive/critical
     # packets so the training envelope does not leak private data.
-    raw = packet.raw_input or ""
-    if packet.privacy_sensitivity in (
-        PrivacySensitivity.SENSITIVE,
-        PrivacySensitivity.CRITICAL,
-    ):
-        raw = "[REDACTED — structural derivative only]"
+    if _is_redacted(packet):
+        raw = _REDACTED_PLACEHOLDER
+        normalized = _REDACTED_PLACEHOLDER
+    else:
+        raw = packet.raw_input or ""
+        normalized = packet.normalized_input or packet.raw_input or ""
 
     return {
         "raw_input": raw,
-        "normalized_input": packet.normalized_input or packet.raw_input or "",
+        "normalized_input": normalized,
         "context": {},
         "claims": _build_claims(packet),
         "declared_constraints": list(packet.declared_constraints),
@@ -397,8 +413,17 @@ def _target_resolution(packet: Any) -> dict[str, Any]:
 
 def _semantic_ir(packet: Any) -> dict[str, Any]:
     sir = packet.semantic_ir
+    redacted = _is_redacted(packet)
+    claims = (
+        [
+            {**c, "content": _REDACTED_PLACEHOLDER} if isinstance(c, dict) and "content" in c else c
+            for c in sir.claims
+        ]
+        if redacted
+        else sir.claims
+    )
     return {
-        "claims": sir.claims,
+        "claims": claims,
         "entities": sir.entities,
         "relationships": [
             {
@@ -1425,8 +1450,8 @@ def _derive_dispositions(packet: Any) -> dict[str, str]:
 
 def _build_privacy(packet: Any) -> dict[str, Any]:
     redactions: list[str] = []
-    if packet.privacy_sensitivity in (PrivacySensitivity.SENSITIVE, PrivacySensitivity.CRITICAL):
-        redactions.append("raw_input")
+    if _is_redacted(packet):
+        redactions.extend(["raw_input", "normalized_input"])
 
     return {
         "sensitivity": _to_sensitivity_name(packet.privacy_sensitivity),
@@ -1465,7 +1490,7 @@ def _build_audit(packet: Any, schema_valid: bool) -> dict[str, Any]:
 
 def build_dataset_row(packet: Any) -> dict[str, Any]:
     """
-    Build a canonical Logos Semantic Training Sample V2.1 row.
+    Build a canonical Logos Semantic Training Sample V3.1.1 row.
 
     The row is schema-aligned and includes every compiler output that is
     safe to serialize, separated into provenance, input, compilation,
@@ -1519,19 +1544,23 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
     return row
 
 
-def _default_schema_path() -> Path:
-    """Resolve the packaged V2.1 JSON Schema, with override hooks."""
-    env_path = os.environ.get("LOGOS_V2_1_SCHEMA_PATH")
+def _default_schema_path(schema_version: str | None = None) -> Path:
+    """Resolve the packaged Logos JSON Schema (default V3.1.1), with override hooks."""
+    env_path = os.environ.get("LOGOS_SCHEMA_PATH") or os.environ.get("LOGOS_V2_1_SCHEMA_PATH")
     if env_path:
         return Path(env_path)
 
-    # Packaged schema, resolved relative to this module.
-    packaged = Path(__file__).resolve().parent.parent / "schemas" / "logos_semantic_training_sample_v2_1.schema.json"
+    schemas_dir = Path(__file__).resolve().parent.parent / "schemas"
+    if schema_version == "2.1.0":
+        legacy = schemas_dir / "logos_semantic_training_sample_v2_1.schema.json"
+        if legacy.exists():
+            return legacy
+
+    packaged = schemas_dir / "logos_semantic_training_sample_v3_1_1.schema.json"
     if packaged.exists():
         return packaged
 
-    # Legacy fallback for existing workstations.
-    return Path("/home/shax/Downloads/logos_semantic_training_sample_v2_1.schema.json")
+    return schemas_dir / "logos_semantic_training_sample_v2_1.schema.json"
 
 
 def validate_dataset_row(
@@ -1539,19 +1568,26 @@ def validate_dataset_row(
     schema_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """
-    Validate a V2.1 dataset row against the Logos JSON Schema.
+    Validate a dataset row against the Logos JSON Schema (default V3.1.1).
 
-    If ``schema_path`` is omitted, the packaged schema is used (resolved
-    relative to this module). Override with ``LOGOS_V2_1_SCHEMA_PATH`` env
-    var or by passing an explicit path.
+    If ``schema_path`` is omitted, the packaged schema matching
+    ``row.get("schema_version")`` (or V3.1.1 by default) is used. Override with
+    ``LOGOS_SCHEMA_PATH`` (or legacy ``LOGOS_V2_1_SCHEMA_PATH``) env var or
+    by passing an explicit path.
 
     Returns {"valid": bool, "errors": list[str]}.
     """
     from jsonschema import Draft202012Validator
 
-    schema_path = Path(schema_path) if schema_path is not None else _default_schema_path()
+    if schema_path is not None:
+        resolved_path = Path(schema_path)
+    else:
+        row_version = row.get("schema_version") if isinstance(row, dict) else None
+        resolved_path = _default_schema_path(
+            "2.1.0" if row_version == "2.1.0" else None
+        )
     try:
-        with schema_path.open("r", encoding="utf-8") as f:
+        with resolved_path.open("r", encoding="utf-8") as f:
             schema = json.load(f)
     except Exception as exc:
         return {"valid": False, "errors": [f"Could not load schema: {exc}"]}
