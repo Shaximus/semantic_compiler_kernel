@@ -1,0 +1,130 @@
+domain: kv_cache_inference
+version: 1.0
+description: >-
+  Large language model serving runtime structured around dynamic key-value (KV)
+  memory virtualization, prefix reuse, and compute/memory-bandwidth phase
+  separation (PagedAttention, RadixAttention, prefill-decode disaggregation,
+  and selective token eviction). Maps directly onto Antigravity / Ark SGLang
+  inference serving architectures where HBM capacity and memory bandwidth
+  determine throughput and tail latency.
+components:
+  - name: request_scheduler
+    function: performs iteration-level continuous batching, admitting prefill and decode steps within token and KV-block budgets
+    criticality: high
+    medical_map: homeostasis
+  - name: radix_prefix_tree
+    function: tracks shared prompt prefixes in an LRU radix tree so identical system prompts and few-shot blocks are reused rather than recomputed
+    criticality: high
+    medical_map: vaccination
+  - name: logical_kv_table
+    function: translates per-sequence logical token positions into non-contiguous physical KV block addresses (PagedAttention block table)
+    criticality: high
+    medical_map: diagnosis
+  - name: physical_block_pool
+    function: manages fixed-size physical KV blocks in GPU HBM with copy-on-write reference counts
+    criticality: high
+    medical_map: homeostasis
+  - name: prefill_engine
+    function: processes prompt tokens in parallel compute-bound passes to populate initial KV blocks
+    criticality: high
+    medical_map: prognosis
+  - name: decode_engine
+    function: executes autoregressive token-by-token generation bound by HBM memory bandwidth reading cached KV blocks
+    criticality: high
+    medical_map: homeostasis
+  - name: eviction_policy
+    function: reclaims physical KV blocks under memory pressure while preserving attention sinks and heavy-hitter tokens
+    criticality: medium
+    medical_map: treatment
+  - name: admission_guard
+    function: enforces backpressure, request preemption, or CPU swap-out when physical HBM blocks saturate
+    criticality: high
+    medical_map: immune_system
+relationships:
+  - from: request_scheduler
+    to: prefill_engine
+    type: dispatches
+  - from: request_scheduler
+    to: decode_engine
+    type: schedules
+  - from: radix_prefix_tree
+    to: logical_kv_table
+    type: shares_prefix_blocks_with
+  - from: logical_kv_table
+    to: physical_block_pool
+    type: maps_to
+  - from: prefill_engine
+    to: physical_block_pool
+    type: writes
+  - from: decode_engine
+    to: physical_block_pool
+    type: reads_and_appends
+  - from: admission_guard
+    to: request_scheduler
+    type: preempts
+  - from: eviction_policy
+    to: physical_block_pool
+    type: reclaims_from
+invariants:
+  - "Virtualizing KV cache into non-contiguous fixed-size physical blocks via a block table eliminates external HBM fragmentation without changing attention math [DERIVED]"
+  - "Prefix trees (RadixAttention) turn repeated system-prompt and multi-turn conversation history from O(N^2) prefill compute into O(1) reference-counted block sharing [DERIVED]"
+  - "Prefill is compute-bound (FLOPS-limited) while autoregressive decode is memory-bandwidth-bound (bytes-moved-limited); mixing them in one step induces mutual latency interference [DERIVED]"
+  - "Dropping initial attention-sink tokens during sliding-window eviction collapses long-context attention distributions even when recent local tokens remain [DERIVED]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: Immutable base model weights plus
+    authoritative physical HBM block contents represent consciousness
+    (ground substrate), while the scheduler's logical view, streaming
+    output tokens, and client context window represent cognition
+    (terminal output). Premature KV eviction corrupts terminal
+    recall without altering underlying base weights.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Model weights and authoritative KV block pool =
+    server (L1); attention kernel + continuous batcher = rendering
+    engine (L2); prefix-tree block table / client token stream =
+    client cache (L3); active generation requests = avatars (L4).
+    Copy-on-write fork = state snapshot replication across avatars.
+    KV swap thrashing = L2 rendering stall while server state swaps.
+    Cross-ref: client_server_reality.yaml [DERIVED]
+failure_modes:
+  - name: kv_cache_thrashing
+    medical_map: acute
+    description: aggressive block eviction under high concurrency forces continuous prefix recomputation and CPU-GPU swap stalls
+    indicators:
+      - kv_cache_thrashing
+      - block_exhaustion
+      - prefix_recompute_spike
+  - name: memory_fragmentation_oom
+    medical_map: sepsis
+    description: contiguous max-sequence-length reservations exhaust HBM capacity despite low actual token occupancy
+    indicators:
+      - memory_fragmentation_oom
+      - fragmentation_waste
+      - allocation_failure
+  - name: prefill_decode_interference
+    medical_map: inflammation
+    description: long prompt prefill iterations delay concurrent decode batches and cause severe time-per-output-token (TPOT) jitter
+    indicators:
+      - prefill_decode_interference
+      - tpot_latency_spike
+      - batch_stall
+  - name: attention_sink_eviction
+    medical_map: autoimmune
+    description: naive FIFO KV eviction discards initial sink tokens needed to normalize softmax attention weights across long contexts
+    indicators:
+      - attention_sink_eviction
+      - perplexity_collapse
+      - sink_token_drop
+architecture_patterns:
+  - name: paged_virtual_kv_blocks
+    medical_map: homeostasis
+    description: decouple logical token sequences from contiguous GPU allocations using fixed-size page tables and copy-on-write
+  - name: radix_prefix_reuse
+    medical_map: vaccination
+    description: retain inactive prompt prefixes in an LRU radix tree to eliminate redundant prefill work across turns
+  - name: prefill_decode_disaggregation
+    medical_map: quarantine
+    description: isolate compute-heavy prefill workers from bandwidth-bound decode workers across fast KV transfer links
+  - name: preserved_sink_eviction
+    medical_map: treatment
+    description: anchor initial attention-sink tokens permanently while evicting only middle-window blocks

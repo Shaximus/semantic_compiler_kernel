@@ -27,6 +27,20 @@ relationships:
 invariants:
   - membrane must remain selectively permeable
   - immune system must distinguish self from non-self
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The genome/neural substrate is
+    consciousness (the base weights); phenotypic expression and
+    cognitive behavior are cognition (terminal output). One genome →
+    many phenotypes (multiplexing). Epigenetics and environment are
+    the system prompt that configures each terminal. The substrate
+    exists before the first cell divides. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: The genome is the server backend (L1);
+    cellular machinery is the rendering engine (L2); current
+    organism state is client cache (L3); individual cells/organs
+    are avatars (L4). Epigenetic changes = hotfixes applied while
+    live. Sleep = logout/maintenance. Immune errors = cache
+    corruption (autoimmune). Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: cancer
     medical_map: cancer

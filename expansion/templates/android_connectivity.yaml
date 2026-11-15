@@ -122,6 +122,25 @@ invariants:
   - "Read-only diagnosis until the owner approves a single change with undo; root goes through the fingerprint gate [operational rule]"
   - "Never put IMEI, IMSI, ICCID, phone numbers or keys into reports or evidence bundles [operational rule]"
   - "SELinux enforcing and verified-boot state are independent of whether KernelSU or service.d hooks are active after boot [MEASURED]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The radio hardware / baseband
+    firmware / RF substrate is consciousness; Android framework
+    state, status-bar icons, and user-visible connectivity are
+    cognition (terminal output). The radio exists before the OS
+    boots. dumpsys telephony.registry = reading substrate state.
+    Status-bar icon = terminal rendering (may not match substrate).
+    SIM slot mapping = system prompt assigning identity to substrate
+    channel. Carrier policy = external system prompt constraining
+    terminal behavior. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Baseband / radio hardware = server (L1);
+    Android telephony framework / RIL = rendering engine (L2);
+    connectivity manager state / user-visible indicators = client
+    cache (L3); individual data sessions / calls = avatars (L4).
+    APN reconfiguration = hotfix. Status bar mismatch with radio
+    state = cache desync. Carrier OTA update = server-side push.
+    Airplane mode = client-side logout. Tethering = cache sharing
+    (exposing L3 to downstream clients). Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: allowance_exhausted
     medical_map: acute

@@ -639,7 +639,10 @@ def identify_missing_departments(
     present_functions = system_description.get("present_functions", [])
     present_set = _map_present_to_departments(present_functions, scale, raw_text=raw_text)
     # Also keep any already-canonical department names that may be present.
-    present_set.update(f.upper() for f in present_functions if f.upper() in {d.name for d in FunctionalDepartment})
+    dept_names = {d.name for d in FunctionalDepartment}
+    present_set.update(
+        f.upper() for f in present_functions if isinstance(f, str) and f.upper() in dept_names
+    )
 
     findings = []
     for dept in FunctionalDepartment:

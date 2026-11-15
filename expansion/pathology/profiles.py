@@ -19,11 +19,12 @@ _GENERIC_WORDS = frozenset(
 
 CONFIDENCE_DIRECT = 0.75
 CONFIDENCE_CIRCUMSTANTIAL = 0.6
+_TOKEN_RE = re.compile(r"[a-z0-9]+")
 
 
 def _tokens(text: str) -> set[str]:
     """Meaningful lowercase tokens, excluding filler and generic structural words."""
-    words = re.findall(r"[a-z0-9]+", text.lower())
+    words = _TOKEN_RE.findall(text.lower())
     return {w for w in words if len(w) >= 3 and w not in _STOPWORDS and w not in _GENERIC_WORDS}
 
 

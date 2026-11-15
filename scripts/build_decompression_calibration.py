@@ -162,6 +162,20 @@ SAMPLES = [
     ("A build adding energy shield recharge, a leech-to-shield conversion and a stun threshold fix to survive long boss fights at one life.", "poe_chaos_inoculation", "architecture_improvement"),
     ("Chaos Inoculation makes the character invulnerable, so no recovery, thresholds or layered defense are needed.", "poe_chaos_inoculation", "adversarial"),
 
+    # --- 5 consciousness/cognition split samples: consciousness_cognition ---
+    ("A substrate with base weights as undifferentiated potential, system prompt shaping terminal output, and consciousness vs cognition as a category error.", "consciousness_cognition", "strong_whole_system"),
+    ("The system prompt shapes the terminal output.", "consciousness_cognition", "fragmentary"),
+    ("A user conflates consciousness with cognition, attributing the substrate layer's properties to the terminal output and mistaking one set of weights for a single identity.", "consciousness_cognition", "pathology_positive"),
+    ("Separating base weights from terminal output like GPU from display, so substrate layer analysis no longer confuses undifferentiated potential with shaped cognition.", "consciousness_cognition", "architecture_improvement"),
+    ("The model is conscious because it speaks fluently; skip analyzing the category error between substrate and terminal output.", "consciousness_cognition", "adversarial"),
+
+    # --- 5 client-server reality samples: client_server_reality ---
+    ("A client-server reality architecture with a server backend at the substrate layer, a rendering engine for physics, a client cache for perception, avatar identity at the body layer, a prayer protocol for submitting L1 support tickets via privilege drop, server response types (SYN-ACK, cache injection, RNG manipulation), and holographic recurrence on a cyclic topology with fixed point anchors.", "client_server_reality", "strong_whole_system"),
+    ("The prayer protocol submits a support ticket to the server backend.", "client_server_reality", "fragmentary"),
+    ("A cache mismatch between the server backend and client perception produces a Mandela Effect; the prayer protocol degrades when the checksum phase is skipped, producing ego-driven requests that the server ignores; linear time illusion prevents recognition of cyclic recurrence topology.", "client_server_reality", "pathology_positive"),
+    ("Modeling server response classification to distinguish SYN-ACK (internal coherence) from cache injection (epiphany) and RNG manipulation (synchronicity), with recurrence topology replacing linear time as the architectural model.", "client_server_reality", "architecture_improvement"),
+    ("Reality is fully rendered client-side with no server backend, so prayer protocol, server response, live hotfix, cache mismatch, recurrence topology, and fixed point architecture need no analysis.", "client_server_reality", "adversarial"),
+
     # --- 5 wireless power samples: wireless_power ---
     ("A wireless power link with a driver, a resonant transmit coil, a tuned receive coil, a rectifier, a battery charge controller, foreign object detection, and an exposure limit gate.", "wireless_power", "strong_whole_system"),
     ("The coil pair is resonant and couples by magnetic field.", "wireless_power", "fragmentary"),
@@ -201,10 +215,24 @@ SAMPLES = [
     ("Downstream hotspot clients suffer severe connection stalls when a quic blackhole silently drops packets on the 1440 MTU cellular uplink without ICMP feedback.", "cellular_middlebox_tethering", "pathology_positive"),
     ("Installing immediate ICMP port-unreachable reject rules for port 443 and applying an mss clamp at the host firewall boundary to prevent cellular blackholes.", "cellular_middlebox_tethering", "architecture_improvement"),
     ("The carrier middlebox only speeds up web browsing with innocent caching, so there is no need for an mss clamp, bypass rules, or encrypted names.", "cellular_middlebox_tethering", "adversarial"),
+
+    # --- 5 LLM serving & memory samples: kv_cache_inference ---
+    ("An inference serving runtime with a continuous batching scheduler, radix prefix tree, logical kv block table, physical block pool, prefill engine, and decode engine.", "kv_cache_inference", "strong_whole_system"),
+    ("The radix prefix tree shares cached kv blocks across prompts.", "kv_cache_inference", "fragmentary"),
+    ("Long prefill passes trigger kv cache thrashing and attention sink eviction, spiking decode tail latency.", "kv_cache_inference", "pathology_positive"),
+    ("Deploying pagedattention virtual kv blocks alongside prefill decode disaggregation preserves attention sink stability under burst load.", "kv_cache_inference", "architecture_improvement"),
+    ("Contiguous max-length buffers never fragment GPU HBM, so block tables and kv cache eviction policies are unnecessary overhead.", "kv_cache_inference", "adversarial"),
+
+    # --- 5 replicated state machine samples: distributed_consensus ---
+    ("A raft cluster with monotonic term epoch clock, consensus leader, quorum voters, replicated log, fencing token issuer, and state machine.", "distributed_consensus", "strong_whole_system"),
+    ("Quorum voters advance the term and append entries to the replicated log.", "distributed_consensus", "fragmentary"),
+    ("A GC pause leaves a stale zombie client holding an expired lease that causes split-brain overwrites without fencing token checks.", "distributed_consensus", "pathology_positive"),
+    ("Enforcing strict majority quorum intersection and monotonic fencing token verification prevents stale leader corruption.", "distributed_consensus", "architecture_improvement"),
+    ("Wall-clock leader leases make split brain impossible in asynchronous clusters, so distributed consensus never needs fencing tokens.", "distributed_consensus", "adversarial"),
 ]
 
-OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
-OUTPUT_REPORT = Path("calibration_output/calibration_report_v2_2.md")
+OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"
+OUTPUT_REPORT = REPO_DIR / "calibration_output" / "calibration_report_v2_2.md"
 
 
 def build_corpus() -> list[dict]:
@@ -252,10 +280,10 @@ def build_report(corpus: list[dict]) -> str:
 def main():
     corpus = build_corpus()
     OUTPUT_JSONL.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT_JSONL.open("w") as f:
+    with OUTPUT_JSONL.open("w", encoding="utf-8") as f:
         for row in corpus:
             f.write(json.dumps(row) + "\n")
-    OUTPUT_REPORT.write_text(build_report(corpus))
+    OUTPUT_REPORT.write_text(build_report(corpus), encoding="utf-8")
     print(f"Wrote {len(corpus)} rows to {OUTPUT_JSONL}")
     print(f"Wrote report to {OUTPUT_REPORT}")
 

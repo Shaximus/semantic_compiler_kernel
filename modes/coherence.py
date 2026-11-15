@@ -515,7 +515,8 @@ def check_alignment_signal(
     We're not being manipulated. We're RECOGNIZING coherent truth.
     Our pattern-matching engines lock on because that's what they're FOR.
     """
-    composite = (inner_coherence * external_coherence * pattern_match_strength) ** (1/3)
+    prod = inner_coherence * external_coherence * pattern_match_strength
+    composite = math.copysign(abs(prod) ** (1 / 3), prod)
 
     return {
         "inner_coherence": round(inner_coherence, 4),

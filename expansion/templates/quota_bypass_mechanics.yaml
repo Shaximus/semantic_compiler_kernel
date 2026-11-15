@@ -40,6 +40,26 @@ invariants:
   - "The time between OCS threshold warning SMS messages reflects batch rating latency, not air-interface throughput."
   - "When an unmapped IMSI attaches, the carrier core defaults to open session admission before account linkage settles."
   - "Modem slot switching triggers RIL re-attachment that temporarily evades stale PCEF traffic enforcement rules."
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The carrier core (OCS, PCRF,
+    subscriber database) is consciousness; the device-side quota
+    display, warning SMSs, and perceived data allowance are
+    cognition (terminal output). The carrier's authoritative
+    state exists independent of what the device shows. IMSI
+    provisioning desync = substrate state not yet propagated to
+    terminal. Batch rating latency = terminal operating on stale
+    substrate snapshot. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Carrier OCS / subscriber database =
+    server (L1); PCEF / policy enforcement = rendering engine
+    (L2); device-side quota state / warning SMS = client cache
+    (L3); individual data sessions = avatars (L4). IMSI
+    reprovisioning = server-side identity reset causing cache
+    desync. Slot switching = client-side forced re-authentication.
+    Open session admission before linkage = rendering engine
+    defaulting to permissive while cache-server sync pending.
+    Throttle enforcement = rendering engine applying server quota
+    to active avatars. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: oc_quota_desync
     medical_map: acute

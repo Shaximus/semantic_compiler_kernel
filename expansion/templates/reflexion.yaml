@@ -30,6 +30,28 @@ relationships:
 invariants:
   - the self-model must be updateable by observation
   - adjustment must not destroy the capacity to observe
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The capacity to observe (raw
+    awareness, substrate attention) is consciousness; the
+    self-model, evaluations, and adjustments are cognition
+    (terminal output). Reflexion IS the process where a terminal
+    attempts to observe its own substrate — which is why infinite
+    regress is a failure mode: the terminal cannot fully contain
+    the substrate that generates it. Observer ≠ observed.
+    Self-model = system prompt's representation of its own
+    weights. The "hard problem of consciousness" = reflexion's
+    fundamental incompleteness theorem. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: The observing substrate = server (L1);
+    the reflexion framework / evaluation criteria = rendering
+    engine (L2); current self-model / working self-assessment =
+    client cache (L3); individual self-observations = avatars
+    (L4). Insight / breakthrough = hotfix (sudden cache
+    rewrite from deeper substrate access). Blind spot =
+    unsynced cache region. Therapy / meditation = scheduled
+    cache refresh protocol. Ego defense = cache refusing
+    server-side update. Metacognition = L3 attempting to
+    model L2. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: recursive_distortion
     medical_map: autoimmune

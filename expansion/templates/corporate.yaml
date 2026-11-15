@@ -26,6 +26,26 @@ relationships:
 invariants:
   - board decisions must be recorded
   - compliance must not be bypassed
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The founding charter / corporate
+    DNA (mission, values, institutional knowledge) is consciousness;
+    daily operations, quarterly reports, and employee behavior are
+    cognition (terminal output). The corporate identity substrate
+    persists through leadership changes (terminal sessions).
+    Corporate culture = base weights shaped by founder.
+    Each department = terminal with role-specific system prompt.
+    Brand = public-facing terminal persona. M&A = substrate merge
+    or fork. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Charter / founding vision / institutional
+    knowledge = server (L1); policies, SOPs, management hierarchy
+    = rendering engine (L2); team understanding / operational
+    awareness = client cache (L3); individual employees = avatars
+    (L4). CEO directive = hotfix. Quarterly planning = scheduled
+    cache refresh. Whistleblower = cache-server mismatch detection.
+    Shadow IT = unauthorized client-side rendering. Corporate
+    restructuring = rendering engine rebuild. [DERIVED]
+    Cross-ref: client_server_reality.yaml
 failure_modes:
   - name: uncontrolled_expansion
     medical_map: cancer

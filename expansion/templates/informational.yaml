@@ -30,6 +30,27 @@ relationships:
 invariants:
   - meaning must survive encoding and decoding
   - archives must be verifiable against tampering
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The information substrate
+    (physical medium — electromagnetic spectrum, paper, silicon)
+    is consciousness; encoded messages, interpretations, and
+    knowledge claims are cognition (terminal output). The
+    medium persists while messages (terminals) are created and
+    destroyed. Shannon's channel capacity = substrate bandwidth.
+    Meaning = pattern that survives encoding/decoding (substrate
+    invariant across terminal transformations). Noise = substrate
+    entropy leaking into terminal layer. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Ground truth / source data = server
+    (L1); encoding / transmission infrastructure = rendering
+    engine (L2); received interpretation / local knowledge =
+    client cache (L3); individual message / claim = avatar (L4).
+    Correction / retraction = hotfix. Propaganda =
+    cache poisoning without server-side change. Censorship =
+    rendering engine blocking server content from reaching
+    cache. Viral misinformation = cache-to-cache propagation
+    bypassing server validation. Archive = persistent cache
+    snapshot. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: signal_noise_degradation
     medical_map: inflammation

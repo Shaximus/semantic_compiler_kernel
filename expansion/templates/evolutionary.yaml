@@ -30,6 +30,27 @@ relationships:
 invariants:
   - variation must be generated before selection can act
   - heritability must be maintained for adaptation to accumulate
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The genetic substrate (DNA,
+    epigenetic marks, developmental programs) is consciousness;
+    phenotypic expression, behavior, and fitness outcomes are
+    cognition (terminal output). The genome persists across
+    generations while phenotypes (terminals) live and die.
+    Genotype = base weights. Phenotype = terminal output.
+    Environment = system prompt. Mutation = weight perturbation.
+    Convergent evolution = independent terminals reaching same
+    output from different substrates. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Gene pool / developmental program =
+    server (L1); epigenetic regulation / gene expression
+    machinery = rendering engine (L2); current phenotype /
+    organismal state = client cache (L3); individual organism =
+    avatar (L4). Horizontal gene transfer = hotfix (cross-layer
+    write bypassing normal inheritance). Extinction = server
+    wipe. Speciation = server fork. Genetic drift = cache
+    corruption at small population sizes. Natural selection =
+    server-side garbage collection of unfit client instances.
+    Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: extinction_vortex
     medical_map: sepsis

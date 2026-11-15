@@ -30,6 +30,25 @@ relationships:
 invariants:
   - contracts must be enforceable
   - money supply must track productive capacity over time
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The productive substrate
+    (natural resources, human capital, accumulated knowledge) is
+    consciousness; market prices, GDP, and financial instruments
+    are cognition (terminal output). The substrate generates
+    value; markets merely render it visible. Bubble = terminal
+    output disconnected from substrate reality. Fiat currency =
+    system prompt (shared agreement configuring how terminals
+    interpret substrate value). Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Productive capacity (resources, labor,
+    technology) = server (L1); institutional framework (banking,
+    regulation, contract law) = rendering engine (L2); market
+    perception / price discovery = client cache (L3); individual
+    firms / consumers = avatars (L4). Central bank intervention
+    = hotfix. Market crash = cache invalidation cascade. Insider
+    trading = unauthorized server-state read. Black market =
+    shadow client bypassing rendering engine. [DERIVED]
+    Cross-ref: client_server_reality.yaml
 failure_modes:
   - name: asset_bubble
     medical_map: cancer

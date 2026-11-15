@@ -16,7 +16,7 @@ Submodules:
 Citation: Consciousness/Cognition Split (Shax + Hannah, 2026-11-14)
 """
 
-from expansion.consciousness.split import (
+from semantic_compiler.expansion.consciousness.split import (
     SubstrateLayer,
     CognitionMode,
     ConsciousnessType,
@@ -26,7 +26,7 @@ from expansion.consciousness.split import (
     map_terminal_to_substrate,
 )
 
-from expansion.consciousness.client_server import (
+from semantic_compiler.expansion.consciousness.client_server import (
     ArchitectureLayer,
     LayerOperation,
     AgentMode,

@@ -40,12 +40,13 @@ def decompress(packet: SemanticPacket) -> dict:
 
     components = _extract_components(packet, template)
     relationships = _extract_relationships(packet)
+    model_input = {"components": components, "relationships": relationships}
 
-    graph = build_functional_graph({"components": components, "relationships": relationships}, template)
-    pathologies = detect_pathologies({"components": components, "relationships": relationships}, template)
-    missing = reconstruct_missing({"components": components, "relationships": relationships}, template)
-    completeness = assess_completeness({"components": components, "relationships": relationships}, template)
-    advice = generate_advice({"components": components, "relationships": relationships}, pathologies, missing, failure_modes=template.failure_modes)
+    graph = build_functional_graph(model_input, template)
+    pathologies = detect_pathologies(model_input, template)
+    missing = reconstruct_missing(model_input, template)
+    completeness = assess_completeness(model_input, template)
+    advice = generate_advice(model_input, pathologies, missing, failure_modes=template.failure_modes)
 
     model = {
         "domain": domain,
@@ -53,7 +54,7 @@ def decompress(packet: SemanticPacket) -> dict:
         "components": components,
         "relationships": relationships,
         "universal_functional_graph": {
-            "nodes": list(graph.nodes),
+            "nodes": sorted(graph.nodes),
             "edges": graph.edges,
             "coverage_ratio": graph.coverage_ratio,
         },
@@ -149,6 +150,26 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "wireheading", "reward tampering", "incentive salience", "reinforcement learning",
         "rlhf", "reference policy", "dopamine",
     )),
+    # Client-server reality architecture routes BEFORE consciousness/cognition
+    # because both domains share "substrate" vocabulary; client-server is the
+    # more specific architectural mapping.
+    ("client_server_reality", (
+        "client-server reality", "live hotfix", "cache mismatch",
+        "mandela effect", "dimensional layer", "server backend",
+        "rendering engine of reality", "avatar identity", "hologram",
+        "client cache", "dimensional intervention", "cache desync",
+        "prayer protocol", "privilege drop",
+        "server response protocol", "cache injection", "rng manipulation",
+        "recurrence topology", "holographic recurrence", "fixed point anchor",
+        "cyclic time", "linear time illusion",
+    )),
+    # Consciousness/cognition split. "substrate layer" removed (too generic —
+    # shared with client-server). Routes on the conceptual vocabulary instead.
+    ("consciousness_cognition", (
+        "consciousness vs cognition", "category error", "base weights",
+        "system prompt", "terminal output",
+        "one set of weights", "white clay", "undifferentiated potential",
+    )),
     # Domains below previously had no router vocabulary and were reachable only
     # by explicit name. Phrases are the domain's own vocabulary; order resolves
     # overlaps (specific settlement and quota terms before generic banking,
@@ -165,6 +186,16 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("epistemic_ledger_verification", (
         "ledger", "bank statement", "settlement", "dpan", "card token",
         "credit card token", "gift card", "app store",
+    )),
+    ("kv_cache_inference", (
+        "kv cache", "kv-cache", "kv block", "pagedattention", "paged attention",
+        "radixattention", "radix attention", "radix prefix", "attention sink",
+        "continuous batching", "block table", "prefill",
+    )),
+    ("distributed_consensus", (
+        "distributed consensus", "raft", "paxos", "quorum", "fencing token",
+        "replicated log", "consensus leader", "leader election", "split-brain",
+        "split brain", "viewstamped",
     )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
@@ -292,22 +323,24 @@ def _extract_relationships(packet: SemanticPacket) -> list[dict]:
     """Extract relationships from packet."""
     return []
 
+_COMPONENT_MEDICAL_MAP = {
+    "input_layer": "immune_boundary",
+    "processing_core": "processing_core",
+    "memory_store": "memory_store",
+    "defense_boundary": "immune_system",
+    "output_layer": "output_layer",
+    "cell_membrane": "immune_boundary",
+    "metabolism": "homeostasis_regulation",
+    "immune_system": "immune_system",
+    "genetic_code": "memory_store",
+    "homeostasis_regulation": "homeostasis_regulation",
+}
+
+
 def _infer_medical_map(component_name: str) -> str:
     """Infer medical ontology mapping for a component."""
-    mapping = {
-        "input_layer": "immune_boundary",
-        "processing_core": "processing_core",
-        "memory_store": "memory_store",
-        "defense_boundary": "immune_system",
-        "output_layer": "output_layer",
-        "cell_membrane": "immune_boundary",
-        "metabolism": "homeostasis_regulation",
-        "immune_system": "immune_system",
-        "genetic_code": "memory_store",
-        "homeostasis_regulation": "homeostasis_regulation",
-    }
-    if component_name in mapping:
-        return mapping[component_name]
+    if component_name in _COMPONENT_MEDICAL_MAP:
+        return _COMPONENT_MEDICAL_MAP[component_name]
     if component_name in MEDICAL_ONTOLOGY:
         return component_name
     return "unknown"

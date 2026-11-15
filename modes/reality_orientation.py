@@ -163,7 +163,7 @@ def detect_avoidance_pattern(
     patterns = []
 
     for claim in claims:
-        content = claim.get("content", "").lower()
+        content = (claim.get("content") or "").lower()
         claim_type = claim.get("claim_type", "")
 
         # Check for magical planning (solution without math)
@@ -184,6 +184,7 @@ def detect_avoidance_pattern(
                             f"ignores physical constraint: '{constraint}'. "
                             f"Label as coping unless resource math passes."
                         )
+                        break
 
         # Check for distraction-as-strategy
         distraction_keywords = [

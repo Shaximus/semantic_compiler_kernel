@@ -20,7 +20,7 @@ Citation: Reflexion Semantic Compiler v1.0.0 Specification, Sections 1-27
 Citation: Diamond+++ Semantic Ore — Regulated Reality Orientation Protocol
 """
 
-__version__ = "3.0.0"
+__version__ = "3.1.1"
 __compiler_name__ = "Reflexion Semantic Compiler"
 
 from semantic_compiler.compat import compile_semantic_packet
