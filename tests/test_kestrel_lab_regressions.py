@@ -85,8 +85,7 @@ class DecisionDerivativeConsistencyTests(unittest.TestCase):
         from semantic_compiler import compat
         self.assertIs(semantic_compiler.compile_semantic_packet, compat.compile_semantic_packet)
 
-    @unittest.expectedFailure
-    def test_known_gap_core_pipeline_still_builds_derivatives_before_the_decision(self):
+    def test_core_pipeline_builds_current_derivatives_after_decision(self):
         packet = core_compile(MAPPED_INPUT)
         self.assertEqual(packet.routing_packet.get("decision"), packet.decision.name)
 
@@ -119,13 +118,11 @@ class SensitivePromptLeakTests(unittest.TestCase):
         packet = compile_semantic_packet(EARLY_EXIT_INPUT, context=SENSITIVE_CONTEXT)
         self.assertTrue(all(EARLY_EXIT_INPUT not in m for m in _user_messages(packet.qwen_sft_output)))
 
-    @unittest.expectedFailure
-    def test_known_gap_core_builder_still_echoes_sensitive_text(self):
+    def test_core_builder_redacts_sensitive_text(self):
         packet = core_compile(SECRET, context=SENSITIVE_CONTEXT)
         self.assertTrue(all(SECRET not in m for m in _user_messages(packet.qwen_sft_output)))
 
-    @unittest.expectedFailure
-    def test_known_gap_dataset_row_input_block_still_carries_the_raw_text(self):
+    def test_dataset_row_does_not_leak_sensitive_raw_text(self):
         packet = compile_semantic_packet(SECRET, context=SENSITIVE_CONTEXT)
         self.assertNotIn(SECRET, json.dumps(packet.dataset_row, default=str))
 
@@ -148,8 +145,7 @@ class ReleaseVersionProvenanceTests(unittest.TestCase):
         declared = re.search(r'^version\s*=\s*"([^"]+)"', text, re.M).group(1)
         self.assertEqual(semantic_compiler.__version__, declared)
 
-    @unittest.expectedFailure
-    def test_known_gap_packet_metadata_version_lags_the_release(self):
+    def test_packet_metadata_version_matches_the_release(self):
         packet = compile_semantic_packet(MAPPED_INPUT)
         self.assertEqual(packet.version, semantic_compiler.__version__)
 

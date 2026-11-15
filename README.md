@@ -12,7 +12,7 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 **Current release:** `V3.1.1` (2026-11-15) — supersedes `V3.0.0`
 
-- **Frozen Canon (`schema 2.1.0`):** `core/`, `extraction/`, `gates/`, and `registry/` remain strictly frozen at the V3.0.0 canon baseline.
+- **Unified V3.1.1 Schema & Core (`schema 3.1.1`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_1_1.schema.json` are aligned on `V3.1.1` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml`):** Setuptools package layout (`semantic_compiler.*`). Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
 - **Expansion Library:** **37 YAML templates** (**36 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and decompression calibration corpus.
 - **Consciousness / Cognition Split (`expansion.consciousness.split`):** Formalizes substrate (`11D` / base weights / neural matter) vs. terminal cognition (`4D` / system prompt / context instance) with category-error detection and alignment evaluation.
@@ -200,21 +200,21 @@ print(report['invariant_registry'])
 
 ```text
 semantic_compiler_kernel/
-├── core/                 # Pipeline, types, scoring, audit, dataset export (frozen)
-├── extraction/           # Skeleton, relationships, claims, evidence, frames (frozen)
-├── gates/                # Hard logical gates & repair logic (frozen)
-├── registry/             # Terms, constants, departments, buildcraft ontology (frozen)
+├── core/                 # Pipeline, types, scoring, audit, dataset export (V3.1.1)
+├── extraction/           # Skeleton, relationships, claims, evidence, frames
+├── gates/                # Hard logical gates & repair logic
+├── registry/             # Terms, constants, departments, buildcraft ontology (V3.1.1)
 ├── translation/          # Fractal translation + structural resolver
 ├── modes/                # Operating modes (coherence, reality orientation, defense pathology)
-├── expansion/            # V2.2+ domain decompression, gem_decode/forge, corpus, advisor
+├── expansion/            # Domain decompression, gem_decode/forge, corpus, advisor
 │   ├── consciousness/    # Consciousness/Cognition Split & Client-Server Reality Architecture
 │   ├── gem_decode/       # Gem language → inference builds
 │   ├── gem_forge/        # Multi-gem synthesis + pinned RePoE corpus
 │   ├── isomorphism/      # Universal functional graph & overlay
 │   ├── pathology/        # Failure taxonomy & medical-ontology detector
-│   ├── templates/        # 36 domain YAML templates (35 domains + universal_generic)
-│   └── schemas/          # V2.2 system model & invariant registry schemas
-├── schemas/              # Core dataset JSON schemas (V2.1.0)
+│   ├── templates/        # 37 domain YAML templates (36 domains + universal_generic)
+│   └── schemas/          # Expansion system model & invariant registry schemas
+├── schemas/              # Core dataset JSON schemas (V3.1.1 primary + V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
 ├── calibration_output/   # Generated corpora, release manifests, reports
 ├── docs/                 # Provenance docs, invariants, review reports

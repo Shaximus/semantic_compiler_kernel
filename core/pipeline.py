@@ -948,7 +948,8 @@ def build_qwen_sft_output(packet: SemanticPacket) -> dict[str, Any]:
         PrivacySensitivity.CRITICAL,
     )
     if redacted:
-        user_content = "Compile (redacted): " + raw
+        digest = packet.compute_input_hash()
+        user_content = f"Compile (redacted): input sha256={digest}"
     else:
         user_content = "Compile: '" + raw + "'"
 
@@ -1039,8 +1040,8 @@ def _finalize_packet(packet: SemanticPacket) -> None:
     from semantic_compiler.core.dataset import _classify_tier
 
     packet.dataset_tier = _classify_tier(packet)
-    packet.dataset_row = build_dataset_row(packet)
     packet.qwen_sft_output = build_qwen_sft_output(packet)
+    packet.dataset_row = build_dataset_row(packet)
     packet.audit = build_audit_record(packet)
     packet.mark_compilation_end()
 
@@ -1237,12 +1238,22 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     packet.scores = {**packet.scores, **score_packet(packet)}
     packet.decision = decide_packet(packet)
-    packet.route_to = packet.routing_packet.get("route_to", [])
+
+    # Refresh decision-dependent derivatives so routing_packet and translations
+    # reflect the final decision rather than the pre-decision PENDING state.
+    if packet.routing_packet:
+        packet.routing_packet = build_routing_packet(packet)
+        packet.route_to = list(packet.routing_packet.get("route_to", []))
+        packet.literal_translation = generate_literal_translation(packet)
+        packet.public_translation = generate_public_translation(packet)
+        packet.executive_translation = generate_executive_translation(packet)
+    else:
+        packet.route_to = packet.routing_packet.get("route_to", [])
 
     # ──────────────────────────────────────────────────────────
     # Stage 10: Learn and audit
     # ──────────────────────────────────────────────────────────
-    _finalize_packet(packet)
     packet.status = "compiled"
+    _finalize_packet(packet)
 
     return packet
