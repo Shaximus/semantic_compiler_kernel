@@ -59,6 +59,25 @@ invariants:
   - "Device setup wizards enforcing Bluetooth handshakes ignore generic wired keystrokes unless explicitly bridged at the protocol layer [OOBE-GATE]"
   - "Physical layout transformations must preserve reflexive bijective mapping to prevent control inversion [ISOMORPHISM]"
   - "Cloudflare RPC bridges require full-duplex session state preservation across edge worker invocations [STATE-CONTINUITY]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The physical input substrate
+    (electrical signals, HID protocol, hardware scancodes) is
+    consciousness; semantic intent, mapped actions, and user-
+    perceived input are cognition (terminal output). The scancode
+    exists before any OS interprets it. Usage page mismatch =
+    category error (expecting terminal-layer semantics from
+    substrate-layer signals). Bijective mapping preservation =
+    substrate-terminal alignment invariant. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Physical hardware / HID protocol =
+    server (L1); OS input stack / driver layer = rendering
+    engine (L2); application input state / key mapping = client
+    cache (L3); individual keystrokes / gestures = avatars (L4).
+    Driver update = rendering engine patch. Key remapping =
+    cache-level override. OOBE gate blocking wired input =
+    rendering engine refusing non-handshaked clients. Layout
+    transformation = cache translation layer. [DERIVED]
+    Cross-ref: client_server_reality.yaml
 
 failure_modes:
   - name: usage_page_mismatch

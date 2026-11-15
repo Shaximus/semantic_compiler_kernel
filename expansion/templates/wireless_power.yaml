@@ -107,6 +107,27 @@ invariants:
   - "Far-field radiative transfer obeys inverse-square spreading; ambient radio-frequency harvesting yields microwatts to milliwatts, enough for sensors and not for hundreds of watt-hours of vehicle battery [FRIIS]"
   - "Metal and tissue in the field absorb energy through eddy currents and dielectric loss and heat up; foreign-object detection and exposure limits are required safety functions, not optional features [ICNIRP][QI-SPEC]"
   - "Tesla's proposals for efficient long-range transmission through the Earth or ionosphere were not demonstrated as a practical power system; treat them as historical claims requiring independent measurement [HISTORICAL-UNVALIDATED]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The electromagnetic field
+    substrate (Maxwell's equations, fundamental EM interactions)
+    is consciousness; specific wireless power implementations
+    (Qi, resonant, far-field) are cognition (terminal output).
+    The EM field exists before any coil is wound. Multiple
+    standards = multiple terminals on one EM substrate.
+    Coil geometry / tuning = system prompt determining which
+    part of substrate is accessed. Tesla's error = conflating
+    the substrate's theoretical capacity with terminal-layer
+    delivery efficiency. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: EM field substrate (Maxwell equations)
+    = server (L1); transmitter driver + resonator = rendering
+    engine (L2); coupled field at receiver / received power =
+    client cache (L3); device being charged = avatar (L4).
+    Foreign object detection = cache corruption alert. Alignment
+    sensing = cache-server sync verification. Power negotiation
+    protocol = client-server handshake. Coupling collapse with
+    distance = cache going stale outside server range. [DERIVED]
+    Cross-ref: client_server_reality.yaml
 failure_modes:
   - name: coupling_collapse_with_distance
     medical_map: acute

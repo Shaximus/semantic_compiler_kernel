@@ -40,6 +40,23 @@ invariants:
   - "Presence of an active subscription in library.db proves entitlement grant, not card debit."
   - "Google Play exhausts stored balance (gift cards) before dispatching authorization to secondary card rails."
   - "An external bank ledger with zero corresponding debits strictly falsifies claims of card settlement."
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The actual bank ledger (ground
+    truth of financial state) is consciousness; DPAN tokens,
+    subscription entries, and app-layer records are cognition
+    (terminal output). The ledger exists independent of what any
+    app claims. Assuming a preference-file token proves settlement
+    = category error (terminal state mistaken for substrate
+    truth). Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Bank ledger / card network authorization
+    = server (L1); Play Store billing infrastructure = rendering
+    engine (L2); local library.db / preference tokens = client
+    cache (L3); individual purchase records = avatars (L4).
+    Balance check = cache-server sync. Gift card exhaustion before
+    card charge = rendering engine priority routing. False
+    settlement claim = stale cache read treated as server truth.
+    Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: false_settlement_attribution
     medical_map: inflammation

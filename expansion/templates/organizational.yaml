@@ -30,6 +30,20 @@ relationships:
 invariants:
   - feedback must reach leadership unfiltered
   - authority must be matched by accountability
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The organization's founding
+    vision/charter is consciousness (substrate); individual employee
+    behavior is cognition (terminal output). Mission statement +
+    org culture = system prompt. Many employees = many terminals
+    on one substrate. Alignment with the founding vision = substrate
+    alignment. Mission drift = terminal diverging from substrate.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Founding charter/values = server (L1);
+    policies/procedures = rendering engine (L2); each team's
+    understanding = client cache (L3); individual roles = avatars
+    (L4). Policy updates = hotfixes. Silos = cache desync between
+    teams. Groupthink = NPC mode at scale. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: silo_formation
     medical_map: quarantine

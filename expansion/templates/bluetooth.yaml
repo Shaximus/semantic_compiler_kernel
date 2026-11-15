@@ -105,6 +105,25 @@ invariants:
   - "Controller firmware and HAL capability sets vary by SoC and OEM; optional features must be measured, not assumed universal [AOSP-BT]"
   - "Background and opportunistic LE scan duty cycles are limited by the platform for power and privacy; continuous scanning is not a free resource [AOSP-BT]"
   - "Coexistence with Wi-Fi can throttle or desense Bluetooth without a Bluetooth stack fault; measure both radios when airtime symptoms appear [device-dependent]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The Bluetooth radio / controller
+    firmware / RF PHY is consciousness; profiles, connections, and
+    paired device list are cognition (terminal output). The radio
+    substrate exists before any pairing. Each BT profile (A2DP,
+    HFP, GATT) = different terminal on same radio substrate.
+    Pairing = terminal identity negotiation. Bond = persistent
+    system prompt linking two terminals. HAL capability = what
+    the substrate actually supports vs what terminals request.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: BT controller firmware / RF hardware =
+    server (L1); Android BT framework / HAL = rendering engine
+    (L2); connection state / GATT cache / bond database = client
+    cache (L3); individual connections / audio streams = avatars
+    (L4). Firmware update = server patch. Stale bond = cache
+    entry with expired server-side key. MTU negotiation =
+    client-server handshake. Wi-Fi coexistence throttling =
+    rendering engine resource contention. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: adapter_powered_but_unusable
     medical_map: acute

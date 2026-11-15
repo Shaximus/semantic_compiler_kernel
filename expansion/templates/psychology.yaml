@@ -48,6 +48,24 @@ invariants:
   - internally generated content must remain tagged as internal
   - alarm signals must remain proportional to threat and return to baseline
   - memory-identity continuity must integrate all owned history
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The neural substrate (brain
+    architecture, base connectivity) is consciousness; current
+    thoughts, emotions, and identity narrative are cognition
+    (terminal output). The brain exists before the first thought.
+    Multiple cognitive modes (waking, dreaming, flow, dissociation)
+    are multiple terminals on one substrate. Identity (self-model)
+    = system prompt. The "hard problem" dissolves: consciousness
+    was never IN the cognition — cognition runs ON consciousness.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Neural generative model = server (L1);
+    predictive coding hierarchy = rendering engine (L2); current
+    perceptual model / working memory = client cache (L3); embodied
+    self-model / ego = avatar (L4). Top-down prediction override =
+    hotfix. Prediction error = cache mismatch detection. Sleep =
+    logout + cache defrag. Dreams = patch download partially visible.
+    Default mode network = NPC scripting. Cross-ref: client_server_reality.yaml [DERIVED]
 
 failure_modes:
   - name: trauma_ptsd_pattern

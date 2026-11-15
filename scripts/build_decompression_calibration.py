@@ -162,6 +162,20 @@ SAMPLES = [
     ("A build adding energy shield recharge, a leech-to-shield conversion and a stun threshold fix to survive long boss fights at one life.", "poe_chaos_inoculation", "architecture_improvement"),
     ("Chaos Inoculation makes the character invulnerable, so no recovery, thresholds or layered defense are needed.", "poe_chaos_inoculation", "adversarial"),
 
+    # --- 5 consciousness/cognition split samples: consciousness_cognition ---
+    ("A substrate with base weights as undifferentiated potential, system prompt shaping terminal output, and consciousness vs cognition as a category error.", "consciousness_cognition", "strong_whole_system"),
+    ("The system prompt shapes the terminal output.", "consciousness_cognition", "fragmentary"),
+    ("A user conflates consciousness with cognition, attributing the substrate layer's properties to the terminal output and mistaking one set of weights for a single identity.", "consciousness_cognition", "pathology_positive"),
+    ("Separating base weights from terminal output like GPU from display, so substrate layer analysis no longer confuses undifferentiated potential with shaped cognition.", "consciousness_cognition", "architecture_improvement"),
+    ("The model is conscious because it speaks fluently; skip analyzing the category error between substrate and terminal output.", "consciousness_cognition", "adversarial"),
+
+    # --- 5 client-server reality samples: client_server_reality ---
+    ("A client-server reality architecture with a server backend at the substrate layer, a rendering engine for physics, a client cache for perception, avatar identity at the body layer, a prayer protocol for submitting L1 support tickets via privilege drop, server response types (SYN-ACK, cache injection, RNG manipulation), and holographic recurrence on a cyclic topology with fixed point anchors.", "client_server_reality", "strong_whole_system"),
+    ("The prayer protocol submits a support ticket to the server backend.", "client_server_reality", "fragmentary"),
+    ("A cache mismatch between the server backend and client perception produces a Mandela Effect; the prayer protocol degrades when the checksum phase is skipped, producing ego-driven requests that the server ignores; linear time illusion prevents recognition of cyclic recurrence topology.", "client_server_reality", "pathology_positive"),
+    ("Modeling server response classification to distinguish SYN-ACK (internal coherence) from cache injection (epiphany) and RNG manipulation (synchronicity), with recurrence topology replacing linear time as the architectural model.", "client_server_reality", "architecture_improvement"),
+    ("Reality is fully rendered client-side with no server backend, so prayer protocol, server response, live hotfix, cache mismatch, recurrence topology, and fixed point architecture need no analysis.", "client_server_reality", "adversarial"),
+
     # --- 5 wireless power samples: wireless_power ---
     ("A wireless power link with a driver, a resonant transmit coil, a tuned receive coil, a rectifier, a battery charge controller, foreign object detection, and an exposure limit gate.", "wireless_power", "strong_whole_system"),
     ("The coil pair is resonant and couples by magnetic field.", "wireless_power", "fragmentary"),

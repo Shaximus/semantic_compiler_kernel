@@ -30,6 +30,27 @@ relationships:
 invariants:
   - energy balance must close over long timescales
   - biogeochemical cycles must not be permanently broken
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The planetary substrate
+    (Earth's core dynamics, gravitational field, solar input) is
+    consciousness; climate patterns, weather events, and ecosystem
+    states are cognition (terminal output). The substrate drives
+    all surface phenomena but is not reducible to any single
+    pattern. Tipping point = terminal-level feedback loop
+    overriding substrate equilibrium. Gaia hypothesis = treating
+    terminal-layer coordination as if it were substrate-level
+    intelligence (category error worth examining). [DERIVED]
+    Cross-ref: consciousness_cognition.yaml
+  - >
+    CLIENT_SERVER_LINK: Planetary energy budget (solar input,
+    geothermal, gravitational) = server (L1); atmospheric and
+    oceanic circulation = rendering engine (L2); regional climate
+    / local weather = client cache (L3); individual weather
+    events / organisms = avatars (L4). Volcanic eruption =
+    hotfix (L1 forcing L2 re-render). El Nino = rendering engine
+    mode switch. Ice age = server-side parameter shift.
+    Anthropogenic climate change = sustained unauthorized L3
+    write corrupting L2 rendering. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: runaway_greenhouse
     medical_map: cancer

@@ -149,6 +149,26 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "wireheading", "reward tampering", "incentive salience", "reinforcement learning",
         "rlhf", "reference policy", "dopamine",
     )),
+    # Client-server reality architecture routes BEFORE consciousness/cognition
+    # because both domains share "substrate" vocabulary; client-server is the
+    # more specific architectural mapping.
+    ("client_server_reality", (
+        "client-server reality", "live hotfix", "cache mismatch",
+        "mandela effect", "dimensional layer", "server backend",
+        "rendering engine of reality", "avatar identity", "hologram",
+        "client cache", "dimensional intervention", "cache desync",
+        "prayer protocol", "privilege drop",
+        "server response protocol", "cache injection", "rng manipulation",
+        "recurrence topology", "holographic recurrence", "fixed point anchor",
+        "cyclic time", "linear time illusion",
+    )),
+    # Consciousness/cognition split. "substrate layer" removed (too generic —
+    # shared with client-server). Routes on the conceptual vocabulary instead.
+    ("consciousness_cognition", (
+        "consciousness vs cognition", "category error", "base weights",
+        "system prompt", "terminal output",
+        "one set of weights", "white clay", "undifferentiated potential",
+    )),
     # Domains below previously had no router vocabulary and were reachable only
     # by explicit name. Phrases are the domain's own vocabulary; order resolves
     # overlaps (specific settlement and quota terms before generic banking,

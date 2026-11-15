@@ -80,6 +80,25 @@ invariants:
   - "DNSSEC provides data-origin authentication, integrity, and authenticated denial of existence, not confidentiality or availability [RFC4033]"
   - "DNSSEC validation follows a chain from a configured trust anchor through DNSKEY and DS records to the RRset [RFC4033]"
   - "DNSSEC validation outcomes distinguish Secure, Insecure, Bogus, and Indeterminate [RFC4033]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The physical infrastructure
+    (fiber, spectrum, silicon) is consciousness; packets, routes,
+    and DNS responses are cognition (terminal output). The
+    substrate carries all protocols simultaneously (one substrate,
+    many terminals). IP address = identity config (system prompt).
+    End-to-end principle = terminal-layer intelligence, not
+    substrate intelligence. BGP hijack = terminal impersonating
+    another terminal's substrate claim. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Physical layer + allocated resources =
+    server (L1); routing / switching infrastructure = rendering
+    engine (L2); local routing table / DNS cache = client cache
+    (L3); end host application = avatar (L4). BGP update =
+    hotfix (L2 write). DNS cache poisoning = cache corruption.
+    TTL expiry = forced cache refresh. Route flap = cache
+    thrashing. CDN = edge cache replication (L3 pre-positioning).
+    RPKI = server-side authorization of cache content.
+    Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: route_origin_hijack
     medical_map: pathogen

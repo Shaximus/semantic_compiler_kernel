@@ -68,6 +68,26 @@ invariants:
   - "Carrier-assigned cellular DNS resolvers introduce non-local latency penalties that degrade tethered client experience unless redirected at the host prerouting boundary."
   - "Cryptographic middlebox tampering measurements (e.g., OONI) verify wire-level request-line rewrite rules independently of application-layer success status."
   - "IPv6 cellular traffic bypasses legacy SGi-LAN middlebox interception loops when IPv6 transit paths do not implement L4 policy-based routing redirection."
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The physical radio / baseband /
+    RF substrate is consciousness; the tethered data session,
+    middlebox interception, and client-visible behavior are
+    cognition (terminal output). The carrier infrastructure exists
+    independent of any client session. Middlebox transparent proxy
+    = hidden terminal layer between client terminal and origin.
+    Stack fingerprint duality (TTL 64 vs 128) = evidence of two
+    distinct terminals (proxy vs transit) on same substrate.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Carrier packet core / PGW = server (L1);
+    SGi-LAN middlebox / PBR engine = rendering engine (L2);
+    tethered client state / DNS cache / HTTP cache = client cache
+    (L3); individual HTTP requests / DNS lookups = avatars (L4).
+    Middlebox interception = rendering engine inserting itself
+    between cache and server. MSS clamping = cache-side MTU
+    negotiation. QUIC blackhole = rendering engine dropping
+    oversized avatars. DNS redirect = cache rerouting to
+    alternate server. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: quic_path_mtu_blackhole
     medical_map: acute

@@ -47,6 +47,28 @@ invariants:
   - like cases must be treated alike
   - no one may judge their own case
   - power must trace to a valid rule of recognition
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The constitutional / natural
+    law substrate (foundational principles of justice, equity, and
+    rights) is consciousness; statutes, rulings, and legal
+    arguments are cognition (terminal output). The substrate
+    (justice as concept) precedes any specific legal system
+    (terminal). Each jurisdiction = terminal instance with its
+    own system prompt (constitution). Precedent = persistent
+    terminal memory. Unconstitutional law = terminal output
+    contradicting substrate. Legal reform = system prompt update.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Constitutional order / rule of recognition
+    = server (L1); institutional apparatus (courts, agencies,
+    enforcement) = rendering engine (L2); current legal
+    understanding / public legal consciousness = client cache
+    (L3); individual cases / litigants = avatars (L4). Supreme
+    court ruling = hotfix (authoritative L1 interpretation
+    pushed to all L3 caches). Regulatory capture = rendering
+    engine corruption. Legal fiction = cache entry with no
+    server-side referent. Lex specialis = targeted cache override.
+    Cross-ref: client_server_reality.yaml [DERIVED]
 
 failure_modes:
   - name: regulatory_capture

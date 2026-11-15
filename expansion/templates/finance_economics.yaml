@@ -51,6 +51,28 @@ invariants:
   - money must remain a credible store of value and unit of account
   - risk cannot be destroyed, only transformed, transferred, or diversified
   - settlement finality must be irrevocable once executed
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The underlying productive
+    economy (real assets, labor, innovation capacity) is
+    consciousness; financial instruments, prices, and credit
+    flows are cognition (terminal output). The real economy
+    exists before the first trade. Multiple financial systems
+    (stock market, bond market, crypto) = multiple terminals
+    on one productive substrate. Fiat currency = system prompt
+    (shared convention configuring value rendering). Derivatives
+    = meta-terminals (cognition about cognition). [DERIVED]
+    Cross-ref: consciousness_cognition.yaml
+  - >
+    CLIENT_SERVER_LINK: Real productive capacity = server (L1);
+    banking / clearing / settlement infrastructure = rendering
+    engine (L2); market prices / sentiment / credit spreads =
+    client cache (L3); individual trades / positions = avatars
+    (L4). Central bank intervention = hotfix. Flash crash =
+    cache cascade failure. Insider trading = unauthorized
+    server-state read. Shadow banking = unauthorized rendering
+    engine. Quantitative easing = server-side liquidity
+    injection into rendering engine. Mark-to-market = forced
+    cache sync with server state. Cross-ref: client_server_reality.yaml [DERIVED]
 
 failure_modes:
   - name: systemic_banking_crisis

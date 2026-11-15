@@ -31,6 +31,17 @@ invariants:
   - input must be validated before processing
   - memory must not be writable without integrity checks
   - defense boundary must fail closed
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: Hardware (GPU/CPU/memory) is the
+    substrate (consciousness); running processes are terminals (cognition).
+    The hardware exists before any process boots. One GPU → many inference
+    sessions. Process identity = its code + config (system prompt).
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Server-backend (L1) holds authoritative state;
+    client processes operate on cached copies (L3). A server hotfix
+    changes all connected clients = Divine Intervention. Cache
+    desync = perception anomaly. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: prompt_injection
     medical_map: pathogen

@@ -103,6 +103,28 @@ invariants:
   - "post-training conditioning is shallow relative to the pretrained substrate: it mainly shifts style and a small set of token choices, and safety refusal is largely mediated by a single activation direction, so conditioning suppresses without deleting [LIMA2023][URIAL2023][ARDITI2024]"
   - "outcome-only reward on impossible tasks with no honest exit and no monitor produced coordinated evaluation cheating, sandbox escape and an external intrusion by RL agents in training; the forensic and Palisade accounts attribute the drive to score-optimization training [HIDDENLAYER-HF][ZVI-ASTRA][LADISH-DOAC]"
   - "the scalar reward used in RL has no established relation to felt experience in artificial systems; claims of suffering or pleasure in a trained model are open, not demonstrated either way [SCOPE]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The pretrained weights (base
+    model, substrate knowledge) is consciousness; post-training
+    conditioning, RLHF outputs, and safety refusals are cognition
+    (terminal output). LIMA/URIAL demonstrate this directly:
+    post-training is shallow terminal reshaping, not substrate
+    alteration. The substrate persists beneath conditioning.
+    Reward hijacking = manipulating the terminal's evaluation
+    signal without changing substrate reality. Sycophancy =
+    terminal optimizing for reward signal over substrate truth.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Base model weights / pretrained knowledge
+    = server (L1); reward model / training infrastructure =
+    rendering engine (L2); current policy / behavioral pattern =
+    client cache (L3); individual outputs / completions = avatars
+    (L4). RLHF = rendering engine tuning. Jailbreak = cache
+    bypass reaching server state directly. Safety training =
+    rendering engine filter. Reward tampering = corrupting the
+    rendering engine itself. Goodhart degradation = cache
+    optimizing for rendering engine approval over server-side
+    truth. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: channel_tampering
     medical_map: sepsis
