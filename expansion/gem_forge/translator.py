@@ -376,14 +376,24 @@ _STAT_ID_PATTERNS: tuple[tuple[str, str, str], ...] = (
 )
 
 
+_COMPILED_STAT_ID_PATTERNS: tuple[tuple[re.Pattern[str], str, str], ...] = tuple(
+    (re.compile(pattern), primitive, label)
+    for pattern, primitive, label in _STAT_ID_PATTERNS
+)
+_STAT_ID_CAPTURE_RE = re.compile(r"^([a-z0-9_+%]+):\s*(-?[\d.]+)$")
+_MECHANIC_FLAG_PREFIX_RE = re.compile(
+    r"^(is_|base_|can_|cannot_|skill_|always_|ignores_|spell_|melee_|console_)"
+)
+
+
 def _stat_id(line: str):
     """Convert untranslated internal stat-id lines by mechanic family."""
-    match = re.match(r"^([a-z0-9_+%]+):\s*(-?[\d.]+)$", line.strip())
+    match = _STAT_ID_CAPTURE_RE.match(line.strip())
     if not match:
         return None
     stat_id, value = match.group(1), match.group(2)
-    for pattern, primitive, label in _STAT_ID_PATTERNS:
-        if re.search(pattern, stat_id):
+    for pattern, primitive, label in _COMPILED_STAT_ID_PATTERNS:
+        if pattern.search(stat_id):
             sign = "+" if not value.startswith("-") else ""
             return (
                 f"internal stat `{stat_id}` → {sign}{value} modifier to {label}",
@@ -392,7 +402,7 @@ def _stat_id(line: str):
     # Boolean mechanic flags: preserve the flag verbatim without inventing
     # family semantics. This is a faithful structural translation, not an
     # equivalence claim.
-    if value in ("0", "1") and re.match(r"^(is_|base_|can_|cannot_|skill_|always_|ignores_|spell_|melee_|console_)", stat_id):
+    if value in ("0", "1") and _MECHANIC_FLAG_PREFIX_RE.match(stat_id):
         state = "ON" if value == "1" else "OFF"
         return (
             f"internal mechanic flag `{stat_id}` = {state} (flag preserved verbatim; family semantics not remapped)",

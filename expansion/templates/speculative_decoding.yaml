@@ -1,0 +1,122 @@
+domain: speculative_decoding
+version: 1.0
+description: >-
+  Lossless accelerated LLM decoding using fast draft token proposal, parallel
+  target-model verification (linear or tree attention), rejection sampling, and
+  atomic KV-cache state rollback to guarantee exact target-distribution output.
+components:
+  - name: draft_model
+    function: generates low-cost speculative continuation tokens or candidate trees ahead of full target verification
+    criticality: high
+    medical_map: prognosis
+  - name: target_model
+    function: evaluates all drafted candidate sequences in a single parallel forward pass to produce authoritative token distributions
+    criticality: high
+    medical_map: immune_system
+  - name: rejection_sampler
+    function: accepts or rejects drafted tokens probabilistically against target-to-draft ratios while preserving exact target distribution
+    criticality: high
+    medical_map: diagnosis
+  - name: tree_attention_verifier
+    function: applies topological causal masks across branching draft trees so multiple candidate paths verify in one pass
+    criticality: high
+    medical_map: treatment
+  - name: kv_cache_rollback_manager
+    function: resets logical sequence pointers and frees provisional KV slots cleanly upon token or branch rejection
+    criticality: high
+    medical_map: homeostasis
+  - name: adaptive_speculation_controller
+    function: adjusts draft lookahead depth and tree fanout dynamically in response to rolling acceptance rate alpha
+    criticality: medium
+    medical_map: vaccination
+  - name: bonus_token_sampler
+    function: draws an exact residual token from max(0, p - q) or target logits at the first rejected position
+    criticality: medium
+    medical_map: remission
+  - name: verification_mask_builder
+    function: constructs flattened token position IDs and sparse tree causal attention masks for packed batch verification
+    criticality: medium
+    medical_map: quarantine
+relationships:
+  - from: draft_model
+    to: verification_mask_builder
+    type: supplies_candidate_tree_to
+  - from: verification_mask_builder
+    to: tree_attention_verifier
+    type: encodes_causal_topology_for
+  - from: tree_attention_verifier
+    to: target_model
+    type: executes_parallel_pass_on
+  - from: target_model
+    to: rejection_sampler
+    type: supplies_authoritative_logits_to
+  - from: rejection_sampler
+    to: bonus_token_sampler
+    type: triggers_residual_recovery_on
+  - from: rejection_sampler
+    to: kv_cache_rollback_manager
+    type: truncates_rejected_suffix_via
+  - from: rejection_sampler
+    to: adaptive_speculation_controller
+    type: feeds_acceptance_telemetry_to
+  - from: adaptive_speculation_controller
+    to: draft_model
+    type: tunes_lookahead_depth_for
+invariants:
+  - "Speculative rejection sampling plus normalized max(0, p - q) residual resampling guarantees an output distribution mathematically identical to standard target decoding [SPEC-DEC]"
+  - "Provisional KV entries written for rejected draft tokens or pruned branches must be atomically rolled back before the next decode step [DERIVED]"
+  - "End-to-end speedup holds only when draft latency plus verification overhead stays strictly below serial target token latency amortized over accepted length [SPEC-DEC]"
+  - "Tree attention position IDs and ancestor masks must match flattened target-pass coordinates to avoid silent logit corruption [SPECINFER]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The authoritative target model probability
+    distribution represents consciousness (ground-truth substrate), while
+    unverified draft hypotheses represent cognition (fast speculative terminal).
+    Any unrolled-back draft leak corrupts downstream context identity. Cross-ref:
+    consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Target model logits = server (L1); tree attention +
+    rejection sampler = rendering engine (L2); provisional draft KV slots = client
+    cache (L3); emitted output tokens = avatars (L4). KV rollback = hard L3
+    cache eviction on server mismatch. Cross-ref: client_server_reality.yaml [DERIVED]
+failure_modes:
+  - name: acceptance_rate_collapse
+    medical_map: chronic
+    description: fixed deep draft lookahead under domain shift yields near-zero acceptance rate alpha and slower-than-baseline generation
+    indicators:
+      - acceptance_rate_collapse
+      - low_alpha_overhead
+      - wasted_draft_steps
+  - name: kv_cache_ghost_state
+    medical_map: sepsis
+    description: missing or incomplete KV cache rollback leaves rejected draft KV entries active in attention context for subsequent tokens
+    indicators:
+      - kv_cache_ghost_state
+      - stale_draft_kv
+      - corrupted_rollback_pointer
+  - name: distribution_drift_violation
+    medical_map: autoimmune
+    description: heuristic acceptance bypassing exact p/q rejection and residual sampling breaks target-distribution equivalence
+    indicators:
+      - distribution_drift_violation
+      - biased_sampling
+      - lossless_invariant_broken
+  - name: tree_width_memory_thrash
+    medical_map: acute
+    description: oversized speculation trees saturate verification FLOPs and HBM bandwidth while exceeding KV capacity
+    indicators:
+      - tree_width_memory_thrash
+      - verification_bottleneck
+      - excessive_tree_fanout
+architecture_patterns:
+  - name: lossless_residual_resampling
+    medical_map: immune_system
+    description: validate draft probabilities with exact p/q gates and sample rejected tails from normalized max(0, p - q)
+  - name: atomic_kv_prefix_rollback
+    medical_map: homeostasis
+    description: advance committed KV length only through verified accepted token indices and reclaim all rejected slots immediately
+  - name: dynamic_draft_length_tuning
+    medical_map: treatment
+    description: modulate speculation depth k or early-exit draft passes dynamically from rolling acceptance rate telemetry
+  - name: packed_tree_attention_mask
+    medical_map: quarantine
+    description: verify branching candidate paths in one packed target forward pass using shared prefix KV pages and causal bitmasks

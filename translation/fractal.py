@@ -300,6 +300,15 @@ _SCALE_KEYWORDS: dict[str, list[str]] = {
 }
 
 
+_SCALE_KEYWORD_PATTERNS: dict[str, tuple[re.Pattern[str], ...]] = {
+    scale_name: tuple(
+        re.compile(rf"(?<![a-z]){re.escape(kw)}(?![a-z])")
+        for kw in keywords
+    )
+    for scale_name, keywords in _SCALE_KEYWORDS.items()
+}
+
+
 def scale_for_frame(frame: str | None) -> str | None:
     """Resolve a frame/target name to a canonical scale, or None."""
     if not frame:
@@ -307,9 +316,9 @@ def scale_for_frame(frame: str | None) -> str | None:
     key = frame.strip().rstrip("?").lower()
     if key in FRAME_TO_SCALE:
         return FRAME_TO_SCALE[key]
-    for scale_name, keywords in _SCALE_KEYWORDS.items():
+    for scale_name, patterns in _SCALE_KEYWORD_PATTERNS.items():
         # Whole-word match: "ai" must not match "chain" or "domain".
-        if any(re.search(rf"(?<![a-z]){re.escape(kw)}(?![a-z])", key) for kw in keywords):
+        if any(pattern.search(key) for pattern in patterns):
             return scale_name
     return None
 
@@ -599,6 +608,10 @@ def _sentence_departments(sentence: str, scale: str, self_tokens: frozenset[str]
     return found
 
 
+_SENTENCE_SPLIT_RE = re.compile(r"[.;!?\n]+")
+_ALL_DEPARTMENT_NAMES: frozenset[str] = frozenset(d.name for d in FunctionalDepartment)
+
+
 def _map_present_to_departments(
     present: list[str],
     scale: str,
@@ -616,7 +629,7 @@ def _map_present_to_departments(
         texts.append(raw_text)
 
     for text in texts:
-        for sentence in re.split(r"[.;!?\n]+", text.lower()):
+        for sentence in _SENTENCE_SPLIT_RE.split(text.lower()):
             departments |= _sentence_departments(sentence, scale, self_tokens)
 
     return departments
@@ -639,9 +652,8 @@ def identify_missing_departments(
     present_functions = system_description.get("present_functions", [])
     present_set = _map_present_to_departments(present_functions, scale, raw_text=raw_text)
     # Also keep any already-canonical department names that may be present.
-    dept_names = {d.name for d in FunctionalDepartment}
     present_set.update(
-        f.upper() for f in present_functions if isinstance(f, str) and f.upper() in dept_names
+        f.upper() for f in present_functions if isinstance(f, str) and f.upper() in _ALL_DEPARTMENT_NAMES
     )
 
     findings = []

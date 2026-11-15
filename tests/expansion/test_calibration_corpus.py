@@ -50,6 +50,7 @@ def test_calibration_corpus_category_coverage():
         "poe_chaos_inoculation",
         "remote_attestation",
         "reward_hijacking",
+        "speculative_decoding",
         "consciousness_cognition",
         "client_server_reality",
     }
