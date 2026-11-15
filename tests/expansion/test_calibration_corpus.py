@@ -48,6 +48,7 @@ def test_calibration_corpus_category_coverage():
         "distributed_consensus",
         "kv_cache_inference",
         "poe_chaos_inoculation",
+        "remote_attestation",
         "reward_hijacking",
         "consciousness_cognition",
         "client_server_reality",

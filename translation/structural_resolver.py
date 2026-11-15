@@ -29,6 +29,7 @@ Resolution rules worth knowing (all covered by tests):
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import lru_cache
 import re
 from typing import Iterable, Mapping, Sequence
 
@@ -115,17 +116,40 @@ def normalize(text: str) -> str:
     return " ".join(_TOKEN_RE.findall(text))
 
 
+_CLAUSE_SPLIT_RE = re.compile(r"[.!?;\n]+")
+
+
+@lru_cache(maxsize=16)
+def _compiled_alias_bundle(
+    signature: tuple[tuple[str, tuple[str, ...]], ...],
+) -> tuple[
+    tuple[tuple[str, str, re.Pattern[str]], ...],
+    dict[str, tuple[tuple[str, tuple[str, ...]], ...]],
+]:
+    patterns: list[tuple[str, str, re.Pattern[str]]] = []
+    index: dict[str, list[tuple[str, tuple[str, ...]]]] = {}
+    for concept, phrases in signature:
+        for phrase in phrases:
+            candidate = normalize(phrase)
+            if not candidate:
+                continue
+            patterns.append((
+                concept,
+                candidate,
+                re.compile(rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9])"),
+            ))
+            phrase_tokens = tuple(candidate.split())
+            index.setdefault(phrase_tokens[0], []).append((concept, phrase_tokens))
+    frozen_index = {k: tuple(v) for k, v in index.items()}
+    return tuple(patterns), frozen_index
+
+
 def _index_aliases(
     aliases: Mapping[str, Iterable[str]],
-) -> dict[str, list[tuple[str, tuple[str, ...]]]]:
+) -> dict[str, tuple[tuple[str, tuple[str, ...]], ...]]:
     """Index alias phrases by first token so matching is not O(tokens x phrases)."""
-    index: dict[str, list[tuple[str, tuple[str, ...]]]] = {}
-    for concept, phrases in aliases.items():
-        for phrase in phrases:
-            phrase_tokens = tuple(normalize(phrase).split())
-            if phrase_tokens:
-                index.setdefault(phrase_tokens[0], []).append((concept, phrase_tokens))
-    return index
+    signature = tuple((c, tuple(p)) for c, p in aliases.items())
+    return _compiled_alias_bundle(signature)[1]
 
 
 def _clause_positions(
@@ -177,14 +201,14 @@ def extract_evidence(text: str, aliases: Mapping[str, Iterable[str]]) -> Structu
     concepts: set[str] = set()
     spans: dict[str, list[str]] = {}
 
-    for concept, phrases in aliases.items():
-        for phrase in phrases:
-            candidate = normalize(phrase)
-            if candidate and re.search(rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9])", normalized):
-                concepts.add(concept)
-                spans.setdefault(concept, []).append(candidate)
+    signature = tuple((c, tuple(p)) for c, p in aliases.items())
+    patterns, alias_index = _compiled_alias_bundle(signature)
 
-    alias_index = _index_aliases(aliases)
+    for concept, candidate, pattern in patterns:
+        if pattern.search(normalized):
+            concepts.add(concept)
+            spans.setdefault(concept, []).append(candidate)
+
     relations: list[tuple[str, str, str]] = []
 
     # Relations are extracted per clause. Splitting the raw text on clause
@@ -192,7 +216,7 @@ def extract_evidence(text: str, aliases: Mapping[str, Iterable[str]]) -> Structu
     # kept their trailing "." ("reservation." never matched alias windows),
     # and pairs were formed across ";" boundaries, producing spurious
     # relations between unrelated clauses.
-    for clause in re.split(r"[.!?;\n]+", text):
+    for clause in _CLAUSE_SPLIT_RE.split(text):
         tokens = normalize(clause).split()
         if not tokens:
             continue

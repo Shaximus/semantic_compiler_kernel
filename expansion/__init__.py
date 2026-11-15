@@ -197,6 +197,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "replicated log", "consensus leader", "leader election", "split-brain",
         "split brain", "viewstamped",
     )),
+    ("remote_attestation", (
+        "remote attestation", "rats", "attester", "relying party",
+        "attestation result", "reference value", "freshness nonce",
+        "toctou", "rollback fuse", "tpm quote", "endorser",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
