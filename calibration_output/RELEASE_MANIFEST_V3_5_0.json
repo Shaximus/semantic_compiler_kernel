@@ -1,0 +1,17 @@
+{
+  "manifest_version": "3.5.0",
+  "semantic_compiler_version": "3.5.0",
+  "schema_version": "3.5.0",
+  "generated_at": "2026-11-15T22:22:00Z",
+  "git_commit": "main-v3.5.0-sync",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_0.json"
+  ],
+  "frozen_modules": [],
+  "notes": "V3.5.0 full synchronization & expansion release: aligned core/, extraction/, gates/, registry/, and schemas/ (logos_semantic_training_sample_v3_5_0.schema.json) at version 3.5.0; integrated second-pass poe_chaos_inoculation v1.1 (resource_costs, bypass_clauses, conditional bypass + cost reference-model tests) and Buildcraft-derived ci_build_invariants domain; 42 expansion templates (41 concrete domains + universal_generic); 205-sample decompression calibration corpus; 1.000/1.000 missing-organ precision/recall with 0.000 fragment FPR."
+}

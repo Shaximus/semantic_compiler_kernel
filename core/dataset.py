@@ -1,8 +1,8 @@
 """
-Reflexion Semantic Compiler V3.1.1 — Logos Dataset Row V3.1.1 Exporter
+Reflexion Semantic Compiler V3.5.0 — Logos Dataset Row V3.5.0 Exporter
 
 Canonical dataset-row builder aligned with:
-    LOGOS SEMANTIC DATASET PROTOCOL V3.1.1
+    LOGOS SEMANTIC DATASET PROTOCOL V3.5.0
 
 Produces the versioned training-data envelope used by SFT, DPO,
 contrastive learning, retrieval, isomorphism judging, and repair models.
@@ -1490,7 +1490,7 @@ def _build_audit(packet: Any, schema_valid: bool) -> dict[str, Any]:
 
 def build_dataset_row(packet: Any) -> dict[str, Any]:
     """
-    Build a canonical Logos Semantic Training Sample V3.1.1 row.
+    Build a canonical Logos Semantic Training Sample V3.5.0 row.
 
     The row is schema-aligned and includes every compiler output that is
     safe to serialize, separated into provenance, input, compilation,
@@ -1545,7 +1545,7 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
 
 
 def _default_schema_path(schema_version: str | None = None) -> Path:
-    """Resolve the packaged Logos JSON Schema (default V3.1.1), with override hooks."""
+    """Resolve the packaged Logos JSON Schema (default V3.5.0), with override hooks."""
     env_path = os.environ.get("LOGOS_SCHEMA_PATH") or os.environ.get("LOGOS_V2_1_SCHEMA_PATH")
     if env_path:
         return Path(env_path)
@@ -1555,8 +1555,12 @@ def _default_schema_path(schema_version: str | None = None) -> Path:
         legacy = schemas_dir / "logos_semantic_training_sample_v2_1.schema.json"
         if legacy.exists():
             return legacy
+    if schema_version == "3.1.1":
+        v311 = schemas_dir / "logos_semantic_training_sample_v3_1_1.schema.json"
+        if v311.exists():
+            return v311
 
-    packaged = schemas_dir / "logos_semantic_training_sample_v3_1_1.schema.json"
+    packaged = schemas_dir / "logos_semantic_training_sample_v3_5_0.schema.json"
     if packaged.exists():
         return packaged
 
@@ -1568,10 +1572,10 @@ def validate_dataset_row(
     schema_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """
-    Validate a dataset row against the Logos JSON Schema (default V3.1.1).
+    Validate a dataset row against the Logos JSON Schema (default V3.5.0).
 
     If ``schema_path`` is omitted, the packaged schema matching
-    ``row.get("schema_version")`` (or V3.1.1 by default) is used. Override with
+    ``row.get("schema_version")`` (or V3.5.0 by default) is used. Override with
     ``LOGOS_SCHEMA_PATH`` (or legacy ``LOGOS_V2_1_SCHEMA_PATH``) env var or
     by passing an explicit path.
 

@@ -40,7 +40,7 @@ class TermRegistry:
 
     def __init__(self) -> None:
         self._terms: dict[str, TermEntry] = {}
-        self._version: str = "3.1.1"
+        self._version: str = "3.5.0"
         self._load_defaults()
 
     @property

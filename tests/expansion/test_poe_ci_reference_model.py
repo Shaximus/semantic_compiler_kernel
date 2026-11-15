@@ -14,6 +14,10 @@ Rules encoded, with the sources the template cites for them:
   bleeding skips the buffer and is inflicted only by a hit that damages life (MOBA-ES)
 * recharge runs only after a delay with no damage taken; damage restarts the delay
 * Chaos Inoculation: life is 1 and chaos damage (poison included) is ignored (POEDB-CI)
+* an item clause can let a share of hit damage bypass the buffer while the buffer is below
+  half (pre-0.5.x Runemastered Revered Vestments, FEXTRA-POE2-050)
+* a skill can cost energy shield (FEXTRA-POE2-050). Whether paying such a cost restarts the
+  recharge delay was not read in any source, so the tests below hold for both settings.
 Not modeled: PoE 1 bleeding, thresholds, flasks, anything time-continuous.
 """
 from __future__ import annotations
@@ -50,6 +54,8 @@ class Character:
     delay: int = 2          # quiet ticks before recharge starts (toy value)
     recharge: int = 5       # buffer per quiet tick once the delay has passed (toy value)
     converted: int = 0      # converted recovery per tick, independent of quiet time (toy value)
+    bypass_below_half: float = 0.0  # share of hit damage that skips the buffer while it is below half
+    cost_restarts_delay: bool = False  # unsourced; tests that use costs check both values
 
 
 CI = Character(life=1, immune=frozenset({"chaos"}))
@@ -78,6 +84,13 @@ def simulate(events, rules: Rules, char: Character):
         for _ in range(gap):
             tick()
         cause = None
+        if kind == "es_cost":
+            if amount > buffer:
+                return True, None  # the cost cannot be paid, so the skill is not used
+            buffer -= amount
+            if char.cost_restarts_delay:
+                quiet = 0
+            continue  # a cost is not damage taken; no tick, the next event follows at once
         if kind in ("chaos", "poison") and "chaos" in char.immune:
             tick()
             continue  # no damage taken, so the recharge delay is not restarted
@@ -94,6 +107,12 @@ def simulate(events, rules: Rules, char: Character):
                 buffer = 0.0
                 cause = "overflow"
         else:  # hit or bleed_hit
+            if char.bypass_below_half and buffer < char.buffer_max / 2:
+                skipped = amount * char.bypass_below_half
+                life -= skipped
+                amount -= skipped
+                if life <= 0:
+                    return False, "bypass"
             overflow = max(0.0, amount - buffer)
             buffer = max(0.0, buffer - amount)
             if overflow:
@@ -176,3 +195,46 @@ def test_a_single_hit_within_the_current_buffer_never_kills_ci(rules):
     for amount in range(1, CI.buffer_max + 1):
         assert simulate([(0, "hit", amount)], rules, CI) == (True, None)
     assert simulate([(0, "hit", CI.buffer_max + 1)], rules, CI) == (False, "overflow")
+
+
+# --- Second pass (2026-11-06): bypass clauses and buffer spent as cost --------------------
+
+VESTMENTS = Character(life=1, immune=frozenset({"chaos"}), bypass_below_half=0.5)
+CHIP_THEN_SMALL_HIT = [(0, "hit", 6), (0, "hit", 3)]
+
+
+def test_a_conditional_bypass_clause_kills_with_a_hit_the_current_buffer_could_absorb():
+    # After the chip, 4 buffer is left and the next hit is 3: absorbed without the clause.
+    assert simulate(CHIP_THEN_SMALL_HIT, POE1, CI) == (True, None)
+    assert simulate(CHIP_THEN_SMALL_HIT, POE1, VESTMENTS) == (False, "bypass")
+
+
+def test_chaos_immunity_does_not_close_an_item_granted_bypass():
+    # Safety 1 holds for plain CI (only overflow kills) and fails once the clause is equipped.
+    assert causes(POE1, CI) == {"overflow"}
+    assert "bypass" in causes(POE1, VESTMENTS)
+    assert "bypass" in causes(POE2_JAN_2025, VESTMENTS)
+
+
+def test_the_clause_is_inert_while_the_buffer_is_at_least_half():
+    assert simulate([(0, "hit", 3)], POE1, VESTMENTS) == (True, None)
+
+
+@pytest.mark.parametrize("restarts", [False, True], ids=["cost_keeps_delay", "cost_restarts_delay"])
+def test_spending_the_buffer_turns_an_absorbed_hit_into_overflow(restarts):
+    caster = Character(life=1, immune=frozenset({"chaos"}), cost_restarts_delay=restarts)
+    assert simulate([(0, "hit", 8)], POE1, caster) == (True, None)
+    assert simulate([(0, "es_cost", 4), (0, "hit", 8)], POE1, caster) == (False, "overflow")
+
+
+def test_a_cost_the_buffer_cannot_cover_is_not_paid():
+    assert simulate([(0, "es_cost", CI.buffer_max + 1)], POE1, CI) == (True, None)
+
+
+def test_a_cost_only_delays_recharge_if_it_restarts_the_clock():
+    # The unsourced rule matters only once there is time to refill: with a quiet gap equal to
+    # the delay, the buffer is back before the spike unless the cost restarted the delay.
+    keeps = Character(life=1, immune=frozenset({"chaos"}), recharge=1, cost_restarts_delay=False)
+    restarts = Character(life=1, immune=frozenset({"chaos"}), recharge=1, cost_restarts_delay=True)
+    seq = [(0, "hit", 2), (0, "es_cost", 4), (2, "hit", 6)]
+    assert simulate(seq, POE1, keeps) != simulate(seq, POE1, restarts)
