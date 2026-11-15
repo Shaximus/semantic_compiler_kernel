@@ -53,6 +53,10 @@ def test_calibration_corpus_category_coverage():
         "speculative_decoding",
         "consciousness_cognition",
         "client_server_reality",
+        "agentic_tool_orchestration",
+        "capability_isolation",
+        "formal_verification",
+        "sovereign_local_mesh",
     }
     for row in corpus:
         if row["domain"] in wired:

@@ -29,12 +29,12 @@ components:
   - name: transport_bridge_adapter
     function: encapsulates translated scancodes into target wire protocols (USB ConfigFS gadget, BLE HOGP, Cloudflare Worker RPC)
     criticality: high
-    medical_map: diagnosis
+    medical_map: homeostasis
 
   - name: protocol_gate_interceptor
     function: identifies and satisfies vendor-specific setup barriers (Fire OS OOBE Bluetooth remote pairing mandates)
     criticality: high
-    medical_map: quarantine
+    medical_map: immune_system
 
 relationships:
   - from: semantic_intent_resolver

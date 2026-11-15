@@ -1,0 +1,109 @@
+domain: agentic_tool_orchestration
+version: 1.0
+description: >-
+  Bounded autonomous tool execution and multi-agent orchestration loops
+  (ReAct, function calling, Model Context Protocol servers, and subagent
+  supervisors). Focuses on schema-validated invocation, budget enforcement,
+  reentrancy/idempotency isolation, prompt-to-tool injection defense, and
+  approval gating at high-impact boundaries.
+
+components:
+  - name: planner_loop
+    function: generates structured next-step reasoning and candidate tool invocations within a bounded turn budget
+    criticality: high
+    medical_map: homeostasis
+  - name: schema_validator
+    function: enforces strict JSON Schema argument typing and parameter constraints before tool dispatch
+    criticality: high
+    medical_map: immune_system
+  - name: tool_dispatcher
+    function: routes validated calls to isolated MCP servers or local tool handlers and normalizes responses
+    criticality: high
+    medical_map: homeostasis
+  - name: budget_supervisor
+    function: meters token spend, wall-clock timeout, tool-call depth, and parallelism caps
+    criticality: high
+    medical_map: homeostasis
+  - name: approval_gate
+    function: intercepts irreversible or privileged tool mutations for explicit policy or human authorization
+    criticality: high
+    medical_map: immune_system
+  - name: scratchpad_state
+    function: maintains append-only observation traces and idempotency keys across turns
+    criticality: medium
+    medical_map: remission
+
+relationships:
+  - from: planner_loop
+    to: schema_validator
+    type: submits_call_to
+  - from: schema_validator
+    to: approval_gate
+    type: forwards_verified_call_to
+  - from: approval_gate
+    to: tool_dispatcher
+    type: authorizes_execution_on
+  - from: budget_supervisor
+    to: planner_loop
+    type: constrains_turns_of
+  - from: tool_dispatcher
+    to: scratchpad_state
+    type: records_observation_in
+  - from: scratchpad_state
+    to: planner_loop
+    type: informs_next_step_of
+
+invariants:
+  - "Every tool invocation must validate against a declared parameter schema before reaching side-effecting handlers [JSON-SCHEMA][OPENAI-FC]"
+  - "Autonomous execution loops require hard turn, token, and parallelism budgets to guarantee termination [ANTHROPIC-AGENTS][REACT-YAO]"
+  - "Untrusted tool outputs returned into context must stay data-plane separated from control-plane instructions [MCP-SPEC][NIST-AI-RMF]"
+  - "Non-idempotent or irreversible tool actions must pass an explicit approval boundary prior to dispatch [ANTHROPIC-AGENTS][NIST-AI-RMF]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: Model weights and deterministic runtime
+    invariants form consciousness (substrate); individual ReAct trajectories
+    and scratchpad turns are cognition (terminal output). Many concurrent
+    tool-using subagents share one base substrate via distinct prompt/tool
+    schemas. Prompt injection attempts to overwrite terminal instructions
+    rather than altering substrate weights. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Host tool runtime and immutable policy store = server (L1);
+    schema validator and MCP router = rendering engine (L2); context window
+    and scratchpad history = client cache (L3); single tool invocation =
+    avatar (L4). Context truncation or hallucinated tool schemas are L3
+    cache desync against authoritative L1 state. Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: infinite_retry_loop
+    medical_map: cancer
+    description: planner repeatedly invokes a failing tool call without backoff or budget termination
+    indicators: [unbounded_turn_count, repeated_identical_tool_error, budget_exhausted]
+  - name: indirect_prompt_injection
+    medical_map: pathogen
+    description: malicious directives embedded in retrieved tool output hijack downstream tool calls
+    indicators: [untrusted_tool_output_executed, unexpected_privileged_call, instruction_smuggling]
+  - name: schema_hallucination_mismatch
+    medical_map: acute
+    description: model invents nonexistent tool names or malformed JSON arguments rejected at dispatch
+    indicators: [unknown_tool_name, schema_validation_error, malformed_json_arguments]
+  - name: reentrant_side_effect_storm
+    medical_map: sepsis
+    description: parallel or retried non-idempotent tool calls duplicate mutations and corrupt shared state
+    indicators: [missing_idempotency_key, duplicate_mutation_commit, parallel_write_race]
+  - name: unapproved_privilege_escalation
+    medical_map: metastasis
+    description: subagent exercises high-impact write or network tools without passing an approval gate
+    indicators: [approval_bypass, ambient_tool_inheritance, unverified_destructive_call]
+
+architecture_patterns:
+  - name: strict_structured_tool_contracts
+    medical_map: vaccination
+    description: enforce strict JSON Schema validation and enum allowlists on all tool parameters prior to execution
+  - name: idempotency_key_ledger
+    medical_map: treatment
+    description: attach monotonic call IDs and replay caches so retried tool dispatches execute at most once
+  - name: read_only_research_tiering
+    medical_map: quarantine
+    description: isolate exploratory subagents with read-only tool scopes and route write tools through gated supervisors
+  - name: bounded_watchdog_circuit_breaker
+    medical_map: diagnosis
+    description: halt loops after consecutive identical errors or budget thresholds and escalate structured state

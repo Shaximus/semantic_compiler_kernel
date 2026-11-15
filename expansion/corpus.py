@@ -480,7 +480,13 @@ def _build_registry(
             )
             disconfirmations.append(disc.to_negative_test(test_id=f"nt-corpus-{i}"))
 
-        if len(doc_ids) >= 2:
+        has_counterexample = any(
+            d.get("status") in {"FAILED", "WEAKENED", "SUSPICIOUS"}
+            for d in disconfirmations
+        )
+        if has_counterexample:
+            verdict = CorpusVerdict.STRAINS.value
+        elif len(doc_ids) >= 2:
             verdict = CorpusVerdict.HOLDS.value
         else:
             verdict = CorpusVerdict.UNRESOLVED.value

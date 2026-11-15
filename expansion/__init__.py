@@ -119,10 +119,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     # Handset companions. "android" stays on mobile_security; these phrases
     # are the connectivity and radio terms that do not belong there.
     ("android_connectivity", (
-        "apn", "tethering", "rndis",
+        "apn", "tethering", "rndis", "epc", "pdp", "volte", "carrier config",
+        "siminfo", "mobile data", "rmnet",
     )),
     ("bluetooth", (
-        "bluetooth", "ble", "gatt", "a2dp",
+        "bluetooth", "ble", "gatt", "a2dp", "hfp", "avrcp", "ltk", "pairing",
     )),
     ("networking", (
         "bgp", "dns", "dnssec", "rpki", "tcp", "udp", "autonomous system",
@@ -207,9 +208,33 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "attestation result", "reference value", "freshness nonce",
         "toctou", "rollback fuse", "tpm quote", "endorser",
     )),
+    ("agentic_tool_orchestration", (
+        "tool call", "tool calling", "function calling", "mcp server",
+        "model context protocol", "agentic loop", "tool schema",
+        "tool budget", "parallel tool execution", "reentrant tool",
+        "subagent orchestration",
+    )),
+    ("capability_isolation", (
+        "object capability", "capability isolation", "ocap",
+        "ambient authority", "confused deputy", "attenuation",
+        "seccomp", "landlock", "capsicum", "cheri", "least privilege",
+    )),
+    ("formal_verification", (
+        "formal verification", "smt solver", "tla+", "model checking",
+        "proof obligation", "loop invariant", "temporal logic",
+        "liveness property", "safety invariant", "counterexample trace",
+        "abstract interpretation",
+    )),
+    ("sovereign_local_mesh", (
+        "sovereign mesh", "tailscale", "wireproxy", "userspace tunnel",
+        "overlay mesh", "peer-to-peer mesh", "device identity",
+        "split-horizon", "local inference gateway", "offline-first sync",
+        "air-gapped mesh",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
+        "liquidity", "solvency", "balance sheet", "collateral",
     )),
     ("economic", (
         "economy", "inflation", "labor market", "supply chain", "trade balance",
@@ -227,26 +252,29 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("informational", (
         "knowledge platform", "information ecosystem", "indexing", "ingestion", "ingest",
         "document archive", "records platform", "recommendation feedback", "retrieval",
-        "misinformation",
+        "misinformation", "metadata", "search index", "provenance",
     )),
     ("corporate", (
         "corporate", "corporation", "executive board", "board of directors", "payroll",
         "legal department", "ownership structure", "family business", "shareholder",
+        "governance", "compliance",
     )),
     ("organizational", (
         "middle management", "reporting line", "coordination meeting", "weekly meeting",
         "open-source project", "maintainer", "org chart", "feedback channel",
+        "department", "workflow",
     )),
     ("government", (
         "government", "legislature", "ministry", "bureaucracy", "agency", "permitting",
-        "constitutional", "election", "public service",
+        "constitutional", "election", "public service", "municipality",
     )),
     ("law", (
         "court", "legal system", "precedent", "contract", "legal review", "jurisdiction",
-        "litigation", "appeal",
+        "litigation", "appeal", "statute", "judicial", "verdict", "arbitration",
     )),
     ("social", (
         "neighborhood", "neighbor", "community", "group chat", "friends", "social norm",
+        "social trust", "grassroots", "civic", "peer norm",
     )),
     ("military", (
         "military", "radar", "command structure", "logistics command", "coast guard",
@@ -279,8 +307,15 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
 
 
 def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
+    alts: list[str] = []
+    for kw in keywords:
+        escaped = re.escape(kw)
+        if len(kw) > 2 and kw.endswith("y") and kw[-2].lower() not in "aeiou":
+            alts.append(re.escape(kw[:-1]) + r"(?:y|ies)")
+        else:
+            alts.append(escaped + r"(?:s|es)?")
     return re.compile(
-        r"(?<![a-z])(?:" + "|".join(map(re.escape, keywords)) + r")(?:s|es)?(?![a-z])",
+        r"(?<![a-z])(?:" + "|".join(alts) + r")(?![a-z])",
         re.IGNORECASE,
     )
 

@@ -34,6 +34,27 @@ SCALE_ORDER = [
     ScaleType.COSMOLOGICAL,
 ]
 
+_FRACTAL_SCALE_ALIASES: dict[str, ScaleType] = {
+    "cell": ScaleType.CELLULAR,
+    "human": ScaleType.AGENT,
+    "computer": ScaleType.COMPONENT,
+    "llm": ScaleType.PROCESS,
+    "society": ScaleType.CIVILIZATIONAL,
+    "cosmos": ScaleType.COSMOLOGICAL,
+}
+
+
+def _resolve_scale_type(scale_str: str) -> ScaleType | None:
+    if not scale_str:
+        return None
+    norm = scale_str.strip()
+    if norm.lower() in _FRACTAL_SCALE_ALIASES:
+        return _FRACTAL_SCALE_ALIASES[norm.lower()]
+    try:
+        return ScaleType[norm.upper()]
+    except KeyError:
+        return None
+
 
 def scale_distance(source: ScaleType, target: ScaleType) -> int:
     """
@@ -88,6 +109,14 @@ def validate_scale_transform(transform: ScaleTransform) -> dict[str, Any]:
             "This is almost certainly a scale collapse."
         )
         gate_passed = False
+
+    # Orthogonal scale crosses (EVENT / SYMBOLIC <-> ordinal) also need explicit rules
+    if dist == -1 and transform.source_scale != transform.target_scale:
+        if not transform.aggregation_rule and not transform.decomposition_rule:
+            warnings.append(
+                f"Cross-category scale transform ({transform.source_scale.name} -> "
+                f"{transform.target_scale.name}) has no explicit mapping rule."
+            )
 
     # Large distance requires aggregation/decomposition rules
     if dist > 1:
@@ -157,13 +186,8 @@ def enforce_scale_separation(packet: Any) -> dict[str, Any]:
         source_scale_str = mapping.get("source_scale", "")
         target_scale_str = mapping.get("target_scale", "")
 
-        # Try to resolve scale types
-        try:
-            source_scale = ScaleType[source_scale_str.upper()] if source_scale_str else None
-            target_scale = ScaleType[target_scale_str.upper()] if target_scale_str else None
-        except (KeyError, AttributeError):
-            source_scale = None
-            target_scale = None
+        source_scale = _resolve_scale_type(source_scale_str) if isinstance(source_scale_str, str) else None
+        target_scale = _resolve_scale_type(target_scale_str) if isinstance(target_scale_str, str) else None
 
         if source_scale and target_scale:
             transform = ScaleTransform(

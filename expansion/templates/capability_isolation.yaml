@@ -1,0 +1,90 @@
+domain: capability_isolation
+version: 1.0
+description: >-
+  Object-capability (ocap) security architectures and least-privilege
+  sandboxing (CHERI, Capsicum, seccomp-bpf, Landlock, and WebAssembly
+  Component Model). Eliminates ambient authority by binding designation to
+  unforgeable authorization tokens and attenuating permissions across trust boundaries.
+
+components:
+  - name: capability_token_authority
+    function: mints and tracks unforgeable references combining object identity with explicit permission bits
+    criticality: high
+    medical_map: immune_system
+  - name: attenuation_proxy
+    function: derives strictly weaker sub-capabilities by masking off unneeded rights before delegation
+    criticality: high
+    medical_map: homeostasis
+  - name: compartment_sandbox
+    function: executes untrusted workloads inside syscall-restricted and memory-bounded isolation domains
+    criticality: high
+    medical_map: immune_system
+  - name: membrane_switch
+    function: mediates cross-compartment calls and revokes delegated graphs when a session terminates
+    criticality: high
+    medical_map: homeostasis
+  - name: audit_ledger
+    function: records capability transfers, denials, and sandbox violations for provenance verification
+    criticality: medium
+    medical_map: treatment
+
+relationships:
+  - from: capability_token_authority
+    to: attenuation_proxy
+    type: delegates_root_handle_to
+  - from: attenuation_proxy
+    to: compartment_sandbox
+    type: grants_narrowed_capability_to
+  - from: membrane_switch
+    to: compartment_sandbox
+    type: enforces_boundary_on
+  - from: compartment_sandbox
+    to: audit_ledger
+    type: emits_violation_events_to
+
+invariants:
+  - "No computation may exercise authority unless explicitly passed an unforgeable capability handle [DENNIS-VAN-HORN][OCAP-STIEGLER]"
+  - "Authority can only be monotonically attenuated across delegation boundaries and never amplified [OCAP-STIEGLER][WASM-CM]"
+  - "Sandbox transitions drop ambient filesystem, network, and namespace descriptors prior to untrusted execution [CAPSICUM][SECCOMP-BPF]"
+  - "Pointer provenance and hardware capability bounds must remain unforgeable across spatial memory accesses [CHERI-ISA]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The hardware/kernel TCB enforcing
+    capability bounds is consciousness (substrate); sandboxed workloads
+    holding attenuated handles are cognition (terminal outputs). One
+    substrate enforces isolation for arbitrary untrusted terminals without
+    trusting terminal assertions. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Kernel/CHERI capability table = server (L1);
+    seccomp/membrane dispatcher = rendering engine (L2); process FD
+    table = client cache (L3); untrusted worker call = avatar (L4).
+    Ambient authority leaks let an L4 avatar bypass L2 filtering to reach
+    unintended L1 resources. Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: confused_deputy_escalation
+    medical_map: autoimmune
+    description: privileged component misuses its own authority on behalf of an untrusted caller input
+    indicators: [ambient_path_lookup, missing_caller_capability_check, unintended_privileged_action]
+  - name: ambient_authority_leak
+    medical_map: metastasis
+    description: global environment, inherited descriptors, or shared sockets allow escape from sandbox scope
+    indicators: [inherited_fd_leak, unrestricted_proc_mount, global_socket_access]
+  - name: capability_forgery_or_uaf
+    medical_map: pathogen
+    description: stale reference reuse or corrupt tag grants unauthorized handle dereference
+    indicators: [tag_violation, dangling_handle_reuse, bounds_bypass]
+  - name: policy_filter_drift
+    medical_map: chronic
+    description: seccomp or Landlock rulesets lag behind new syscalls and leave unblocked kernel surfaces
+    indicators: [unfiltered_syscall_surface, inconsistent_sandbox_profile, permissive_fallback]
+
+architecture_patterns:
+  - name: zero_ambient_capability_passing
+    medical_map: vaccination
+    description: require explicit capability handles on every resource operation and strip global ambient state
+  - name: membrane_revocation_wrapper
+    medical_map: quarantine
+    description: interpose revocable membranes around delegated graphs so compromised compartments detach cleanly
+  - name: layered_syscall_seccomp_jail
+    medical_map: diagnosis
+    description: pair pre-opened Capsicum/Landlock directory handles with strict seccomp-bpf allowlists

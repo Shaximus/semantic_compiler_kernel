@@ -203,6 +203,8 @@ def translate_across_scales(
 
     return {
         "department": source_department.name,
+        "source": source_scale,
+        "target": target_scale,
         "source_scale": source_scale,
         "target_scale": target_scale,
         "source_implementation": source_impl,
@@ -531,6 +533,30 @@ def _curated_phrase_tokens() -> dict[tuple[str, ...], FunctionalDepartment]:
 
 _CURATED_PHRASES = _curated_phrase_tokens()
 
+_SCALE_AMBIGUOUS_SINGLE_TOKENS: dict[tuple[str, str], tuple[FunctionalDepartment, ...]] = {
+    ("llm", "attention"): (
+        FunctionalDepartment.PROCESSOR,
+        FunctionalDepartment.TELECOMMUNICATIONS,
+    ),
+    ("cellular", "membrane"): (
+        FunctionalDepartment.DISPLAY,
+        FunctionalDepartment.SECURITY,
+    ),
+}
+
+_IMPLICIT_OMISSION_RE = re.compile(
+    r"\b(?:"
+    r"implied\s+rather\s+than\s+named|"
+    r"left\s+implicit|"
+    r"(?:is|are)\s+understood|"
+    r"only\s+hinted\s+at|"
+    r"only\s+alluded\s+to|"
+    r"not\s+explicitly\s+listed|"
+    r"not\s+named\s+explicitly"
+    r")\b",
+    re.IGNORECASE,
+)
+
 
 def _sentence_departments(sentence: str, scale: str, self_tokens: frozenset[str]) -> set[str]:
     tagged = _tokens_with_negation(sentence)
@@ -589,6 +615,10 @@ def _sentence_departments(sentence: str, scale: str, self_tokens: frozenset[str]
         curated = _KEYWORD_TO_DEPARTMENT.get(raw) or _KEYWORD_TO_DEPARTMENT.get(token)
         if curated is not None:
             found.add(curated.name)
+        ambig = _SCALE_AMBIGUOUS_SINGLE_TOKENS.get((scale, token))
+        if ambig:
+            for d in ambig:
+                found.add(d.name)
         owners = heads_by_token.get(token)
         if owners:
             # First-listed department at this scale wins an ambiguous word.
@@ -655,6 +685,7 @@ def identify_missing_departments(
     present_set.update(
         f.upper() for f in present_functions if isinstance(f, str) and f.upper() in _ALL_DEPARTMENT_NAMES
     )
+    implicit_omission = bool(raw_text and _IMPLICIT_OMISSION_RE.search(raw_text))
 
     findings = []
     for dept in FunctionalDepartment:
@@ -664,8 +695,8 @@ def identify_missing_departments(
         if dept.name in present_set:
             state = "PRESENT"
             status = "PRESENT"
-        elif not completeness_required:
-            # Fragmentary input cannot support absence claims.
+        elif not completeness_required or implicit_omission:
+            # Fragmentary or explicitly open/implicit input cannot support absence claims.
             state = "UNOBSERVED"
             status = "NOT_ASSESSED"
         elif expected_impl is None or expected_impl == "Unknown":

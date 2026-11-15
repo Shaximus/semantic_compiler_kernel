@@ -1,26 +1,28 @@
 # Decompression Calibration Report V2.2
 
-- Total samples: 180
+- Total samples: 200
 - Categories: 8 (minimum 10 each)
-- Domains covered: 36
-- Samples with detected pathologies: 160
+- Domains covered: 40
+- Samples with detected pathologies: 0
 
 ## Samples per category
 
-- adversarial: 28
-- architecture_improvement: 30
+- adversarial: 32
+- architecture_improvement: 34
 - boundary_case: 10
 - cross_domain_analogy: 12
-- fragmentary: 30
-- pathology_positive: 30
+- fragmentary: 34
+- pathology_positive: 34
 - privacy_restricted: 10
-- strong_whole_system: 30
+- strong_whole_system: 34
 
 ## Samples per domain
 
+- agentic_tool_orchestration: 5
 - android_connectivity: 5
 - biology: 5
 - bluetooth: 5
+- capability_isolation: 5
 - cellular_middlebox_tethering: 5
 - client_server_reality: 5
 - computation: 5
@@ -34,6 +36,7 @@
 - epistemic_ledger_verification: 5
 - evolutionary: 5
 - finance_economics: 5
+- formal_verification: 5
 - government: 5
 - informational: 5
 - input_semantic_adapter: 5
@@ -51,6 +54,7 @@
 - remote_attestation: 5
 - reward_hijacking: 5
 - social: 5
+- sovereign_local_mesh: 5
 - speculative_decoding: 5
 - trust_chain: 5
 - wireless_power: 5

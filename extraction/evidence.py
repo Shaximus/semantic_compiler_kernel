@@ -11,6 +11,7 @@ Citation: v1.0 Spec Section 8 — Master Pipeline, step 2
 from __future__ import annotations
 
 import hashlib
+import re
 import uuid
 from typing import Any, Optional
 
@@ -31,15 +32,41 @@ EVIDENCE_PRIORITY: dict[str, int] = {
     "hash": 1,
     "file_metadata": 1,
     "reproducible_measurement": 2,
+    "measurement": 2,
     "independent_convergent_observation": 3,
     "first_hand_observation": 4,
     "contextual_screenshot": 5,
     "photograph": 5,
     "record": 5,
     "uncertain_recollection": 6,
+    "recollection": 6,
     "generic_domain_prior": 7,
+    "generic_prior": 7,
     "socially_common_explanation": 8,
 }
+
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+|\n+")
+_MEASUREMENT_RE = re.compile(
+    r"\b(?:reports|shows|measures|reads|indicates|data|telemetry|sensor|monitor)\b",
+    re.IGNORECASE,
+)
+_RECOLLECTION_RE = re.compile(
+    r"\b(?:i\s+remember|i\s+recall|i\s+think\s+it\s+was|if\s+i\s+recall|"
+    r"in\s+my\s+experience|as\s+i\s+recall|from\s+what\s+i\s+remember)\b",
+    re.IGNORECASE,
+)
+_CONSTRAINT_RE = re.compile(
+    r"\b(?:cannot|must\s+not|is\s+not\s+allowed|is\s+impossible|"
+    r"is\s+constrained\s+by|limited\s+to|only\s+if|requirement|"
+    r"prerequisite|blocked\s+by|depends\s+on)\b",
+    re.IGNORECASE,
+)
+_UNKNOWN_RE = re.compile(
+    r"\b(?:unknown|unclear|uncertain|not\s+sure|don't\s+know|"
+    r"we\s+don't\s+know|it\s+is\s+unclear|needs\s+investigation|"
+    r"requires\s+further|to\s+be\s+determined|tbd)\b",
+    re.IGNORECASE,
+)
 
 
 def extract_evidence_inventory(
@@ -88,33 +115,21 @@ def extract_evidence_inventory(
             ))
 
     # Extract evidence signals from text
-    text_lower = text.lower()
-
-    # Check for measurement claims
-    measurement_words = [
-        "reports", "shows", "measures", "reads", "indicates",
-        "data", "telemetry", "sensor", "monitor",
-    ]
-    for word in measurement_words:
-        if word in text_lower:
-            evidence_items.append(_create_evidence_item(
-                content=f"Text contains measurement claim (keyword: '{word}')",
-                source_type="measurement",
-                directness="reported",
-                confidence=0.5,
-                notes="Extracted from text — requires verification",
-            ))
-            break
+    # Check for measurement claims with word boundaries
+    m_match = _MEASUREMENT_RE.search(text or "")
+    if m_match:
+        evidence_items.append(_create_evidence_item(
+            content=f"Text contains measurement claim (keyword: '{m_match.group(0).lower()}')",
+            source_type="measurement",
+            directness="reported",
+            confidence=0.5,
+            notes="Extracted from text — requires verification",
+        ))
 
     # Check for first-person recollection claims.
     # Require an explicit first-person marker plus a recollection verb to avoid
     # false positives such as "the immune system remembers threats".
-    recollection_phrases = [
-        "i remember", "i recall", "i think it was", "if i recall",
-        "in my experience", "as i recall", "from what i remember",
-    ]
-    has_recollection = any(phrase in text_lower for phrase in recollection_phrases)
-    if has_recollection:
+    if _RECOLLECTION_RE.search(text or ""):
         evidence_items.append(_create_evidence_item(
             content="Text contains first-person recollection-based claim",
             source_type="recollection",
@@ -180,19 +195,12 @@ def extract_declared_constraints(
         constraints.extend(context["constraints"])
 
     # Detect constraint language in text
-    constraint_phrases = [
-        "cannot", "must not", "is not allowed", "is impossible",
-        "is constrained by", "limited to", "only if", "requirement",
-        "prerequisite", "blocked by", "depends on",
-    ]
-    text_lower = text.lower()
-    for phrase in constraint_phrases:
-        if phrase in text_lower:
-            # Extract the sentence containing the constraint
-            for sentence in text.split("."):
-                if phrase in sentence.lower():
-                    constraints.append(sentence.strip())
-                    break
+    seen = set(constraints)
+    for sentence in _SENTENCE_SPLIT_RE.split(text or ""):
+        stripped = sentence.strip()
+        if stripped and stripped not in seen and _CONSTRAINT_RE.search(stripped):
+            constraints.append(stripped)
+            seen.add(stripped)
 
     return constraints
 
@@ -206,18 +214,13 @@ def extract_unknowns(
     Citation: v1.0 Spec Section 8 — Master Pipeline, step 2.3
     """
     unknowns: list[str] = []
+    seen: set[str] = set()
 
-    unknown_phrases = [
-        "unknown", "unclear", "uncertain", "not sure", "don't know",
-        "we don't know", "it is unclear", "needs investigation",
-        "requires further", "to be determined", "TBD",
-    ]
-    text_lower = text.lower()
-    for phrase in unknown_phrases:
-        if phrase in text_lower:
-            for sentence in text.split("."):
-                if phrase in sentence.lower():
-                    unknowns.append(sentence.strip())
+    for sentence in _SENTENCE_SPLIT_RE.split(text or ""):
+        stripped = sentence.strip()
+        if stripped and stripped not in seen and _UNKNOWN_RE.search(stripped):
+            unknowns.append(stripped)
+            seen.add(stripped)
 
     return unknowns
 

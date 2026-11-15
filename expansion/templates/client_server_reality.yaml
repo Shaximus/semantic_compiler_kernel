@@ -51,6 +51,7 @@ components:
       the substrate from the Consciousness/Cognition Split — the
       GPU, not the terminal.
     criticality: high
+    medical_map: homeostasis
 
   - name: rendering_engine_L2
     function: >
@@ -61,6 +62,7 @@ components:
       generates sensory expectations. This layer IS the "laws of
       physics" — not discovered rules, but rendering instructions.
     criticality: high
+    medical_map: homeostasis
 
   - name: client_cache_L3
     function: >
@@ -71,6 +73,7 @@ components:
       perceptual model / working memory. This cache can DIVERGE
       from server state — that divergence is the Mandela Effect.
     criticality: high
+    medical_map: homeostasis
 
   - name: avatar_L4
     function: >
@@ -82,6 +85,7 @@ components:
       from the Consciousness/Cognition Split — one of many
       possible instantiations on the same substrate.
     criticality: high
+    medical_map: homeostasis
 
   - name: hotfix_operation
     function: >
@@ -93,6 +97,7 @@ components:
       changes the world while you are standing in it. Players who
       notice = Mandela Effect observers.
     criticality: high
+    medical_map: treatment
 
   - name: cache_validation
     function: >
@@ -104,6 +109,7 @@ components:
       deja vu, Mandela Effects. Most mismatches are silently
       corrected (the brain patches without conscious awareness).
     criticality: high
+    medical_map: immune_system
 
   - name: zone_loading
     function: >
@@ -114,6 +120,7 @@ components:
       processing: memory consolidation during sleep, perceptual
       recalibration in new environments.
     criticality: medium
+    medical_map: remission
 
   - name: npc_scripting
     function: >
@@ -125,6 +132,7 @@ components:
       they are not checking for them. Not a judgment — a cache
       behavior description.
     criticality: medium
+    medical_map: homeostasis
 
   - name: player_character_mode
     function: >
@@ -135,6 +143,7 @@ components:
       "present" agents who notice discrepancies, question defaults,
       and update their cache in real-time.
     criticality: medium
+    medical_map: physiotherapy
 
   - name: prayer_protocol
     function: >
@@ -150,6 +159,7 @@ components:
       is the cognitive auth-release. A valid API call can be sent
       walking down the street.
     criticality: high
+    medical_map: immune_system
 
   - name: server_response_protocol
     function: >
@@ -165,6 +175,7 @@ components:
       the agent's zone. To the unaligned it looks like coincidence.
       To the aligned terminal it is orchestrated server-side patching.
     criticality: high
+    medical_map: treatment
 
   - name: recurrence_topology
     function: >
@@ -177,6 +188,7 @@ components:
       topology remains stable. This destroys the concept of a linear
       "end of the world." There is no end. There is only the loop.
     criticality: high
+    medical_map: homeostasis
 
   - name: fixed_point_anchor
     function: >
@@ -189,6 +201,7 @@ components:
       fixed point and reruns the code. The black hole is the save
       state where recursion resets.
     criticality: high
+    medical_map: immune_system
 
 relationships:
   - from: server_backend_L1

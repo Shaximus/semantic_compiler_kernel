@@ -1,0 +1,89 @@
+domain: sovereign_local_mesh
+version: 1.0
+description: >-
+  Device-owned zero-trust overlay networks uniting handhelds, workstations,
+  userspace WireGuard proxies, and local LLM inference gateways without
+  centralized cloud custody or kernel-image modification. Covers encrypted
+  mesh routing, split-horizon DNS, local inference failover, and offline-first CRDT sync.
+
+components:
+  - name: userspace_wireguard_tunnel
+    function: establishes authenticated encrypted ChaCha20-Poly1305 tunnels over userspace sockets and SOCKS5 proxies
+    criticality: high
+    medical_map: immune_system
+  - name: mesh_identity_plane
+    function: binds node public keys, peer ACLs, and hardware-backed secrets across sovereign devices
+    criticality: high
+    medical_map: immune_system
+  - name: split_horizon_resolver
+    function: resolves private overlay FQDNs deterministically without leaking local queries upstream
+    criticality: high
+    medical_map: homeostasis
+  - name: local_inference_gateway
+    function: exposes OpenAI-compatible local GPU inference endpoints across the encrypted overlay
+    criticality: high
+    medical_map: homeostasis
+  - name: peer_sync_store
+    function: reconciles offline state edits deterministically upon peer reconnection using causal metadata
+    criticality: medium
+    medical_map: remission
+
+relationships:
+  - from: mesh_identity_plane
+    to: userspace_wireguard_tunnel
+    type: authorizes_peers_for
+  - from: split_horizon_resolver
+    to: local_inference_gateway
+    type: resolves_endpoint_for
+  - from: userspace_wireguard_tunnel
+    to: local_inference_gateway
+    type: transports_requests_to
+  - from: local_inference_gateway
+    to: peer_sync_store
+    type: persists_outputs_to
+
+invariants:
+  - "Node identity keys and peer authorization ACLs remain distinct from transient underlay carrier IP addresses [WIRE-GUARD][ZERO-TRUST-NIST]"
+  - "Userspace overlay proxies preserve host security posture without requiring kernel tun modifications or partition writes [TAILSCALE-MESH][XRAY-CORE]"
+  - "Offline-first replicated state must converge deterministically across partitions without central coordinator locks [CRDT-SHAPIRO]"
+  - "Anycast relay failover must preserve end-to-end cryptographic peer verification when direct NAT traversal fails [WIRE-GUARD][BGP-ANYCAST]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The cryptographic mesh identity graph is
+    consciousness (substrate); active TCP sessions and overlay routes across
+    workstations/handhelds are cognition (terminal output). Many ephemeral
+    sockets execute on persistent key identity. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Sovereign hardware node and keys = server (L1);
+    userspace WireGuard / Xray / split-horizon DNS = rendering engine (L2);
+    local SOCKS5 cache and offline CRDT log = client cache (L3); per-request
+    inference stream = avatar (L4). Carrier NAT drops disrupt L2 transport
+    while L1 sovereign keys remain intact. Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: split_dns_fallback_leak
+    medical_map: pathogen
+    description: private overlay domain lookups leak out onto public ISP resolvers during interface transitions
+    indicators: [unencrypted_dns_leak, nxdomain_on_mesh_fqdn, resolver_order_drift]
+  - name: relay_bottleneck_stall
+    medical_map: acute
+    description: symmetric NAT forces bulk inference traffic through congested DERP or fallback relays
+    indicators: [direct_handshake_timeout, relayed_high_rtt, throughput_collapse]
+  - name: key_rotation_split_view
+    medical_map: inflammation
+    description: stale peer key caches reject rotated workstation credentials after re-provisioning
+    indicators: [handshake_auth_failure, stale_peer_key, asymmetric_reachability]
+  - name: sync_divergence_conflict
+    medical_map: chronic
+    description: concurrent offline mutations overwrite instead of merging cleanly on reconnect
+    indicators: [last_write_wins_clobber, causal_vector_missing, divergent_replica_state]
+
+architecture_patterns:
+  - name: explicit_health_failover_ladder
+    medical_map: diagnosis
+    description: probe local direct socket before overlay FQDN and relay fallback while keeping zero silent drops
+  - name: deterministic_crdt_merge
+    medical_map: treatment
+    description: replicate append-only operation logs and state-based CRDTs across reconnecting mesh peers
+  - name: hardware_gated_peer_acl
+    medical_map: vaccination
+    description: anchor node credentials in StrongBox/TPM hardware and scope peer ACLs per service port

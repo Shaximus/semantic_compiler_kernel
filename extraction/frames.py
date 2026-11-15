@@ -6,21 +6,23 @@ Citation: v1.0 Spec Section 8 — Master Pipeline, steps 3.2-3.4
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 
 # Known frames / domains for detection
 KNOWN_FRAMES: dict[str, list[str]] = {
     "biology": [
-        "organism", "cell", "immune", "nervous", "organ", "tissue",
+        "organism", "cell", "cellular", "immune", "nervous", "organ", "tissue",
         "metabolism", "DNA", "protein", "membrane", "disease",
         "kidney", "blood", "brain", "liver", "heart", "lung", "body",
-        "oxygen", "circulatory", "antibody", "pathogen",
+        "oxygen", "circulatory", "antibody", "pathogen", "mitochondria",
     ],
     "computation": [
         "CPU", "GPU", "RAM", "process", "thread", "memory", "disk",
-        "network", "firewall", "server", "database", "API",
-        "algorithm", "software", "hardware", "program", "queue", "cache",
+        "network", "firewall", "server", "database", "API", "LLM",
+        "transformer", "attention", "algorithm", "software", "hardware",
+        "program", "queue", "cache",
     ],
     "organizational": [
         "department", "team", "employee", "manager", "CEO", "board",
@@ -52,6 +54,14 @@ KNOWN_FRAMES: dict[str, list[str]] = {
     ],
 }
 
+_FRAME_PATTERNS: dict[str, list[tuple[str, re.Pattern[str]]]] = {
+    frame: [
+        (kw, re.compile(rf"\b{re.escape(kw)}\b", re.IGNORECASE))
+        for kw in keywords
+    ]
+    for frame, keywords in KNOWN_FRAMES.items()
+}
+
 
 def detect_source_frames(
     input_or_packet: Any,
@@ -63,15 +73,15 @@ def detect_source_frames(
     Citation: v1.0 Spec Section 8 — Master Pipeline, step 3.2
     """
     if isinstance(input_or_packet, str):
-        text = input_or_packet.lower()
+        text = input_or_packet
         registry = None
     else:
-        text = (input_or_packet.raw_input or "").lower()
+        text = input_or_packet.raw_input or ""
         registry = context_or_registry
     detected: list[str] = []
 
-    for frame_name, keywords in KNOWN_FRAMES.items():
-        match_count = sum(1 for kw in keywords if kw.lower() in text)
+    for frame_name, patterns in _FRAME_PATTERNS.items():
+        match_count = sum(1 for _kw, pat in patterns if pat.search(text))
         if match_count >= 2:  # At least 2 keywords to count as a frame
             detected.append(frame_name)
         elif match_count == 1:
