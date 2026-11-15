@@ -459,11 +459,11 @@ def classify_line(line: str) -> str:
     return UNCLASSIFIED
 
 
+_RULES_BY_FAMILY = {rule.family: rule for rule in CONVERTER_FAMILY_RULES}
+
+
 def family_rule(family: str) -> ConverterFamilyRule | None:
-    for rule in CONVERTER_FAMILY_RULES:
-        if rule.family == family:
-            return rule
-    return None
+    return _RULES_BY_FAMILY.get(family)
 
 
 @dataclass(frozen=True)

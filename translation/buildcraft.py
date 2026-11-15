@@ -216,6 +216,24 @@ def _trigger_ids(normalized: str) -> list[str]:
 # Combined resolution
 # ---------------------------------------------------------------------------
 
+_BUILDCRAFT_BY_ID = {mapping.mapping_id: mapping for mapping in BUILDCRAFT_MAPPINGS}
+
+
+def _select_buildcraft_entries(text: str, matches) -> list[BuildcraftMapping]:
+    entries: list[BuildcraftMapping] = []
+    seen: set[str] = set()
+    for match in matches:
+        entries.append(_BUILDCRAFT_BY_ID[match.rule_id])
+        seen.add(match.rule_id)
+    normalized = _normalize(text)
+    if normalized:
+        for mapping_id in _trigger_ids(normalized):
+            if mapping_id not in seen:
+                entries.append(_BUILDCRAFT_BY_ID[mapping_id])
+                seen.add(mapping_id)
+    return entries
+
+
 def resolve_buildcraft_entries(text: str) -> list[BuildcraftMapping]:
     """Return buildcraft mappings supported by structural or trigger evidence.
 
@@ -223,19 +241,7 @@ def resolve_buildcraft_entries(text: str) -> list[BuildcraftMapping]:
     trigger-layer matches, deduplicated.
     """
     _, matches = resolve_rules(text, ALIASES, RULES)
-    by_id = {mapping.mapping_id: mapping for mapping in BUILDCRAFT_MAPPINGS}
-    entries: list[BuildcraftMapping] = []
-    seen: set[str] = set()
-    for match in matches:
-        entries.append(by_id[match.rule_id])
-        seen.add(match.rule_id)
-    normalized = _normalize(text)
-    if normalized:
-        for mapping_id in _trigger_ids(normalized):
-            if mapping_id not in seen:
-                entries.append(by_id[mapping_id])
-                seen.add(mapping_id)
-    return entries
+    return _select_buildcraft_entries(text, matches)
 
 
 def resolve_buildcraft_mappings(text: str) -> list[dict[str, object]]:
@@ -243,7 +249,7 @@ def resolve_buildcraft_mappings(text: str) -> list[dict[str, object]]:
     scores = {match.rule_id: match for match in matches}
     denied = negated_rule_ids(RULES, evidence)
     output = []
-    for entry in resolve_buildcraft_entries(text):
+    for entry in _select_buildcraft_entries(text, matches):
         item = entry.to_fractal_mapping()
         match = scores.get(entry.mapping_id)
         if match is not None:
@@ -272,7 +278,7 @@ def summarize_buildcraft_ontology(text: str) -> dict[str, object]:
     return {
         "ontology": "BUILDCRAFT_COMPUTE_ONTOLOGY",
         "resolver": "RELATION_AWARE_STRUCTURAL_IR_V1+TRIGGER_RECALL",
-        "mapping_ids": [entry.mapping_id for entry in resolve_buildcraft_entries(text)],
+        "mapping_ids": [entry.mapping_id for entry in _select_buildcraft_entries(text, matches)],
         "scores": {match.rule_id: match.score for match in matches},
         "concepts": sorted(evidence.concepts),
         "relations": [list(relation) for relation in evidence.relations],

@@ -215,10 +215,24 @@ SAMPLES = [
     ("Downstream hotspot clients suffer severe connection stalls when a quic blackhole silently drops packets on the 1440 MTU cellular uplink without ICMP feedback.", "cellular_middlebox_tethering", "pathology_positive"),
     ("Installing immediate ICMP port-unreachable reject rules for port 443 and applying an mss clamp at the host firewall boundary to prevent cellular blackholes.", "cellular_middlebox_tethering", "architecture_improvement"),
     ("The carrier middlebox only speeds up web browsing with innocent caching, so there is no need for an mss clamp, bypass rules, or encrypted names.", "cellular_middlebox_tethering", "adversarial"),
+
+    # --- 5 LLM serving & memory samples: kv_cache_inference ---
+    ("An inference serving runtime with a continuous batching scheduler, radix prefix tree, logical kv block table, physical block pool, prefill engine, and decode engine.", "kv_cache_inference", "strong_whole_system"),
+    ("The radix prefix tree shares cached kv blocks across prompts.", "kv_cache_inference", "fragmentary"),
+    ("Long prefill passes trigger kv cache thrashing and attention sink eviction, spiking decode tail latency.", "kv_cache_inference", "pathology_positive"),
+    ("Deploying pagedattention virtual kv blocks alongside prefill decode disaggregation preserves attention sink stability under burst load.", "kv_cache_inference", "architecture_improvement"),
+    ("Contiguous max-length buffers never fragment GPU HBM, so block tables and kv cache eviction policies are unnecessary overhead.", "kv_cache_inference", "adversarial"),
+
+    # --- 5 replicated state machine samples: distributed_consensus ---
+    ("A raft cluster with monotonic term epoch clock, consensus leader, quorum voters, replicated log, fencing token issuer, and state machine.", "distributed_consensus", "strong_whole_system"),
+    ("Quorum voters advance the term and append entries to the replicated log.", "distributed_consensus", "fragmentary"),
+    ("A GC pause leaves a stale zombie client holding an expired lease that causes split-brain overwrites without fencing token checks.", "distributed_consensus", "pathology_positive"),
+    ("Enforcing strict majority quorum intersection and monotonic fencing token verification prevents stale leader corruption.", "distributed_consensus", "architecture_improvement"),
+    ("Wall-clock leader leases make split brain impossible in asynchronous clusters, so distributed consensus never needs fencing tokens.", "distributed_consensus", "adversarial"),
 ]
 
-OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
-OUTPUT_REPORT = Path("calibration_output/calibration_report_v2_2.md")
+OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"
+OUTPUT_REPORT = REPO_DIR / "calibration_output" / "calibration_report_v2_2.md"
 
 
 def build_corpus() -> list[dict]:
@@ -266,10 +280,10 @@ def build_report(corpus: list[dict]) -> str:
 def main():
     corpus = build_corpus()
     OUTPUT_JSONL.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT_JSONL.open("w") as f:
+    with OUTPUT_JSONL.open("w", encoding="utf-8") as f:
         for row in corpus:
             f.write(json.dumps(row) + "\n")
-    OUTPUT_REPORT.write_text(build_report(corpus))
+    OUTPUT_REPORT.write_text(build_report(corpus), encoding="utf-8")
     print(f"Wrote {len(corpus)} rows to {OUTPUT_JSONL}")
     print(f"Wrote report to {OUTPUT_REPORT}")
 

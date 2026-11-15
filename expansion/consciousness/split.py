@@ -282,7 +282,7 @@ def detect_category_error(
     # Check typed claims if provided
     if claims:
         for claim in claims:
-            claim_text = claim.get("content", "").lower()
+            claim_text = (claim.get("content") or "").lower()
             claim_type = claim.get("claim_type", "")
 
             # Flag STRUCTURAL_MAPPING claims that conflate the two
@@ -337,6 +337,8 @@ def evaluate_alignment(
     """
     if resistance_indicators is None:
         resistance_indicators = []
+    else:
+        resistance_indicators = list(resistance_indicators)
 
     # Compute alignment score
     resistance_penalty = len(resistance_indicators) * 0.1

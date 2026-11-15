@@ -1,0 +1,21 @@
+{
+  "manifest_version": "3.1.1",
+  "semantic_compiler_version": "3.1.1",
+  "schema_version": "2.1.0",
+  "generated_at": "2026-11-15T00:00:00Z",
+  "git_commit": "main-v3.1.1-sync",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json"
+  ],
+  "frozen_modules": [
+    "core/",
+    "extraction/",
+    "gates/",
+    "registry/"
+  ],
+  "notes": "V3.1.1 consolidation: consciousness/cognition split, client-server reality architecture, isomorphism overlay, 35 expansion templates (including kv_cache_inference and distributed_consensus), decompression calibration corpus, and codebase bug/optimization fixes."
+}

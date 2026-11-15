@@ -1,0 +1,125 @@
+domain: distributed_consensus
+version: 1.0
+description: >-
+  Fault-tolerant replicated state machine coordination under partial synchrony
+  and network partitions (Raft, Multi-Paxos, Viewstamped Replication). Separates
+  leader election, strict majority quorum intersection, log replication safety,
+  and external storage fencing so zombie leaders or GC-paused clients cannot
+  corrupt committed state.
+components:
+  - name: term_epoch_clock
+    function: supplies a strictly monotonic logical term/ballot number that fences stale leaders across partitions
+    criticality: high
+    medical_map: diagnosis
+  - name: consensus_leader
+    function: serializes incoming commands, appends them to the replicated log, and advances the commit index upon majority acknowledgement
+    criticality: high
+    medical_map: homeostasis
+  - name: quorum_voters
+    function: cluster nodes enforcing the one-vote-per-term rule and requiring log completeness before granting leadership
+    criticality: high
+    medical_map: immune_system
+  - name: replicated_log
+    function: ordered, durable sequence of (term, index, command) entries converging identically across a quorum
+    criticality: high
+    medical_map: homeostasis
+  - name: fencing_token_issuer
+    function: attaches monotonically increasing epoch tokens to lock/lease acquisitions verified by downstream storage
+    criticality: high
+    medical_map: immune_system
+  - name: lease_timer
+    function: bounds unrenewed leader validity under bounded clock drift so reads avoid stale state when clocks behave
+    criticality: medium
+    medical_map: prognosis
+  - name: state_machine
+    function: deterministically executes committed log entries in exact index order
+    criticality: high
+    medical_map: homeostasis
+  - name: snapshot_compactor
+    function: checkpoints state machine prefixes into durable snapshots to bound recovery time and log growth
+    criticality: medium
+    medical_map: remission
+relationships:
+  - from: quorum_voters
+    to: term_epoch_clock
+    type: advances_and_checks
+  - from: quorum_voters
+    to: consensus_leader
+    type: elects_by_majority
+  - from: consensus_leader
+    to: replicated_log
+    type: replicates
+  - from: replicated_log
+    to: state_machine
+    type: commits_in_order_to
+  - from: fencing_token_issuer
+    to: state_machine
+    type: protects_writes_to
+  - from: lease_timer
+    to: consensus_leader
+    type: bounds_authority_of
+  - from: snapshot_compactor
+    to: replicated_log
+    type: truncates_prefix_of
+invariants:
+  - "Any two strict-majority quorums overlap in at least one node, guaranteeing at most one leader can win election per monotonic term [DERIVED]"
+  - "Under asynchronous networks (FLP impossibility), consensus can preserve safety unconditionally by blocking progress until synchrony returns [DERIVED]"
+  - "Time-bounded leases alone cannot prevent split-brain writes during arbitrary GC pauses or clock jumps; downstream storage must reject writes carrying lower monotonic fencing tokens [DERIVED]"
+  - "Election liveness requires randomized timeout backoff so competing candidates break symmetry instead of oscillating in split votes [DERIVED]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The durable replicated log agreed upon
+    by a strict majority quorum represents consciousness (authoritative
+    ground truth), while an individual node's local lease timer,
+    uncommitted cache, or client session belief represents cognition
+    (terminal output). A partitioned zombie leader exhibits stale
+    terminal cognition decoupled from quorum truth.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Quorum-committed replicated log + fencing
+    storage verifier = server (L1); consensus term/commit protocol =
+    rendering engine (L2); leader lease cache and client read view =
+    client cache (L3); concurrent client transactions = avatars (L4).
+    Split-brain lease expiry = client cache desync cured by L1 fencing
+    token rejection. Cross-ref: client_server_reality.yaml [DERIVED]
+failure_modes:
+  - name: split_brain_dual_leaders
+    medical_map: autoimmune
+    description: asymmetric partition or unguarded lease overlap leaves two nodes believing they hold leadership concurrently
+    indicators:
+      - split_brain_dual_leaders
+      - dual_leader_conflict
+      - stale_leader_write
+  - name: stale_zombie_client_write
+    medical_map: pathogen
+    description: a paused client holding an expired lock wakes up and overwrites storage because the target lacks fencing-token verification
+    indicators:
+      - stale_zombie_client_write
+      - unfenced_storage_mutation
+      - expired_lease_write
+  - name: quorum_livelock_election_storm
+    medical_map: inflammation
+    description: synchronized election timers cause repeated split votes across candidates without electing a stable leader
+    indicators:
+      - quorum_livelock_election_storm
+      - split_vote_loop
+      - election_timeout_resonance
+  - name: log_divergence_uncommitted_overwrite
+    medical_map: sepsis
+    description: broken log-completeness check allows a new leader lacking committed entries to overwrite quorum history
+    indicators:
+      - log_divergence_uncommitted_overwrite
+      - committed_entry_loss
+      - term_index_mismatch
+architecture_patterns:
+  - name: strict_majority_quorum_intersection
+    medical_map: homeostasis
+    description: enforce N/2 + 1 overlap and monotonic term gates across all elections and commits
+  - name: monotonic_fencing_tokens
+    medical_map: immune_system
+    description: make every storage service validate strictly non-decreasing epoch tokens independently of client clocks
+  - name: randomized_election_backoff
+    medical_map: treatment
+    description: jitter election timeouts across nodes to ensure rapid convergence after partitions heal
+  - name: log_compaction_snapshotting
+    medical_map: remission
+    description: compact applied log prefixes atomically once durable state snapshots are persisted

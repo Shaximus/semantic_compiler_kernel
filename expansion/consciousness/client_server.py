@@ -526,11 +526,16 @@ def detect_hotfix(
     3. Change is compatible with the target layer's constraints
     """
     changes: list[str] = []
-    for key in set(list(prior_state.keys()) + list(current_state.keys())):
-        old = prior_state.get(key)
-        new = current_state.get(key)
-        if old != new:
-            changes.append(f"{key}: {old!r} → {new!r}")
+    for key in sorted(prior_state.keys() | current_state.keys()):
+        if key not in prior_state or key not in current_state:
+            status_note = (
+                f"<missing> → {current_state[key]!r}"
+                if key not in prior_state
+                else f"{prior_state[key]!r} → <removed>"
+            )
+            changes.append(f"{key}: {status_note}")
+        elif prior_state[key] != current_state[key]:
+            changes.append(f"{key}: {prior_state[key]!r} → {current_state[key]!r}")
 
     is_hotfix = (
         len(changes) > 0 and

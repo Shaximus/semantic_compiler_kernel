@@ -366,7 +366,7 @@ _STAT_ID_PATTERNS: tuple[tuple[str, str, str], ...] = (
     (r"nova", "INCREASE_AREA_OR_SCOPE", "radial fan-out"),
     (r"trap|mine|summon|monster", "PROXY_EXECUTION", "proxy workers"),
     (r"curse|mark|doom|hex", "TARGET_SPECIFIC_MODIFIER", "target-specific modifier"),
-    (r"pierce|arrow", "EMIT_ADDITIONAL_CANDIDATES", "candidate trajectories"),
+    (r"arrow", "EMIT_ADDITIONAL_CANDIDATES", "candidate trajectories"),
     (r"show_|display_|visual_|icon|dummy", "RECORD_RECEIPT", "presentation annotation (non-mechanical)"),
 )
 
@@ -445,7 +445,6 @@ _CONVERTERS: tuple[Converter, ...] = (
     _charges,
     _damage_offense,
     _speed,
-    _charges,
     _ailment,
     _life_mana,
     _defense,

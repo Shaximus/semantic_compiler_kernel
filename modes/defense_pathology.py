@@ -384,6 +384,10 @@ def deescalate_vocabulary(text: str) -> dict[str, Any]:
     }
 
 
+def _is_real_number(val: Any) -> bool:
+    return isinstance(val, (int, float)) and not isinstance(val, bool)
+
+
 def build_micro_packet(
     resource: str,
     required: Any,
@@ -403,13 +407,14 @@ def build_micro_packet(
 
     Citation: Shax — Firewall Bypass Protocol (2025)
     """
-    executable = available >= required
+    both_numeric = _is_real_number(required) and _is_real_number(available)
+    executable = (available >= required) if both_numeric else False
 
     return {
         "resource": resource,
         "required": required,
         "available": available,
-        "deficit": max(0, required - available) if isinstance(required, (int, float)) else "N/A",
+        "deficit": max(0, required - available) if both_numeric else "N/A",
         "status": "EXECUTABLE" if executable else "BLOCKED",
         "packet": (
             f"Resource: {resource}\n"

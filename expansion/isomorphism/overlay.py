@@ -122,8 +122,8 @@ def build_functional_graph(system_model: dict, template: DomainTemplate) -> Func
                 observed_tokens |= _tokens(str(value))
 
     covered = 0
-    for comp in template.components:
-        if comp["name"] in observed or _tokens(comp["name"]) & observed_tokens:
+    for comp_name in expected:
+        if comp_name in observed or _tokens(comp_name) & observed_tokens:
             covered += 1
     coverage = covered / max(len(expected), 1)
 
