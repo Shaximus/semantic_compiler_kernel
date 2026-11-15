@@ -25,6 +25,29 @@ BOUNDARY_TYPES = [
 ]
 
 
+_STRENGTH_RANK: dict[str, float] = {
+    "none": 0.0,
+    "open": 0.0,
+    "weak": 1.0,
+    "low": 1.0,
+    "soft": 1.0,
+    "medium": 2.0,
+    "moderate": 2.0,
+    "high": 3.0,
+    "strong": 3.0,
+    "strict": 4.0,
+    "hard": 4.0,
+}
+
+
+def _normalize_strength(val: Any) -> float:
+    if isinstance(val, (int, float)):
+        return float(val)
+    if isinstance(val, str):
+        return _STRENGTH_RANK.get(val.strip().lower(), 0.0)
+    return 0.0
+
+
 def check_boundary_preservation(
     source_boundaries: list[dict[str, Any]],
     target_boundaries: list[dict[str, Any]],
@@ -40,28 +63,49 @@ def check_boundary_preservation(
     violations = []
     preserved = []
 
-    source_by_type = {b.get("type", ""): b for b in source_boundaries}
-    target_by_type = {b.get("type", ""): b for b in target_boundaries}
+    source_by_type: dict[str, list[dict[str, Any]]] = {}
+    for b in source_boundaries:
+        btype = b.get("type", "")
+        source_by_type.setdefault(btype, []).append(b)
 
-    for btype, source_b in source_by_type.items():
-        if btype not in target_by_type:
-            violations.append({
-                "type": btype,
-                "violation": "BOUNDARY_LOST",
-                "source": source_b,
-                "detail": f"Source boundary '{btype}' has no target equivalent.",
-            })
-        else:
-            target_b = target_by_type[btype]
-            # Check if target is weaker
-            source_strength = source_b.get("strength", 0)
-            target_strength = target_b.get("strength", 0)
+    target_by_type: dict[str, list[dict[str, Any]]] = {}
+    for b in target_boundaries:
+        btype = b.get("type", "")
+        target_by_type.setdefault(btype, []).append(b)
+
+    for btype, source_list in source_by_type.items():
+        target_list = target_by_type.get(btype, [])
+        if not target_list:
+            for source_b in source_list:
+                violations.append({
+                    "type": btype,
+                    "violation": "BOUNDARY_LOST",
+                    "source": source_b,
+                    "detail": f"Source boundary '{btype}' has no target equivalent.",
+                })
+            continue
+
+        # Sort both lists descending by normalized strength so pairs align fairly
+        src_sorted = sorted(source_list, key=lambda b: _normalize_strength(b.get("strength", 0)), reverse=True)
+        tgt_sorted = sorted(target_list, key=lambda b: _normalize_strength(b.get("strength", 0)), reverse=True)
+        for idx, source_b in enumerate(src_sorted):
+            if idx >= len(tgt_sorted):
+                violations.append({
+                    "type": btype,
+                    "violation": "BOUNDARY_LOST",
+                    "source": source_b,
+                    "detail": f"Source boundary '{btype}' exceeded target count ({len(tgt_sorted)}).",
+                })
+                continue
+            target_b = tgt_sorted[idx]
+            source_strength = _normalize_strength(source_b.get("strength", 0))
+            target_strength = _normalize_strength(target_b.get("strength", 0))
             if target_strength < source_strength:
                 violations.append({
                     "type": btype,
                     "violation": "BOUNDARY_WEAKENED",
-                    "source_strength": source_strength,
-                    "target_strength": target_strength,
+                    "source_strength": source_b.get("strength", 0),
+                    "target_strength": target_b.get("strength", 0),
                     "detail": f"Target boundary '{btype}' is weaker than source.",
                 })
             else:

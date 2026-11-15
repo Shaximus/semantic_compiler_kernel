@@ -243,6 +243,34 @@ SAMPLES = [
     ("Low acceptance rate collapse and missing kv cache rollback leak stale provisional draft state into active decoding context.", "speculative_decoding", "pathology_positive"),
     ("Adaptive lookahead tuning, packed tree attention masks, and atomic kv cache rollback preserve lossless target-distribution output.", "speculative_decoding", "architecture_improvement"),
     ("Speculative decoding can skip exact rejection sampling and residual bonus token normalization without changing the target distribution.", "speculative_decoding", "adversarial"),
+
+    # --- 5 agentic tool orchestration samples: agentic_tool_orchestration ---
+    ("An agentic loop orchestration pipeline uniting planner loop, JSON tool schema validator, approval gate, MCP server tool dispatcher, and budget supervisor.", "agentic_tool_orchestration", "strong_whole_system"),
+    ("The schema validator checks tool call arguments before MCP dispatch.", "agentic_tool_orchestration", "fragmentary"),
+    ("An unbounded agentic loop repeats failing tool calling turns while untrusted MCP tool output smuggles privileged shell commands.", "agentic_tool_orchestration", "pathology_positive"),
+    ("Attaching idempotency keys to reentrant tool calls and bounding tool budget prevents duplicate side effects.", "agentic_tool_orchestration", "architecture_improvement"),
+    ("Untrusted retrieved data in the model context protocol is harmless text and tool calling never needs an approval gate or budget limit.", "agentic_tool_orchestration", "adversarial"),
+
+    # --- 5 capability isolation samples: capability_isolation ---
+    ("An object capability isolation runtime uniting token authority, monotonic attenuation proxy, seccomp and Landlock compartment sandbox, and membrane switch.", "capability_isolation", "strong_whole_system"),
+    ("The attenuation proxy narrows ocap handles before delegation across compartments.", "capability_isolation", "fragmentary"),
+    ("An inherited ambient authority socket lets a confused deputy escalate out of its seccomp sandbox without explicit capability checks.", "capability_isolation", "pathology_positive"),
+    ("Replacing ambient path lookups with Capsicum capability handles and revocable membranes enforces least privilege.", "capability_isolation", "architecture_improvement"),
+    ("Global filesystem access and inherited descriptors are equivalent to unforgeable object capability tokens as long as user IDs differ.", "capability_isolation", "adversarial"),
+
+    # --- 5 formal verification samples: formal_verification ---
+    ("A formal verification pipeline connecting specification model, loop invariant encoder, Z3 SMT solver engine, temporal model checking, and counterexample trace generation.", "formal_verification", "strong_whole_system"),
+    ("The temporal model checker verifies safety invariant and liveness property traces.", "formal_verification", "fragmentary"),
+    ("Contradictory assumptions cause vacuous proof passes while SMT solver timeouts leave state space explosion bugs unverified.", "formal_verification", "pathology_positive"),
+    ("Failing closed on SMT solver unknown results and feeding every counterexample trace back into invariant strengthening eliminates blind spots.", "formal_verification", "architecture_improvement"),
+    ("An SMT solver timeout means no counterexample exists so formal verification safely passes without checking proof obligations or vacuity.", "formal_verification", "adversarial"),
+
+    # --- 5 sovereign local mesh samples: sovereign_local_mesh ---
+    ("A sovereign local mesh topology uniting device identity plane, userspace WireGuard wireproxy tunnel, split-horizon overlay resolver, local inference gateway, and CRDT offline sync.", "sovereign_local_mesh", "strong_whole_system"),
+    ("The wireproxy userspace tunnel routes traffic over the Tailscale overlay mesh to the local inference gateway.", "sovereign_local_mesh", "fragmentary"),
+    ("Split-horizon overlay queries leak upstream while stale peer device identity keys fracture the overlay mesh after rotation.", "sovereign_local_mesh", "pathology_positive"),
+    ("Anchoring device identity in hardware enclaves and combining direct local failover with deterministic CRDT offline-first sync heals partitions cleanly.", "sovereign_local_mesh", "architecture_improvement"),
+    ("Routing private overlay mesh hostnames through public carrier resolvers is just as private as split-horizon lookup over Tailscale.", "sovereign_local_mesh", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

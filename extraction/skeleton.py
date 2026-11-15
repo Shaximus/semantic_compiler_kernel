@@ -302,7 +302,13 @@ def _extract_object_phrases(tokens: list[str]) -> list[str]:
 
     for start in range(1, n):
         prev = tokens[start - 1].lower()
-        if prev not in _ACTION_VERBS and prev not in _PREPOSITIONS and prev not in _DETERMINERS:
+        is_verb_or_prep = prev in _ACTION_VERBS or prev in _PREPOSITIONS
+        is_det_after_verb_or_prep = (
+            prev in _DETERMINERS
+            and start >= 2
+            and tokens[start - 2].lower() in (_ACTION_VERBS | _PREPOSITIONS)
+        )
+        if not is_verb_or_prep and not is_det_after_verb_or_prep:
             continue
 
         for end in range(start + 1, min(start + 4, n + 1)):
@@ -317,8 +323,10 @@ def _extract_object_phrases(tokens: list[str]) -> list[str]:
             phrase = _phrase_key(candidate)
             if not phrase or phrase in seen:
                 continue
-            # Skip if any word of this phrase is already captured by a subject.
-            if any(_is_subsumed(word, list(subject_phrases)) for word in phrase.split()):
+            # Skip exact full-phrase match against already captured subjects,
+            # while allowing distinct compound phrases that happen to share a word
+            # (e.g. "immune system" vs "nervous system").
+            if phrase in subject_phrases:
                 continue
             seen.add(phrase)
             objects.append(phrase)
@@ -437,6 +445,20 @@ def _extract_objects(packet: Any) -> list[str]:
 # Public skeleton API
 # ---------------------------------------------------------------------------
 
+_BOUNDARY_RE = re.compile(
+    r"\b(?:boundary|firewall|sandbox|membrane|isolation|trust\s+zone|permission|containment)\b",
+    re.IGNORECASE,
+)
+_FLOW_RE = re.compile(
+    r"\b(?:data\s+flow|information\s+flow|signal\s+flow|packet\s+flow|pipeline|stream)\b",
+    re.IGNORECASE,
+)
+_LOOP_RE = re.compile(
+    r"\b(?:feedback\s+loop|control\s+loop|closed\s+loop|homeostasis)\b",
+    re.IGNORECASE,
+)
+
+
 def extract_structural_skeleton(packet: Any) -> dict[str, Any]:
     """
     Extract the structural skeleton from the packet.
@@ -447,20 +469,33 @@ def extract_structural_skeleton(packet: Any) -> dict[str, Any]:
     Citation: v1.0 Spec Section 8 — Master Pipeline, step 4.2
     """
     sir = packet.semantic_ir
+    text = packet.raw_input or ""
+
+    boundaries = list(sir.boundaries) if sir.boundaries else sorted(
+        {m.group(0).lower() for m in _BOUNDARY_RE.finditer(text)}
+    )
+    flows = list(sir.flows) if sir.flows else sorted(
+        {m.group(0).lower() for m in _FLOW_RE.finditer(text)}
+    )
+    loops = sorted({m.group(0).lower() for m in _LOOP_RE.finditer(text)})
 
     return {
         "actors": list(sir.actors) if sir.actors else _extract_actors(packet),
         "objects": list(sir.objects) if sir.objects else _extract_objects(packet),
-        "boundaries": list(sir.boundaries) if sir.boundaries else [],
+        "boundaries": boundaries,
         "inputs": list(sir.inputs) if sir.inputs else [],
         "outputs": list(sir.outputs) if sir.outputs else [],
-        "flows": list(sir.flows) if sir.flows else [],
+        "flows": flows,
         "authority": [
             av for av in sir.authority_vectors
         ] if sir.authority_vectors else [],
         "failure_modes": list(sir.failure_modes) if sir.failure_modes else [],
-        "control_loops": list(sir.control_loops) if sir.control_loops else [],
-        "feedback_loops": list(sir.feedback_loops) if sir.feedback_loops else [],
+        "control_loops": list(sir.control_loops) if sir.control_loops else [
+            lp for lp in loops if "control" in lp or "homeostasis" in lp
+        ],
+        "feedback_loops": list(sir.feedback_loops) if sir.feedback_loops else [
+            lp for lp in loops if "feedback" in lp or "closed" in lp
+        ],
         "resources": list(sir.resources) if sir.resources else [],
         "forces": list(sir.forces) if sir.forces else [],
     }

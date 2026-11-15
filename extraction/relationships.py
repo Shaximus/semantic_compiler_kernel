@@ -271,6 +271,11 @@ def _extract_svo_relationships(
 
         verb_index = i - 1
 
+        # Skip negated verbs ("does not detect threats", "cannot access files").
+        neg_window = [t.lower() for t in tokens[max(0, verb_index - 2):verb_index]]
+        if any(neg in {"not", "never", "no", "cannot"} for neg in neg_window):
+            continue
+
         # If a word that can be a verb is actually functioning as the object of
         # the immediately preceding verb, skip it (e.g., "controls access").
         if verb_index > 0 and tokens[verb_index - 1].lower() in _ACTION_VERBS:
@@ -287,19 +292,20 @@ def _extract_svo_relationships(
         if not subject:
             continue
 
+        # Check analogy markers BEFORE advancing past prepositions, since
+        # _ANALOGY_MARKERS ("like", "as") are a subset of _PREPOSITIONS.
+        raw_next = verb_index + 1
+        if raw_next < n and tokens[raw_next].lower() in _ANALOGY_MARKERS:
+            continue
+
         # Look for object after the verb, skipping a leading determiner or
         # preposition if present (e.g. "delivers [the] materials").
-        obj_start = verb_index + 1
+        obj_start = raw_next
         if obj_start < n and tokens[obj_start].lower() in _DETERMINERS | _PREPOSITIONS:
             obj_start += 1
         object_phrase = _extract_noun_phrase_after(tokens, obj_start)
         if object_phrase:
             object_phrase = _find_closest_phrase_after(object_phrase, tokens, obj_start, objects) or object_phrase
-
-        # If the verb is followed by an analogy marker, this is an analogy
-        # edge rather than a normal SVO; handled separately below.
-        if obj_start < n and tokens[obj_start].lower() in _ANALOGY_MARKERS:
-            continue
 
         if not object_phrase:
             continue
@@ -326,12 +332,6 @@ def _extract_svo_relationships(
         # Coordinated verb: "X detects and remembers Y" -> also extract
         # "X remembers Y". Require the coordinator and second verb to follow
         # immediately, with the object already captured.
-        coord_index = obj_start
-        if coord_index < n and tokens[coord_index].lower() in _DETERMINERS | _PREPOSITIONS:
-            coord_index += 1
-        # If the object phrase was consumed, the next token may be the coordinator.
-        obj_end = obj_start + len(object_phrase.split())
-        # Recompute object span from actual tokens to find the position after it.
         obj_tokens = _tokenize(object_phrase)
         after_obj = obj_start + len(obj_tokens)
         if after_obj < n and tokens[after_obj].lower() in _COORDINATORS:

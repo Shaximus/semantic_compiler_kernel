@@ -142,20 +142,31 @@ def separate_causality_from_analogy(
         evidence = packet.get("evidence_inventory", [])
 
     findings: list[dict[str, Any]] = []
-    all_analogy_only = True
     any_gate_failure = False
 
     for mapping in mappings:
+        raw_declared = mapping.get("declared_class")
+        if isinstance(raw_declared, str):
+            try:
+                declared_cls: MappingClass | None = MappingClass[raw_declared.upper()]
+            except KeyError:
+                declared_cls = MappingClass.HEURISTIC_METAPHOR
+        else:
+            declared_cls = raw_declared
+
+        preserved = (
+            mapping.get("preserved_functions")
+            or mapping.get("preserved_invariants")
+            or []
+        )
         finding = classify_mapping(
-            source=mapping.get("source", ""),
-            target=mapping.get("target", ""),
-            declared_class=mapping.get("declared_class"),
+            source=mapping.get("source") or mapping.get("source_scale", ""),
+            target=mapping.get("target") or mapping.get("target_scale", ""),
+            declared_class=declared_cls,
             evidence=evidence,
-            preserved=mapping.get("preserved_functions", []),
+            preserved=preserved,
             residuals=mapping.get("residuals", []),
         )
-        if not finding.analogy_only:
-            all_analogy_only = False
         if not finding.gate_passed:
             any_gate_failure = True
 
@@ -170,6 +181,8 @@ def separate_causality_from_analogy(
             "residuals": finding.residuals,
             "failure_reason": finding.failure_reason,
         })
+
+    all_analogy_only = bool(findings) and all(f["analogy_only"] for f in findings)
 
     return {
         "findings": findings,

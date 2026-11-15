@@ -111,8 +111,12 @@ def resolve_mode(
         except KeyError:
             pass
 
-    # Auto-detection based on claim types
-    claim_type_names = [c.get("type", "") for c in packet.claim_types]
+    # Auto-detection based on claim types (supports both `claim_type` and `type` keys)
+    claim_type_names = [
+        str(c.get("claim_type") or c.get("type") or "")
+        for c in packet.claim_types
+        if isinstance(c, dict)
+    ]
 
     if "REALITY_ORIENTATION" in claim_type_names:
         return CompilerMode.REGULATED_REALITY_ORIENTATION
@@ -1148,7 +1152,11 @@ def compile_semantic_packet(
     packet.function_translation = build_function_translation(packet, registry)
     packet.relationship_translation = build_relationship_translation(packet, registry)
     packet.failure_mode_translation = build_failure_mode_translation(packet, registry)
-    packet.fractal_mappings = map_fractal_similarity(packet, registry)
+    packet.fractal_mappings = map_fractal_similarity(
+        packet,
+        registry,
+        resolve_frames=(packet.mode == CompilerMode.FRACTAL_ISOMORPHISM_MAPPING),
+    )
 
     # ──────────────────────────────────────────────────────────
     # Stage 4.5: Populate Semantic IR from extracted data

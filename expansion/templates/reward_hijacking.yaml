@@ -19,7 +19,7 @@ components:
   - name: outcome_evaluator
     function: scores the consequence of an action (primary reinforcer, environment reward, or human/reward-model preference)
     criticality: high
-    medical_map: diagnosis
+    medical_map: immune_system
   - name: prediction_error_signal
     function: reports the difference between received and expected value; drives learning (phasic dopamine, TD error, advantage estimate)
     criticality: high
@@ -27,7 +27,7 @@ components:
   - name: value_estimator
     function: holds learned expectations of future reward for states and actions (striatal value, critic, reward model)
     criticality: high
-    medical_map: prognosis
+    medical_map: homeostasis
   - name: policy
     function: selects actions from learned values; goal-directed or habitual (cortico-striatal action selection, actor, LM policy weights)
     criticality: high
@@ -35,7 +35,7 @@ components:
   - name: incentive_salience
     function: assigns motivational pull ("wanting") to cues and actions; separable from enjoyment
     criticality: high
-    medical_map: inflammation
+    medical_map: homeostasis
   - name: hedonic_evaluator
     function: produces liking or displeasure ("liking"); biological hotspots, no established artificial counterpart
     criticality: medium

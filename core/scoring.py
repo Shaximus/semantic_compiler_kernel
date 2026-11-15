@@ -211,6 +211,21 @@ def score_packet(packet: Any) -> dict[str, float]:
     if "structural_fit" not in packet.scores:
         scores["structural_fit"] = _compute_structural_fit(packet)
 
+    # Derive dataset_value from packet richness if not explicitly set.
+    if "dataset_value" not in packet.scores:
+        dv = 0.50
+        if scores["structural_fit"] >= 0.60:
+            dv += 0.12
+        if getattr(packet, "fractal_mappings", None):
+            dv += 0.12
+        if getattr(packet, "contradictions", None):
+            dv += 0.10
+        if getattr(packet, "negative_isomorphism_tests", None):
+            dv += 0.10
+        if getattr(packet, "residual_mismatches", None):
+            dv += 0.08
+        scores["dataset_value"] = round(min(1.0, dv), 4)
+
     # --- Hard gates ---
     for gate in HARD_GATE_NAMES:
         if gate not in scores:
@@ -242,6 +257,8 @@ def _derive_gate_score(packet: Any, gate_name: str) -> float:
     """Derive a hard gate score from packet analysis results."""
     if gate_name == "causal_validity":
         ca = packet.causal_analysis
+        if ca.get("any_gate_failure"):
+            return 0.1
         if ca.get("mapping_class") == "MATERIAL_IDENTITY":
             return 0.9
         if ca.get("analogy_only"):
@@ -250,9 +267,9 @@ def _derive_gate_score(packet: Any, gate_name: str) -> float:
 
     if gate_name == "scale_integrity":
         ss = packet.scale_separation
-        if ss.get("violation"):
-            return 0.0
-        if ss.get("transform_valid"):
+        if ss.get("violation") or ss.get("any_gate_failure"):
+            return 0.1
+        if ss.get("transform_valid") or (ss.get("gate_status") == "PASSED" and ss.get("transforms")):
             return 0.9
         return 0.5
 

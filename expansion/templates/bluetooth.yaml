@@ -30,11 +30,11 @@ components:
   - name: gatt_client
     function: discovers services and characteristics and issues reads, writes, and notifications as a GATT client
     criticality: medium
-    medical_map: diagnosis
+    medical_map: homeostasis
   - name: gatt_server
     function: exposes local services and characteristics to remote GATT clients under app and system policy
     criticality: medium
-    medical_map: diagnosis
+    medical_map: homeostasis
   - name: audio_transport
     function: carries SCO/eSCO or A2DP (and optionally LE Audio) media and call audio between host and remote
     criticality: high
@@ -42,11 +42,11 @@ components:
   - name: permission_and_location_gate
     function: mediates runtime Bluetooth and location-related permissions required for scan and connection on modern Android
     criticality: high
-    medical_map: quarantine
+    medical_map: immune_system
   - name: bluetooth_hal
     function: bridges framework/stack to vendor HAL and controller firmware; version and capability vary by device
     criticality: high
-    medical_map: quarantine
+    medical_map: homeostasis
   - name: controller_firmware
     function: runs link-layer and baseband behavior on the Bluetooth controller; updatable on some platforms
     criticality: high
@@ -58,7 +58,7 @@ components:
   - name: background_scan_limits
     function: applies OS and OEM limits on opportunistic and background LE scanning to control power and privacy
     criticality: medium
-    medical_map: vaccination
+    medical_map: immune_system
 relationships:
   - from: bluetooth_adapter
     to: classic_profile_stack
