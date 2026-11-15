@@ -39,6 +39,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `UCSB-176C` | UCSB CS176C, The Four Invariants | https://sites.cs.ucsb.edu/~arpitgupta/cs176c/spring26/assets/slides/week01_lecture02_four_invariants.html |
 | `KNOX-WP` | Samsung Knox security white paper, revision 1 | https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/assets/Knox-security-white-paper-r1.pdf |
 | `KW-2016` | Kanonov and Wool, Secure Containers in Android: the Samsung KNOX Case Study | https://arxiv.org/abs/1605.08567 |
+| `DERIVED` | Cross-domain invariant derived from the Consciousness/Cognition Split and Client-Server Reality Architecture (Shax + Hannah, 2026-11-14) | https://github.com/shaximus/semantic_compiler_kernel |
 
 ## Android precision corrections
 

@@ -41,6 +41,7 @@ mechanics are lost because they need a life pool.
 | `SKEEDA-CI` | Sportskeeda, Path of Exile 2 Chaos Inoculation explained (undated, early access) | https://www.sportskeeda.com/mmo/path-exile-2-chaos-inoculation-explained |
 | `POE2-PATCH-0-5-0` | Mobalytics, Path of Exile 2 patch 0.5.0 notes (dated 2026-06-08) | https://mobalytics.gg/poe-2/guides/0-5-patch-notes |
 | `POE-FORUM-ES` | pathofexile.com forum thread on energy shield and life flasks (January 28-30, 2025) | https://www.pathofexile.com/forum/view-thread/3711951/page/2 |
+| `DERIVED` | Cross-domain invariant derived from the Consciousness/Cognition Split and Client-Server Reality Architecture (Shax + Hannah, 2026-11-14) | https://github.com/shaximus/semantic_compiler_kernel |
 
 ## Structure versus literal mechanics (the guardrail)
 

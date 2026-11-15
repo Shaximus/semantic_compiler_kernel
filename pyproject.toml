@@ -37,6 +37,7 @@ packages = [
     "semantic_compiler.expansion.reconstruction",
     "semantic_compiler.expansion.registry",
     "semantic_compiler.expansion.schema",
+    "semantic_compiler.expansion.consciousness",
 ]
 
 [tool.setuptools.package-data]

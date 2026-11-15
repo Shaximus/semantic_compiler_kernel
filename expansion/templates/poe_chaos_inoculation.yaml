@@ -87,6 +87,25 @@ invariants:
   - "effects that spend or require life are excluded: Arrogance Support stops affected skills being cast and Midnight Bargain cannot be used with the keystone (PoE 1) [POEDB-CI]"
   - "Blood Rage's life degeneration is not exempted, and since 2.0.0 it is physical damage rather than chaos (PoE 1) [POEDB-CI]"
   - "Eldritch Battery makes energy shield protect mana instead of life, so it conflicts with a keystone whose only protection is the buffer over life (PoE 1 and PoE 2 early access) [FANDOM-EB][SKEEDA-CI]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The game engine / server-side
+    mechanics (damage calculation, item database, keystone rules)
+    is consciousness; player experience, tooltip display, and
+    build perception are cognition (terminal output). The
+    mechanics exist before any player reads them. Misunderstanding
+    Chaos Inoculation = category error between what the engine
+    does (substrate) and what the player expects (terminal).
+    Energy shield = buffer layer between substrate (life=1) and
+    terminal (apparent survivability) (PoE 1 and PoE 2). Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Game server / authoritative damage calc =
+    server (L1); game engine / physics simulation = rendering
+    engine (L2); client-side display / tooltip / life bar = client
+    cache (L3); player character = avatar (L4). Keystone selection
+    = server-side build commit. Tooltip mismatch with actual
+    mechanics = cache desync. Patch changing CI behavior = hotfix.
+    Life=1 display = cache accurately reflecting extreme server
+    state (PoE 1 and PoE 2). Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: oversized_hit_overflow
     medical_map: acute
