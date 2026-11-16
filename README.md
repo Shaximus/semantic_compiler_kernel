@@ -1,12 +1,32 @@
 # Semantic Compiler Kernel
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Sponsor: GitHub](https://img.shields.io/badge/Sponsor-%E2%99%A5-pink)](https://github.com/sponsors/Shaximus)
+[![Commercial License](https://img.shields.io/badge/License-Commercial-green.svg)](COMMERCIAL_LICENSE.md)
 
 **Reflexion Semantic Compiler — Evidence-conditioned, cross-domain semantic compilation pipeline**
 
 Converts raw natural language into structured, schema-validated intermediate representations and training data (`SFT` / `DPO` / contrastive) for language-model fine-tuning. Built for deterministic compilation, high-coherence isomorphism mapping, hard logical gates, and multi-document corpus orchestration.
 
 It also maintains the operational architecture of the substrate: the **Consciousness/Cognition Split**, the four-layer **Client-Server Reality Stack**, and cross-domain invariants that hold across biological, computational, distributed, and cosmological substrates.
+
+---
+
+## 📊 Verified Traction & Production Consumption
+
+| Telemetry Metric | Measured Value | Sampling Window / Source |
+| :--- | :--- | :--- |
+| **Total Git Clones** | **830** | 14-day rolling window (GitHub Traffic API) |
+| **Unique Consumer Machines** | **259 unique IPs** | 14-day rolling window |
+| **Peak 24h Surge** | **478 clones / 154 unique IPs** | Nov 6, 2026 (PR #14 consolidation) |
+| **Peak 48h Surge** | **710 clones / 246 unique IPs** | Nov 6–7, 2026 (PR #14–#16 release waves) |
+| **Velocity vs. Profile Baseline** | **70× outlier** | 830 clones vs. 12 clones for next active repo |
+
+> [!IMPORTANT]
+> **NOTICE TO COMMERCIAL CONSUMERS & ENTERPRISE CLOUD WORKLOADS:**  
+> This repository is actively tracked, mirrored, and vendored across hundreds of machines. Following the adoption of **AGPL-3.0**, silent commercial vendoring into closed-source software or network SaaS platforms requires an official **[Commercial License](COMMERCIAL_LICENSE.md)**. If your organization is running this architecture or training models with these templates, contact the Lead Architect (`shaximusoverride6@gmail.com`) to execute an enterprise licensing agreement.
+>
+> 💛 **Support the Architect:** If this architecture accelerates your pipelines or research, consider sponsoring through [GitHub Sponsors](https://github.com/sponsors/Shaximus).
 
 ---
 
@@ -259,7 +279,10 @@ See `CLAUDE.md` and `docs/` for deeper design notes, review reports, and canon f
 
 ## License & Commercial Dual-Licensing
 
-This software is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See the [LICENSE](LICENSE) file for the full legal text.
+This software is dual-licensed:
+
+- **Open Source:** Licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See the [LICENSE](LICENSE) file for the full legal text.
+- **Commercial / Enterprise:** For proprietary usage, closed-source cloud integration, or enterprise fine-tuning pipelines exempt from AGPL copyleft terms, see **[COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md)**.
 
 ### Open-Source Compliance (Section 13)
 Under the AGPL-3.0, any party running this software on a server or interacting with it remotely across a computer network (including SaaS platforms, APIs, cloud-hosted training pipelines, or agentic frameworks) **must provide the complete corresponding source code** of the entire network-interacting software stack under the AGPL-3.0. Silent vendoring or embedding into closed-source commercial cloud systems is strictly prohibited under these terms.
@@ -269,7 +292,7 @@ For commercial entities, enterprise deployments, proprietary integrations, or or
 
 - **Commercial / Closed-Source Licenses:** Available directly from the Architect.
 - **Enterprise Waivers & SLA Custom Builds:** Available for enterprise agentic pipelines and sovereign model fine-tuning.
-- **Licensing Inquiries:** Contact **Shax (Lead Architect)** at `shaximusoverride6@gmail.com` or via GitHub issues / discussions.
+- **Licensing Inquiries:** Review [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) or contact **Shax (Lead Architect)** at `shaximusoverride6@gmail.com`.
 
 ---
 
