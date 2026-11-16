@@ -10,7 +10,12 @@ import re
 from typing import Callable
 
 from semantic_compiler.expansion.gem_forge.models import GemTranslation, LineTranslation, PoeGem
-from semantic_compiler.expansion.gem_forge.taxonomy import extract_domains, extract_primitives, normalize_text
+from semantic_compiler.expansion.gem_forge.taxonomy import (
+    extract_domains,
+    extract_primitives,
+    extract_primitives_and_domains,
+    normalize_text,
+)
 
 
 Converter = Callable[[str], tuple[str, tuple[str, ...]] | None]
@@ -366,19 +371,29 @@ _STAT_ID_PATTERNS: tuple[tuple[str, str, str], ...] = (
     (r"nova", "INCREASE_AREA_OR_SCOPE", "radial fan-out"),
     (r"trap|mine|summon|monster", "PROXY_EXECUTION", "proxy workers"),
     (r"curse|mark|doom|hex", "TARGET_SPECIFIC_MODIFIER", "target-specific modifier"),
-    (r"pierce|arrow", "EMIT_ADDITIONAL_CANDIDATES", "candidate trajectories"),
+    (r"arrow", "EMIT_ADDITIONAL_CANDIDATES", "candidate trajectories"),
     (r"show_|display_|visual_|icon|dummy", "RECORD_RECEIPT", "presentation annotation (non-mechanical)"),
+)
+
+
+_COMPILED_STAT_ID_PATTERNS: tuple[tuple[re.Pattern[str], str, str], ...] = tuple(
+    (re.compile(pattern), primitive, label)
+    for pattern, primitive, label in _STAT_ID_PATTERNS
+)
+_STAT_ID_CAPTURE_RE = re.compile(r"^([a-z0-9_+%]+):\s*(-?[\d.]+)$")
+_MECHANIC_FLAG_PREFIX_RE = re.compile(
+    r"^(is_|base_|can_|cannot_|skill_|always_|ignores_|spell_|melee_|console_)"
 )
 
 
 def _stat_id(line: str):
     """Convert untranslated internal stat-id lines by mechanic family."""
-    match = re.match(r"^([a-z0-9_+%]+):\s*(-?[\d.]+)$", line.strip())
+    match = _STAT_ID_CAPTURE_RE.match(line.strip())
     if not match:
         return None
     stat_id, value = match.group(1), match.group(2)
-    for pattern, primitive, label in _STAT_ID_PATTERNS:
-        if re.search(pattern, stat_id):
+    for pattern, primitive, label in _COMPILED_STAT_ID_PATTERNS:
+        if pattern.search(stat_id):
             sign = "+" if not value.startswith("-") else ""
             return (
                 f"internal stat `{stat_id}` → {sign}{value} modifier to {label}",
@@ -387,7 +402,7 @@ def _stat_id(line: str):
     # Boolean mechanic flags: preserve the flag verbatim without inventing
     # family semantics. This is a faithful structural translation, not an
     # equivalence claim.
-    if value in ("0", "1") and re.match(r"^(is_|base_|can_|cannot_|skill_|always_|ignores_|spell_|melee_|console_)", stat_id):
+    if value in ("0", "1") and _MECHANIC_FLAG_PREFIX_RE.match(stat_id):
         state = "ON" if value == "1" else "OFF"
         return (
             f"internal mechanic flag `{stat_id}` = {state} (flag preserved verbatim; family semantics not remapped)",
@@ -445,7 +460,6 @@ _CONVERTERS: tuple[Converter, ...] = (
     _charges,
     _damage_offense,
     _speed,
-    _charges,
     _ailment,
     _life_mana,
     _defense,
@@ -507,8 +521,7 @@ def translate_gem(gem: PoeGem) -> GemTranslation:
         line_pairs.append(LineTranslation(source_line, converted, confidence, status, primitives))
 
     all_parts = (gem.name, gem.description, *gem.tags, *source_lines, *converted_lines)
-    primitives = extract_primitives(all_parts)
-    domains = extract_domains(all_parts)
+    primitives, domains = extract_primitives_and_domains(all_parts)
     return GemTranslation(
         gem_id=gem.gem_id,
         poe_name=gem.name,

@@ -30,6 +30,25 @@ relationships:
 invariants:
   - energy flow must remain unidirectional through trophic levels
   - nutrient cycles must close
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The biogeochemical substrate
+    (soil chemistry, water cycle, atmospheric composition) is
+    consciousness; species behavior, population dynamics, and
+    visible ecosystem state are cognition (terminal output). The
+    substrate persists through mass extinctions while terminals
+    (species) come and go. Ecosystem = one substrate, many
+    terminals. Niche = system prompt determining species role.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Planetary geochemistry = server (L1);
+    climate and energy flow = rendering engine (L2); local
+    ecosystem state (biome, community composition) = client
+    cache (L3); individual organisms = avatars (L4). Volcanic
+    eruption / asteroid impact = hotfix (L1 write forcing L2-L4
+    re-render). Invasive species = unauthorized cache injection.
+    Ecological succession = cache rebuild after crash. Migration
+    = zoning (organisms loading new habitat instance). [DERIVED]
+    Cross-ref: client_server_reality.yaml
 failure_modes:
   - name: trophic_cascade
     medical_map: metastasis

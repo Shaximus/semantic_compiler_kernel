@@ -111,8 +111,12 @@ def resolve_mode(
         except KeyError:
             pass
 
-    # Auto-detection based on claim types
-    claim_type_names = [c.get("type", "") for c in packet.claim_types]
+    # Auto-detection based on claim types (supports both `claim_type` and `type` keys)
+    claim_type_names = [
+        str(c.get("claim_type") or c.get("type") or "")
+        for c in packet.claim_types
+        if isinstance(c, dict)
+    ]
 
     if "REALITY_ORIENTATION" in claim_type_names:
         return CompilerMode.REGULATED_REALITY_ORIENTATION
@@ -948,7 +952,8 @@ def build_qwen_sft_output(packet: SemanticPacket) -> dict[str, Any]:
         PrivacySensitivity.CRITICAL,
     )
     if redacted:
-        user_content = "Compile (redacted): " + raw
+        digest = packet.compute_input_hash()
+        user_content = f"Compile (redacted): input sha256={digest}"
     else:
         user_content = "Compile: '" + raw + "'"
 
@@ -1039,8 +1044,8 @@ def _finalize_packet(packet: SemanticPacket) -> None:
     from semantic_compiler.core.dataset import _classify_tier
 
     packet.dataset_tier = _classify_tier(packet)
-    packet.dataset_row = build_dataset_row(packet)
     packet.qwen_sft_output = build_qwen_sft_output(packet)
+    packet.dataset_row = build_dataset_row(packet)
     packet.audit = build_audit_record(packet)
     packet.mark_compilation_end()
 
@@ -1147,7 +1152,11 @@ def compile_semantic_packet(
     packet.function_translation = build_function_translation(packet, registry)
     packet.relationship_translation = build_relationship_translation(packet, registry)
     packet.failure_mode_translation = build_failure_mode_translation(packet, registry)
-    packet.fractal_mappings = map_fractal_similarity(packet, registry)
+    packet.fractal_mappings = map_fractal_similarity(
+        packet,
+        registry,
+        resolve_frames=(packet.mode == CompilerMode.FRACTAL_ISOMORPHISM_MAPPING),
+    )
 
     # ──────────────────────────────────────────────────────────
     # Stage 4.5: Populate Semantic IR from extracted data
@@ -1237,12 +1246,22 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     packet.scores = {**packet.scores, **score_packet(packet)}
     packet.decision = decide_packet(packet)
-    packet.route_to = packet.routing_packet.get("route_to", [])
+
+    # Refresh decision-dependent derivatives so routing_packet and translations
+    # reflect the final decision rather than the pre-decision PENDING state.
+    if packet.routing_packet:
+        packet.routing_packet = build_routing_packet(packet)
+        packet.route_to = list(packet.routing_packet.get("route_to", []))
+        packet.literal_translation = generate_literal_translation(packet)
+        packet.public_translation = generate_public_translation(packet)
+        packet.executive_translation = generate_executive_translation(packet)
+    else:
+        packet.route_to = packet.routing_packet.get("route_to", [])
 
     # ──────────────────────────────────────────────────────────
     # Stage 10: Learn and audit
     # ──────────────────────────────────────────────────────────
-    _finalize_packet(packet)
     packet.status = "compiled"
+    _finalize_packet(packet)
 
     return packet

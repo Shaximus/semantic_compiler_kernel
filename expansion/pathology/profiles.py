@@ -14,36 +14,64 @@ _STOPWORDS = frozenset(
 _GENERIC_WORDS = frozenset(
     "system systems data process processes service services component components "
     "model models structure function functions layer layers level levels unit units "
-    "state states type types kind kinds thing things part parts item items".split()
+    "state states type types kind kinds thing things part parts item items "
+    "client server cache protocol signal packet token frame block window mode "
+    "agent action value path policy rule check input output update request response".split()
 )
+
+_PATHOLOGY_MEDICAL_MAPS = frozenset({
+    "pathogen", "cancer", "autoimmune", "sepsis",
+    "inflammation", "metastasis", "acute", "chronic",
+})
+_HIGH_SIGNAL_SHORT_TOKENS = frozenset({"l1", "l2", "l3", "l4", "5g", "kl", "io"})
 
 CONFIDENCE_DIRECT = 0.75
 CONFIDENCE_CIRCUMSTANTIAL = 0.6
+_TOKEN_RE = re.compile(r"[a-z0-9]+")
 
 
 def _tokens(text: str) -> set[str]:
     """Meaningful lowercase tokens, excluding filler and generic structural words."""
-    words = re.findall(r"[a-z0-9]+", text.lower())
-    return {w for w in words if len(w) >= 3 and w not in _STOPWORDS and w not in _GENERIC_WORDS}
+    words = _TOKEN_RE.findall(text.lower())
+    return {
+        w
+        for w in words
+        if (len(w) >= 3 or w in _HIGH_SIGNAL_SHORT_TOKENS)
+        and w not in _STOPWORDS
+        and w not in _GENERIC_WORDS
+    }
 
 
 def detect_pathologies(system_model: dict, template: DomainTemplate) -> list[Pathology]:
     """Detect pathologies using direct indicators and lower-confidence token overlap."""
     detected: list[Pathology] = []
     components = system_model.get("components", [])
+    template_comp_names = {c.get("name") for c in template.components if c.get("name")}
     component_names = {c.get("name") for c in components if c.get("name")}
-    medical_maps = {c.get("medical_map") for c in components if c.get("medical_map")}
+    pathology_maps = {
+        c.get("medical_map")
+        for c in components
+        if c.get("medical_map") in _PATHOLOGY_MEDICAL_MAPS
+    }
 
     component_tokens: set[str] = set()
-    for value in component_names | medical_maps:
-        component_tokens |= _tokens(str(value))
+    for comp in components:
+        name = comp.get("name")
+        med = comp.get("medical_map")
+        is_healthy_template_comp = name in template_comp_names and med not in _PATHOLOGY_MEDICAL_MAPS
+        if name and not is_healthy_template_comp:
+            component_tokens |= _tokens(str(name))
+        if med and med in _PATHOLOGY_MEDICAL_MAPS:
+            component_tokens |= _tokens(str(med))
 
     for fm in template.failure_modes:
         indicators = set(fm.get("indicators", []))
-        direct = (component_names & indicators) | (medical_maps & {fm.get("medical_map")})
+        fm_med = fm.get("medical_map")
+        direct_med = pathology_maps & ({fm_med} if fm_med in _PATHOLOGY_MEDICAL_MAPS else set())
+        direct = (component_names & indicators) | direct_med
         fm_tokens = _tokens(" ".join([
             str(fm.get("name", "")),
-            str(fm.get("medical_map", "")),
+            str(fm_med or "") if fm_med in _PATHOLOGY_MEDICAL_MAPS else "",
             str(fm.get("description", "")),
             *(str(i) for i in indicators),
         ]))
@@ -58,7 +86,7 @@ def detect_pathologies(system_model: dict, template: DomainTemplate) -> list[Pat
                 confidence=CONFIDENCE_DIRECT if direct else CONFIDENCE_CIRCUMSTANTIAL,
                 evidence=[
                     f"matched indicators: {sorted(matched)}",
-                    "basis: " + ("direct (indicator or medical_map match)" if direct else "token overlap with failure-mode text"),
+                    "basis: " + ("direct (indicator or pathology medical_map match)" if direct else "token overlap with failure-mode text"),
                 ],
             ))
     return detected

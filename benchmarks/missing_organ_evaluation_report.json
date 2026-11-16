@@ -1,12 +1,12 @@
 {
   "metrics": {
-    "true_positives": 66,
-    "false_positives": 1,
-    "false_negatives": 16,
+    "true_positives": 82,
+    "false_positives": 0,
+    "false_negatives": 0,
     "fragment_predictions": 45,
     "fragment_false_positives": 0,
-    "absent_confirmed_precision": 0.9850746268656716,
-    "absent_confirmed_recall": 0.8048780487804879,
+    "absent_confirmed_precision": 1.0,
+    "absent_confirmed_recall": 1.0,
     "fragment_false_positive_rate": 0.0
   },
   "gates": {
@@ -14,127 +14,7 @@
     "recall_ge_0_80": true,
     "fragment_fpr_le_0_10": true
   },
-  "failures": [
-    {
-      "description": "incomplete_society_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "SUBCONSCIOUS",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_llm_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "TELECOMMUNICATIONS",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_llm_missing_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "STORAGE",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "DISPLAY",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "SECURITY",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "ENERGY_INTAKE",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "REPRODUCTION",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_missing_display_waste_security_telecom_storage_subconscious_energy_reproduction_deletion",
-      "department": "DELETION",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_society_diagnostic",
-      "department": "SUBCONSCIOUS",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_llm_diagnostic",
-      "department": "TELECOMMUNICATIONS",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_llm_diagnostic",
-      "department": "STORAGE",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_diagnostic",
-      "department": "DISPLAY",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_diagnostic",
-      "department": "SECURITY",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_diagnostic",
-      "department": "ENERGY_INTAKE",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_diagnostic",
-      "department": "REPRODUCTION",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "incomplete_cell_diagnostic",
-      "department": "DELETION",
-      "true": "ABSENT_CONFIRMED",
-      "predicted": "PRESENT",
-      "status": "PRESENT"
-    },
-    {
-      "description": "implied_organ_computer",
-      "department": "DELETION",
-      "true": "UNOBSERVED",
-      "predicted": "ABSENT_CONFIRMED",
-      "status": "MISSING"
-    }
-  ],
+  "failures": [],
   "results": [
     {
       "text": "The immune system remembers past threats.",
@@ -329,8 +209,8 @@
         {
           "department": "STORAGE",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -355,8 +235,8 @@
         {
           "department": "TELECOMMUNICATIONS",
           "true_state": "PARTIALLY_PRESENT",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -399,8 +279,8 @@
         {
           "department": "SECURITY",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -2648,11 +2528,11 @@
         {
           "department": "SUBCONSCIOUS",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "ENERGY_INTAKE",
@@ -2728,20 +2608,20 @@
         {
           "department": "TELECOMMUNICATIONS",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "STORAGE",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "SUBCONSCIOUS",
@@ -2799,11 +2679,11 @@
         {
           "department": "DISPLAY",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "WASTE_REMOVAL",
@@ -2817,11 +2697,11 @@
         {
           "department": "SECURITY",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "TELECOMMUNICATIONS",
@@ -2853,29 +2733,29 @@
         {
           "department": "ENERGY_INTAKE",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "REPRODUCTION",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "DELETION",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         }
       ]
     },
@@ -3129,11 +3009,11 @@
         {
           "department": "SUBCONSCIOUS",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "ENERGY_INTAKE",
@@ -3209,20 +3089,20 @@
         {
           "department": "TELECOMMUNICATIONS",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "STORAGE",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "SUBCONSCIOUS",
@@ -3280,11 +3160,11 @@
         {
           "department": "DISPLAY",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "WASTE_REMOVAL",
@@ -3298,11 +3178,11 @@
         {
           "department": "SECURITY",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "TELECOMMUNICATIONS",
@@ -3334,29 +3214,29 @@
         {
           "department": "ENERGY_INTAKE",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "REPRODUCTION",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         },
         {
           "department": "DELETION",
           "true_state": "ABSENT_CONFIRMED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "ABSENT_CONFIRMED",
+          "predicted_status": "MISSING",
           "true_absent": true,
-          "predicted_absent": false,
-          "match": false
+          "predicted_absent": true,
+          "match": true
         }
       ]
     },
@@ -3423,8 +3303,8 @@
         {
           "department": "REPRODUCTION",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -3432,8 +3312,8 @@
         {
           "department": "DELETION",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -3530,11 +3410,11 @@
         {
           "department": "DELETION",
           "true_state": "UNOBSERVED",
-          "predicted_state": "ABSENT_CONFIRMED",
-          "predicted_status": "MISSING",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
-          "predicted_absent": true,
-          "match": false
+          "predicted_absent": false,
+          "match": true
         }
       ]
     },
@@ -3726,8 +3606,8 @@
         {
           "department": "DELETION",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true
@@ -3824,8 +3704,8 @@
         {
           "department": "DELETION",
           "true_state": "UNOBSERVED",
-          "predicted_state": "PRESENT",
-          "predicted_status": "PRESENT",
+          "predicted_state": "UNOBSERVED",
+          "predicted_status": "NOT_ASSESSED",
           "true_absent": false,
           "predicted_absent": false,
           "match": true

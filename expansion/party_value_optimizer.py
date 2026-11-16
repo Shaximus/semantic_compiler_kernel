@@ -344,8 +344,8 @@ def rank_party_upgrades(
         evaluated,
         key=lambda result: (
             not result.feasible,
-            -(result.risk_adjusted_party_tps_per_cad or float("-inf")),
-            -(result.raw_party_tps_per_cad or float("-inf")),
+            -(result.risk_adjusted_party_tps_per_cad if result.risk_adjusted_party_tps_per_cad is not None else float("-inf")),
+            -(result.raw_party_tps_per_cad if result.raw_party_tps_per_cad is not None else float("-inf")),
             result.net_cost_cad,
             result.candidate.name,
         ),
@@ -495,8 +495,8 @@ def rank_party_loadouts(
         evaluated,
         key=lambda result: (
             not result.feasible,
-            -(result.risk_adjusted_throughput_per_cad or float("-inf")),
-            -(result.throughput_per_cad or float("-inf")),
+            -(result.risk_adjusted_throughput_per_cad if result.risk_adjusted_throughput_per_cad is not None else float("-inf")),
+            -(result.throughput_per_cad if result.throughput_per_cad is not None else float("-inf")),
             result.candidate.total_landed_cost_cad,
             result.candidate.name,
         ),

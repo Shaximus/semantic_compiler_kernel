@@ -21,10 +21,13 @@ def test_biology_to_computation_reconstruction():
     assert any(c["medical_map"] == "immune_boundary" for c in model["components"])
 
 
-def test_corporate_to_biology_reconstruction():
+def test_biology_to_corporate_reconstruction():
+    # Same direction as the firewall test above: the subject (X in "X is like Y")
+    # is the target system, and the biological mapping carries across onto it.
     packet = SemanticPacket(
         raw_input="A corporate legal department is like an immune system"
     )
     model = decompress(packet)
-    assert model["domain"] == "biology"
-    assert any(c["medical_map"] == "immune_system" for c in model["components"])
+    assert model["domain"] == "corporate"
+    legal = next(c for c in model["components"] if c["name"] == "legal_compliance")
+    assert legal["medical_map"] == "immune_system"

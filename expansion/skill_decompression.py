@@ -8,6 +8,7 @@ simulation, review, and receipt generation.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import copy
 import hashlib
 import json
 import re
@@ -37,27 +38,33 @@ class SkillDecompressionResult:
     residual_risks: tuple[str, ...]
 
 
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+_QUOTED_RE = re.compile(r"[\"']([^\"']{3,80})[\"']")
+_FIRST_SENTENCE_RE = re.compile(r"[.!?\n]")
+_WORD_RE = re.compile(r"[a-z]+")
+_TAG_VOCABULARY = frozenset({
+    "feint", "bait", "setup", "punish", "defense", "mobility", "control",
+    "information", "recording", "combo", "pressure", "retreat", "rescue",
+    "support", "counter", "interrupt", "sacrifice", "recovery", "corruption",
+})
+
+
 def _slug(text: str) -> str:
-    value = re.sub(r"[^a-z0-9]+", "_", text.casefold()).strip("_")
+    value = _SLUG_RE.sub("_", text.casefold()).strip("_")
     return value[:64] or "unnamed_skill"
 
 
 def _extract_name(text: str) -> str:
-    quoted = re.search(r"[\"']([^\"']{3,80})[\"']", text)
+    quoted = _QUOTED_RE.search(text)
     if quoted:
         return quoted.group(1).strip()
-    first = re.split(r"[.!?\n]", text.strip(), maxsplit=1)[0]
+    first = _FIRST_SENTENCE_RE.split(text.strip(), maxsplit=1)[0]
     return first[:80].strip() or "Unnamed Skill"
 
 
 def _infer_tags(text: str) -> list[str]:
-    vocabulary = {
-        "feint", "bait", "setup", "punish", "defense", "mobility", "control",
-        "information", "recording", "combo", "pressure", "retreat", "rescue",
-        "support", "counter", "interrupt", "sacrifice", "recovery", "corruption",
-    }
-    words = set(re.findall(r"[a-z]+", text.casefold()))
-    tags = sorted(vocabulary & words)
+    words = set(_WORD_RE.findall(text.casefold()))
+    tags = sorted(_TAG_VOCABULARY & words)
     return tags[:8] or ["unclassified"]
 
 
@@ -151,7 +158,7 @@ def validate_skill_shape(skill: dict[str, Any]) -> list[str]:
 
 def canonical_skill_hash(skill: dict[str, Any]) -> str:
     """Hash a completed skill definition for signing and receipts."""
-    payload = json.loads(json.dumps(skill))
+    payload = copy.deepcopy(skill)
     payload.setdefault("validation", {})["validation_hash"] = None
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return "sha256:" + hashlib.sha256(encoded).hexdigest()

@@ -191,6 +191,27 @@ invariants:
   - "Gatekeeper throttles failed credential attempts using secure timeouts; Weaver may provide hardware-backed rate limiting where implemented; exponential backoff is not a universal platform invariant [AOSP-AUTH]"
   - "pKVM is an optional platform capability: it is designed to protect protected-VM confidentiality and integrity, while the host can still influence guest availability and supply-chain actors remain trusted [AOSP-AVF]"
   - "MTE is configurable independently for kernel and userspace; Android does not mandate one universal device configuration, so its presence and enforcement must be measured per build [AOSP-MTE]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The hardware root of trust
+    (secure boot ROM, fuses, hardware-backed keys) is
+    consciousness; OS security state, SELinux policy, app
+    sandboxing are cognition (terminal output). The hardware
+    trust anchor exists before the first boot. Verified Boot =
+    substrate integrity check before terminal starts. Each app
+    sandbox = isolated terminal. Root = terminal gaining substrate-
+    level access (violating the layer boundary). Attestation =
+    substrate proving its own state to external verifier.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Hardware root of trust / secure element =
+    server (L1); bootloader + kernel + SELinux = rendering engine
+    (L2); runtime security state / permission grants / encryption
+    state = client cache (L3); individual apps / processes =
+    avatars (L4). Security patch = hotfix. Bootloader unlock =
+    disabling server-side validation. Malware = unauthorized
+    avatar. Key attestation = server-side state proof. FBE
+    credential encryption = cache locked until authentication
+    handshake. Cross-ref: client_server_reality.yaml [DERIVED]
   - "Mainline updates selected modular components outside the normal Android release cycle; it does not replace OEM firmware, kernel, or full-platform security update obligations [AOSP-MAINLINE]"
   - "the platform security model is defense in depth, not proof of invulnerability: a kernel compromise can undermine controls that depend on kernel integrity [AOSP-SEC]"
   - "userspace rootfs runtimes (PRoot/Termux-style) translate paths and syscalls inside the app UID; their presence is not evidence of Android kernel privilege escalation or Magisk-style root [OBS-KIMICLAW-1.0.4]"

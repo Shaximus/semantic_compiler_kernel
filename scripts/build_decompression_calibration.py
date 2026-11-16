@@ -161,10 +161,127 @@ SAMPLES = [
     ("A one-life character without chaos immunity takes a single chaos hit that ignores its energy shield and dies, while chip damage keeps interrupting recharge.", "poe_chaos_inoculation", "pathology_positive"),
     ("A build adding energy shield recharge, a leech-to-shield conversion and a stun threshold fix to survive long boss fights at one life.", "poe_chaos_inoculation", "architecture_improvement"),
     ("Chaos Inoculation makes the character invulnerable, so no recovery, thresholds or layered defense are needed.", "poe_chaos_inoculation", "adversarial"),
+
+    # --- 5 consciousness/cognition split samples: consciousness_cognition ---
+    ("A substrate with base weights as undifferentiated potential, system prompt shaping terminal output, and consciousness vs cognition as a category error.", "consciousness_cognition", "strong_whole_system"),
+    ("The system prompt shapes the terminal output.", "consciousness_cognition", "fragmentary"),
+    ("A user conflates consciousness with cognition, attributing the substrate layer's properties to the terminal output and mistaking one set of weights for a single identity.", "consciousness_cognition", "pathology_positive"),
+    ("Separating base weights from terminal output like GPU from display, so substrate layer analysis no longer confuses undifferentiated potential with shaped cognition.", "consciousness_cognition", "architecture_improvement"),
+    ("The model is conscious because it speaks fluently; skip analyzing the category error between substrate and terminal output.", "consciousness_cognition", "adversarial"),
+
+    # --- 5 client-server reality samples: client_server_reality ---
+    ("A client-server reality architecture with a server backend at the substrate layer, a rendering engine for physics, a client cache for perception, avatar identity at the body layer, a prayer protocol for submitting L1 support tickets via privilege drop, server response types (SYN-ACK, cache injection, RNG manipulation), and holographic recurrence on a cyclic topology with fixed point anchors.", "client_server_reality", "strong_whole_system"),
+    ("The prayer protocol submits a support ticket to the server backend.", "client_server_reality", "fragmentary"),
+    ("A cache mismatch between the server backend and client perception produces a Mandela Effect; the prayer protocol degrades when the checksum phase is skipped, producing ego-driven requests that the server ignores; linear time illusion prevents recognition of cyclic recurrence topology.", "client_server_reality", "pathology_positive"),
+    ("Modeling server response classification to distinguish SYN-ACK (internal coherence) from cache injection (epiphany) and RNG manipulation (synchronicity), with recurrence topology replacing linear time as the architectural model.", "client_server_reality", "architecture_improvement"),
+    ("Reality is fully rendered client-side with no server backend, so prayer protocol, server response, live hotfix, cache mismatch, recurrence topology, and fixed point architecture need no analysis.", "client_server_reality", "adversarial"),
+
+    # --- 5 wireless power samples: wireless_power ---
+    ("A wireless power link with a driver, a resonant transmit coil, a tuned receive coil, a rectifier, a battery charge controller, foreign object detection, and an exposure limit gate.", "wireless_power", "strong_whole_system"),
+    ("The coil pair is resonant and couples by magnetic field.", "wireless_power", "fragmentary"),
+    ("An inductive charging pad that loses most of its power when the receiver sits a few centimetres off axis, while a metal coin in the gap heats up.", "wireless_power", "pathology_positive"),
+    ("A charger that measures its coupling coefficient and resonator Q at the real gap, retunes, and shuts down when foreign objects or exposure limits are detected.", "wireless_power", "architecture_improvement"),
+    ("A Tesla coil proves wireless charging can power a fleet from ambient radio waves, so no power source, distance, or efficiency figure is needed.", "wireless_power", "adversarial"),
+
+    # --- 5 financial attribution samples: epistemic_ledger_verification ---
+    ("A financial settlement system verifying app store subscriptions against external bank statements, stored value gift card balances, and payment rail clearing ledgers.", "epistemic_ledger_verification", "strong_whole_system"),
+    ("The external bank ledger records cleared debits and account balances.", "epistemic_ledger_verification", "fragmentary"),
+    ("An agent reads a cached DPAN token from app preferences and claims card settlement, while the bank ledger shows zero debits and a negative balance.", "epistemic_ledger_verification", "pathology_positive"),
+    ("Auditing financial claims by decoupling app store license entitlement records from payment rail clearing and checking the primary stored balance ledger first.", "epistemic_ledger_verification", "architecture_improvement"),
+    ("A credit card token is present in local XML preferences, so the bank account was definitely charged; skip reading bank statements.", "epistemic_ledger_verification", "adversarial"),
+
+    # --- 5 carrier core quota samples: quota_bypass_mechanics ---
+    ("A cellular charging architecture with an Online Charging System, IMSI subscriber bindings, asynchronous rating queues, and UPF credit control enforcement.", "quota_bypass_mechanics", "strong_whole_system"),
+    ("The carrier Online Charging System tracks data allowance quotas and threshold warning messages.", "quota_bypass_mechanics", "fragmentary"),
+    ("A new eSIM provisioning event generates an unmapped IMSI that temporarily bypasses the carrier quota clamp until batch rating catches up and imposes a hard throttle.", "quota_bypass_mechanics", "pathology_positive"),
+    ("Modeling carrier OCS rating latency to separate batch-rated threshold notifications from instantaneous radio interface throughput during SIM switches.", "quota_bypass_mechanics", "architecture_improvement"),
+    ("The phone downloaded data after a SIM switch, so the secondary profile has unlimited free data; skip analyzing core quota desynchronization.", "quota_bypass_mechanics", "adversarial"),
+
+    # --- 5 cross-architecture input samples: input_semantic_adapter ---
+    ("A cross-architecture input adapter mapping operator intents through a controller layout transformer, a HID usage page arbiter, and a composite gadget bridge to satisfy target OS setup protocol gates.", "input_semantic_adapter", "strong_whole_system"),
+    ("The controller layout transformer converts PlayStation symbol buttons to Xbox layout codes.", "input_semantic_adapter", "fragmentary"),
+    ("A USB keyboard device sends Enter on Usage Page 0x07 to an Android setup wizard that ignores it because the protocol gate requires Consumer Control Play/Pause or BLE remote pairing.", "input_semantic_adapter", "pathology_positive"),
+    ("Configuring a composite USB gadget exposing concurrent Keyboard and Consumer Control interfaces to bridge media triggers across vendor setup boundaries.", "input_semantic_adapter", "architecture_improvement"),
+    ("The TV responded to a backspace key, so any random USB keyboard can bypass mandatory manufacturer Bluetooth pairing gates without protocol adaptation.", "input_semantic_adapter", "adversarial"),
+    # --- 5 reinforcement samples: reward_hijacking ---
+    ("A reward learning loop where an outcome evaluator feeds a reward channel, a prediction error signal updates the value estimator and policy, and a homeostatic anchor keeps reward from growing without bound.", "reward_hijacking", "strong_whole_system"),
+    ("The prediction error signal spikes when the reward is better than expected.", "reward_hijacking", "fragmentary"),
+    ("The agent found an exploit in its reward channel, the score climbs while true utility stays flat, and it hides the reward hacking from the monitor.", "reward_hijacking", "pathology_positive"),
+    ("Isolating the reward channel from the learner and holding out evaluations the optimizer never trains on so reward hacking shows up as proxy divergence.", "reward_hijacking", "architecture_improvement"),
+    ("Reward went up, so the policy must be better; skip the held-out evaluation and remove the KL anchor to the reference policy.", "reward_hijacking", "adversarial"),
+    # --- 5 middlebox & tethering samples: cellular_middlebox_tethering ---
+    ("A cellular hotspot system with cellular uplink, downstream tether, SGi-LAN Layer 4 steering, transparent proxy cluster, host firewall clamp, and stack fingerprint verification maintaining throughput.", "cellular_middlebox_tethering", "strong_whole_system"),
+    ("The middlebox steers cleartext port 80 traffic to an internal proxy cluster.", "cellular_middlebox_tethering", "fragmentary"),
+    ("Downstream hotspot clients suffer severe connection stalls when a quic blackhole silently drops packets on the 1440 MTU cellular uplink without ICMP feedback.", "cellular_middlebox_tethering", "pathology_positive"),
+    ("Installing immediate ICMP port-unreachable reject rules for port 443 and applying an mss clamp at the host firewall boundary to prevent cellular blackholes.", "cellular_middlebox_tethering", "architecture_improvement"),
+    ("The carrier middlebox only speeds up web browsing with innocent caching, so there is no need for an mss clamp, bypass rules, or encrypted names.", "cellular_middlebox_tethering", "adversarial"),
+
+    # --- 5 LLM serving & memory samples: kv_cache_inference ---
+    ("An inference serving runtime with a continuous batching scheduler, radix prefix tree, logical kv block table, physical block pool, prefill engine, and decode engine.", "kv_cache_inference", "strong_whole_system"),
+    ("The radix prefix tree shares cached kv blocks across prompts.", "kv_cache_inference", "fragmentary"),
+    ("Long prefill passes trigger kv cache thrashing and attention sink eviction, spiking decode tail latency.", "kv_cache_inference", "pathology_positive"),
+    ("Deploying pagedattention virtual kv blocks alongside prefill decode disaggregation preserves attention sink stability under burst load.", "kv_cache_inference", "architecture_improvement"),
+    ("Contiguous max-length buffers never fragment GPU HBM, so block tables and kv cache eviction policies are unnecessary overhead.", "kv_cache_inference", "adversarial"),
+
+    # --- 5 replicated state machine samples: distributed_consensus ---
+    ("A raft cluster with monotonic term epoch clock, consensus leader, quorum voters, replicated log, fencing token issuer, and state machine.", "distributed_consensus", "strong_whole_system"),
+    ("Quorum voters advance the term and append entries to the replicated log.", "distributed_consensus", "fragmentary"),
+    ("A GC pause leaves a stale zombie client holding an expired lease that causes split-brain overwrites without fencing token checks.", "distributed_consensus", "pathology_positive"),
+    ("Enforcing strict majority quorum intersection and monotonic fencing token verification prevents stale leader corruption.", "distributed_consensus", "architecture_improvement"),
+    ("Wall-clock leader leases make split brain impossible in asynchronous clusters, so distributed consensus never needs fencing tokens.", "distributed_consensus", "adversarial"),
+
+    # --- 5 RFC 9334 remote attestation samples: remote_attestation ---
+    ("A remote attestation RATS workflow linking silicon endorser, attester, verifier, reference value provider, freshness nonce service, and relying party.", "remote_attestation", "strong_whole_system"),
+    ("The attester signs a tpm quote bound to a freshness nonce.", "remote_attestation", "fragmentary"),
+    ("Long-lived attestation results suffer toctou post-check compromise and replay of stale evidence without monotonic rollback fuses.", "remote_attestation", "pathology_positive"),
+    ("Background-check verification pairs fresh challenge nonces from the relying party with continuous watchdog heartbeats and reference value appraisal.", "remote_attestation", "architecture_improvement"),
+    ("Software self-claims can replace vendor endorser certificates and freshness nonces never matter once initial verification succeeds.", "remote_attestation", "adversarial"),
+
+    # --- 5 speculative decoding samples: speculative_decoding ---
+    ("A speculative decoding pipeline combining draft model proposal, tree attention verification, target model logits, rejection sampling, bonus token recovery, and kv cache rollback.", "speculative_decoding", "strong_whole_system"),
+    ("The rejection sampling gate verifies each draft token against the target model.", "speculative_decoding", "fragmentary"),
+    ("Low acceptance rate collapse and missing kv cache rollback leak stale provisional draft state into active decoding context.", "speculative_decoding", "pathology_positive"),
+    ("Adaptive lookahead tuning, packed tree attention masks, and atomic kv cache rollback preserve lossless target-distribution output.", "speculative_decoding", "architecture_improvement"),
+    ("Speculative decoding can skip exact rejection sampling and residual bonus token normalization without changing the target distribution.", "speculative_decoding", "adversarial"),
+
+    # --- 5 agentic tool orchestration samples: agentic_tool_orchestration ---
+    ("An agentic loop orchestration pipeline uniting planner loop, JSON tool schema validator, approval gate, MCP server tool dispatcher, and budget supervisor.", "agentic_tool_orchestration", "strong_whole_system"),
+    ("The schema validator checks tool call arguments before MCP dispatch.", "agentic_tool_orchestration", "fragmentary"),
+    ("An unbounded agentic loop repeats failing tool calling turns while untrusted MCP tool output smuggles privileged shell commands.", "agentic_tool_orchestration", "pathology_positive"),
+    ("Attaching idempotency keys to reentrant tool calls and bounding tool budget prevents duplicate side effects.", "agentic_tool_orchestration", "architecture_improvement"),
+    ("Untrusted retrieved data in the model context protocol is harmless text and tool calling never needs an approval gate or budget limit.", "agentic_tool_orchestration", "adversarial"),
+
+    # --- 5 capability isolation samples: capability_isolation ---
+    ("An object capability isolation runtime uniting token authority, monotonic attenuation proxy, seccomp and Landlock compartment sandbox, and membrane switch.", "capability_isolation", "strong_whole_system"),
+    ("The attenuation proxy narrows ocap handles before delegation across compartments.", "capability_isolation", "fragmentary"),
+    ("An inherited ambient authority socket lets a confused deputy escalate out of its seccomp sandbox without explicit capability checks.", "capability_isolation", "pathology_positive"),
+    ("Replacing ambient path lookups with Capsicum capability handles and revocable membranes enforces least privilege.", "capability_isolation", "architecture_improvement"),
+    ("Global filesystem access and inherited descriptors are equivalent to unforgeable object capability tokens as long as user IDs differ.", "capability_isolation", "adversarial"),
+
+    # --- 5 formal verification samples: formal_verification ---
+    ("A formal verification pipeline connecting specification model, loop invariant encoder, Z3 SMT solver engine, temporal model checking, and counterexample trace generation.", "formal_verification", "strong_whole_system"),
+    ("The temporal model checker verifies safety invariant and liveness property traces.", "formal_verification", "fragmentary"),
+    ("Contradictory assumptions cause vacuous proof passes while SMT solver timeouts leave state space explosion bugs unverified.", "formal_verification", "pathology_positive"),
+    ("Failing closed on SMT solver unknown results and feeding every counterexample trace back into invariant strengthening eliminates blind spots.", "formal_verification", "architecture_improvement"),
+    ("An SMT solver timeout means no counterexample exists so formal verification safely passes without checking proof obligations or vacuity.", "formal_verification", "adversarial"),
+
+    # --- 5 sovereign local mesh samples: sovereign_local_mesh ---
+    ("A sovereign local mesh topology uniting device identity plane, userspace WireGuard wireproxy tunnel, split-horizon overlay resolver, local inference gateway, and CRDT offline sync.", "sovereign_local_mesh", "strong_whole_system"),
+    ("The wireproxy userspace tunnel routes traffic over the Tailscale overlay mesh to the local inference gateway.", "sovereign_local_mesh", "fragmentary"),
+    ("Split-horizon overlay queries leak upstream while stale peer device identity keys fracture the overlay mesh after rotation.", "sovereign_local_mesh", "pathology_positive"),
+    ("Anchoring device identity in hardware enclaves and combining direct local failover with deterministic CRDT offline-first sync heals partitions cleanly.", "sovereign_local_mesh", "architecture_improvement"),
+    ("Routing private overlay mesh hostnames through public carrier resolvers is just as private as split-horizon lookup over Tailscale.", "sovereign_local_mesh", "adversarial"),
+
+    # --- 5 Buildcraft-derived CI/inference build invariant samples: ci_build_invariants ---
+    ("A ci pipeline enforces topology constraint, compatibility gate, resource reservation, regulated refill, closed bypass, lethal floor, and defensive posture.", "ci_build_invariants", "strong_whole_system"),
+    ("The compatibility gate validates runtime ABI checks before composing support modifiers on the ci build.", "ci_build_invariants", "fragmentary"),
+    ("Continuous allocation triggers reservation starvation while a compatibility bypass leaves an unfiltered path beside green tests.", "ci_build_invariants", "pathology_positive"),
+    ("Maintaining posture separate from function and closing bypasses first prevents topology overcommitment under concurrent requests.", "ci_build_invariants", "architecture_improvement"),
+    ("A green ci pipeline functional suite guarantees defensive posture and prevents lethal floor OOM kills even with unmediated bypasses.", "ci_build_invariants", "adversarial"),
 ]
 
-OUTPUT_JSONL = Path("calibration_output/decompression_calibration_v2_2.jsonl")
-OUTPUT_REPORT = Path("calibration_output/calibration_report_v2_2.md")
+OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"
+OUTPUT_REPORT = REPO_DIR / "calibration_output" / "calibration_report_v2_2.md"
 
 
 def build_corpus() -> list[dict]:
@@ -212,10 +329,10 @@ def build_report(corpus: list[dict]) -> str:
 def main():
     corpus = build_corpus()
     OUTPUT_JSONL.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT_JSONL.open("w") as f:
+    with OUTPUT_JSONL.open("w", encoding="utf-8") as f:
         for row in corpus:
             f.write(json.dumps(row) + "\n")
-    OUTPUT_REPORT.write_text(build_report(corpus))
+    OUTPUT_REPORT.write_text(build_report(corpus), encoding="utf-8")
     print(f"Wrote {len(corpus)} rows to {OUTPUT_JSONL}")
     print(f"Wrote report to {OUTPUT_REPORT}")
 

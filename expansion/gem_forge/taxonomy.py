@@ -230,11 +230,23 @@ _DOMAIN_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
 )
 
 
+_NON_ALLOWED_RE = re.compile(r"[^a-z0-9+%.'/_ -]+")
+_WHITESPACE_RE = re.compile(r"\s+")
+
+
 def normalize_text(parts: Iterable[str]) -> str:
     text = " ".join(str(part) for part in parts if part)
     text = text.casefold().replace("’", "'")
-    text = re.sub(r"[^a-z0-9+%.'/_ -]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
+    text = _NON_ALLOWED_RE.sub(" ", text)
+    return _WHITESPACE_RE.sub(" ", text).strip()
+
+
+def extract_primitives_and_domains(parts: Iterable[str]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Extract both inference primitives and domains in a single normalization pass."""
+    text = normalize_text(parts)
+    primitives = tuple(name for name, phrases in _RULES if any(phrase in text for phrase in phrases))
+    domains = tuple(name for name, phrases in _DOMAIN_RULES if any(phrase in text for phrase in phrases))
+    return primitives, domains
 
 
 def extract_primitives(parts: Iterable[str]) -> tuple[str, ...]:

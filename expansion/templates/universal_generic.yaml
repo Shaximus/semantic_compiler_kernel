@@ -26,6 +26,18 @@ relationships:
     type: regulates
 invariants:
   - boundary must not be bypassed without control approval
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: In any generic system, the
+    substrate (that which persists across reconfigurations) is
+    consciousness; the current operational state and outputs are
+    cognition (terminal output). This is the universal form of
+    the split. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Authoritative state = server (L1);
+    processing / enforcement infrastructure = rendering engine
+    (L2); local / cached state = client cache (L3); individual
+    operations / actors = avatars (L4). This is the universal
+    form of the four-layer stack. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: boundary_breach
     medical_map: pathogen

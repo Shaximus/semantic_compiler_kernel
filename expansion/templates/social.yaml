@@ -30,6 +30,21 @@ relationships:
 invariants:
   - trust must be repairable after violation
   - norms must allow legitimate dissent
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: Shared cultural substrate
+    (language, deep norms, collective memory) is consciousness;
+    individual social behavior is cognition (terminal output).
+    One cultural substrate → many individuals (multiplexing).
+    Upbringing/education is the system prompt. Cultural water you
+    swim in = substrate you cannot perceive from the terminal.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Deep cultural substrate = server (L1);
+    institutions/norms = rendering engine (L2); individual
+    perception of society = client cache (L3); social role =
+    avatar (L4). Paradigm shifts = server hotfixes. Cultural
+    lag = cache mismatch. Conformity without questioning =
+    NPC mode. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: polarization
     medical_map: autoimmune

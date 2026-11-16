@@ -19,14 +19,13 @@ from typing import Any
 # anthropomorphic causation.
 _ANTHROPOMORPHIC_FEELING_WORDS: set[str] = {
     "want", "wants", "wanted", "wanting",
-    "need", "needs", "needed", "needing",
     "feel", "feels", "felt", "feeling", "feelings",
     "love", "loves", "loved", "loving",
     "hate", "hates", "hated", "hating",
     "angry", "anger", "mad", "sad", "happy", "upset", "mood",
     "desire", "desires", "desired", "desiring",
     "intend", "intends", "intended", "intending",
-    "will", "willed", "willing", "lazy",
+    "willed", "lazy",
     "loyal", "loyalty", "loyalties",
     "believe", "believes", "believed", "believing", "belief", "beliefs",
 }
@@ -38,22 +37,49 @@ _FALSE_MECHANISM_WORDS: set[str] = {
 
 # Pseudo-scientific or unsupported causal terms.
 _PSEUDOSCIENCE_WORDS: set[str] = {
-    "homeopathy", "crystal", "crystals", "vibes", "energy healing",
+    "homeopathy", "vibes", "energy healing",
     "water remembers", "memory of water",
+    "crystal healing", "healing crystal", "healing crystals",
 }
 
 # Phrases that identify a literal causal claim rather than mere personification.
-_LITERAL_CAUSAL_TRIGGERS: set[str] = {
-    "because", "causes", "caused", "cause", "makes", "made",
-    "explains", "explained", "due to", "owing to", "results from",
-    "so", "therefore", "thus", "hence",
-}
+_LITERAL_CAUSAL_TRIGGERS: tuple[str, ...] = (
+    "results from", "owing to", "due to",
+    "therefore", "explained", "explains",
+    "because", "causes", "caused", "cause",
+    "makes", "made", "hence", "thus", "so",
+)
+
+_CAUSAL_TRIGGER_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(t) for t in _LITERAL_CAUSAL_TRIGGERS) + r")\b",
+    re.IGNORECASE,
+)
 
 # Phrases that indicate an identity claim confusing analogy with identity.
 _IDENTITY_MARKERS: set[str] = {
     "is literally", "is actually", "is exactly", "is nothing but",
     "is the same as", "is identical to",
 }
+
+_IDENTITY_MARKER_RE = re.compile(
+    r"\b(?<!not\s)(?<!never\s)(?:" + "|".join(re.escape(m) for m in _IDENTITY_MARKERS) + r")\b",
+    re.IGNORECASE,
+)
+
+_PROTECTED_COLLOCATIONS_RE = re.compile(
+    r"\b(?:"
+    r"nervous\s+system|nervous\s+tissue|central\s+nervous|peripheral\s+nervous|"
+    r"excited\s+states?|lazy\s+evaluation|lazy\s+loading|lazy\s+initialization"
+    r")\b",
+    re.IGNORECASE,
+)
+
+_PSEUDOSCIENCE_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(w) for w in _PSEUDOSCIENCE_WORDS) +
+    r"|crystals?\s+(?:heal|healing|energy|align|chakra|aura|therapy)"
+    r")\b",
+    re.IGNORECASE,
+)
 
 # Rhetorical state-of-being markers for personification.
 _PERSONIFICATION_STATE_WORDS: set[str] = {
@@ -100,18 +126,23 @@ def _tokens(text: str) -> set[str]:
     return set(re.findall(r"[a-z][a-z0-9\-]*", text.lower()))
 
 
+def _scrub_protected(text: str) -> str:
+    return _PROTECTED_COLLOCATIONS_RE.sub(" ", text or "")
+
+
 def _contains_any(text: str, words: set[str]) -> bool:
-    return bool(_tokens(text) & words)
+    return bool(_tokens(_scrub_protected(text)) & words)
 
 
 def _has_literal_causal_trigger(text: str) -> bool:
-    lower = _lower_text(text)
-    return any(trigger in lower for trigger in _LITERAL_CAUSAL_TRIGGERS)
+    return bool(_CAUSAL_TRIGGER_RE.search(text or ""))
 
 
 def _has_identity_marker(text: str) -> bool:
     lower = _lower_text(text)
-    return any(marker in lower for marker in _IDENTITY_MARKERS)
+    if re.search(r"\b(?:not|never|n't)\s+(?:literally|actually|exactly|nothing\s+but|the\s+same\s+as|identical\s+to)\b", lower):
+        return False
+    return bool(_IDENTITY_MARKER_RE.search(lower))
 
 
 def _repair_object(
@@ -136,37 +167,33 @@ def _repair_object(
 
 
 def _detect_anthropomorphic_causation(text: str, claim_id: str = "claim-0") -> dict[str, Any] | None:
-    if not _has_literal_causal_trigger(text):
+    match = _CAUSAL_TRIGGER_RE.search(text or "")
+    if not match:
         return None
     if not _contains_any(text, _ANTHROPOMORPHIC_FEELING_WORDS):
         return None
 
-    lower = _lower_text(text)
-    for trigger in _LITERAL_CAUSAL_TRIGGERS:
-        idx = lower.find(trigger)
-        if idx == -1:
-            continue
-        invalid_component = text[idx:].strip(" .,;:")
-        preserved_component = text[:idx].strip(" .,;:")
-        if not preserved_component:
-            preserved_component = "the structural description preceding the causal claim"
-        corrected = (
-            f"{preserved_component}; the causal attribution to feelings, desire, or mood "
-            "is unsupported and should be replaced by a mechanism-level explanation."
-        )
-        return _repair_object(
-            claim_id=claim_id,
-            error_class="ANTHROPOMORPHIC_CAUSATION",
-            invalid_component=invalid_component,
-            preserved_component=preserved_component,
-            corrected_claim=corrected,
-            explanation=(
-                "Non-mental systems do not have desires, feelings, moods, or intentions. "
-                "A valid causal explanation must reference a mechanism, not a mental state."
-            ),
-            confidence=0.92,
-        )
-    return None
+    idx = match.start()
+    invalid_component = text[idx:].strip(" .,;:")
+    preserved_component = text[:idx].strip(" .,;:")
+    if not preserved_component:
+        preserved_component = "the structural description preceding the causal claim"
+    corrected = (
+        f"{preserved_component}; the causal attribution to feelings, desire, or mood "
+        "is unsupported and should be replaced by a mechanism-level explanation."
+    )
+    return _repair_object(
+        claim_id=claim_id,
+        error_class="ANTHROPOMORPHIC_CAUSATION",
+        invalid_component=invalid_component,
+        preserved_component=preserved_component,
+        corrected_claim=corrected,
+        explanation=(
+            "Non-mental systems do not have desires, feelings, moods, or intentions. "
+            "A valid causal explanation must reference a mechanism, not a mental state."
+        ),
+        confidence=0.92,
+    )
 
 
 def _detect_false_physical_mechanism(text: str, claim_id: str = "claim-0") -> dict[str, Any] | None:
@@ -174,47 +201,39 @@ def _detect_false_physical_mechanism(text: str, claim_id: str = "claim-0") -> di
         return None
     if not ("orbit" in _lower_text(text) or "moon" in _lower_text(text)):
         return None
-    if not _has_literal_causal_trigger(text):
+    match = _CAUSAL_TRIGGER_RE.search(text or "")
+    if not match:
         return None
 
-    lower = _lower_text(text)
-    for trigger in _LITERAL_CAUSAL_TRIGGERS:
-        idx = lower.find(trigger)
-        if idx == -1:
-            continue
-        invalid_component = text[idx:].strip(" .,;:")
-        preserved_component = text[:idx].strip(" .,;:")
-        if not preserved_component:
-            preserved_component = "The Moon remains in orbit"
-        corrected = (
-            f"{preserved_component} due to gravitational attraction and orbital inertia, "
-            "not magnetism."
-        )
-        return _repair_object(
-            claim_id=claim_id,
-            error_class="PHYSICAL_CATEGORY_ERROR",
-            invalid_component=invalid_component,
-            preserved_component=preserved_component,
-            corrected_claim=corrected,
-            explanation=(
-                "Magnetic attraction is not the dominant force governing orbital motion. "
-                "Large-scale celestial orbits are governed by gravity and inertia."
-            ),
-            confidence=0.96,
-        )
-    return None
+    idx = match.start()
+    invalid_component = text[idx:].strip(" .,;:")
+    preserved_component = text[:idx].strip(" .,;:")
+    if not preserved_component:
+        preserved_component = "The Moon remains in orbit"
+    corrected = (
+        f"{preserved_component} due to gravitational attraction and orbital inertia, "
+        "not magnetism."
+    )
+    return _repair_object(
+        claim_id=claim_id,
+        error_class="PHYSICAL_CATEGORY_ERROR",
+        invalid_component=invalid_component,
+        preserved_component=preserved_component,
+        corrected_claim=corrected,
+        explanation=(
+            "Magnetic attraction is not the dominant force governing orbital motion. "
+            "Large-scale celestial orbits are governed by gravity and inertia."
+        ),
+        confidence=0.96,
+    )
 
 
 def _detect_false_mechanism(text: str, claim_id: str = "claim-0") -> dict[str, Any] | None:
     """Catch pseudo-scientific mechanisms such as water memory or crystal healing."""
-    lower = _lower_text(text)
-    matched_term = None
-    for term in _PSEUDOSCIENCE_WORDS:
-        if term in lower:
-            matched_term = term
-            break
-    if not matched_term:
+    match = _PSEUDOSCIENCE_RE.search(text or "")
+    if not match:
         return None
+    matched_term = match.group(0).lower()
 
     corrected = (
         "The claim relies on an unsupported mechanism. "

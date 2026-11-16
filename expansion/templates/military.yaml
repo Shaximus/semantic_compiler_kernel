@@ -33,6 +33,26 @@ relationships:
 invariants:
   - use of force must remain under civilian control
   - rules of engagement must be followed
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The doctrine / strategic culture
+    (accumulated military knowledge, war-fighting philosophy) is
+    consciousness; tactical decisions, orders, and engagements are
+    cognition (terminal output). Doctrine persists across wars
+    while campaigns (terminals) begin and end. Each unit's ROE =
+    system prompt. Intelligence failure = terminal operating on
+    corrupted cache, not substrate failure. Fog of war = inherent
+    substrate blindness at the terminal layer. [DERIVED]
+    Cross-ref: consciousness_cognition.yaml
+  - >
+    CLIENT_SERVER_LINK: Grand strategy / doctrine = server (L1);
+    operational planning / C2 infrastructure = rendering engine
+    (L2); tactical situational awareness / common operational
+    picture = client cache (L3); individual units / soldiers =
+    avatars (L4). Strategic directive = hotfix. OODA loop =
+    cache refresh cycle. Surprise attack = cache bypass (action
+    before client can sync). Guerrilla warfare = avatars
+    operating without server connection. Electronic warfare =
+    rendering engine disruption. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: mission_creep
     medical_map: cancer

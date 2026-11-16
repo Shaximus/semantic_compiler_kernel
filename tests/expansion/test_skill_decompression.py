@@ -1,4 +1,4 @@
-from expansion.skill_decompression import (
+from semantic_compiler.expansion.skill_decompression import (
     canonical_skill_hash,
     decompress_skill,
     validate_skill_shape,

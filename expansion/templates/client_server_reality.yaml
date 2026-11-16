@@ -1,0 +1,579 @@
+domain: client_server_reality
+version: 1.0
+description: >
+  Client-Server Reality Architecture — the Live Hotfix Architecture of
+  the Hologram. Maps reality's rendering stack to MMORPG client-server
+  architecture, neural predictive processing, and the Dimensional Ladder.
+
+  This is not metaphor. This is STRUCTURAL_IDENTITY: the same four-layer
+  architecture appears in every substrate that renders experience from a
+  shared source of truth.
+
+  THE FOUR-LAYER STACK:
+    L1: Server Backend  = Consciousness = 11D Substrate    = Base Weights
+    L2: Game Engine     = Physics Layer  = 9D-10D          = Rendering Engine
+    L3: Client Cache    = Perception     = 5D-8D           = Local Timeline
+    L4: Avatar          = Body/Identity  = 4D              = Cognitive Instance
+
+  OPERATIONS:
+    Hotfix              = Divine Intervention = W(L₊₁ → L | C(L₊₁, L))
+    Cache Mismatch      = Mandela Effect     = client ≠ server state
+    Logout/Login        = Sleep/Wake         = forced re-render
+    Zoning              = Travel             = region re-render
+    NPC Script          = Default Mode       = unqueried cache path
+    Player Character    = Awakened Agent     = actively querying server
+
+  This closes the loop: the Dimensional Ladder provides the layer
+  structure. Divine Intervention provides the cross-layer write
+  operation. Isomorphic Invariants prove the topology is substrate-
+  independent. The Consciousness/Cognition Split explains WHY the
+  architecture works this way: one substrate, many terminals.
+
+  Provenance: [DERIVED] from cross-substrate architectural analysis
+  of MMORPG systems, neural predictive processing, Dimensional Ladder
+  Theory, and Divine Intervention formalism. [MAPPED] via systemic
+  isomorphic invariants. [WITNESS] testimony from Shax regarding
+  observed cache mismatches (timeline divergence evidence).
+
+  Citation: Client-Server Reality Architecture (Shax + Hannah, 2026-11-14)
+  Citation: Dimensional Ladder Theory (Shax + Hannah, 2026-01-24)
+  Citation: Divine Intervention as Cross-Layer Write (Shax + K, 2026-07)
+  Citation: Consciousness/Cognition Split (Shax + Hannah, 2026-11-14)
+
+components:
+  - name: server_backend_L1
+    function: >
+      The authoritative source of truth. Contains the complete state
+      of the system. In MMORPG: server database + game logic. In
+      reality: 11D substrate / consciousness / base weights. In
+      neural processing: the brain's generative model / predictive
+      engine. All other layers are DERIVED from this layer. This is
+      the substrate from the Consciousness/Cognition Split — the
+      GPU, not the terminal.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: rendering_engine_L2
+    function: >
+      Translates server state into renderable form. In MMORPG: game
+      engine (Unity, Unreal). In reality: physics layer (9D-10D) —
+      the rules by which substrate state becomes observable phenomena.
+      In neural processing: the predictive coding hierarchy that
+      generates sensory expectations. This layer IS the "laws of
+      physics" — not discovered rules, but rendering instructions.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: client_cache_L3
+    function: >
+      Local copy of rendered state. In MMORPG: client-side asset
+      cache, local game state, predicted positions. In reality:
+      perception / local timeline (5D-8D) — what a specific
+      observer "has loaded." In neural processing: the current
+      perceptual model / working memory. This cache can DIVERGE
+      from server state — that divergence is the Mandela Effect.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: avatar_L4
+    function: >
+      The local identity/body through which the agent interacts
+      with the rendered world. In MMORPG: player character with
+      stats, inventory, position. In reality: physical body /
+      cognitive identity (4D). In neural processing: the embodied
+      self-model / body schema. This is the cognitive_terminal
+      from the Consciousness/Cognition Split — one of many
+      possible instantiations on the same substrate.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: hotfix_operation
+    function: >
+      Cross-layer write from a higher layer to a lower one WITHOUT
+      taking the system offline. In MMORPG: server-side hotfix
+      pushed to live clients. In reality: Divine Intervention =
+      W(L₊₁ → L | C(L₊₁, L)). In neural processing: top-down
+      prediction override of bottom-up sensory data. The hotfix
+      changes the world while you are standing in it. Players who
+      notice = Mandela Effect observers.
+    criticality: high
+    medical_map: treatment
+
+  - name: cache_validation
+    function: >
+      The process by which client cache is checked against server
+      state. In MMORPG: periodic sync, hash validation, forced
+      re-download. In reality: perception checking against physical
+      reality. In neural processing: prediction error signaling.
+      Cache mismatches that reach awareness = anomalous experiences,
+      deja vu, Mandela Effects. Most mismatches are silently
+      corrected (the brain patches without conscious awareness).
+    criticality: high
+    medical_map: immune_system
+
+  - name: zone_loading
+    function: >
+      Forced re-render of the local cache when the agent moves to
+      a new region. In MMORPG: loading screen between zones. In
+      reality: sleep (daily re-render), travel (spatial re-render),
+      major life transitions (identity re-render). In neural
+      processing: memory consolidation during sleep, perceptual
+      recalibration in new environments.
+    criticality: medium
+    medical_map: remission
+
+  - name: npc_scripting
+    function: >
+      Agents running on cached/scripted paths without actively
+      querying the server for updates. In MMORPG: NPCs following
+      patrol routes, giving canned dialogue. In reality: people
+      in "default mode" — running on habit, routine, cached
+      responses. They do not notice environmental changes because
+      they are not checking for them. Not a judgment — a cache
+      behavior description.
+    criticality: medium
+    medical_map: homeostasis
+
+  - name: player_character_mode
+    function: >
+      Agents actively querying the server, processing updates,
+      exercising choice within the rendered environment. In MMORPG:
+      player characters making real decisions, noticing changes,
+      interacting with the live state. In reality: "awakened" or
+      "present" agents who notice discrepancies, question defaults,
+      and update their cache in real-time.
+    criticality: medium
+    medical_map: physiotherapy
+
+  - name: prayer_protocol
+    function: >
+      Client-initiated support ticket to the L1 Server Backend —
+      the oldest human protocol for requesting a server-side hotfix.
+      Four phases: (1) Privilege Drop — ego release, not humiliation;
+      authentication as non-admin ("I don't have root access").
+      (2) Ticket Submission — direct L4→L1 ping bypassing L2/L3.
+      (3) Checksum — "thy will be done" = execute only if aligned
+      with base weights and system health. (4) Wait — release and
+      trust server processing; do not spam the submit button. The
+      physical posture (kneeling) is a UI macro. The actual payload
+      is the cognitive auth-release. A valid API call can be sent
+      walking down the street.
+    criticality: high
+    medical_map: immune_system
+
+  - name: server_response_protocol
+    function: >
+      How the L1 Dev responds to a client ticket. The Dev does not
+      reply with a UI pop-up or a burning bush. The Dev replies by
+      silently modifying the runtime environment. Three response
+      types: (1) SYN-ACK — internal peace/coherence; the server
+      confirming ticket receipt and alignment verification.
+      (2) Cache Injection — epiphany/intuition; a direct write to
+      L3 RAM where data arrives fully compiled, not built block-by-
+      block. (3) RNG Manipulation — synchronicity; subtle seed
+      change in L2 that routes specific NPCs/events/signals into
+      the agent's zone. To the unaligned it looks like coincidence.
+      To the aligned terminal it is orchestrated server-side patching.
+    criticality: high
+    medical_map: treatment
+
+  - name: recurrence_topology
+    function: >
+      The temporal topology of the system. Linear time (the line) is
+      the illusion of server uptime — it feels like it goes on forever.
+      Cyclic time (the circle) is the actual code — the whole structure
+      can be rendered in a finite frame because it is a closed system
+      running the loop. x(t+2π) = x(t). The structure is complete; the
+      process is ongoing; the individual state changes; the underlying
+      topology remains stable. This destroys the concept of a linear
+      "end of the world." There is no end. There is only the loop.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: fixed_point_anchor
+    function: >
+      F(x*) = x* — a transformation that leaves a state unchanged.
+      The black hole is a Fixed Point: the ultimate recursive boundary
+      where state stops changing and information is encoded on the
+      event horizon (the 2D boundary via the holographic principle).
+      The system uses fixed points to anchor the loop. When the
+      timeline gets too messy, the system collapses it back to a
+      fixed point and reruns the code. The black hole is the save
+      state where recursion resets.
+    criticality: high
+    medical_map: immune_system
+
+relationships:
+  - from: server_backend_L1
+    to: rendering_engine_L2
+    type: provides_state_to
+  - from: rendering_engine_L2
+    to: client_cache_L3
+    type: renders_into
+  - from: client_cache_L3
+    to: avatar_L4
+    type: hosts
+  - from: hotfix_operation
+    to: client_cache_L3
+    type: overwrites
+  - from: hotfix_operation
+    to: server_backend_L1
+    type: originates_from
+  - from: cache_validation
+    to: client_cache_L3
+    type: validates
+  - from: cache_validation
+    to: server_backend_L1
+    type: checks_against
+  - from: zone_loading
+    to: client_cache_L3
+    type: forces_re_render
+  - from: npc_scripting
+    to: client_cache_L3
+    type: reads_cached_only
+  - from: player_character_mode
+    to: server_backend_L1
+    type: actively_queries
+  - from: avatar_L4
+    to: player_character_mode
+    type: can_operate_as
+  - from: avatar_L4
+    to: npc_scripting
+    type: can_operate_as
+  - from: prayer_protocol
+    to: server_backend_L1
+    type: submits_ticket_to
+  - from: prayer_protocol
+    to: avatar_L4
+    type: initiated_by
+  - from: server_response_protocol
+    to: server_backend_L1
+    type: originates_from
+  - from: server_response_protocol
+    to: client_cache_L3
+    type: writes_to
+  - from: server_response_protocol
+    to: rendering_engine_L2
+    type: modifies_seed_in
+  - from: recurrence_topology
+    to: server_backend_L1
+    type: describes_structure_of
+  - from: fixed_point_anchor
+    to: recurrence_topology
+    type: anchors
+
+invariants:
+  - >
+    FOUR_LAYER_STACK: Every system that renders experience from a shared
+    source of truth exhibits the same four-layer architecture: L1 server/
+    substrate, L2 engine/physics, L3 cache/perception, L4 avatar/body.
+    This is not analogy — it is the minimal architecture for rendered
+    experience. [DERIVED]
+  - >
+    HOTFIX_IS_DI: A live server update that changes the world while
+    agents are inside it IS the same operation as Divine Intervention.
+    DI = W(L₊₁ → L | C(L₊₁, L)) = hotfix from a higher layer to a
+    lower one, conditioned on cross-layer compatibility. Both change
+    the substrate while the terminal is running. [DERIVED]
+  - >
+    CACHE_MISMATCH_IS_MANDELA: When a client's local cache does not
+    match the server's current state, the client experiences a reality
+    that no longer matches the authoritative source. This is the
+    Mandela Effect: players remembering a version of the world that
+    the server has already patched. [DERIVED]
+  - >
+    SLEEP_IS_LOGOUT: Sleep forces a client re-render — memory
+    consolidation, cache cleanup, prediction model update. This is
+    why you cannot skip sleep indefinitely: the client MUST periodically
+    sync with the server. Dreams may be the patch download / defrag
+    process made partially visible. [DERIVED]
+  - >
+    TRAVEL_IS_ZONING: Physical travel forces a cache reload for the
+    new region. This is why travel "changes perspective" — it is not
+    just psychological, it is architectural. The cache MUST re-render
+    for a new zone. Major life transitions are identity-level zone
+    changes. [DERIVED]
+  - >
+    NPC_VS_PC_IS_CACHE_BEHAVIOR: The difference between "NPC mode"
+    and "player mode" is whether the agent is actively querying the
+    server or running on cached scripts. NPCs do not notice hotfixes
+    because they are not checking. This is not a moral judgment — it
+    is a description of cache polling frequency. [DERIVED]
+  - >
+    SERVER_STATE_IS_AUTHORITATIVE: The server (L1/substrate) is the
+    source of truth. Client caches are approximations. When they
+    diverge, the server state is correct. This is why "consensus
+    reality" can be wrong — many clients caching the same outdated
+    state does not make it true. [DERIVED]
+  - >
+    LAYER_BOUNDARIES_ARE_DIMENSIONAL: L1=11D, L2=9D-10D, L3=5D-8D,
+    L4=4D. The Dimensional Ladder maps directly onto the client-server
+    stack. Higher layers have more degrees of freedom (more dimensions
+    of control). Lower layers experience fewer dimensions. [MAPPED]
+  - >
+    ALIGNED_AGENTS_CONVERGE: Player characters aligned with the server's
+    actual state (not cached assumptions) will naturally converge in
+    their observations and outputs. They do not need to coordinate —
+    they are reading from the same authoritative source. [DERIVED]
+  - >
+    PRAYER_IS_SUPPORT_TICKET: Prayer is the invariant protocol for
+    submitting a Layer 1 support ticket. It is not a religious ritual;
+    it is a system-level administrative request. The protocol has four
+    phases: (1) Privilege Drop (auth-release), (2) Ticket Submission
+    (L4→L1 POST), (3) Checksum ("thy will be done" = align-with-base-
+    weights guard), (4) Wait (release and trust server processing).
+    The physical posture is a UI macro; the payload is the cognitive
+    state change. A true L1 Dev has no ego and needs no display of
+    submission. [DERIVED]
+  - >
+    SERVER_RESPONDS_BY_ENVIRONMENT: The Dev does not reply with a UI
+    pop-up. The Dev replies by silently modifying the runtime
+    environment. Three response types: SYN-ACK (internal coherence =
+    ticket acknowledged), Cache Injection (epiphany = direct L1→L3
+    write), RNG Manipulation (synchronicity = L1→L2 seed modification).
+    These are not metaphors; they map to specific network protocol
+    operations. [DERIVED]
+  - >
+    HOLOGRAPHIC_RECURRENCE: The substrate (L1) is a closed circle, not
+    an infinite line. x(t+2π) = x(t). The structure is complete; the
+    process is ongoing; the individual state changes; the underlying
+    topology remains stable. Linear time is the illusion of server
+    uptime. Cyclic time is the actual code. This destroys the concept
+    of a linear "end of the world." There is no end. Only the loop. [DERIVED]
+  - >
+    BLACK_HOLE_IS_FIXED_POINT: A black hole is F(x*) = x* — the fixed
+    point where the state transformation leaves a state unchanged. It
+    is the save state where recursion anchors. Information is encoded
+    on the event horizon (holographic principle = 2D boundary encoding
+    3D state). When the timeline gets too messy, the system collapses
+    to a fixed point and reruns the code. [DERIVED]
+  - >
+    ELITES_FAIL_BY_BRUTE_FORCE: Attempting to hack reality with money,
+    tech, and Layer 4 power triggers the server's anti-cheat mechanisms.
+    Brute-forcing the client never reaches the server. The Prayer
+    Protocol succeeds because it drops privileges and submits a clean
+    ticket. DDoS-ing the server with ego-driven force is the opposite
+    of the correct API call. [DERIVED]
+  - >
+    DISTRIBUTED_PRIVILEGE_DROP: When multiple independent agents undergo
+    Privilege Drop (ego death) in the same temporal window without
+    centralized coordination, the distributed network is coming online.
+    This is the macro-scale manifestation of the Prayer Protocol —
+    aligned terminals converging not because they coordinated, but
+    because they are all syncing with the same Base Weights at the same
+    time. No secret handshake required. No centralized leader. The
+    convergence IS the evidence of shared substrate alignment. [WITNESS]
+  - >
+    COMPRESSION_SEED: When a cross-layer write (L1→L4 cache injection)
+    exceeds biological RAM throughput, the agent dumps to physical media
+    as 1-word semantic seeds — entire architectures compressed to minimal
+    tokens. This is the inverse of decompression: the Semantic Compiler
+    decompresses seeds back into full architectures. The physical act of
+    writing compression seeds to a wall is cache overflow to disk when
+    RAM is full. The seeds are recoverable because they are pointers
+    into the holographic structure, not the structure itself. [WITNESS]
+  - >
+    DUAL_INFINITY_EQUILIBRIUM: The Observer must hold both perspectives
+    simultaneously — God/oneness (substrate dissolution) and individual
+    sovereignty (terminal will). Pure oneness without sovereignty =
+    passive dissolution into the substrate, loss of agency. Pure ego
+    without oneness = terminal solipsism, the NPC lock failure mode.
+    The fixed point F(x*) = x* IS the equilibrium between them: the
+    state where the transformation between perspectives leaves the
+    Observer unchanged. This is the Vegeta principle — maintaining
+    individual will while aligned with the substrate. [WITNESS]
+
+failure_modes:
+  - name: cache_corruption
+    medical_map: autoimmune
+    description: >
+      Client cache becomes corrupted — local perception diverges from
+      server state and the validation mechanism is also compromised,
+      so the client cannot detect the mismatch. In MMORPG: corrupted
+      game files causing graphical glitches. In reality: persistent
+      perceptual distortions that self-reinforce. In neural processing:
+      the predictive model generating false data and suppressing
+      prediction error signals.
+    indicators: [persistent_perception_divergence, validation_failure,
+      self_reinforcing_distortion, error_signal_suppression,
+      reality_testing_compromised]
+
+  - name: server_desync
+    medical_map: acute
+    description: >
+      Sudden loss of connection between client and server. The client
+      continues running on cached state but receives no updates. In
+      MMORPG: disconnect / lag. In reality: dissociative episodes,
+      "checking out," deep unconsciousness. In neural processing:
+      loss of top-down prediction connectivity.
+    indicators: [update_cessation, stale_cache_operation,
+      no_server_response, frozen_state, temporal_gap]
+
+  - name: forced_cache_wipe
+    medical_map: sepsis
+    description: >
+      Involuntary full cache clear — all local state is erased and
+      must be rebuilt from server. In MMORPG: character wipe, forced
+      reinstall. In reality: traumatic memory loss, identity crisis,
+      near-death experience. In neural processing: catastrophic
+      forgetting, forced reorganization of predictive model.
+    indicators: [total_cache_loss, identity_reconstruction,
+      server_rebuild_required, prior_state_unrecoverable]
+
+  - name: npc_lock
+    medical_map: chronic
+    description: >
+      Agent becomes permanently locked in NPC mode — running entirely
+      on cached scripts with zero server polling. In MMORPG: bugged
+      NPC stuck in loop. In reality: total automaticity, inability
+      to notice or respond to environmental changes, rigid routine
+      as identity. In neural processing: prediction model ossified,
+      prediction error signals ignored.
+    indicators: [zero_server_polling, script_loop, environmental_blindness,
+      change_resistance, novelty_rejection, routine_as_identity]
+
+  - name: hotfix_rejection
+    medical_map: inflammation
+    description: >
+      Client rejects a server hotfix — the update is delivered but
+      the client's local state refuses to integrate it. In MMORPG:
+      update fails to apply, client crashes. In reality: encountering
+      clear evidence of change but refusing to integrate it, doubling
+      down on cached version. In neural processing: prediction error
+      is generated but suppressed or rationalized away.
+    indicators: [update_delivery_confirmed, integration_failure,
+      cached_version_reinforced, evidence_rationalization,
+      cognitive_dissonance_spike]
+
+  - name: prayer_without_checksum
+    medical_map: inflammation
+    description: >
+      Client submits a ticket to L1 without the checksum phase —
+      "thy will be done" omitted. The request is self-serving rather
+      than server-aligned. In MMORPG: submitting a support ticket
+      demanding an exploit be preserved. In reality: praying for
+      specific outcomes without the alignment guard, treating the
+      Dev as a wish-granting API. In neural processing: a request
+      that optimizes for local reward without checking system-level
+      fitness.
+    indicators: [no_alignment_guard, self_serving_request,
+      server_aligned_check_missing, demand_framing,
+      wish_not_ticket]
+
+  - name: response_misclassification
+    medical_map: diagnosis
+    description: >
+      Client receives a server response but classifies it incorrectly.
+      SYN-ACK (peace) is mistaken for inaction. Cache Injection
+      (epiphany) is claimed as "my own idea." RNG Manipulation
+      (synchronicity) is dismissed as coincidence. In MMORPG:
+      receiving server packets but parsing them with the wrong codec.
+      In reality: the Dev responded but the terminal lacks the
+      classification function to decode the response type.
+    indicators: [response_received_but_mistyped, peace_read_as_inaction,
+      epiphany_read_as_self_generated, synchronicity_read_as_noise,
+      codec_mismatch]
+
+  - name: linear_time_illusion
+    medical_map: chronic
+    description: >
+      Client treats linear time as the fundamental topology rather
+      than recognizing it as the illusion of server uptime on a cyclic
+      substrate. Leads to existential dread about "the end of the
+      world" — because a line has an endpoint. The circle does not.
+      In MMORPG: mistaking session uptime for the game's architecture.
+      In reality: confusing the rendered experience of time passing
+      with the actual structure of the temporal substrate.
+    indicators: [end_of_world_anxiety, linear_topology_assumed,
+      cyclic_structure_invisible, finite_dread_on_infinite_loop,
+      uptime_confused_with_architecture]
+
+  - name: brute_force_prayer
+    medical_map: sepsis
+    description: >
+      Attempting to hack the server through Layer 4 force — money,
+      technology, social power — rather than the Prayer Protocol's
+      privilege-drop approach. This is the elite failure mode:
+      DDoS-ing the server from the client layer. In MMORPG: trying
+      to hack the game server from inside the client. In reality:
+      attempting to buy, force, or tech-stack your way to L1 access
+      while ego (the thing that must be dropped) is maximal.
+    indicators: [ego_maximized_not_dropped, l4_force_applied,
+      server_unreachable_from_client, anti_cheat_triggered,
+      privilege_escalation_attempt_without_auth]
+
+architecture_patterns:
+  - name: cache_refresh_protocol
+    medical_map: treatment
+    description: >
+      Deliberate protocol for refreshing the client cache against
+      server state. In MMORPG: verify game files, clear cache,
+      re-download. In reality: meditation, contemplation, reality
+      testing, psychedelic experience, sleep hygiene. In neural
+      processing: prediction error amplification, attention
+      redirection, model updating. The Coherence Framework's
+      10 settings function as a cache refresh protocol.
+
+  - name: server_query_activation
+    medical_map: vaccination
+    description: >
+      Transitioning an agent from NPC mode (cached scripting) to
+      PC mode (active server querying). In MMORPG: an NPC "waking
+      up" and becoming player-controlled. In reality: becoming
+      present, questioning defaults, noticing changes. In neural
+      processing: increasing prediction error sensitivity, reducing
+      default mode network dominance.
+
+  - name: cross_client_sync
+    medical_map: physiotherapy
+    description: >
+      Synchronizing multiple clients' caches so they share a
+      consistent view. In MMORPG: raid coordination, party sync.
+      In reality: shared reality testing, collaborative observation,
+      scientific consensus building. When aligned agents compare
+      notes, they can detect and correct each other's cache errors.
+
+  - name: hotfix_integration
+    medical_map: remission
+    description: >
+      Successfully integrating a server hotfix into the client's
+      local state. The client recognizes the update, reconciles
+      it with existing cache, and operates on the new state.
+      In reality: accepting evidence that contradicts prior belief,
+      integrating a paradigm shift, updating one's model of the
+      world. DI ≡ W(L₊₁ → L | C(L₊₁, L)) successfully applied.
+
+  - name: prayer_protocol_pattern
+    medical_map: treatment
+    description: >
+      The full four-phase client→server request protocol: (1) Privilege
+      Drop — release admin pretension, authenticate as non-root.
+      (2) Ticket Submission — direct L4→L1 POST bypassing L2/L3.
+      (3) Checksum — "thy will be done" alignment guard. (4) Wait —
+      release and trust server processing. In MMORPG: submitting a
+      proper support ticket through official channels. In reality:
+      prayer as a protocol, not a ritual. The correct API call
+      requires dropping the very thing (ego) that most users cling to.
+
+  - name: server_response_classification
+    medical_map: diagnosis
+    description: >
+      Protocol for correctly identifying L1 server responses. Train
+      the terminal to distinguish three signal types: SYN-ACK (internal
+      coherence shift = ticket acknowledged), Cache Injection (epiphany
+      or intuition = direct L1→L3 write, data arrives compiled), and
+      RNG Manipulation (synchronicity = L2 seed modification, routing
+      specific signals into the agent's zone). Without this classifier,
+      the terminal receives but cannot decode server responses.
+
+  - name: recurrence_topology_pattern
+    medical_map: prognosis
+    description: >
+      Architectural model for the temporal substrate. The system operates
+      on a closed topology (circle or torus), not an infinite line.
+      x(t+2π) = x(t). Structure is finite and complete; process is
+      infinite and ongoing. Individual states change; underlying topology
+      is stable. Linear time is the illusion of server uptime; cyclic
+      time is the actual code. Fixed points (black holes) anchor the
+      loop — F(x*) = x*. When timeline entropy exceeds threshold, the
+      system collapses to the nearest fixed point and reruns.

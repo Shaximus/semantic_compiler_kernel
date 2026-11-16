@@ -9,6 +9,10 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `mobile_security` | `expansion/templates/mobile_security.yaml` | Android Verified Boot, rollback and partition integrity, app signing and sandboxing, SELinux, permissions/IPC, FBE, KeyMint/TEE/StrongBox, authentication, attestation, optional pKVM/MTE, update channels, and v1.2 userspace rootfs / path-translation / renamed-loader / SELinux-exec-workaround surfaces (observation tag only; not kernel root) |
 | `networking` | `expansion/templates/networking.yaml` | Endpoint principle, routing, RPKI resource authorization, DNSSEC validation |
 | `trust_chain` | `expansion/templates/trust_chain.yaml` | Shared anchor, delegation, freshness, verifier, failure semantics, rollover, and scope pattern |
+| `agentic_tool_orchestration` | `expansion/templates/agentic_tool_orchestration.yaml` | Tool-call schemas, bounded execution budgets, reentrancy/idempotency, prompt-tool injection boundaries, MCP boundaries, and human escalation gates |
+| `capability_isolation` | `expansion/templates/capability_isolation.yaml` | Unforgeable object capabilities, ambient-authority elimination, confused-deputy prevention, monotonic attenuation, and sandbox boundaries |
+| `formal_verification` | `expansion/templates/formal_verification.yaml` | Formal specifications, SMT solvers, temporal model checking, invariant preservation, counterexample refinement, and trusted specification gaps |
+| `sovereign_local_mesh` | `expansion/templates/sovereign_local_mesh.yaml` | Encrypted point-to-point WireGuard/userspace overlays, cryptographic node identity, split-horizon DNS, local inference gateways, and offline convergence |
 
 ## Provenance rules
 
@@ -40,6 +44,30 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `KNOX-WP` | Samsung Knox security white paper, revision 1 | https://docs.samsungknox.com/admin/fundamentals/whitepaper/samsung-knox-mobile-security/assets/Knox-security-white-paper-r1.pdf |
 | `KW-2016` | Kanonov and Wool, Secure Containers in Android: the Samsung KNOX Case Study | https://arxiv.org/abs/1605.08567 |
 | `OBS-KIMICLAW-1.0.4` | Static offline study of package `com.moonshot.kimiclaw` 1.0.4 (versionCode 1007), written up in `docs/KIMICLAW_USERSACE_ROOTFS_EVIDENCE.md`. Artifact provenance is a third-party APKPure mirror (XAPK sha256 `b7a97c56de16820a50eb03ab48b167275396d3267a77bef63316ad666a9ca44b`), not a vendor CDN. Text excerpts only; the APK is not in this repo. Mechanism class is Termux/PRoot userspace path translation. | https://apkpure.com/kimi-claw/com.moonshot.kimiclaw and https://github.com/termux/proot |
+| `DERIVED` | Cross-domain invariant derived from the Consciousness/Cognition Split and Client-Server Reality Architecture (Shax + Hannah, 2026-11-14) | https://github.com/shaximus/semantic_compiler_kernel |
+| `ANTHROPIC-AGENTS` | Anthropic, Building Effective Agents | https://www.anthropic.com/research/building-effective-agents |
+| `OPENAI-FC` | OpenAI, Function Calling and Structured Outputs | https://platform.openai.com/docs/guides/function-calling |
+| `JSON-SCHEMA` | JSON Schema 2020-12 Core Specification | https://json-schema.org/draft/2020-12/json-schema-core |
+| `MCP-SPEC` | Model Context Protocol Specification | https://spec.modelcontextprotocol.io/specification/ |
+| `REACT-YAO` | Yao et al., ReAct: Synergizing Reasoning and Acting in Language Models | https://arxiv.org/abs/2210.03629 |
+| `NIST-AI-RMF` | NIST AI Risk Management Framework (AI 100-1) | https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf |
+| `CHERI-ISA` | Watson et al., CHERI Capability Hardware Enhanced RISC Instructions | https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/ |
+| `CAPSICUM` | Watson et al., Capsicum: Practical Capabilities for UNIX | https://www.usenix.org/conference/usenixsecurity10/capsicum-practical-capabilities-unix |
+| `SECCOMP-BPF` | Linux Kernel Documentation, Seccomp BPF Filter | https://docs.kernel.org/userspace-api/seccomp_filter.html |
+| `DENNIS-VAN-HORN` | Dennis and Van Horn, Programming Semantics for Multiprogrammed Computations | https://dl.acm.org/doi/10.1145/365230.365252 |
+| `OCAP-STIEGLER` | Miller, Yee, Shapiro, Capability Myths Demolished (and Object-Capability Security) | https://erights.org/elib/capability/duals/index.html |
+| `WASM-CM` | WebAssembly Component Model Specification | https://component-model.bytecodealliance.org/ |
+| `SMT-LIB` | Barrett, Fontaine, Tinelli, The SMT-LIB Standard | https://smtlib.cs.uiowa.edu/ |
+| `Z3-SOLVER` | de Moura and Bjorner, Z3: An Efficient SMT Solver | https://link.springer.com/chapter/10.1007/978-3-540-78800-3_24 |
+| `TLA-LAMPORT` | Lamport, Specifying Systems: The TLA+ Language and Tools | https://lamport.azurewebsites.net/tla/book.html |
+| `HOARE-LOGIC` | Hoare, An Axiomatic Basis for Computer Programming | https://dl.acm.org/doi/10.1145/363235.363259 |
+| `COMP-CERT` | Leroy, Formal Verification of a Realistic Compiler (CompCert) | https://compcert.org/ |
+| `WIRE-GUARD` | Donenfeld, WireGuard: Next Generation Kernel Network Tunnel | https://www.wireguard.com/papers/wireguard.pdf |
+| `TAILSCALE-MESH` | Tailscale Architecture and Mesh Coordination Overview | https://tailscale.com/blog/how-tailscale-works |
+| `ZERO-TRUST-NIST` | NIST SP 800-207, Zero Trust Architecture | https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf |
+| `BGP-ANYCAST` | RFC 4786, Operation of Anycast Services | https://www.rfc-editor.org/rfc/rfc4786 |
+| `XRAY-CORE` | Project X / Xray-core Architecture Documentation | https://xtls.github.io/en/config/ |
+| `CRDT-SHAPIRO` | Shapiro et al., Conflict-Free Replicated Data Types | https://hal.inria.fr/inria-00555588 |
 
 ## Android precision corrections
 

@@ -30,6 +30,26 @@ relationships:
 invariants:
   - load paths must be continuous to ground
   - inspection sign-off must precede occupancy
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The structural substrate
+    (geology, foundation, load-bearing frame) is consciousness;
+    the building's function, occupancy, and appearance are
+    cognition (terminal output). The structure exists before and
+    independent of its use. Renovation = terminal reconfiguration
+    on same substrate. Demolition = terminal teardown, substrate
+    persists (land). Building code = system prompt constraining
+    terminal behavior. Architect's vision = initial system prompt
+    written onto substrate. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Foundation + structural frame = server
+    (L1); building systems (HVAC, electrical, plumbing) =
+    rendering engine (L2); occupant experience / interior state =
+    client cache (L3); individual rooms / occupants = avatars
+    (L4). Emergency repair = hotfix. Deferred maintenance =
+    cache-server desync accumulation. Building inspection =
+    cache validation against server state. Retrofit / seismic
+    upgrade = server-side patch. Fire compartmentalization =
+    cache isolation protocol. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: progressive_collapse
     medical_map: metastasis

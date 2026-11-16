@@ -27,7 +27,7 @@ class Rule:
     forbidden_use: list[str] = field(default_factory=list)
     residual_mismatches: list[str] = field(default_factory=list)
     review_status: str = "accepted"
-    version: str = "2.0.0"
+    version: str = "3.5.0"
 
 
 # ---------------------------------------------------------------------------

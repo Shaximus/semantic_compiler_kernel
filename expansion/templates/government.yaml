@@ -30,6 +30,25 @@ relationships:
 invariants:
   - no branch may exercise another branch's core power
   - elections must be periodic and verifiable
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The constitutional substrate
+    (founding document, social contract, sovereignty source) is
+    consciousness; legislation, executive orders, and judicial
+    opinions are cognition (terminal output). The constitution
+    persists while governments (terminals) change. Citizen body
+    = base weights. Each administration = new terminal session
+    with same substrate. Unconstitutional action = terminal
+    contradicting substrate. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Constitutional order = server (L1);
+    institutional frameworks (branches, agencies) = rendering
+    engine (L2); public perception / political discourse =
+    client cache (L3); individual officials / citizens = avatars
+    (L4). Constitutional amendment = server-side patch.
+    Executive order = hotfix (L2 write). Propaganda = cache
+    poisoning (L3 manipulation without L1 change). Revolution
+    = server crash and reboot. Election = scheduled cache
+    refresh from server state. Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: authoritarian_consolidation
     medical_map: cancer

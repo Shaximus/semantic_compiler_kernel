@@ -118,6 +118,22 @@ CLAIM_INDICATORS: dict[ClaimType, list[str]] = {
 }
 
 
+def _indicator_pattern(indicator: str) -> tuple[re.Pattern[str], bool]:
+    """Compile a boundary-aware pattern; return (regex, case_sensitive)."""
+    stripped = indicator.strip()
+    if indicator == "IS ":
+        return re.compile(r"\bIS\b"), True
+    prefix = r"(?:^|\b)" if stripped[0].isalnum() else ""
+    suffix = r"(?:\b|$)" if stripped[-1].isalnum() else ""
+    return re.compile(prefix + re.escape(stripped) + suffix, re.IGNORECASE), False
+
+
+_COMPILED_INDICATORS: dict[ClaimType, list[tuple[str, re.Pattern[str], bool]]] = {
+    ct: [(ind, *_indicator_pattern(ind)) for ind in inds]
+    for ct, inds in CLAIM_INDICATORS.items()
+}
+
+
 def classify_claim_types(
     text: str,
     context: dict[str, Any] | None = None,
@@ -130,32 +146,29 @@ def classify_claim_types(
 
     Citation: v1.0 Spec Section 8 — Master Pipeline, step 1.3
     """
-    text_lower = text.lower()
     detected: list[dict[str, Any]] = []
-    matched_types: set[str] = set()
 
-    for claim_type, indicators in CLAIM_INDICATORS.items():
-        for indicator in indicators:
-            if indicator in text_lower:
-                if claim_type.name not in matched_types:
-                    matched_types.add(claim_type.name)
-                    # Count number of matching indicators for confidence
-                    match_count = sum(
-                        1 for ind in indicators if ind in text_lower
-                    )
-                    confidence = min(0.95, 0.4 + match_count * 0.15)
-                    detected.append({
-                        "claim_type": claim_type.name,
-                        "confidence": round(confidence, 3),
-                        "matched_indicators": [
-                            ind for ind in indicators if ind in text_lower
-                        ],
-                    })
-                break
+    for claim_type, patterns in _COMPILED_INDICATORS.items():
+        matched = [
+            ind
+            for ind, regex, _cs in patterns
+            if regex.search(text)
+        ]
+        if matched:
+            confidence = min(0.95, 0.4 + len(matched) * 0.15)
+            detected.append({
+                "claim_id": f"claim-{len(detected)}",
+                "content": text,
+                "claim_type": claim_type.name,
+                "confidence": round(confidence, 3),
+                "matched_indicators": matched,
+            })
 
     # If nothing matched, classify as OBSERVATION with low confidence
     if not detected:
         detected.append({
+            "claim_id": "claim-0",
+            "content": text,
             "claim_type": ClaimType.OBSERVATION.name,
             "confidence": 0.3,
             "matched_indicators": [],

@@ -10,7 +10,7 @@ SCHEMA_PATH = (
     / "v2_2_gem_build.schema.json"
 )
 
-with open(SCHEMA_PATH) as _f:
+with open(SCHEMA_PATH, encoding="utf-8") as _f:
     V2_2_GEM_BUILD_SCHEMA = json.load(_f)
 
 _VALIDATOR = Draft202012Validator(V2_2_GEM_BUILD_SCHEMA)

@@ -30,6 +30,25 @@ relationships:
 invariants:
   - do no harm
   - patient consent must precede non-emergency intervention
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The body's autonomic substrate
+    (brainstem, ANS, immune baseline) is consciousness; presenting
+    symptoms, vital signs, and patient narrative are cognition
+    (terminal output). The substrate runs before the patient reports.
+    Diagnosis must distinguish substrate failure (organic pathology)
+    from terminal misreport (psychosomatic, conversion disorder).
+    Misdiagnosis = category error between substrate and terminal.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Genome + epigenome = server (L1);
+    homeostatic regulation (endocrine, immune, ANS) = rendering
+    engine (L2); current physiological state / interoception =
+    client cache (L3); presenting patient / symptoms = avatar (L4).
+    Surgery / medication = hotfix (direct L1-L2 write). Placebo
+    effect = cache-level rendering without server-side change.
+    Iatrogenic harm = botched hotfix corrupting cache. Autoimmune
+    = rendering engine attacking its own client. [DERIVED]
+    Cross-ref: client_server_reality.yaml
 failure_modes:
   - name: misdiagnosis
     medical_map: pathogen

@@ -37,6 +37,7 @@ from semantic_compiler.expansion.counter_mapping import (
     searched_but_not_found,
 )
 from semantic_compiler.expansion.derivation_order import (
+    _parse_iso,
     attach_derivation_event,
     make_event,
 )
@@ -205,8 +206,12 @@ def chunk_text(text: str, max_chars: int = DEFAULT_MAX_CHUNK_CHARS) -> list[Chun
     pending: Optional[tuple[str, int, int]] = None
     for block in blocks:
         stripped = block[0].strip()
-        if stripped.startswith("#") and pending is None and len(blocks) > 1:
-            pending = block
+        if stripped.startswith("#") and len(blocks) > 1:
+            pending = (
+                block
+                if pending is None
+                else (pending[0] + "\n\n" + block[0], pending[1], block[2])
+            )
             continue
         if pending is not None:
             block = (pending[0] + "\n\n" + block[0], pending[1], block[2])
@@ -407,8 +412,19 @@ def compile_corpus(
             })
             acc["doc_ids"].add(meta.doc_id)
             acc["evidence_tiers"].append(meta.evidence_tier)
-            acc["first_seen_at"] = min(acc["first_seen_at"], meta.captured_at)
-            acc["last_seen_at"] = max(acc["last_seen_at"], meta.captured_at)
+            cur_first, cur_last, cand_ts = (
+                _parse_iso(acc["first_seen_at"]),
+                _parse_iso(acc["last_seen_at"]),
+                _parse_iso(meta.captured_at),
+            )
+            if cand_ts is not None:
+                if cur_first is None or cand_ts < cur_first:
+                    acc["first_seen_at"] = meta.captured_at
+                if cur_last is None or cand_ts > cur_last:
+                    acc["last_seen_at"] = meta.captured_at
+            else:
+                acc["first_seen_at"] = min(acc["first_seen_at"], meta.captured_at)
+                acc["last_seen_at"] = max(acc["last_seen_at"], meta.captured_at)
             seen_in_doc.add(key)
 
         doc_reports[meta.doc_id] = {
@@ -462,9 +478,15 @@ def _build_registry(
                 searched_at=generated_at,
                 impact="bounds cross-document generality of the invariant",
             )
-            disconfirmations.append(disc.to_negative_test(test_id="nt-corpus-0"))
+            disconfirmations.append(disc.to_negative_test(test_id=f"nt-corpus-{i}"))
 
-        if len(doc_ids) >= 2:
+        has_counterexample = any(
+            d.get("status") in {"FAILED", "WEAKENED", "SUSPICIOUS"}
+            for d in disconfirmations
+        )
+        if has_counterexample:
+            verdict = CorpusVerdict.STRAINS.value
+        elif len(doc_ids) >= 2:
             verdict = CorpusVerdict.HOLDS.value
         else:
             verdict = CorpusVerdict.UNRESOLVED.value

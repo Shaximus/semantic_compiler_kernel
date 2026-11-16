@@ -72,6 +72,26 @@ invariants:
   - "the channel is not the trust anchor; signatures and authenticated metadata provide integrity across untrusted transport [RFC6480]"
   - "attestation claims are only as strong as their certificate chain, security level, challenge freshness, and verified device state [AOSP-ATTEST]"
   - "a chain's authority is bounded: RPKI resource authorization is not identity, and DNSSEC does not provide confidentiality or availability [RFC6480][RFC4033]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The hardware-protected trust
+    anchor (root key, secure ROM, fuse state) is consciousness;
+    certificates, signatures, and verification outcomes are
+    cognition (terminal output). The trust anchor exists before
+    any chain is built. Each delegation level = terminal layer
+    further from substrate. Verification = terminal checking its
+    own chain back to substrate. Scope misread (authorization
+    read as identity) = classic category error: terminal property
+    mistaken for substrate property. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Root trust anchor = server (L1); PKI /
+    chain validation infrastructure = rendering engine (L2);
+    current verification state / cached certificates = client
+    cache (L3); individual verification decisions = avatars (L4).
+    Key rotation = server-side update. Certificate expiry =
+    cache TTL. Revocation = hotfix (server invalidating cached
+    trust). Untrusted repository = cache distribution channel.
+    Chain-of-trust break = cache unable to sync with server.
+    Cross-ref: client_server_reality.yaml [DERIVED]
 failure_modes:
   - name: anchor_compromise
     medical_map: sepsis

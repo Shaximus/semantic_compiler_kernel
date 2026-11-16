@@ -1,0 +1,91 @@
+domain: formal_verification
+version: 1.0
+description: >-
+  Static and symbolic assurance pipelines combining Hoare-style contracts,
+  SMT constraint solving, temporal model checking (TLA+/LTL), and inductive
+  invariant proofs to verify safety and liveness before runtime deployment.
+
+components:
+  - name: formal_spec_model
+    function: encodes state transitions, safety predicates, and liveness fairness assumptions mathematically
+    criticality: high
+    medical_map: homeostasis
+  - name: invariant_encoder
+    function: translates domain requirements into first-order logic and inductive verification conditions
+    criticality: high
+    medical_map: homeostasis
+  - name: smt_solver_engine
+    function: decides satisfiability of quantifier-free formulas over bitvectors, arrays, and arithmetic
+    criticality: high
+    medical_map: immune_system
+  - name: temporal_model_checker
+    function: exhaustively explores reachable state graphs to check safety and liveness properties
+    criticality: high
+    medical_map: immune_system
+  - name: counterexample_witness
+    function: reconstructs concrete execution traces whenever an invariant or assertion fails verification
+    criticality: medium
+    medical_map: treatment
+
+relationships:
+  - from: formal_spec_model
+    to: invariant_encoder
+    type: supplies_transitions_to
+  - from: invariant_encoder
+    to: smt_solver_engine
+    type: dispatches_obligations_to
+  - from: formal_spec_model
+    to: temporal_model_checker
+    type: explores_reachable_states_on
+  - from: temporal_model_checker
+    to: counterexample_witness
+    type: produces_failing_trace_in
+  - from: smt_solver_engine
+    to: counterexample_witness
+    type: emits_unsat_or_model_to
+
+invariants:
+  - "An inductive invariant must hold in initial states and be preserved across every atomic transition step [HOARE-LOGIC][TLA-LAMPORT]"
+  - "Unsatisfiable negation of a verification condition yields a sound proof relative to the axiomatized model [SMT-LIB][Z3-SOLVER]"
+  - "Solver timeout or unknown status must fail closed rather than be interpreted as proof of safety [Z3-SOLVER][COMP-CERT]"
+  - "Proof validity covers only what matches real hardware/runtime semantics; the specification gap stays outside the proof boundary [COMP-CERT]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The mathematical state-transition relation
+    is consciousness (substrate); concrete counterexample traces and proof
+    scripts are cognition (terminal output). Many bounded unrollings expose
+    partial projections of the underlying transition invariant. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Concrete runtime hardware semantics = server (L1);
+    formal abstract machine model = rendering engine (L2); solver state cache
+    = client cache (L3); single assertion query = avatar (L4). Modeling
+    assumptions that diverge from L1 create verified-but-broken software.
+    Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: vacuous_specification_trap
+    medical_map: autoimmune
+    description: contradictory assumptions make every downstream assertion trivially provable without real safety
+    indicators: [unsat_assumptions, contradictory_precondition, vacuous_truth_pass]
+  - name: solver_timeout_blindness
+    medical_map: chronic
+    description: treating incomplete BMC depth or SMT unknown verdicts as equivalent to full proof
+    indicators: [smt_unknown_ignored, bounded_depth_miss, unchecked_timeout]
+  - name: state_space_explosion
+    medical_map: cancer
+    description: combinatorial interleaving overflows memory before liveness violations become reachable
+    indicators: [exponential_state_growth, memory_exhausted, truncated_exploration]
+  - name: abstract_concrete_model_gap
+    medical_map: pathogen
+    description: idealized proof model omits overflows, concurrency weak memory, or FFI side effects
+    indicators: [unchecked_axiom_violation, weak_memory_reorder, ffi_assumption_breach]
+
+architecture_patterns:
+  - name: fail_closed_proof_gate
+    medical_map: vaccination
+    description: reject builds on unknown/timeout solver status and run vacuity sanity checks on preconditions
+  - name: symmetry_and_abstraction_reduction
+    medical_map: quarantine
+    description: collapse symmetric replicas and apply compositional assume-guarantee reasoning
+  - name: counterexample_guided_refinement
+    medical_map: diagnosis
+    description: feed solver counterexample traces back into invariant strengthening loops

@@ -47,10 +47,10 @@ class DatasetV21Tests(unittest.TestCase):
         for key in required:
             self.assertIn(key, row)
 
-    def test_schema_version_is_2_1_0(self):
+    def test_schema_version_is_3_5_0(self):
         packet = compile_semantic_packet(SAMPLE_INPUT)
         row = build_dataset_row(packet)
-        self.assertEqual(row["schema_version"], "2.1.0")
+        self.assertEqual(row["schema_version"], "3.5.0")
 
     def test_sensitive_input_redacted(self):
         packet = compile_semantic_packet(
@@ -155,7 +155,7 @@ class DatasetV21Tests(unittest.TestCase):
         valid_packet = compile_semantic_packet(SAMPLE_INPUT)
         valid_row = build_dataset_row(valid_packet)
 
-        invalid_row = {"schema_version": "2.1.0"}  # missing required fields
+        invalid_row = {"schema_version": "3.5.0"}  # missing required fields
 
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".jsonl", delete=False
@@ -184,11 +184,34 @@ class DatasetV21Tests(unittest.TestCase):
         self.assertNotIn("Downloads", str(schema_path))
 
     def test_validation_works_with_packaged_schema(self):
-        """Validation succeeds when explicitly using the packaged schema file."""
+        """Validation succeeds when explicitly using the packaged V3.5.0 schema file."""
         packet = compile_semantic_packet(SAMPLE_INPUT)
         row = build_dataset_row(packet)
-        packaged = Path(__file__).resolve().parent.parent / "schemas" / "logos_semantic_training_sample_v2_1.schema.json"
+        packaged = Path(__file__).resolve().parent.parent / "schemas" / "logos_semantic_training_sample_v3_5_0.schema.json"
         validation = validate_dataset_row(row, schema_path=packaged)
+        self.assertTrue(validation["valid"], validation["errors"])
+
+    def test_fractal_scale_aliases_validate_against_v3_5_0_schema(self):
+        """Lower-case fractal scale aliases normalize to schema-valid ScaleType names."""
+        packet = compile_semantic_packet(SAMPLE_INPUT)
+        packet.fractal_mappings = [
+            {
+                "source": "immune_system",
+                "target": "security_ops",
+                "source_scale": "human",
+                "target_scale": "society",
+                "scale_transform": {"source_scale": "computer", "target_scale": "llm"},
+            }
+        ]
+        row = build_dataset_row(packet)
+        self.assertTrue(row["audit"]["schema_valid"], row["audit"]["reproducibility_notes"])
+
+    def test_legacy_v2_1_0_row_still_validates_for_backwards_compatibility(self):
+        """Existing 2.1.0 corpus rows validate automatically against the legacy schema."""
+        packet = compile_semantic_packet(SAMPLE_INPUT)
+        row = build_dataset_row(packet)
+        row["schema_version"] = "2.1.0"
+        validation = validate_dataset_row(row)
         self.assertTrue(validation["valid"], validation["errors"])
 
 

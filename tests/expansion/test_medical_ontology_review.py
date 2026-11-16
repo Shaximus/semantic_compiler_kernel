@@ -161,7 +161,7 @@ def test_confidence_reflects_evidence_strength():
         ("The doctor diagnosed the patient and prescribed treatment.", "medical"),
         ("The APIs and servers are down.", "computation"),
         ("A network firewall is like a cell membrane", "computation"),
-        ("A corporate legal department is like an immune system", "biology"),
+        ("A corporate legal department is like an immune system", "corporate"),
         ("Cells and organisms metabolise.", "biology"),
     ],
 )

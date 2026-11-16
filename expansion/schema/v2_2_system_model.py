@@ -6,7 +6,7 @@ from jsonschema import Draft202012Validator
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "v2_2_system_model.schema.json"
 
-with open(SCHEMA_PATH) as _f:
+with open(SCHEMA_PATH, encoding="utf-8") as _f:
     V2_2_SYSTEM_MODEL_SCHEMA = json.load(_f)
 
 _VALIDATOR = Draft202012Validator(V2_2_SYSTEM_MODEL_SCHEMA)
