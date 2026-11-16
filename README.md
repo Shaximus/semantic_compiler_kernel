@@ -4,6 +4,9 @@
 [![Sponsor: GitHub](https://img.shields.io/badge/Sponsor-%E2%99%A5-pink)](https://github.com/sponsors/Shaximus)
 [![Commercial License](https://img.shields.io/badge/License-Commercial-green.svg)](COMMERCIAL_LICENSE.md)
 
+> [!IMPORTANT]
+> **`semantic_compiler_kernel` is AGPL-3.0.** Commercial license for closed-stack integration, proprietary model training, and enterprise deployment available today: **[Commercial License](COMMERCIAL_LICENSE.md)** | Inquiries: `shaximusoverride6@gmail.com` / `https://reflexionsoftware.com`.
+
 **Reflexion Semantic Compiler — Evidence-conditioned, cross-domain semantic compilation pipeline**
 
 Converts raw natural language into structured, schema-validated intermediate representations and training data (`SFT` / `DPO` / contrastive) for language-model fine-tuning. Built for deterministic compilation, high-coherence isomorphism mapping, hard logical gates, and multi-document corpus orchestration.
