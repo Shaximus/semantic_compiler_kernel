@@ -18,6 +18,21 @@ jobs:
     steps:
       - name: Check out archive repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare traffic-archive branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin traffic-archive > /dev/null 2>&1; then
+            echo "Branch traffic-archive exists on remote. Fetching and checking out..."
+            git fetch origin traffic-archive:refs/remotes/origin/traffic-archive
+            git checkout -B traffic-archive refs/remotes/origin/traffic-archive
+          else
+            echo "Branch traffic-archive does not exist yet. Creating branch traffic-archive..."
+            git checkout -b traffic-archive
+          fi
 
       - name: Collect repository traffic
         env:
@@ -80,4 +95,4 @@ jobs:
             exit 0
           fi
           git commit -m "Archive GitHub traffic snapshot $(date -u +%F)"
-          git push
+          git push origin traffic-archive

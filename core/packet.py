@@ -30,7 +30,7 @@ from semantic_compiler.core.types import (
 from semantic_compiler.core.semantic_ir import SemanticIR
 
 
-COMPILER_VERSION = "3.5.0"
+COMPILER_VERSION = "3.5.1"
 
 
 @dataclass
