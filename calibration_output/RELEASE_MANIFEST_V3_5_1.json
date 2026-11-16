@@ -1,0 +1,18 @@
+{
+  "manifest_version": "3.5.1",
+  "semantic_compiler_version": "3.5.1",
+  "schema_version": "3.5.0",
+  "generated_at": "2026-11-16T11:00:00Z",
+  "git_commit": "v3.5.1",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_1.json"
+  ],
+  "frozen_modules": [],
+  "notes": "V3.5.1 release: AGPL-3.0 commercial dual-licensing, canary provenance watermark, and automated daily traffic archival."
+}

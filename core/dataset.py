@@ -34,7 +34,7 @@ from semantic_compiler.core.types import (
 # Constants
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = COMPILER_VERSION
+SCHEMA_VERSION = "3.5.0"
 EXTRACTOR_VERSION = "skeleton-np-v2"
 _REDACTED_PLACEHOLDER = "[REDACTED — structural derivative only]"
 
