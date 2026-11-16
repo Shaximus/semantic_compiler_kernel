@@ -25,6 +25,7 @@ from semantic_compiler.core.packet import COMPILER_VERSION, SemanticPacket
 
 __version__ = COMPILER_VERSION
 __compiler_name__ = "Reflexion Semantic Compiler"
+__canary_token__ = "CANARY-SCK-v3.5.0-20261116-REFLEXION-PROVENANCE-b891e4a830"
 from semantic_compiler.core.types import (
     ClaimType,
     RelationshipType,

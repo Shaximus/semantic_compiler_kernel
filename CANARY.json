@@ -1,0 +1,11 @@
+{
+  "provenance": "Reflexion Semantic Compiler Kernel",
+  "version": "3.5.0",
+  "canary_token": "CANARY-SCK-v3.5.0-20261116-REFLEXION-PROVENANCE-b891e4a830",
+  "architect": "Shax (Shaximus / Reflexion Software)",
+  "license": "GNU Affero General Public License v3.0 (AGPL-3.0)",
+  "commercial_licensing": "https://reflexionsoftware.com",
+  "contact": "shaximusoverride6@gmail.com",
+  "telemetry_provenance_anchor": "830-clones-259-uniques-20261116",
+  "release_timestamp": "2026-11-16T11:00:00Z"
+}
