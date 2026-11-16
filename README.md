@@ -1,5 +1,7 @@
 # Semantic Compiler Kernel
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 **Reflexion Semantic Compiler — Evidence-conditioned, cross-domain semantic compilation pipeline**
 
 Converts raw natural language into structured, schema-validated intermediate representations and training data (`SFT` / `DPO` / contrastive) for language-model fine-tuning. Built for deterministic compilation, high-coherence isomorphism mapping, hard logical gates, and multi-document corpus orchestration.
@@ -252,6 +254,22 @@ python -m unittest discover
 ```
 
 See `CLAUDE.md` and `docs/` for deeper design notes, review reports, and canon freeze directives.
+
+---
+
+## License & Commercial Dual-Licensing
+
+This software is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See the [LICENSE](LICENSE) file for the full legal text.
+
+### Open-Source Compliance (Section 13)
+Under the AGPL-3.0, any party running this software on a server or interacting with it remotely across a computer network (including SaaS platforms, APIs, cloud-hosted training pipelines, or agentic frameworks) **must provide the complete corresponding source code** of the entire network-interacting software stack under the AGPL-3.0. Silent vendoring or embedding into closed-source commercial cloud systems is strictly prohibited under these terms.
+
+### Commercial Licensing (Proprietary / Enterprise Exemption)
+For commercial entities, enterprise deployments, proprietary integrations, or organizations that cannot or will not comply with the copyleft obligations of the AGPL-3.0:
+
+- **Commercial / Closed-Source Licenses:** Available directly from the Architect.
+- **Enterprise Waivers & SLA Custom Builds:** Available for enterprise agentic pipelines and sovereign model fine-tuning.
+- **Licensing Inquiries:** Contact **Shax (Lead Architect)** at `shaximusoverride6@gmail.com` or via GitHub issues / discussions.
 
 ---
 
