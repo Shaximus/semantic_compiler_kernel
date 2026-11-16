@@ -2,6 +2,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Sponsor: GitHub](https://img.shields.io/badge/Sponsor-%E2%99%A5-pink)](https://github.com/sponsors/Shaximus)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-kingsleywmk-yellow.svg)](https://buymeacoffee.com/kingsleywmk)
 [![Commercial License](https://img.shields.io/badge/License-Commercial-green.svg)](COMMERCIAL_LICENSE.md)
 
 > [!IMPORTANT]
@@ -29,13 +30,13 @@ It also maintains the operational architecture of the substrate: the **Conscious
 > **NOTICE TO COMMERCIAL CONSUMERS & ENTERPRISE CLOUD WORKLOADS:**  
 > This repository is actively tracked, mirrored, and vendored across hundreds of machines. Following the adoption of **AGPL-3.0**, silent commercial vendoring into closed-source software or network SaaS platforms requires an official **[Commercial License](COMMERCIAL_LICENSE.md)**. If your organization is running this architecture or training models with these templates, contact the Lead Architect (`shaximusoverride6@gmail.com`) to execute an enterprise licensing agreement.
 >
-> 💛 **Support the Architect:** If this architecture accelerates your pipelines or research, consider sponsoring through [GitHub Sponsors](https://github.com/sponsors/Shaximus).
+> 💛 **Support the Architect:** If this architecture accelerates your pipelines or research, consider sponsoring through [GitHub Sponsors](https://github.com/sponsors/Shaximus), buying a coffee at [buymeacoffee.com/kingsleywmk](https://buymeacoffee.com/kingsleywmk), backing via [Stripe Lifetime Founding Access](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00), or sending ETH / USDC (ERC-20) to `0x41aD2494Ee9e703Bd289b20cBe25101123137d4e`.
 
 ---
 
 ## Status
 
-**Current release:** `V3.5.0` (2026-11-15) — supersedes `V3.1.1`
+**Current release:** `V3.5.1` (2026-11-16) — supersedes `V3.5.0`
 
 - **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml`):** Setuptools package layout (`semantic_compiler.*`). Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
