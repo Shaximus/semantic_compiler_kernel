@@ -1,0 +1,83 @@
+name: Daily GitHub Traffic Archive
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-traffic-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out archive repository
+        uses: actions/checkout@v4
+
+      - name: Collect repository traffic
+        env:
+          GH_TOKEN: ${{ secrets.GH_TRAFFIC_TOKEN }}
+          OWNER: Shaximus
+          ARCHIVE_DATE: ${{ github.run_started_at }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo "::error::GH_TRAFFIC_TOKEN secret is missing. Add a fine-grained PAT with Metadata: read and Administration: read access to every repository to be archived."
+            exit 1
+          fi
+          DAY="$(date -u -d "$ARCHIVE_DATE" +%F)"
+          OUT="traffic-archive/$DAY"
+          mkdir -p "$OUT"
+          if ! gh repo list "$OWNER" --limit 100 --json nameWithOwner,isPrivate > "$RUNNER_TEMP/repos.json"; then
+            echo "::error::Could not enumerate repositories. Check GH_TRAFFIC_TOKEN repository access."
+            exit 1
+          fi
+          jq -r '.[].nameWithOwner' "$RUNNER_TEMP/repos.json" | sort -u > "$RUNNER_TEMP/repos.txt"
+          TOTAL="$(wc -l < "$RUNNER_TEMP/repos.txt" | tr -d ' ')"
+          echo "Repositories visible to token: $TOTAL"
+          printf '{"archive_date":"%s","owner":"%s","visible_repository_count":%s,"repositories":[' "$DAY" "$OWNER" "$TOTAL" > "$OUT/index.json"
+          FIRST=1
+          while IFS= read -r REPO; do
+            [[ -z "$REPO" ]] && continue
+            SAFE_NAME="${REPO#*/}"
+            REPO_DIR="$OUT/$SAFE_NAME"
+            mkdir -p "$REPO_DIR"
+            STATUS="ok"
+            for METRIC in clones views referrers paths; do
+              case "$METRIC" in
+                clones|views) ENDPOINT="traffic/$METRIC" ;;
+                referrers) ENDPOINT="traffic/popular/referrers" ;;
+                paths) ENDPOINT="traffic/popular/paths" ;;
+              esac
+              if ! gh api -H "Accept: application/vnd.github+json" "repos/$REPO/$ENDPOINT" > "$REPO_DIR/$METRIC.json" 2> "$REPO_DIR/$METRIC.error"; then
+                STATUS="partial"
+                rm -f "$REPO_DIR/$METRIC.json"
+              else
+                rm -f "$REPO_DIR/$METRIC.error"
+              fi
+            done
+            if [[ "$FIRST" -eq 0 ]]; then printf ',' >> "$OUT/index.json"; fi
+            FIRST=0
+            printf '{"repository":"%s","status":"%s"}' "$REPO" "$STATUS" >> "$OUT/index.json"
+            echo "$REPO: $STATUS"
+          done < "$RUNNER_TEMP/repos.txt"
+          printf ']}' >> "$OUT/index.json"
+      - name: Commit archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add traffic-archive/
+          if git diff --cached --quiet; then
+            echo "No new traffic data to commit."
+            exit 0
+          fi
+          git commit -m "Archive GitHub traffic snapshot $(date -u +%F)"
+          git push
