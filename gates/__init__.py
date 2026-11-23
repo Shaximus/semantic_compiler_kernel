@@ -14,6 +14,7 @@ Gates:
     measurement    — measurement path integrity
     wave_function  — v2.0: thinking-output convergence
     substrate      — v2.0: dimensional ladder / substrate control relationships
+    testimony_integrity — Gate 0 (SC-TIG-001): pre-gate testimony classification
 """
 
 from semantic_compiler.gates.causality import separate_causality_from_analogy
@@ -29,6 +30,14 @@ from semantic_compiler.gates.substrate import (
     map_dimensional_relationship,
     check_loop_closure,
 )
+from semantic_compiler.gates.testimony_integrity import (
+    ConsistencyClass,
+    IsomorphismClass,
+    CorroborationClass,
+    TIGClassification,
+    evaluate_testimony_integrity,
+    classify_packet_testimony,
+)
 
 __all__ = [
     "separate_causality_from_analogy",
@@ -43,4 +52,10 @@ __all__ = [
     "evaluate_substrate_claim",
     "map_dimensional_relationship",
     "check_loop_closure",
+    "ConsistencyClass",
+    "IsomorphismClass",
+    "CorroborationClass",
+    "TIGClassification",
+    "evaluate_testimony_integrity",
+    "classify_packet_testimony",
 ]
