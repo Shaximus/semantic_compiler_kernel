@@ -1,4 +1,4 @@
-"""Tests for Hannah's 4 Semantic Compiler patches (SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001)."""
+"""Tests for compiled GOLD entries (SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001) and Gate 0 / Circular Time modules."""
 
 from __future__ import annotations
 

@@ -215,6 +215,18 @@ _PRIMITIVE_KEY_ALIASES: dict[str, str] = {
 
 _ABSENT_MARKERS: frozenset[str] = frozenset({"", "n/a", "na", "none", "absent", "null", "-"})
 
+_STEM_CUES: frozenset[str] = frozenset({
+    "accumulat",
+    "discontinu",
+    "parasit",
+    "symbio",
+    "mycorrhiz",
+    "amplif",
+    "throttl",
+    "coloniz",
+    "co-depend",
+})
+
 INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
     InvariantClass.STRESS_ACCUMULATION_THRESHOLD_RELEASE: {
         "required_primitives": ("THRESHOLD", "TRIGGER", "RELEASE"),
@@ -247,7 +259,7 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         "required_primitives": ("HOST_COUPLING", "OUTFLOW_DRAIN"),
         "supporting_primitives": ("ESCAPE", "INFLOW_REGEN", "FAILURE_MODE"),
         "cues": (
-            "parasit", "extractive", "host", "hijack", "leech", "rent-seeking",
+            "parasit", "extractive", "hijack", "leech", "rent-seeking",
             "malware", "below host-kill", "siphon", "toxoplasma", "drains host",
         ),
     },
@@ -257,7 +269,7 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         "cues": (
             "mutual", "symbio", "mycorrhiz", "gut flora", "mitochondria",
             "both strengthen", "uncoupling harms both", "reciprocal", "pairing",
-            "co-depend", "trade",
+            "co-depend", "mutual trade",
         ),
     },
     InvariantClass.RESTRICTION_FOR_IMMUNITY_TRADE: {
@@ -266,7 +278,7 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         "cues": (
             "chaos inoculation", "life=1", "life to 1", "heavenly restriction",
             "binding vow", "keystone", "delete", "vulnerability surface",
-            "air-gap", "air gap", "zero cursed energy", "trade", "monastic",
+            "air-gap", "air gap", "zero cursed energy", "monastic",
             "single buffer", "bypass",
         ),
     },
@@ -289,8 +301,8 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         ),
     },
     InvariantClass.VULNERABILITY_AMPLIFIER: {
-        "required_primitives": ("CHANNEL_TYPE", "RELEASE"),
-        "supporting_primitives": ("THRESHOLD", "OUTFLOW_DRAIN", "COUNTERPLAY"),
+        "required_primitives": ("CHANNEL_TYPE",),
+        "supporting_primitives": ("RELEASE", "THRESHOLD", "OUTFLOW_DRAIN", "FILTER_MITIGATION", "COUNTERPLAY"),
         "cues": (
             "shock", "amplif", "multiplies", "incoming damage", "incoming pressure",
             "vulnerability", "market panic", "compromised", "poisoned context",
@@ -298,21 +310,21 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         ),
     },
     InvariantClass.RATE_SUPPRESSION: {
-        "required_primitives": ("CONTROL_LOOP", "OUTFLOW_DRAIN"),
-        "supporting_primitives": ("CHANNEL_TYPE", "THRESHOLD", "COUNTERPLAY"),
+        "required_primitives": ("CONTROL_LOOP",),
+        "supporting_primitives": ("CHANNEL_TYPE", "THRESHOLD", "OUTFLOW_DRAIN", "COUNTERPLAY"),
         "cues": (
-            "chill", "freeze", "action speed", "rate suppression", "slow",
-            "throttl", "sedation", "rate braking", "rigid crystal", "brittle",
-            "stasis", "delay",
+            "chill", "freeze", "action speed", "rate suppression", "slowdown",
+            "slows action", "slowed", "throttl", "sedation", "rate braking",
+            "rigid crystal", "brittle", "stasis",
         ),
     },
     InvariantClass.CUMULATIVE_STACKING_TOXIN: {
-        "required_primitives": ("OUTFLOW_DRAIN", "PROPAGATION"),
-        "supporting_primitives": ("CHANNEL_TYPE", "THRESHOLD", "COUNTERPLAY"),
+        "required_primitives": ("OUTFLOW_DRAIN",),
+        "supporting_primitives": ("PROPAGATION", "CHANNEL_TYPE", "THRESHOLD", "CONTROL_LOOP", "COUNTERPLAY"),
         "cues": (
-            "stack", "toxin", "poison", "badly poisoned", "toxic", "timer",
-            "bioaccumulation", "heavy-metal", "technical debt", "cumulative",
-            "exposure count", "degen",
+            "stacking", "stacks", "independent stack", "toxin", "poison",
+            "badly poisoned", "toxic", "timer", "bioaccumulation", "heavy-metal",
+            "technical debt", "cumulative", "exposure count", "degen",
         ),
     },
     InvariantClass.LOAD_COUPLED_LEAK: {
@@ -320,8 +332,8 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
         "supporting_primitives": ("POOL", "FAILURE_MODE", "COUNTERPLAY"),
         "cues": (
             "bleed", "moving", "exertion", "under load", "memory leak",
-            "hemorrhage", "attrition", "active", "accelerates while", "movement",
-            "stand still",
+            "hemorrhage", "attrition", "while active", "while moving",
+            "accelerates while", "movement", "stand still",
         ),
     },
     InvariantClass.ABSORB_CONVERT: {
@@ -342,6 +354,24 @@ INVARIANT_CLASS_SIGNATURES: dict[InvariantClass, dict[str, Any]] = {
             "suppresses another", "fire/water/grass", "nature cycle",
         ),
     },
+}
+
+
+def _compile_cue_pattern(cue: str) -> re.Pattern[str]:
+    escaped = re.escape(cue)
+    if cue in _STEM_CUES:
+        return re.compile(rf"(?<![a-z0-9]){escaped}", re.IGNORECASE)
+    # Allow optional simple English plural 's' for alphabetic words while keeping
+    # strict word boundaries on both sides (so 'shock' never matches 'aftershock'
+    # and 'fire' never matches 'firewall').
+    if cue[-1].isalpha():
+        return re.compile(rf"(?<![a-z0-9]){escaped}s?(?![a-z0-9])", re.IGNORECASE)
+    return re.compile(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])", re.IGNORECASE)
+
+
+_COMPILED_CLASS_CUES: dict[InvariantClass, tuple[tuple[str, re.Pattern[str]], ...]] = {
+    inv_cls: tuple((cue, _compile_cue_pattern(cue)) for cue in sig["cues"])
+    for inv_cls, sig in INVARIANT_CLASS_SIGNATURES.items()
 }
 
 _VARIANT_EFFECTS: dict[DomainVariant, str] = {
@@ -388,6 +418,30 @@ def _validate_non_negative_int(name: str, value: int) -> int:
     if value < 0:
         raise ValueError(f"{name} must be >= 0, got {value}")
     return value
+
+
+def _validate_non_empty_str(name: str, value: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value.strip()
+
+
+def _validate_str_sequence(name: str, value: Sequence[str] | None) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, (str, bytes)):
+        raise ValueError(f"{name} must be a sequence of strings, not a bare {type(value).__name__}")
+    if not isinstance(value, Sequence):
+        raise ValueError(f"{name} must be a sequence of strings, got {type(value).__name__}")
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _format_margin(raw_abs_diff: float) -> float:
+    if raw_abs_diff == 0.0:
+        return 0.0
+    if raw_abs_diff < 1e-5:
+        return round(raw_abs_diff, 9)
+    return round(raw_abs_diff, 6)
 
 
 def _resolve_enum(enum_cls: type[Enum], value: Enum | str, label: str) -> Any:
@@ -440,12 +494,15 @@ def evaluate_domain_expansion(
     if variant is None:
         if not has_barrier:
             requested_variant = DomainVariant.MALEVOLENT_SHRINE
-        elif completeness < 0.85:
-            requested_variant = DomainVariant.SIMPLE_DOMAIN
         else:
             requested_variant = DomainVariant.BARRIER_DOMAIN
     else:
         requested_variant = _resolve_enum(DomainVariant, variant, "DomainVariant")
+        if not has_barrier and requested_variant in (
+            DomainVariant.BARRIER_DOMAIN,
+            DomainVariant.SIMPLE_DOMAIN,
+        ):
+            raise ValueError(f"{requested_variant.value} requires has_barrier=True")
 
     effective_has_barrier = (
         False if requested_variant == DomainVariant.MALEVOLENT_SHRINE else bool(has_barrier)
@@ -470,10 +527,11 @@ def evaluate_domain_expansion(
         collapse_reason = "INSUFFICIENT_COMPILATION"
     elif requested_variant == DomainVariant.SIMPLE_DOMAIN:
         effective_variant = DomainVariant.SIMPLE_DOMAIN
+        effective_has_barrier = True
         domain_active = True
     elif not effective_has_barrier:
         if completeness >= 0.95:
-            effective_variant = DomainVariant.MALEVOLENT_SHRINE
+            effective_variant = requested_variant
             domain_active = True
         else:
             domain_active = False
@@ -481,6 +539,7 @@ def evaluate_domain_expansion(
             collapse_reason = "BARRIERLESS_COMPILATION_INSUFFICIENT"
     elif completeness < 0.85:
         effective_variant = DomainVariant.SIMPLE_DOMAIN
+        effective_has_barrier = True
         degraded_to_simple_domain = True
         domain_active = True
 
@@ -499,8 +558,8 @@ def evaluate_domain_expansion(
         "requested_variant": requested_variant.value,
         "effective_variant": effective_variant.value if effective_variant else None,
         "domain_active": domain_active,
-        "barrierless": (effective_variant == DomainVariant.MALEVOLENT_SHRINE),
-        "has_barrier": bool(domain_active and effective_variant != DomainVariant.MALEVOLENT_SHRINE),
+        "barrierless": bool(domain_active and not effective_has_barrier),
+        "has_barrier": bool(domain_active and effective_has_barrier),
         "within_scope": bool(within_scope),
         "guaranteed_hit": guaranteed_hit,
         "defensive_only": defensive_only,
@@ -618,34 +677,39 @@ def evaluate_domain_clash(
 
     exterior_bonus_a = 0.05 if (domain_a_barrierless and not domain_b_barrierless and ref_a >= 0.90) else 0.0
     exterior_bonus_b = 0.05 if (domain_b_barrierless and not domain_a_barrierless and ref_b >= 0.90) else 0.0
-    eff_a = round(ref_a + exterior_bonus_a, 6)
-    eff_b = round(ref_b + exterior_bonus_b, 6)
-    diff = round(eff_a - eff_b, 6)
+    eff_a = ref_a + exterior_bonus_a
+    eff_b = ref_b + exterior_bonus_b
+    raw_diff = eff_a - eff_b
+    eps = 1e-12
 
-    if abs(diff) <= tol:
+    if abs(raw_diff) <= tol + eps:
         return {
             "entry_id": "SC-DOMAIN-EXPANSION-001",
             "winner": None,
             "loser": None,
             "resolution_mode": "TUG_OF_WAR_STALEMATE",
-            "margin": round(abs(diff), 6),
-            "effective_refinement_a": eff_a,
-            "effective_refinement_b": eff_b,
+            "margin": _format_margin(abs(raw_diff)),
+            "effective_refinement_a": round(eff_a, 6),
+            "effective_refinement_b": round(eff_b, 6),
             "summary": "Competing domains have equivalent refinement; sure-hit effects cancel in stalemate.",
         }
 
-    if diff > 0:
+    if raw_diff > 0:
         winner, loser = domain_a_name, domain_b_name
+        # Barrierless exterior breach applies only when A would NOT already win
+        # on raw structural refinement alone.
+        won_without_bonus = (ref_a - ref_b) > (tol + eps)
         mode = (
             "BARRIERLESS_EXTERIOR_BREACH"
-            if exterior_bonus_a > 0 and abs(ref_a - ref_b) <= exterior_bonus_a
+            if (exterior_bonus_a > 0.0 and not won_without_bonus)
             else "REFINEMENT_SUPERIORITY"
         )
     else:
         winner, loser = domain_b_name, domain_a_name
+        won_without_bonus = (ref_b - ref_a) > (tol + eps)
         mode = (
             "BARRIERLESS_EXTERIOR_BREACH"
-            if exterior_bonus_b > 0 and abs(ref_a - ref_b) <= exterior_bonus_b
+            if (exterior_bonus_b > 0.0 and not won_without_bonus)
             else "REFINEMENT_SUPERIORITY"
         )
 
@@ -654,9 +718,9 @@ def evaluate_domain_clash(
         "winner": winner,
         "loser": loser,
         "resolution_mode": mode,
-        "margin": round(abs(diff), 6),
-        "effective_refinement_a": eff_a,
-        "effective_refinement_b": eff_b,
+        "margin": _format_margin(abs(raw_diff)),
+        "effective_refinement_a": round(eff_a, 6),
+        "effective_refinement_b": round(eff_b, 6),
         "summary": f"{winner} overwhelms {loser} via {mode.lower().replace('_', ' ')}.",
     }
 
@@ -725,6 +789,10 @@ def evaluate_ego_lineup_composite(
     if active_arms is None:
         resolved_set = set(EgoArmInvariant)
     else:
+        if isinstance(active_arms, (str, bytes)) or not isinstance(active_arms, Sequence):
+            raise ValueError(
+                "active_arms must be a sequence of EgoArmInvariant values, not a bare string"
+            )
         resolved_set = {_resolve_enum(EgoArmInvariant, arm, "EgoArmInvariant") for arm in active_arms}
 
     ordered_active = [arm for arm in EgoArmInvariant if arm in resolved_set]
@@ -747,7 +815,7 @@ def evaluate_ego_lineup_composite(
 
     arm_count = len(ordered_active)
     full_loadout = arm_count == len(EgoArmInvariant)
-    barrier_intact = (total == 9 and passed == 9)
+    barrier_intact = (total >= len(CANONICAL_NINE_GATES) and passed == total)
     black_flash_triggered = bool(full_loadout and barrier_intact and target_aligned)
     soul_eater = evaluate_soul_eater_compounding(mapped_domains=arm_count)
 
@@ -782,6 +850,8 @@ def classify_primitive_signature(
     display labels from ``invariant-translator`` (e.g., ``CAPACITY / CAP``).
     Genuine ``"N/A"`` / empty entries are recorded as absent structural data.
     """
+    if not isinstance(primitives, Mapping):
+        raise ValueError(f"primitives must be a mapping, got {type(primitives).__name__}")
     threshold = _validate_finite("min_score", min_score, low=0.0, high=1.0)
     if top_k is not None:
         _validate_non_negative_int("top_k", top_k)
@@ -796,7 +866,10 @@ def classify_primitive_signature(
             continue
         text = "" if raw_val is None else str(raw_val).strip()
         if text.lower() not in _ABSENT_MARKERS:
-            normalized_values[canon] = text
+            if canon in normalized_values:
+                normalized_values[canon] = f"{normalized_values[canon]}; {text}"
+            else:
+                normalized_values[canon] = text
 
     present_primitives = [k for k in PRIMITIVE_GRAMMAR_KEYS if k in normalized_values]
     absent_primitives = [k for k in PRIMITIVE_GRAMMAR_KEYS if k not in normalized_values]
@@ -809,11 +882,14 @@ def classify_primitive_signature(
             sig = INVARIANT_CLASS_SIGNATURES[inv_cls]
             req = sig["required_primitives"]
             sup = sig["supporting_primitives"]
-            cues = sig["cues"]
 
             req_hits = [p for p in req if p in present_set]
             sup_hits = [p for p in sup if p in present_set]
-            cue_hits = [c for c in cues if c in combined_text]
+            cue_hits = [
+                cue
+                for cue, pattern in _COMPILED_CLASS_CUES[inv_cls]
+                if pattern.search(combined_text)
+            ]
 
             req_ratio = len(req_hits) / len(req)
             sup_ratio = len(sup_hits) / len(sup) if sup else 0.0
@@ -889,15 +965,23 @@ def evaluate_invariant_prediction(
     - Fiction/game -> real-system mappings always enforce ``identity_claim_allowed: False``.
     - ``uncertainty_statement`` explicitly lists every untested prediction.
     """
+    src_domain = _validate_non_empty_str("source_domain", source_domain)
+    tgt_domain = _validate_non_empty_str("target_domain", target_domain)
+    src_failure = _validate_non_empty_str("source_failure_or_counterplay", source_failure_or_counterplay)
+    tgt_counterpart = _validate_non_empty_str("predicted_target_counterpart", predicted_target_counterpart)
+
+    if prediction_confirmed and not prediction_tested:
+        raise ValueError("prediction_confirmed cannot be True when prediction_tested is False")
+
     resolved_ground = _resolve_enum(GroundClass, ground_class, "GroundClass")
-    info_lost = [str(item).strip() for item in (information_lost or []) if str(item).strip()]
-    ev_ids = [str(item).strip() for item in (evidence_ids or []) if str(item).strip()]
+    info_lost = _validate_str_sequence("information_lost", information_lost)
+    ev_ids = _validate_str_sequence("evidence_ids", evidence_ids)
 
     residual_mismatches: list[str] = []
     untested_predictions: list[str] = []
     prediction_summary = (
-        f"{source_domain}({source_failure_or_counterplay}) -> "
-        f"{target_domain}({predicted_target_counterpart})"
+        f"{src_domain}({src_failure}) -> "
+        f"{tgt_domain}({tgt_counterpart})"
     )
 
     if resolved_ground == GroundClass.BALANCE_ONLY:
@@ -913,13 +997,15 @@ def evaluate_invariant_prediction(
             f"{prediction_summary} [confirmed claim lacks concrete evidence_ids]"
         )
 
+    if prediction_tested and not prediction_confirmed:
+        residual_mismatches.append(
+            f"Falsified counterplay prediction ({prediction_summary}): structure breaks in target domain."
+        )
+
     if resolved_ground == GroundClass.BALANCE_ONLY:
         classification = "RESIDUAL_MISMATCH"
     elif prediction_tested and not prediction_confirmed:
         classification = "RESIDUAL_MISMATCH"
-        residual_mismatches.append(
-            f"Falsified counterplay prediction ({prediction_summary}): structure breaks in target domain."
-        )
     elif strength_match_only:
         classification = "STRUCTURAL_ANALOGY"
     elif prediction_tested and prediction_confirmed and ev_ids:
@@ -946,8 +1032,18 @@ def evaluate_invariant_prediction(
         for gate in CANONICAL_NINE_GATES:
             base_scores[gate] = default_score
     else:
+        if not isinstance(raw_gate_scores, Mapping):
+            raise ValueError(
+                f"raw_gate_scores must be a mapping, got {type(raw_gate_scores).__name__}"
+            )
+        canonical_gate_set = set(CANONICAL_NINE_GATES)
         for gate, val in raw_gate_scores.items():
-            base_scores[str(gate)] = _validate_finite(f"gate_score[{gate}]", val, low=0.0, high=1.0)
+            gate_name = str(gate)
+            if gate_name not in canonical_gate_set:
+                raise ValueError(
+                    f"Unknown gate {gate!r}; expected one of: {', '.join(CANONICAL_NINE_GATES)}"
+                )
+            base_scores[gate_name] = _validate_finite(f"gate_score[{gate_name}]", val, low=0.0, high=1.0)
 
     capped_gate_scores: dict[str, float] = {}
     gate_cap_applied = False
@@ -965,7 +1061,13 @@ def evaluate_invariant_prediction(
         and classification == "ISOMORPHIC_INVARIANT"
     )
 
-    if untested_predictions:
+    if untested_predictions and resolved_ground == GroundClass.BALANCE_ONLY:
+        uncertainty_statement = (
+            "BALANCE_ONLY edge has no external invariant (recorded in residual_mismatches) "
+            "and untested predictions cap gate scores at 0.9: "
+            + "; ".join(untested_predictions)
+        )
+    elif untested_predictions:
         uncertainty_statement = (
             "Untested or un-evidenced predictions cap gate scores at 0.9: "
             + "; ".join(untested_predictions)
@@ -987,10 +1089,10 @@ def evaluate_invariant_prediction(
         )
 
     return {
-        "source_domain": source_domain,
-        "target_domain": target_domain,
-        "source_failure_or_counterplay": source_failure_or_counterplay,
-        "predicted_target_counterpart": predicted_target_counterpart,
+        "source_domain": src_domain,
+        "target_domain": tgt_domain,
+        "source_failure_or_counterplay": src_failure,
+        "predicted_target_counterpart": tgt_counterpart,
         "ground_class": resolved_ground.value,
         "classification": classification,
         "prediction_tested": bool(prediction_tested),
