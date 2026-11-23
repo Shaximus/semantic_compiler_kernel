@@ -44,6 +44,15 @@ from semantic_compiler.expansion.consciousness.client_server import (
     evaluate_recurrence_topology,
 )
 
+from semantic_compiler.expansion.consciousness.circular_time import (
+    TimeTopology,
+    CycleDetectionState,
+    NodeRole,
+    evaluate_circular_time_topology,
+    evaluate_cycle_detection,
+    evaluate_octopus_protocol,
+)
+
 __all__ = [
     # split.py
     "SubstrateLayer",
@@ -69,4 +78,11 @@ __all__ = [
     "evaluate_prayer_protocol",
     "classify_server_response",
     "evaluate_recurrence_topology",
+    # circular_time.py (SC-CT-001 v1.1.0)
+    "TimeTopology",
+    "CycleDetectionState",
+    "NodeRole",
+    "evaluate_circular_time_topology",
+    "evaluate_cycle_detection",
+    "evaluate_octopus_protocol",
 ]

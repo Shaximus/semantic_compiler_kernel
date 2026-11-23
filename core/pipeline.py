@@ -52,6 +52,7 @@ from semantic_compiler.gates.authority import scan_approval_vectors
 from semantic_compiler.gates.security import scan_semantic_and_operational_risk
 from semantic_compiler.gates.wave_function import evaluate_wave_function_coherence
 from semantic_compiler.gates.substrate import detect_sovereignty_threat
+from semantic_compiler.gates.testimony_integrity import classify_packet_testimony
 from semantic_compiler.gates.contradiction_repair import (
     detect_and_repair_contradictions,
     classify_semantic_error,
@@ -1087,10 +1088,11 @@ def compile_semantic_packet(
     packet = initialize_packet(input_text, context, mode)
 
     # ──────────────────────────────────────────────────────────
-    # Stage 1: Preserve and classify source
+    # Stage 1: Preserve and classify source (+ Gate 0: TIG)
     # ──────────────────────────────────────────────────────────
     packet.normalized_input = normalize_preserving_signal(input_text)
     packet.source_context = classify_source_context(input_text, context)
+    packet.testimony_integrity_gate = classify_packet_testimony(packet, context)
     packet.claim_types = classify_claim_types(input_text, context)
     packet.mode = resolve_mode(packet, requested_mode=mode)
 

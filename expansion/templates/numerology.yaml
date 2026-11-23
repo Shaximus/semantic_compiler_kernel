@@ -1,0 +1,186 @@
+domain: numerology
+version: 1.0
+description: >
+  Archetypal numerological reduction, vibrational frequency calculation,
+  Pythagorean and Chaldean mapping systems, core number triad (Life Path
+  blueprint, Expression destiny, Soul Urge motivation, Personality persona),
+  temporal cycles (Personal Year, Month, Day, Pinnacles, Challenges),
+  karmic debt gates, and master number invariants.
+  Citation: Numerology & Astrology Agent Guide (Hannah for Reflexion Software, 2026-11-17)
+
+components:
+  - name: digit_reduction_engine
+    function: >
+      Iterative base-10 digit summation algorithm reducing multi-digit numbers
+      to single roots (1-9) while enforcing master number non-reduction halts.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: master_number_gate
+    function: >
+      Structural barrier preventing reduction for master numbers 11 (The Intuitive /
+      Illuminator), 22 (The Master Builder), 33 (The Master Teacher), and 44
+      (The Master Healer).
+    criticality: high
+    medical_map: immune_system
+
+  - name: karmic_debt_sentinel
+    function: >
+      Pre-reduction detector identifying karmic debt indicators 13 (discipline/laziness),
+      14 (temperance/freedom abuse), 16 (ego destruction/humility), and 19
+      (compassion/independence) before root reduction.
+    criticality: high
+    medical_map: diagnosis
+
+  - name: pythagorean_matrix
+    function: >
+      Standard 1-9 Western letter-to-number transformation grid mapping letters
+      A through Z to numerical vibrational indices.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: chaldean_matrix
+    function: >
+      Ancient 1-8 vibrational mapping system reserving 9 as sacred/unmapped,
+      utilizing common usage names and compound double-digit values.
+    criticality: medium
+    medical_map: homeostasis
+
+  - name: life_path_calculator
+    function: >
+      Foundational blueprint engine reducing birth month, day, and year separately
+      before final summation to protect intermediate master numbers.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: expression_destiny_engine
+    function: >
+      Full birth certificate name letter sum quantifying life mission, innate
+      capacity, and operational trajectory.
+    criticality: high
+    medical_map: treatment
+
+  - name: soul_urge_resonator
+    function: >
+      Vowels-only letter summation calculating internal motivation, heart's
+      desire, and underlying psychological drive.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: personality_interface
+    function: >
+      Consonants-only letter summation calculating outward persona, behavioral
+      mask, and external interface presentation.
+    criticality: high
+    medical_map: immune_system
+
+  - name: temporal_cycle_clock
+    function: >
+      Ephemeral progression engine tracking Personal Year (birth month + birth day +
+      current calendar year), Personal Month, Personal Day, and 4 life Pinnacle/Challenge cycles.
+    criticality: medium
+    medical_map: homeostasis
+
+relationships:
+  - from: digit_reduction_engine
+    to: master_number_gate
+    type: evaluates_halt
+  - from: digit_reduction_engine
+    to: karmic_debt_sentinel
+    type: detects_pre_reduction
+  - from: pythagorean_matrix
+    to: expression_destiny_engine
+    type: encodes_full_name
+  - from: pythagorean_matrix
+    to: soul_urge_resonator
+    type: filters_vowels
+  - from: pythagorean_matrix
+    to: personality_interface
+    type: filters_consonants
+  - from: life_path_calculator
+    to: expression_destiny_engine
+    type: aligns_with
+  - from: soul_urge_resonator
+    to: personality_interface
+    type: underlies_mask
+  - from: temporal_cycle_clock
+    to: life_path_calculator
+    type: modulates_phase
+
+invariants:
+  - "Master numbers 11, 22, 33, 44 must never be reduced to single digits when evaluating core archetypes."
+  - "Karmic debt numbers 13, 14, 16, 19 must be flagged at the intermediate compound stage prior to reduction."
+  - "Life path calculation must reduce month, day, and year components independently prior to final summation to preserve master number intermediate states."
+  - "Pythagorean mapping assigns letters across values 1-9 sequentially while Chaldean mapping assigns across 1-8 reserving 9."
+  - "Soul Urge strictly processes vowel sounds while Personality strictly processes consonant sounds."
+  - "Personal Year is calculated by summing birth month, birth day, and current calendar year reduced to a root or master number."
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The undifferentiated archetypal numeric substrate
+    (1-9 vibrational spectrum and master frequencies) is consciousness; specific
+    names, dates, personal year readings, and transient numerological profiles
+    are cognition (terminal output). A persona's name can change while the core
+    blueprint remains rooted in the underlying substrate.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: The archetypal vibrational blueprint / soul seed = server (L1);
+    date of birth and letter reduction engine = rendering engine (L2); personal
+    year / pinnacle cycle progression = client cache (L3); outer personality
+    number and public mask = avatar (L4). Modifying the outer name mask (L4)
+    adjusts local client rendering without altering the foundational
+    server-side life path (L1). Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: premature_master_reduction
+    medical_map: acute
+    description: >
+      Flattening 11->2, 22->4, or 33->6, eliminating the higher vibrational octave
+      and leadership potential.
+    indicators:
+      - Master numbers reduced to single digits in reports
+      - Flattened life path without master builder or illuminator indicators
+
+  - name: karmic_debt_erasure
+    medical_map: chronic
+    description: >
+      Directly reducing 13, 14, 16, or 19 without logging the underlying debt,
+      missing structural friction root causes.
+    indicators:
+      - Root 4, 5, 7, 1 presented without karmic lesson annotation
+      - Unaccounted developmental friction in life cycles
+
+  - name: full_date_batch_reduction
+    medical_map: sepsis
+    description: >
+      Summing all birthdate digits concurrently rather than reducing month,
+      day, and year separately, distorting master number detection.
+    indicators:
+      - Divergence between batch-summed and component-reduced life path totals
+      - Inadvertently erased master 11 or 22 in month/day components
+
+  - name: vowel_consonant_misclassification
+    medical_map: diagnosis
+    description: >
+      Misidentifying the phonetic role of 'Y' (treating vocalic Y as consonant
+      or consonantal Y as vowel), corrupting Soul Urge and Personality totals.
+    indicators:
+      - Discrepancy in vowel sums for names like Lynn or Yolanda
+      - Corrupted Heart's Desire or Personality values
+
+architecture_patterns:
+  - name: core_number_quadrad
+    medical_map: homeostasis
+    description: >
+      Integrated synthesis of Life Path (blueprint), Expression (mission),
+      Soul Urge (motivation), and Personality (mask).
+
+  - name: pinnacle_challenge_dialectic
+    medical_map: physiotherapy
+    description: >
+      Complementary four-stage developmental lifecycle balancing external
+      pinnacles against internal challenges.
+
+  - name: chaldean_compound_depth
+    medical_map: prognosis
+    description: >
+      Evaluating compound double-digit spiritual significance alongside reduced
+      root operational tendencies.

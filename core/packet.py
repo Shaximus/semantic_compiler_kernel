@@ -105,6 +105,7 @@ class SemanticPacket:
     fractal_mappings: list[dict[str, Any]] = field(default_factory=list)
 
     # --- Hard gates ---
+    testimony_integrity_gate: dict[str, Any] = field(default_factory=dict)
     causal_analysis: dict[str, Any] = field(default_factory=dict)
     macro_micro_checks: dict[str, Any] = field(default_factory=dict)
     scale_separation: dict[str, Any] = field(default_factory=dict)

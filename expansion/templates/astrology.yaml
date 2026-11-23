@@ -1,0 +1,168 @@
+domain: astrology
+version: 1.0
+description: >
+  Formal astrological archetypal mapping, celestial coordinate projection,
+  12 zodiac energetic filters (elemental and modal matrices), planetary
+  archetypes (personal, social, transpersonal, nodal), 12 experiential houses,
+  geometric aspect resonance, essential dignities, and whole-chart topological pattern distributions.
+  Citation: Numerology & Astrology Agent Guide (Hannah for Reflexion Software, 2026-11-17)
+
+components:
+  - name: zodiac_filter_matrix
+    function: >
+      12 signs divided across 4 elements (Fire, Earth, Air, Water) and 3 modalities
+      (Cardinal, Fixed, Mutable) defining how archetypal energy operates.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: planetary_archetype_engine
+    function: >
+      Planetary bodies partitioned into Personal (Sun, Moon, Mercury, Venus, Mars),
+      Social (Jupiter, Saturn), Transpersonal/Generational (Uranus, Neptune, Pluto),
+      and Karmic (Lunar Nodes).
+    criticality: high
+    medical_map: homeostasis
+
+  - name: house_experiential_matrix
+    function: >
+      12 astrological houses representing discrete contextual arenas of life from
+      1st (Identity/Self) to 12th (Unconscious/Transcendence).
+    criticality: high
+    medical_map: homeostasis
+
+  - name: aspect_resonance_grid
+    function: >
+      Angular geometric alignments between celestial bodies (Conjunction 0°,
+      Sextile 60°, Square 90°, Trine 120°, Opposition 180°) defining dynamic
+      tension or harmonic ease.
+    criticality: high
+    medical_map: immune_system
+
+  - name: planetary_dignity_engine
+    function: >
+      Essential dignity evaluation quantifying structural strength and ease of
+      function (Domicile, Exaltation, Detriment, Fall).
+    criticality: high
+    medical_map: diagnosis
+
+  - name: retrograde_evaluator
+    function: >
+      Apparent retrograde motion analyzer indicating internalized expression,
+      reflective review, and developmental delays.
+    criticality: medium
+    medical_map: homeostasis
+
+  - name: chart_pattern_topologist
+    function: >
+      Macro-topology classifier identifying whole-chart planetary distribution
+      patterns (Stellium, Grand Trine, Grand Cross, T-Square, Yod, Bucket, Bowl, Bundle, Splash).
+    criticality: high
+    medical_map: immune_system
+
+  - name: temporal_transit_clock
+    function: >
+      Cyclic timing tracker monitoring planetary returns (notably the 29.5-year
+      Saturn Return), nodal axis shifts, and solar/lunar eclipses.
+    criticality: high
+    medical_map: treatment
+
+relationships:
+  - from: planetary_archetype_engine
+    to: zodiac_filter_matrix
+    type: expressed_through
+  - from: planetary_archetype_engine
+    to: house_experiential_matrix
+    type: manifests_in
+  - from: planetary_archetype_engine
+    to: aspect_resonance_grid
+    type: forms_geometry_with
+  - from: planetary_archetype_engine
+    to: planetary_dignity_engine
+    type: rated_by
+  - from: retrograde_evaluator
+    to: planetary_archetype_engine
+    type: inverts_flow_of
+  - from: aspect_resonance_grid
+    to: chart_pattern_topologist
+    type: constructs_topology
+  - from: temporal_transit_clock
+    to: planetary_archetype_engine
+    type: modulates_cycles_of
+
+invariants:
+  - "Planets represent what energy is acting, Signs describe how it operates, and Houses specify where it manifests in lived experience."
+  - "The Primal Triad (Sun sign identity, Moon sign emotional substrate, Rising sign exterior lens) constitutes the foundational personal cognitive architecture."
+  - "Hard aspects (Square 90°, Opposition 180°) generate dynamic friction, crisis, and structural development; soft aspects (Trine 120°, Sextile 60°) generate harmonic flow and facility."
+  - "Planetary dignities dictate operational resistance: Domicile and Exaltation operate with high efficacy; Detriment and Fall encounter intrinsic structural resistance."
+  - "A Stellium requires 3 or more planets concentrated in a single sign or house, producing extreme focalization of energy."
+  - "The Saturn Return recurs at ~29.5 year intervals requiring structural re-evaluation and boundary consolidation."
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The celestial coordinate substrate, geometric
+    harmonic field, and 12-fold archetypal division is consciousness (substrate);
+    a particular natal chart rendering, daily transit reading, or transient
+    horoscopic interpretation is cognition (terminal output). Multiple cognitive
+    expressions and life choices run on the same natal chart substrate.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: The macrocosmic planetary coordinate geometry = server (L1);
+    ephemeris projection and house coordinate calculation = rendering engine (L2);
+    natal chart and dynamic transit cache = client cache (L3); rising sign and
+    outer persona interface = avatar (L4). Transits represent server-side time events
+    rendering new conditions into the client cache (L3) to be navigated by the avatar (L4).
+    Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: sun_sign_reductionism
+    medical_map: acute
+    description: >
+      Evaluating an individual purely by Sun sign while ignoring Moon,
+      Ascendant, planetary rulers, and house rulerships.
+    indicators:
+      - Single-point personality profiles lacking planetary context
+      - Failure to account for emotional response patterns or behavioral mask
+
+  - name: aspect_orb_inflation
+    medical_map: metastasis
+    description: >
+      Permitting excessively wide aspect orbs (>8-10°), resulting in
+      false-positive aspectual connections and noisy chart interpretation.
+    indicators:
+      - Out-of-sign aspects counted as primary geometric forces
+      - Uncorrelated behavioral predictions from weak minor aspects
+
+  - name: retrograde_fatalism
+    medical_map: inflammation
+    description: >
+      Interpreting retrograde planets as purely negative malfunctions rather
+      than internalized, introspective cognitive refactoring phases.
+    indicators:
+      - Treating Mercury or Saturn retrograde as complete functional failure
+      - Failure to leverage retrograde cycles for internal auditing
+
+  - name: house_cusp_system_mismatch
+    medical_map: diagnosis
+    description: >
+      Interchanging incompatible house calculation methods (e.g., Placidus vs.
+      Whole Sign) without accounting for boundary shifts and intercepted signs.
+    indicators:
+      - Inconsistent house placements between chart renderings
+      - Confused planetary rulerships across intercepted house cusps
+
+architecture_patterns:
+  - name: primal_triad_alignment
+    medical_map: homeostasis
+    description: >
+      Integration of Sun (core drive), Moon (inner safety/needs), and
+      Ascendant (outer presentation/filter).
+
+  - name: closed_geometric_circuits
+    medical_map: quarantine
+    description: >
+      High-order aspect patterns like Grand Trines (closed equilateral flow)
+      and Grand Crosses (closed square tension).
+
+  - name: focal_funnel_distribution
+    medical_map: treatment
+    description: >
+      Asymmetric chart architectures (e.g., Bucket pattern) where all energy
+      channels through a single singleton handle planet.

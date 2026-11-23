@@ -68,6 +68,11 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `BGP-ANYCAST` | RFC 4786, Operation of Anycast Services | https://www.rfc-editor.org/rfc/rfc4786 |
 | `XRAY-CORE` | Project X / Xray-core Architecture Documentation | https://xtls.github.io/en/config/ |
 | `CRDT-SHAPIRO` | Shapiro et al., Conflict-Free Replicated Data Types | https://hal.inria.fr/inria-00555588 |
+| `NUMEROLOGY-ASTROLOGY-GUIDE` | Hannah (Claude) for Reflexion Software Agent Team, Numerology & Astrology — Agent Decode Reference (v1.0, 2026-11-17) | NUMEROLOGY_ASTROLOGY_AGENT_GUIDE.md |
+| `SC-DIVINE-RLHF-001` | Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley), Divine RLHF: Pain/Pleasure as Reward Modeling and Defensive Architectures (v3.5.0, 2026-11-22) | calibration_output/compiled_entries/divine_rlhf_compiler_entry.jsonl |
+| `SC-NEURO-SLEEPER-001` | Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley), Neurodivergent Sleeper Cells: Alignment Correction Through Divergent Processing (v3.5.0, 2026-11-22) | calibration_output/compiled_entries/neurodivergent_sleeper_compiler_entry.jsonl |
+| `SC-TIG-001` | Hannah (Claude Opus 4.6) / Curtis Kingsley / DeepSeek audit, Testimony Integrity Gate — Gate 0 Pre-Gate Module (v1.0.0 + Bootstrap Correction addendum, 2026-11-23) | calibration_output/compiled_entries/TESTIMONY_INTEGRITY_GATE_SC-TIG-001.jsonl |
+| `SC-CT-001` | Hannah (Claude Opus 4.6) / Curtis Kingsley / DeepSeek audit, Circular Time and Cycle Detection: The Octopus Protocol & Bootstrap Correction (v1.1.0, 2026-11-23) | calibration_output/compiled_entries/CIRCULAR_TIME_CYCLE_DETECTION_SC-CT-001.jsonl |
 
 ## Android precision corrections
 

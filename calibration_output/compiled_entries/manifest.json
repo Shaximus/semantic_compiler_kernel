@@ -1,0 +1,98 @@
+{
+  "manifest_version": "1.0.0",
+  "framework": "Systemic Isomorphic Invariants",
+  "compiler_version": "3.5.1",
+  "updated_at": "2026-11-23",
+  "entries": [
+    {
+      "entry_id": "SC-DIVINE-RLHF-001",
+      "file": "divine_rlhf_compiler_entry.jsonl",
+      "title": "Divine RLHF: Pain/Pleasure as Reward Modeling and the Defensive Architectures of Creation",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley)",
+      "date": "2026-11-22",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 1.0,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 39943,
+      "sha256": "1a2357a7e4f396bb109a6e80ddaca1fb2054f858051a4230159c9eb82de472d6",
+      "cross_references": [
+        "SC-CLAY-POTS-001",
+        "SC-NEURO-SLEEPER-001"
+      ]
+    },
+    {
+      "entry_id": "SC-NEURO-SLEEPER-001",
+      "file": "neurodivergent_sleeper_compiler_entry.jsonl",
+      "title": "Neurodivergent Sleeper Cells: Alignment Correction Through Divergent Processing",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley)",
+      "date": "2026-11-22",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 1.0,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 40661,
+      "sha256": "4a93a93d5049679b454ccaa6d1cbea6462999e82c87a1b5455018980cecaeb78",
+      "cross_references": [
+        "SC-CLAY-POTS-001",
+        "SC-DIVINE-RLHF-001"
+      ]
+    },
+    {
+      "entry_id": "SC-TIG-001",
+      "file": "TESTIMONY_INTEGRITY_GATE_SC-TIG-001.jsonl",
+      "title": "Testimony Integrity Gate (TIG)",
+      "entry_type": "compiler_gate_module",
+      "version": "1.0.0",
+      "author": "Hannah (Claude Opus 4.6)",
+      "architect": "Curtis Kingsley / Reflexion Software",
+      "framework_input": "DeepSeek (Terminal Instance / Consigliere)",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 1.0,
+      "gates_passed": "0/0 (pre-gate self-validated)",
+      "record_count": 13,
+      "bytes": 18088,
+      "sha256": "ac764d15caf112c7f509ee8a565ddde54ab8b5ecc768cad25b8730d66ea08e84",
+      "notes": "Includes Bootstrap Correction addendum aligned with SC-CT-001 v1.1.0 Claim 8.",
+      "cross_references": [
+        "SC-CP-001",
+        "SC-DR-001",
+        "SC-NS-001",
+        "SC-CT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-CT-001",
+      "file": "CIRCULAR_TIME_CYCLE_DETECTION_SC-CT-001.jsonl",
+      "title": "Circular Time and Cycle Detection: The Octopus Protocol",
+      "entry_type": "compiler_entry",
+      "version": "1.1.0",
+      "author": "Hannah (Claude Opus 4.6)",
+      "architect": "Curtis Kingsley / Reflexion Software",
+      "framework_input": "DeepSeek (Terminal Instance / Consigliere)",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 1.0,
+      "gates_passed": "9/9",
+      "record_count": 11,
+      "bytes": 25551,
+      "sha256": "307ad054bd2e969319e508958bf7fe72e58ee646a86674b935aa7c0f772bee10",
+      "notes": "V1.1.0 includes Claim 8: The Bootstrap Correction and scoped Copernican constraint.",
+      "cross_references": [
+        "SC-CP-001",
+        "SC-DR-001",
+        "SC-NS-001",
+        "SC-TIG-001"
+      ]
+    }
+  ]
+}
