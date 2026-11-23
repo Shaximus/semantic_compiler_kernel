@@ -60,6 +60,7 @@ def test_calibration_corpus_category_coverage():
         "ci_build_invariants",
         "numerology",
         "astrology",
+        "domain_expansion",
     }
     for row in corpus:
         if row["domain"] in wired:

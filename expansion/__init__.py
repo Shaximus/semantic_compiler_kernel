@@ -249,6 +249,15 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "stellium", "saturn return", "planetary dignity", "midheaven",
         "synastry", "ephemeris", "retrograde planet",
     )),
+    ("domain_expansion", (
+        "domain expansion", "innate domain", "domain clash", "guaranteed hit",
+        "sure-hit", "sure hit", "malevolent shrine", "unlimited void",
+        "chimera shadow garden", "simple domain", "black flash",
+        "soul eater compounding", "ego lineup", "heavenly restriction",
+        "inverted spear", "berserker armor", "dimension slash",
+        "17-primitive grammar", "invariant translator", "primitive signature",
+        "isomorphic invariant",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",

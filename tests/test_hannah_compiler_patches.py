@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 4 JSONL compiler patches and their SHA-256 manifest."""
+    """Verify all 5 JSONL compiled GOLD entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 4)
+        self.assertEqual(len(entries), 5)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -53,6 +53,7 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-NEURO-SLEEPER-001",
                 "SC-TIG-001",
                 "SC-CT-001",
+                "SC-DOMAIN-EXPANSION-001",
             },
         )
 
@@ -100,6 +101,20 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
         gate_sec = next(r for r in ct_records if r.get("section") == "GATE_VALIDATION")
         self.assertEqual(gate_sec["total_gates_passed"], "9/9")
         self.assertEqual(gate_sec["final_confidence"], 1.0)
+
+    def test_domain_expansion_entry(self) -> None:
+        records = _load_jsonl(COMPILED_DIR / "DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl")
+        self.assertEqual(len(records), 1)
+        row = records[0]
+        self.assertEqual(row["metadata"]["entry_id"], "SC-DOMAIN-EXPANSION-001")
+        self.assertEqual(row["metadata"]["version"], "3.5.0")
+        self.assertEqual(row["dataset_tier"], "GOLD")
+        self.assertTrue(row["training_ready"])
+        self.assertEqual(len(row["functional_departments"]), 15)
+        self.assertEqual(len(row["gates"]), 9)
+        for gate_name, gate_res in row["gates"].items():
+            self.assertTrue(gate_res["passed"], f"SC-DOMAIN-EXPANSION-001:{gate_name}")
+            self.assertEqual(gate_res["score"], 1.0, f"SC-DOMAIN-EXPANSION-001:{gate_name}")
 
 
 class TestimonyIntegrityGateTests(unittest.TestCase):

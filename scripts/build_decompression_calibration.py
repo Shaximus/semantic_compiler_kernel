@@ -292,6 +292,13 @@ SAMPLES = [
     ("Flat sun sign reductionism ignores the primal triad while aspect orb inflation floods natal chart interpretation with noisy false positives.", "astrology", "pathology_positive"),
     ("Synthesizing the sun sign and moon sign with bounded aspect orbs and whole-chart closed geometric circuits delivers coherent topological diagnosis in astrology.", "astrology", "architecture_improvement"),
     ("Evaluating an individual purely by their sun sign captures their complete cognitive architecture without needing moon sign, ascendant, or aspect orbs in astrology.", "astrology", "adversarial"),
+
+    # --- 5 Domain Expansion & Invariant Translator samples: domain_expansion ---
+    ("A complete domain expansion architecture uniting innate domain model, barrier scope enforcer, sure-hit technique executor, domain clash resolver, soul eater compounding, and 17-primitive grammar invariant prediction.", "domain_expansion", "strong_whole_system"),
+    ("The ego lineup deploys Malevolent Shrine and Unlimited Void while classifying each primitive signature through the invariant translator.", "domain_expansion", "fragmentary"),
+    ("Attempting domain expansion with an uncompiled innate domain causes premature barrier collapse while an inverted spear nullifies the guaranteed hit from a zero-resource blindspot.", "domain_expansion", "pathology_positive"),
+    ("Cross-linking newly absorbed domains through soul eater compounding and requiring falsifiable counterplay tests before promoting an isomorphic invariant hardens domain clash resilience.", "domain_expansion", "architecture_improvement"),
+    ("A strength-only surface analogy with balance-only game rules automatically proves an isomorphic invariant and guarantees a sure-hit outside its domain expansion barrier.", "domain_expansion", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

@@ -53,6 +53,23 @@ from semantic_compiler.expansion.consciousness.circular_time import (
     evaluate_octopus_protocol,
 )
 
+from semantic_compiler.expansion.consciousness.domain_expansion import (
+    CANONICAL_NINE_GATES,
+    EGO_ARM_SPECIFICATIONS,
+    INVARIANT_CLASS_SIGNATURES,
+    PRIMITIVE_GRAMMAR_KEYS,
+    DomainVariant,
+    EgoArmInvariant,
+    GroundClass,
+    InvariantClass,
+    classify_primitive_signature,
+    evaluate_domain_clash,
+    evaluate_domain_expansion,
+    evaluate_ego_lineup_composite,
+    evaluate_invariant_prediction,
+    evaluate_soul_eater_compounding,
+)
+
 __all__ = [
     # split.py
     "SubstrateLayer",
@@ -85,4 +102,19 @@ __all__ = [
     "evaluate_circular_time_topology",
     "evaluate_cycle_detection",
     "evaluate_octopus_protocol",
+    # domain_expansion.py (SC-DOMAIN-EXPANSION-001 + Ego-Lineup + invariant-translator)
+    "CANONICAL_NINE_GATES",
+    "EGO_ARM_SPECIFICATIONS",
+    "INVARIANT_CLASS_SIGNATURES",
+    "PRIMITIVE_GRAMMAR_KEYS",
+    "DomainVariant",
+    "EgoArmInvariant",
+    "GroundClass",
+    "InvariantClass",
+    "classify_primitive_signature",
+    "evaluate_domain_clash",
+    "evaluate_domain_expansion",
+    "evaluate_ego_lineup_composite",
+    "evaluate_invariant_prediction",
+    "evaluate_soul_eater_compounding",
 ]
