@@ -25,7 +25,7 @@ The unit of work is a **whole domain**, not a single mechanic. When given one th
 
 1. Read the canonical JSONL template:
    - `~/semantic_compiler_kernel/calibration_output/compiled_entries/DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl` (keep the exact field structure).
-2. Read `INVARIANT_CATALOG.md` and `DOMAIN_LEDGER.md` if they exist in the active catalog directory (resume unfinished domains, reuse already-compiled node invariants, and extend existing catalog classes instead of duplicating them).
+2. Read `INVARIANT_CATALOG.md` and `DOMAIN_LEDGER.md` if they exist in `~/semantic_compiler_kernel/docs/invariant_catalog/` (the canonical catalog directory; resume unfinished domains, reuse already-compiled node invariants, and extend existing catalog classes instead of duplicating them).
 3. Fetch the domain's **complete, authoritative rule source** (web search / official rule table / wiki / patch notes / textbook taxonomy). Record source, version/generation, and date. Tag every fact `source-fact`, `common-reading`, or `mapping`.
 
 ## 1. Enumerate the Full Ontology (Exhaustive, With Count Check)
@@ -111,6 +111,7 @@ A real invariant transfers **weaknesses and counterplay**, not just strengths:
 
 ## 11. Emit, Validate & Grow the Catalog
 
+Write all outputs into `~/semantic_compiler_kernel/docs/invariant_catalog/` and run its `validate_catalog.py` before finishing.
 1. Emit `DOMAIN_DECODE_<DOMAIN>.md` (ontology + counts, full interaction matrix, topology, node invariants & 17-primitive tables, grounded edge decodes, closure table, predicted missing edges, overlays with topology scores, all 15 departments).
 2. Emit `INVARIANT_ENTRY_SC-IT-<DOMAIN>-001.jsonl` in exact `SC-DE-001` format (`compiler_mode: "UNIVERSAL_DECOMPRESSION"`, `framework: "Systemic Isomorphic Invariants"`, `version: "3.5.0"`, `source: "Shax (Curtis Kingsley) — Reflexion Software"`), plus extra `SC-IT-<SLUG>-001` entries for standalone hub nodes. Only cross-reference entry IDs that actually exist.
 3. Update `INVARIANT_CATALOG.md` (signature, cross-domain instances with entry IDs, predictions with `confirmed`/`untested`/`failed` status, class compositions).
