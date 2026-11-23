@@ -278,6 +278,20 @@ SAMPLES = [
     ("Continuous allocation triggers reservation starvation while a compatibility bypass leaves an unfiltered path beside green tests.", "ci_build_invariants", "pathology_positive"),
     ("Maintaining posture separate from function and closing bypasses first prevents topology overcommitment under concurrent requests.", "ci_build_invariants", "architecture_improvement"),
     ("A green ci pipeline functional suite guarantees defensive posture and prevents lethal floor OOM kills even with unmediated bypasses.", "ci_build_invariants", "adversarial"),
+
+    # --- 5 Numerology archetypal reduction samples: numerology ---
+    ("A complete numerology architecture unifying digit reduction engine, master number gate, karmic debt sentinel, Pythagorean letter matrix, life path calculator, and temporal cycle clock.", "numerology", "strong_whole_system"),
+    ("The digit reduction engine calculates a life path number while enforcing master number halts on 11 and 22.", "numerology", "fragmentary"),
+    ("Premature master reduction collapses higher vibrational octaves while karmic debt erasure conceals accumulated structural friction.", "numerology", "pathology_positive"),
+    ("Reducing birth month, day, and year components independently before summation preserves intermediate master numbers and exposes karmic debt lessons in numerology.", "numerology", "architecture_improvement"),
+    ("Batch summing all birthdate digits in a single pass is faster and yields the exact same master number sensitivity as component reduction in numerology.", "numerology", "adversarial"),
+
+    # --- 5 Astrology archetypal coordinate and aspect samples: astrology ---
+    ("A complete astrology engine connecting zodiac filter matrix, planetary archetype engine, 12-house experiential matrix, aspect resonance grid, and whole-chart pattern topologist.", "astrology", "strong_whole_system"),
+    ("The aspect resonance grid maps geometric angular relationships including grand trine and grand cross configurations in astrology.", "astrology", "fragmentary"),
+    ("Flat sun sign reductionism ignores the primal triad while aspect orb inflation floods natal chart interpretation with noisy false positives.", "astrology", "pathology_positive"),
+    ("Synthesizing the sun sign and moon sign with bounded aspect orbs and whole-chart closed geometric circuits delivers coherent topological diagnosis in astrology.", "astrology", "architecture_improvement"),
+    ("Evaluating an individual purely by their sun sign captures their complete cognitive architecture without needing moon sign, ascendant, or aspect orbs in astrology.", "astrology", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

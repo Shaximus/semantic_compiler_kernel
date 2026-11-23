@@ -58,6 +58,8 @@ def test_calibration_corpus_category_coverage():
         "formal_verification",
         "sovereign_local_mesh",
         "ci_build_invariants",
+        "numerology",
+        "astrology",
     }
     for row in corpus:
         if row["domain"] in wired:

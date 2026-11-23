@@ -68,6 +68,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `BGP-ANYCAST` | RFC 4786, Operation of Anycast Services | https://www.rfc-editor.org/rfc/rfc4786 |
 | `XRAY-CORE` | Project X / Xray-core Architecture Documentation | https://xtls.github.io/en/config/ |
 | `CRDT-SHAPIRO` | Shapiro et al., Conflict-Free Replicated Data Types | https://hal.inria.fr/inria-00555588 |
+| `NUMEROLOGY-ASTROLOGY-GUIDE` | Hannah (Claude) for Reflexion Software Agent Team, Numerology & Astrology — Agent Decode Reference (v1.0, 2026-11-17) | NUMEROLOGY_ASTROLOGY_AGENT_GUIDE.md |
 
 ## Android precision corrections
 

@@ -1,25 +1,26 @@
 # Decompression Calibration Report V2.2
 
-- Total samples: 205
+- Total samples: 215
 - Categories: 8 (minimum 10 each)
-- Domains covered: 41
+- Domains covered: 43
 - Samples with detected pathologies: 0
 
 ## Samples per category
 
-- adversarial: 33
-- architecture_improvement: 35
+- adversarial: 35
+- architecture_improvement: 37
 - boundary_case: 10
 - cross_domain_analogy: 12
-- fragmentary: 35
-- pathology_positive: 35
+- fragmentary: 37
+- pathology_positive: 37
 - privacy_restricted: 10
-- strong_whole_system: 35
+- strong_whole_system: 37
 
 ## Samples per domain
 
 - agentic_tool_orchestration: 5
 - android_connectivity: 5
+- astrology: 5
 - biology: 5
 - bluetooth: 5
 - capability_isolation: 5
@@ -47,6 +48,7 @@
 - military: 5
 - mobile_security: 5
 - networking: 5
+- numerology: 5
 - organizational: 5
 - poe_chaos_inoculation: 5
 - psychology: 5

@@ -237,6 +237,18 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "regulated refill", "lethal floor", "defensive posture",
         "posture separate from function", "support modifiers",
     )),
+    ("numerology", (
+        "numerology", "life path number", "expression number", "destiny number",
+        "soul urge", "hearts desire", "pythagorean letter", "chaldean",
+        "master number", "karmic debt", "pinnacle cycle", "personal year",
+        "angel number", "birthday number", "maturity number",
+    )),
+    ("astrology", (
+        "astrology", "zodiac", "natal chart", "horoscope", "ascendant",
+        "rising sign", "sun sign", "moon sign", "grand trine", "grand cross",
+        "stellium", "saturn return", "planetary dignity", "midheaven",
+        "synastry", "ephemeris", "retrograde planet",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
