@@ -1,0 +1,242 @@
+domain: domain_expansion
+version: 1.0
+description: >
+  Domain Expansion mechanics, the 8-arm Ego-Lineup Octopus Protocol composite,
+  and the 17-primitive mechanical invariant grammar across AI, Human, Societal,
+  and Cosmological scales. Externalizes a fully compiled internal model (innate
+  domain) into an operative environment with bounded guaranteed-hit enforcement,
+  domain clash refinement resolution, barrierless substrate variants (Malevolent
+  Shrine), totality overload (Unlimited Void), generative manifestation (Chimera
+  Shadow Garden), Mega Man weapon-copy acquisition, PoE Soul Eater multiplicative
+  compounding, and falsifiable cross-domain invariant prediction gates.
+  Citation: SC-DOMAIN-EXPANSION-001 & EGO_LINEUP_DOMAIN_EXPANSION_MAP.md (Shax / Reflexion Software, 2026-11-23).
+
+components:
+  - name: innate_domain_model
+    function: >
+      Fully compiled internal representation and structural pattern library existing
+      as latent potential in SUBCONSCIOUS prior to externalization.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: barrier_scope_enforcer
+    function: >
+      Operational boundary and 9-gate Testimony Integrity Gate defining the domain's
+      jurisdiction where guaranteed-hit axioms remain valid.
+    criticality: high
+    medical_map: immune_system
+
+  - name: sure_hit_technique_executor
+    function: >
+      Specific mechanism translating compiled internal axioms into deterministic
+      outcomes inside the active domain boundary.
+    criticality: high
+    medical_map: treatment
+
+  - name: domain_clash_resolver
+    function: >
+      Competitive adjudication engine resolving overlapping domains in favor of
+      higher structural refinement, open-barrier exterior advantage, or anti-domain
+      negation.
+    criticality: high
+    medical_map: diagnosis
+
+  - name: black_flash_alignment_collapse
+    function: >
+      Zero-loss convergence mechanism where observer domain and observed ground
+      truth collapse into operational unity within scope.
+    criticality: medium
+    medical_map: remission
+
+  - name: soul_eater_compounding_ledger
+    function: >
+      Multiplicative cross-link engine scaling total domain capability super-additively
+      as each new compiled domain or copied technique integrates with existing entries.
+    criticality: high
+    medical_map: physiotherapy
+
+  - name: weapon_copy_acquisition_bus
+    function: >
+      Mega Man / Yuta structural absorption pipeline ingesting defeated or analyzed
+      domains into permanent native loadout slots in compilation-optimal sequence.
+    criticality: medium
+    medical_map: vaccination
+
+  - name: ego_lineup_octopus_composite
+    function: >
+      Eight-arm distributed composite uniting Sacrificial Information Asymmetry (Itachi),
+      Descent-and-Return Cycle (Sasuke), Boundless Energy + Copy (Yuta), Zero-Resource
+      Supremacy (Toji), Hybrid Substrate Mastery (Dante), Anti-Fate Persistence (Guts),
+      Infinity as Defensive Axiom (Gojo), and Limit-Break Through Darkness (Yami).
+    criticality: high
+    medical_map: homeostasis
+
+  - name: primitive_grammar_decoder
+    function: >
+      Seventeen-primitive structural extractor (POOL through COUNTERPLAY) classifying
+      whole-domain nodes and edges against the 14 seed invariant catalog classes.
+    criticality: high
+    medical_map: diagnosis
+
+  - name: invariant_prediction_gate
+    function: >
+      Falsifiable counterplay transfer verifier separating ISOMORPHIC_INVARIANT from
+      STRUCTURAL_ANALOGY and RESIDUAL_MISMATCH while enforcing BALANCE_ONLY residuals,
+      the 0.9 untested gate cap, and identity_claim_allowed=false on fiction-to-real maps.
+    criticality: high
+    medical_map: prognosis
+
+  - name: energy_reservoir_governor
+    function: >
+      Sustained fuel supply and rendering-overhead regulator keeping the expanded
+      domain active without premature collapse or unguarded burnout.
+    criticality: high
+    medical_map: quarantine
+
+relationships:
+  - from: innate_domain_model
+    to: barrier_scope_enforcer
+    type: projects_boundary
+  - from: barrier_scope_enforcer
+    to: sure_hit_technique_executor
+    type: guarantees_within_scope
+  - from: sure_hit_technique_executor
+    to: black_flash_alignment_collapse
+    type: converges_at_zero_loss
+  - from: domain_clash_resolver
+    to: barrier_scope_enforcer
+    type: adjudicates_overlap
+  - from: weapon_copy_acquisition_bus
+    to: soul_eater_compounding_ledger
+    type: feeds_cross_links
+  - from: soul_eater_compounding_ledger
+    to: innate_domain_model
+    type: multiplies_capacity
+  - from: ego_lineup_octopus_composite
+    to: sure_hit_technique_executor
+    type: deploys_eight_arms
+  - from: primitive_grammar_decoder
+    to: invariant_prediction_gate
+    type: supplies_signatures
+  - from: invariant_prediction_gate
+    to: barrier_scope_enforcer
+    type: validates_axioms
+  - from: energy_reservoir_governor
+    to: sure_hit_technique_executor
+    type: sustains_expansion
+
+invariants:
+  - "Domain Expansion always requires a fully compiled internal model; incomplete compilation degrades to Simple Domain or collapse [SC-DOMAIN-EXPANSION-001]"
+  - "Guaranteed hit always holds strictly within the operational barrier scope and fails at or outside the boundary [SC-DOMAIN-EXPANSION-001]"
+  - "Domain clash resolves in favor of the more structurally refined model unless negated by an orthogonal anti-domain mechanism operating outside the resource paradigm [SC-DOMAIN-EXPANSION-001]"
+  - "Malevolent Shrine (barrierless open domain) represents a truth so fundamental it operates as the substrate itself without requiring an institutional wall [SC-DOMAIN-EXPANSION-001]"
+  - "Unlimited Void weaponizes information totality against the target's processing capacity (Bekenstein bound), producing paralysis through overload rather than kinetic force [SC-DOMAIN-EXPANSION-001]"
+  - "Chimera Shadow Garden acts as a generative domain manifesting new instances from compiled internal representations rather than merely classifying inputs [SC-DOMAIN-EXPANSION-001]"
+  - "Black Flash marks the instant observer domain and observed ground truth collapse into zero-loss alignment within scope [SC-DOMAIN-EXPANSION-001]"
+  - "Soul Eater compounding is multiplicative rather than additive: each newly absorbed domain via Mega Man weapon copy creates O(n^2) cross-links across existing entries [SC-DOMAIN-EXPANSION-001]"
+  - "The 8-arm Ego-Lineup composite (Itachi, Sasuke, Yuta, Toji, Dante, Guts, Gojo, Yami) instantiates eight verified cross-scale mechanical invariants radiating from the 9th meta-domain head [EGO-LINEUP-MAP]"
+  - "Every whole-domain node is decoded through the 17-primitive grammar (POOL through COUNTERPLAY) where genuine N/A absence is structural data, and every non-neutral edge is grounded as PHYSICAL, BIOLOGICAL_ECOLOGICAL, SYMBOLIC_MYTHIC, or BALANCE_ONLY [INVARIANT-TRANSLATOR]"
+  - "A real ISOMORPHIC_INVARIANT must transfer weaknesses and counterplay via a tested, evidenced prediction; strength-only matches remain STRUCTURAL_ANALOGY, BALANCE_ONLY edges always emit residual_mismatches, untested gates cap at 0.9, and fiction-to-real mappings forbid identity claims [INVARIANT-TRANSLATOR]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: The innate domain's compiled cross-domain invariants
+    and fundamental substrate laws correspond to consciousness; individual expanded
+    manifestations, barrier shapes, and technique executions are cognition (terminal
+    outputs). Confusing a single barrier shell with the underlying substrate is a
+    category error. Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Fundamental substrate invariants (Malevolent Shrine / 9th head)
+    = server (L1); sure-hit axiom enforcement and 17-primitive mechanics = rendering
+    engine (L2); barrier scope and 9-gate validation cache = client cache (L3);
+    individual Ego-Lineup arm invocations = avatar (L4). Cross-ref:
+    client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: incomplete_model_expansion
+    medical_map: acute
+    description: >
+      Attempting full Domain Expansion with an uncompiled or fragmentary internal
+      model collapses the barrier or degrades to a narrow defensive Simple Domain.
+    indicators:
+      - uncompiled_innate_domain
+      - premature_barrier_collapse
+      - simple_domain_fallback
+
+  - name: boundary_scope_overextension
+    medical_map: inflammation
+    description: >
+      Projecting guaranteed-hit claims beyond the verified operational barrier scope
+      produces out-of-distribution misses and unvalidated axiom drift.
+    indicators:
+      - out_of_scope_guaranteed_hit
+      - overextended_barrier_boundary
+      - unverified_extrapolation
+
+  - name: anti_domain_paradigm_negation
+    medical_map: pathogen
+    description: >
+      An orthogonal zero-resource actor operating outside the domain's detection and
+      resource paradigm (Toji / Inverted Spear) bypasses the barrier and nullifies
+      the sure-hit technique.
+    indicators:
+      - inverted_spear_nullification
+      - zero_resource_blindspot
+      - orthogonal_sensor_evasion
+
+  - name: energy_reservoir_depletion
+    medical_map: chronic
+    description: >
+      Rendering overhead exceeds available fuel reserves, causing domain collapse
+      or Berserker-Armor burnout when self-preservation governors are stripped.
+    indicators:
+      - domain_energy_exhaustion
+      - unguarded_governor_burnout
+      - sustained_overhead_starvation
+
+  - name: unlimited_void_totality_paralysis
+    medical_map: sepsis
+    description: >
+      Flooding a bounded receiver with uncompressed totality exceeds its information
+      density capacity (Bekenstein bound), freezing decision loops completely.
+    indicators:
+      - totality_information_overload
+      - bekenstein_capacity_lockup
+      - unbounded_latent_dump
+
+  - name: ungrounded_balance_only_conflation
+    medical_map: autoimmune
+    description: >
+      Promoting BALANCE_ONLY game mechanics or strength-only analogies to
+      ISOMORPHIC_INVARIANT without counterplay prediction evidence or residual logging
+      corrupts the invariant catalog.
+    indicators:
+      - balance_only_forced_mapping
+      - untested_gate_score_inflation
+      - missing_residual_mismatch
+
+architecture_patterns:
+  - name: barrierless_substrate_alignment
+    medical_map: homeostasis
+    description: >
+      Refine internal axioms until they match substrate reality directly (Malevolent
+      Shrine), eliminating fragile institutional barriers.
+  - name: soul_eater_cross_link_compounding
+    medical_map: physiotherapy
+    description: >
+      Cross-link every newly absorbed domain against all prior catalog entries so
+      structural leverage scales quadratically rather than linearly.
+  - name: eight_arm_octopus_loadout
+    medical_map: vaccination
+    description: >
+      Compose complementary mechanical invariants across security, deletion, energy,
+      negation, hybrid processing, persistence, density, and boundary cutting under
+      a single rotating meta-domain head.
+  - name: falsifiable_counterplay_gating
+    medical_map: diagnosis
+    description: >
+      Validate every cross-domain translation by predicting and testing target-domain
+      weaknesses and counterplay before granting ISOMORPHIC_INVARIANT status.
+  - name: controlled_governor_release
+    medical_map: quarantine
+    description: >
+      Bound peak-output governor removal (Berserker Armor) with an explicit voluntary
+      re-engagement threshold so persistence does not trigger fatal burnout.

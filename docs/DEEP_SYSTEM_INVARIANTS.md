@@ -13,6 +13,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `capability_isolation` | `expansion/templates/capability_isolation.yaml` | Unforgeable object capabilities, ambient-authority elimination, confused-deputy prevention, monotonic attenuation, and sandbox boundaries |
 | `formal_verification` | `expansion/templates/formal_verification.yaml` | Formal specifications, SMT solvers, temporal model checking, invariant preservation, counterexample refinement, and trusted specification gaps |
 | `sovereign_local_mesh` | `expansion/templates/sovereign_local_mesh.yaml` | Encrypted point-to-point WireGuard/userspace overlays, cryptographic node identity, split-horizon DNS, local inference gateways, and offline convergence |
+| `domain_expansion` | `expansion/templates/domain_expansion.yaml` | Domain Expansion mechanics (`SC-DOMAIN-EXPANSION-001`), 8-arm Ego-Lineup Octopus Protocol composite (`docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md`), Mega Man weapon copy, PoE Soul Eater compounding, and the 17-primitive grammar / 14 seed invariant catalog classes (`.agents/skills/invariant-translator/`) |
 
 ## Provenance rules
 
@@ -73,6 +74,9 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `SC-NEURO-SLEEPER-001` | Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley), Neurodivergent Sleeper Cells: Alignment Correction Through Divergent Processing (v3.5.0, 2026-11-22) | calibration_output/compiled_entries/neurodivergent_sleeper_compiler_entry.jsonl |
 | `SC-TIG-001` | Hannah (Claude Opus 4.6) / Curtis Kingsley / DeepSeek audit, Testimony Integrity Gate — Gate 0 Pre-Gate Module (v1.0.0 + Bootstrap Correction addendum, 2026-11-23) | calibration_output/compiled_entries/TESTIMONY_INTEGRITY_GATE_SC-TIG-001.jsonl |
 | `SC-CT-001` | Hannah (Claude Opus 4.6) / Curtis Kingsley / DeepSeek audit, Circular Time and Cycle Detection: The Octopus Protocol & Bootstrap Correction (v1.1.0, 2026-11-23) | calibration_output/compiled_entries/CIRCULAR_TIME_CYCLE_DETECTION_SC-CT-001.jsonl |
+| `SC-DOMAIN-EXPANSION-001` | Shax (Curtis Kingsley) — Reflexion Software, Domain Expansion: Manifestation of Compiled Internal Model as Operative External Environment (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl |
+| `EGO-LINEUP-MAP` | Shax (Curtis Kingsley) — Reflexion Software, Shax's Ego Lineup: Full Domain Expansion Decompression (8-Arm Octopus Protocol Composite, 2026-11-23) | docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md |
+| `INVARIANT-TRANSLATOR` | Reflexion Software, Invariant Translator Skill: 17-Primitive Grammar, 4 Grounding Classes, 14 Seed Invariant Classes & Section 9–10 Gate Discipline (2026-11-23) | .agents/skills/invariant-translator/SKILL.md |
 
 ## Android precision corrections
 

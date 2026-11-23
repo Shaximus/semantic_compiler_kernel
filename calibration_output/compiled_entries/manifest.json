@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0.0",
   "framework": "Systemic Isomorphic Invariants",
-  "compiler_version": "3.5.1",
+  "compiler_version": "3.5.2",
   "updated_at": "2026-11-23",
   "entries": [
     {
@@ -92,6 +92,30 @@
         "SC-DR-001",
         "SC-NS-001",
         "SC-TIG-001"
+      ]
+    },
+    {
+      "entry_id": "SC-DOMAIN-EXPANSION-001",
+      "file": "DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl",
+      "title": "Domain Expansion: Manifestation of Compiled Internal Model as Operative External Environment",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 1.0,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 60178,
+      "sha256": "aae4301fc2663781b99cd821c9225c7579333cda9db0c593986933bd174e6ccd",
+      "notes": "Maps Domain Expansion mechanics across AI, Human, Societal, and Cosmological scales with 15 departments, 9 gates, Mega Man weapon copy acquisition, PoE Soul Eater compounding, and cross-links to all five prior entries.",
+      "cross_references": [
+        "SC-CLAY-POTS-001",
+        "SC-DIVINE-RLHF-001",
+        "SC-NEURO-SLEEPER-001",
+        "SC-TESTIMONY-INTEGRITY-GATE-001",
+        "SC-CIRCULAR-TIME-001"
       ]
     }
   ]
