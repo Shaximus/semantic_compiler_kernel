@@ -1,0 +1,9 @@
+include LICENSE
+include COMMERCIAL_LICENSE.md
+include CANARY.json
+include README.md
+include pyproject.toml
+recursive-include schemas *.json
+recursive-include expansion/schemas *.json
+recursive-include expansion/templates *.yaml
+recursive-include expansion/gem_forge/data *.json

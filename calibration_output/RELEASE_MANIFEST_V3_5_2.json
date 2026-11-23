@@ -1,0 +1,19 @@
+{
+  "manifest_version": "3.5.2",
+  "semantic_compiler_version": "3.5.2",
+  "schema_version": "3.5.0",
+  "generated_at": "2026-11-23T16:50:00Z",
+  "git_commit": "v3.5.2",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_2.json"
+  ],
+  "frozen_modules": [],
+  "notes": "V3.5.2 release: includes Gate 0 Testimony Integrity Gate (SC-TIG-001), Circular Time / Octopus Protocol (SC-CT-001 v1.1.0), 4 compiled GOLD entries, wheel/sdist packaging of CANARY.json and COMMERCIAL_LICENSE.md, pyproject.toml project URLs, account-level funding inheritance, Discussions enablement, and honest dated traffic telemetry."
+}
