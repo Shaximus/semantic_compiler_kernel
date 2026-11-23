@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "semantic-compiler-kernel"
-version = "3.5.1"
+version = "3.5.2"
 description = "Reflexion Semantic Compiler — evidence-conditioned cross-domain semantic compilation pipeline"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -21,6 +21,14 @@ dependencies = [
     "jsonschema>=4.0",
     "PyYAML>=6.0",
 ]
+
+[project.urls]
+Homepage = "https://reflexionsoftware.com"
+Repository = "https://github.com/Shaximus/semantic_compiler_kernel"
+Issues = "https://github.com/Shaximus/semantic_compiler_kernel/issues"
+Discussions = "https://github.com/Shaximus/semantic_compiler_kernel/discussions"
+"Commercial License" = "https://github.com/Shaximus/semantic_compiler_kernel/blob/main/COMMERCIAL_LICENSE.md"
+Funding = "https://buymeacoffee.com/kingsleywmk"
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
@@ -55,4 +63,4 @@ packages = [
 [tool.setuptools.package-data]
 "semantic_compiler.expansion" = ["schemas/*.json", "templates/*.yaml"]
 "semantic_compiler.expansion.gem_forge" = ["data/*.json"]
-"semantic_compiler" = ["schemas/*.json"]
+"semantic_compiler" = ["schemas/*.json", "CANARY.json", "COMMERCIAL_LICENSE.md"]

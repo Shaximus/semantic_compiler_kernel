@@ -1,5 +1,5 @@
 """
-Reflexion Semantic Compiler V3.5.0 — Universal Semantic Packet
+Reflexion Semantic Compiler V3.5.2 — Universal Semantic Packet
 
 The canonical data structure that flows through the entire compilation pipeline.
 Every field corresponds to a stage in the master pipeline (Section 8).
@@ -30,7 +30,7 @@ from semantic_compiler.core.types import (
 from semantic_compiler.core.semantic_ir import SemanticIR
 
 
-COMPILER_VERSION = "3.5.1"
+COMPILER_VERSION = "3.5.2"
 
 
 @dataclass

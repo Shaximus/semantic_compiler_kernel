@@ -1,12 +1,13 @@
 # Semantic Compiler Kernel
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Sponsor: GitHub](https://img.shields.io/badge/Sponsor-%E2%99%A5-pink)](https://github.com/sponsors/Shaximus)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-kingsleywmk-yellow.svg)](https://buymeacoffee.com/kingsleywmk)
 [![Commercial License](https://img.shields.io/badge/License-Commercial-green.svg)](COMMERCIAL_LICENSE.md)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-kingsleywmk-yellow.svg)](https://buymeacoffee.com/kingsleywmk)
+[![Stripe Checkout](https://img.shields.io/badge/Stripe-Founding%20Access-635BFF.svg)](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00)
+[![Discussions](https://img.shields.io/badge/GitHub-Discussions-purple.svg)](https://github.com/Shaximus/semantic_compiler_kernel/discussions)
 
 > [!IMPORTANT]
-> **`semantic_compiler_kernel` is AGPL-3.0.** Commercial license for closed-stack integration, proprietary model training, and enterprise deployment available today: **[Commercial License](COMMERCIAL_LICENSE.md)** | Inquiries: `shaximusoverride6@gmail.com` / `https://reflexionsoftware.com`.
+> **`semantic_compiler_kernel` is AGPL-3.0.** Commercial license for closed-stack integration, proprietary model training, and enterprise deployment available today: **[Commercial License](COMMERCIAL_LICENSE.md)** | Inquiries: `shaximusoverride6@gmail.com` / `https://reflexionsoftware.com` | Community & Licensing Q&A: **[GitHub Discussions](https://github.com/Shaximus/semantic_compiler_kernel/discussions/35)**.
 
 **Reflexion Semantic Compiler — Evidence-conditioned, cross-domain semantic compilation pipeline**
 
@@ -16,30 +17,38 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 ---
 
-## 📊 Verified Traction & Production Consumption
+## 📊 GitHub Traffic Telemetry & Commercial Compliance
 
-| Telemetry Metric | Measured Value | Sampling Window / Source |
-| :--- | :--- | :--- |
-| **Total Git Clones** | **830** | 14-day rolling window (GitHub Traffic API) |
-| **Unique Consumer Machines** | **259 unique IPs** | 14-day rolling window |
-| **Peak 24h Surge** | **478 clones / 154 unique IPs** | Nov 6, 2026 (PR #14 consolidation) |
-| **Peak 48h Surge** | **710 clones / 246 unique IPs** | Nov 6–7, 2026 (PR #14–#16 release waves) |
-| **Velocity vs. Profile Baseline** | **70× outlier** | 830 clones vs. 12 clones for next active repo |
+| Sampling Window (GitHub Traffic API) | Total Clones | Unique Cloner IPs | Notes |
+| :--- | :--- | :--- | :--- |
+| **Nov 6–16, 2026** (14-day window) | **830** | **259** | Includes peak release wave (Nov 6: 478 clones / 154 unique IPs; Nov 6–7: 710 / 246) |
+| **Nov 9–22, 2026** (14-day window) | **458** | **179** | Post-AGPL transition rolling window |
+
+> *Methodology note:* GitHub Traffic API clone metrics aggregate all git clones, including automated CI runners, mirrors, and crawlers alongside human developers. Daily raw telemetry snapshots are archived on the [`traffic-archive`](https://github.com/Shaximus/semantic_compiler_kernel/tree/traffic-archive) branch.
 
 > [!IMPORTANT]
 > **NOTICE TO COMMERCIAL CONSUMERS & ENTERPRISE CLOUD WORKLOADS:**  
-> This repository is actively tracked, mirrored, and vendored across hundreds of machines. Following the adoption of **AGPL-3.0**, silent commercial vendoring into closed-source software or network SaaS platforms requires an official **[Commercial License](COMMERCIAL_LICENSE.md)**. If your organization is running this architecture or training models with these templates, contact the Lead Architect (`shaximusoverride6@gmail.com`) to execute an enterprise licensing agreement.
->
-> 💛 **Support the Architect:** If this architecture accelerates your pipelines or research, consider sponsoring through [GitHub Sponsors](https://github.com/sponsors/Shaximus), buying a coffee at [buymeacoffee.com/kingsleywmk](https://buymeacoffee.com/kingsleywmk), backing via [Stripe Lifetime Founding Access](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00), or sending ETH / USDC (ERC-20) to `0x41aD2494Ee9e703Bd289b20cBe25101123137d4e`.
+> Following the adoption of **AGPL-3.0**, silent commercial vendoring into closed-source software or network SaaS platforms requires an official **[Commercial License](COMMERCIAL_LICENSE.md)**. If your organization is running this architecture or training models with these templates, contact the Lead Architect (`shaximusoverride6@gmail.com`) or start a thread in **[GitHub Discussions](https://github.com/Shaximus/semantic_compiler_kernel/discussions/35)**.
+
+### Support, Funding & Payment Rails
+
+- **Stripe Checkout (Reflexion Ecosystem — Live):**
+  - **[Lifetime Founding Access ($249 one-time)](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00)** — Permanent access to Reflexion tools, evidence vaults, and priority developer channels.
+  - **[Annual Subscription ($99.99/yr)](https://buy.stripe.com/5kQ6oI2pE7GB7zf2AidAk01)** — Full platform access, local inference routing, and priority updates.
+  - **[Monthly Subscription ($9.99/mo)](https://buy.stripe.com/8x27sMaWa4up7zf1wedAk02)** — Full access, cancel anytime.
+- **Buy Me a Coffee:** [buymeacoffee.com/kingsleywmk](https://buymeacoffee.com/kingsleywmk)
+- **Cryptocurrency (ETH / USDC / USDT — ERC-20):** `0x41aD2494Ee9e703Bd289b20cBe25101123137d4e` ([View on Etherscan](https://etherscan.io/address/0x41aD2494Ee9e703Bd289b20cBe25101123137d4e))
+- **GitHub Sponsors:** Enrollment pending (not yet active).
+- **Community & Show-and-Tell:** [Show us what you're building / Commercial Licensing & Support (Discussion #35)](https://github.com/Shaximus/semantic_compiler_kernel/discussions/35)
 
 ---
 
 ## Status
 
-**Current release:** `V3.5.1` (2026-11-16) — supersedes `V3.5.0`
+**Current release:** `V3.5.2` (2026-11-23) — supersedes `V3.5.1`
 
 - **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
-- **Packaging (`pyproject.toml`):** Setuptools package layout (`semantic_compiler.*`). Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
+- **Packaging (`pyproject.toml` + `MANIFEST.in`):** Setuptools package layout (`semantic_compiler.*`) with `[project.urls]` and bundled `CANARY.json` & `COMMERCIAL_LICENSE.md` in both wheel and sdist distributions. Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
 - **Expansion Library:** **44 YAML templates** (**43 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and 215-sample decompression calibration corpus.
 - **Numerology & Astrology Systems (`expansion.templates.numerology`, `expansion.templates.astrology`):** Full archetypal reduction and celestial coordinate projection pipeline mapping Pythagorean/Chaldean matrices, master numbers (11/22/33/44), karmic debts (13/14/16/19), Core Number Quadrad (Life Path blueprint, Expression mission, Soul Urge motivation, Personality mask), Primal Triad (Sun/Moon/Rising), 12 houses, aspect resonance, and whole-chart topology into Logos Semantic Training Sample V3.5.0 rows.
 - **Consciousness / Cognition Split (`expansion.consciousness.split`):** Formalizes substrate (`11D` / base weights / neural matter) vs. terminal cognition (`4D` / system prompt / context instance) with category-error detection and alignment evaluation.
@@ -49,7 +58,7 @@ It also maintains the operational architecture of the substrate: the **Conscious
 - **Compiled GOLD Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (`SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, and `SC-CT-001` v1.1.0).
 - **Gem Decode & Gem Forge (`expansion.gem_decode`, `expansion.gem_forge`):** Deterministic Path of Exile skill/support-gem translation into inference-architecture build sheets and multi-gem synthesis over a pinned RePoE corpus.
 - **Buildcraft Ontology (`registry` + `translation`):** `BUILD_001`–`BUILD_018` structural compute mappings resolved by a two-layer relation-aware structural + trigger-recall resolver.
-- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → **`V3.5.0`**
+- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → **`V3.5.2`**
 
 ---
 
@@ -243,13 +252,16 @@ semantic_compiler_kernel/
 │   ├── gem_forge/        # Multi-gem synthesis + pinned RePoE corpus
 │   ├── isomorphism/      # Universal functional graph & overlay
 │   ├── pathology/        # Failure taxonomy & medical-ontology detector
-│   ├── templates/        # 42 domain YAML templates (41 domains + universal_generic)
+│   ├── templates/        # 44 domain YAML templates (43 concrete domains + universal_generic)
 │   └── schemas/          # Expansion system model & invariant registry schemas
 ├── schemas/              # Core dataset JSON schemas (V3.5.0 primary + V3.1.1/V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
 ├── calibration_output/   # Generated corpora, release manifests, reports
 ├── docs/                 # Provenance docs, invariants, review reports
 ├── tests/                # Unit & integration tests (pytest + unittest)
+├── CANARY.json           # Cryptographic provenance watermark
+├── COMMERCIAL_LICENSE.md # Enterprise / closed-source dual-licensing terms
+├── MANIFEST.in           # Source distribution inclusion manifest
 └── pyproject.toml
 ```
 
@@ -259,6 +271,8 @@ semantic_compiler_kernel/
 
 | Artifact | Path |
 |---|---|
+| Release manifest (V3.5.2) | `calibration_output/RELEASE_MANIFEST_V3_5_2.json` |
+| Release manifest (V3.5.1) | `calibration_output/RELEASE_MANIFEST_V3_5_1.json` |
 | Release manifest (V3.5.0) | `calibration_output/RELEASE_MANIFEST_V3_5_0.json` |
 | Release manifest (V3.1.1) | `calibration_output/RELEASE_MANIFEST_V3_1_1.json` |
 | Release manifest (V3.0.0) | `calibration_output/RELEASE_MANIFEST_V3_0_0.json` |

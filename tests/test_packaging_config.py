@@ -43,11 +43,35 @@ class PackagingConfigTests(unittest.TestCase):
         self.assertIn("schemas/*.json", data["semantic_compiler.expansion"])
         self.assertIn("data/*.json", data["semantic_compiler.expansion.gem_forge"])
         self.assertIn("schemas/*.json", data["semantic_compiler"])
-        # The globs must match files that exist.
+        self.assertIn("CANARY.json", data["semantic_compiler"])
+        self.assertIn("COMMERCIAL_LICENSE.md", data["semantic_compiler"])
+        # The globs and provenance/licensing files must exist on disk.
         self.assertTrue(list((REPO / "expansion" / "templates").glob("*.yaml")))
         self.assertTrue(list((REPO / "expansion" / "gem_forge" / "data").glob("*.json")))
         self.assertTrue(list((REPO / "expansion" / "schemas").glob("*.json")))
         self.assertTrue(list((REPO / "schemas").glob("*.json")))
+        self.assertTrue((REPO / "CANARY.json").is_file())
+        self.assertTrue((REPO / "COMMERCIAL_LICENSE.md").is_file())
+
+    def test_sdist_manifest_includes_provenance_and_commercial_license(self) -> None:
+        manifest_path = REPO / "MANIFEST.in"
+        self.assertTrue(manifest_path.is_file(), "MANIFEST.in must exist for sdist packaging")
+        manifest = manifest_path.read_text()
+        self.assertIn("CANARY.json", manifest)
+        self.assertIn("COMMERCIAL_LICENSE.md", manifest)
+        self.assertIn("LICENSE", manifest)
+
+    def test_project_urls_are_declared(self) -> None:
+        urls = self.config["project"].get("urls", {})
+        for key in ("Homepage", "Repository", "Discussions", "Commercial License", "Funding"):
+            self.assertIn(key, urls, f"missing [project.urls] key: {key}")
+            self.assertTrue(urls[key].startswith("https://"), f"URL for {key} must be https")
+
+    def test_funding_yml_has_no_invalid_mailto_override(self) -> None:
+        funding = REPO / ".github" / "FUNDING.yml"
+        if funding.exists():
+            text = funding.read_text()
+            self.assertNotIn("mailto:", text, "GitHub FUNDING.yml rejects mailto: custom URIs")
 
 
 if __name__ == "__main__":
