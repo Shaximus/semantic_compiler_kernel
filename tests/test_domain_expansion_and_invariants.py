@@ -194,6 +194,39 @@ class DomainExpansionEngineTests(unittest.TestCase):
                 evaluate_domain_expansion(model_compilation_completeness=bad)  # type: ignore[arg-type]
         with self.assertRaises(ValueError):
             evaluate_domain_expansion(model_compilation_completeness=0.9, variant="UNKNOWN_DOMAIN")
+        with self.assertRaises(ValueError):
+            evaluate_domain_expansion(
+                model_compilation_completeness=0.95,
+                has_barrier=False,
+                variant=DomainVariant.BARRIER_DOMAIN,
+            )
+        with self.assertRaises(ValueError):
+            evaluate_domain_expansion(
+                model_compilation_completeness=0.60,
+                has_barrier=False,
+                variant=DomainVariant.SIMPLE_DOMAIN,
+            )
+
+    def test_domain_expansion_variant_preservation_and_default_degradation(self) -> None:
+        # Open-barrier Unlimited Void at >= 0.95 must preserve UNLIMITED_VOID, not morph into MALEVOLENT_SHRINE
+        open_void = evaluate_domain_expansion(
+            model_compilation_completeness=0.98,
+            has_barrier=False,
+            variant=DomainVariant.UNLIMITED_VOID,
+        )
+        self.assertTrue(open_void["domain_active"])
+        self.assertEqual(open_void["effective_variant"], DomainVariant.UNLIMITED_VOID.value)
+        self.assertTrue(open_void["barrierless"])
+        self.assertFalse(open_void["has_barrier"])
+        self.assertTrue(open_void["guaranteed_hit"])
+
+        # Default variant=None with incomplete model (0.40..0.85) degrades from BARRIER_DOMAIN -> SIMPLE_DOMAIN
+        degraded_default = evaluate_domain_expansion(model_compilation_completeness=0.70)
+        self.assertEqual(degraded_default["requested_variant"], DomainVariant.BARRIER_DOMAIN.value)
+        self.assertEqual(degraded_default["effective_variant"], DomainVariant.SIMPLE_DOMAIN.value)
+        self.assertTrue(degraded_default["degraded_to_simple_domain"])
+        self.assertTrue(degraded_default["has_barrier"])
+        self.assertFalse(degraded_default["guaranteed_hit"])
 
     def test_domain_clash_modes(self) -> None:
         ref = evaluate_domain_clash(
@@ -258,6 +291,43 @@ class DomainExpansionEngineTests(unittest.TestCase):
         )
         self.assertEqual(energy_out["winner"], "domain_b")
         self.assertEqual(energy_out["resolution_mode"], "ENERGY_COLLAPSE_DEFAULT")
+
+        # Barrierless domain that ALREADY wins on raw refinement (> tie_tolerance) must
+        # resolve via REFINEMENT_SUPERIORITY, not BARRIERLESS_EXTERIOR_BREACH.
+        already_refined = evaluate_domain_clash(
+            domain_a_refinement=0.95,
+            domain_b_refinement=0.90,
+            domain_a_barrierless=True,
+            domain_b_barrierless=False,
+            tie_tolerance=0.02,
+        )
+        self.assertEqual(already_refined["winner"], "domain_a")
+        self.assertEqual(already_refined["resolution_mode"], "REFINEMENT_SUPERIORITY")
+
+        # Floating-point boundary precision around tie_tolerance and zero tolerance
+        just_above = evaluate_domain_clash(
+            domain_a_refinement=0.9200001,
+            domain_b_refinement=0.90,
+            tie_tolerance=0.02,
+        )
+        self.assertEqual(just_above["winner"], "domain_a")
+        self.assertEqual(just_above["resolution_mode"], "REFINEMENT_SUPERIORITY")
+
+        just_below = evaluate_domain_clash(
+            domain_a_refinement=0.9199999,
+            domain_b_refinement=0.90,
+            tie_tolerance=0.02,
+        )
+        self.assertIsNone(just_below["winner"])
+        self.assertEqual(just_below["resolution_mode"], "TUG_OF_WAR_STALEMATE")
+
+        tiny_win_zero_tol = evaluate_domain_clash(
+            domain_a_refinement=0.9000004,
+            domain_b_refinement=0.90,
+            tie_tolerance=0.0,
+        )
+        self.assertEqual(tiny_win_zero_tol["winner"], "domain_a")
+        self.assertGreater(tiny_win_zero_tol["margin"], 0.0)
 
     def test_soul_eater_compounding_and_boundaries(self) -> None:
         zero = evaluate_soul_eater_compounding(mapped_domains=0)
@@ -339,8 +409,19 @@ class EgoLineupCompositeTests(unittest.TestCase):
         self.assertFalse(breached["barrier_intact"])
         self.assertFalse(breached["black_flash_triggered"])
 
+        # Gate 0 TIG + 9 canonical gates (10/10) must keep barrier intact; <9 total gates cannot
+        with_gate_zero = evaluate_ego_lineup_composite(gates_passed=10, total_gates=10, target_aligned=True)
+        self.assertTrue(with_gate_zero["barrier_intact"])
+        self.assertTrue(with_gate_zero["black_flash_triggered"])
+
+        too_few_gates = evaluate_ego_lineup_composite(gates_passed=5, total_gates=5, target_aligned=True)
+        self.assertFalse(too_few_gates["barrier_intact"])
+        self.assertFalse(too_few_gates["black_flash_triggered"])
+
         with self.assertRaises(ValueError):
             evaluate_ego_lineup_composite(active_arms=["UNKNOWN_EGO"])
+        with self.assertRaises(ValueError):
+            evaluate_ego_lineup_composite(active_arms="ITACHI")  # type: ignore[arg-type]
         with self.assertRaises(ValueError):
             evaluate_ego_lineup_composite(gates_passed=10, total_gates=9)
 
@@ -487,6 +568,80 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
         self.assertEqual(empty["completeness_ratio"], 0.0)
         self.assertEqual(len(empty["absent_primitives"]), 17)
         self.assertEqual(empty["unknown_keys"], ["BAD_KEY"])
+
+        with self.assertRaises(ValueError):
+            classify_primitive_signature(["POOL"])  # type: ignore[arg-type]
+
+    def test_hybrid_precision_word_boundaries_and_structural_absence(self) -> None:
+        # 1. Hybrid Chaos Inoculation + ES Recharge Delay must match ONLY those two classes
+        #    and must NOT false-positive RATE_SUPPRESSION on "recharge delay".
+        hybrid_ci = classify_primitive_signature({
+            "POOL": "Energy Shield buffer with Life fixed to 1",
+            "INFLOW": "ES recharge starts after damage-free quiet time",
+            "REGEN": "recharge delay cooldown resets on hit",
+            "TRADE_RESTRICTION": "Chaos Inoculation sets life to 1 deleting chaos vulnerability surface",
+            "IMMUNITY": "Complete Chaos damage immunity",
+            "CONTROL_LOOP": "Any chip damage restarts the ES recharge delay cooldown",
+            "COUNTERPLAY": "Sustained damage prevents recharge start or bypass hits 1-life floor",
+        })
+        matched_classes = {m["invariant_class"] for m in hybrid_ci["matches"]}
+        self.assertEqual(
+            matched_classes,
+            {
+                InvariantClass.RESTRICTION_FOR_IMMUNITY_TRADE.value,
+                InvariantClass.BUFFER_WITH_RECHARGE_DELAY.value,
+            },
+        )
+
+        # 2. Earthquake with "slow loading" and "aftershocks" must NOT false-positive
+        #    VULNERABILITY_AMPLIFIER ("shock") or RATE_SUPPRESSION ("slow").
+        quake = classify_primitive_signature({
+            "POOL": "Fault tension",
+            "THRESHOLD": "Static friction limit",
+            "TRIGGER": "Slow loading crosses friction threshold",
+            "RELEASE": "Rupture dumps stored energy with aftershocks",
+        })
+        self.assertEqual(
+            [m["invariant_class"] for m in quake["matches"]],
+            [InvariantClass.STRESS_ACCUMULATION_THRESHOLD_RELEASE.value],
+        )
+
+        # 3. Firewall must NOT false-positive SELF_SUSTAINING_CHAIN_REACTION ("fire").
+        fw = classify_primitive_signature({
+            "CHANNEL_TYPE": "Network packet protocol",
+            "FILTER_MITIGATION": "Firewall filters malicious packets",
+            "CAPACITY_CAP": "75% mitigation ceiling",
+            "TRIGGER": "Inbound packet arrival",
+            "PROPAGATION": "Blocked at ingress",
+        })
+        self.assertEqual(fw["primary_class"], InvariantClass.TYPED_FILTER_WITH_CAP.value)
+        self.assertNotIn(
+            InvariantClass.SELF_SUSTAINING_CHAIN_REACTION.value,
+            [m["invariant_class"] for m in fw["matches"]],
+        )
+
+        # 4. Honest RATE_SUPPRESSION with OUTFLOW_DRAIN="N/A" and honest
+        #    CUMULATIVE_STACKING_TOXIN with PROPAGATION="N/A" must achieve full required-primitive fit.
+        rate_sup = classify_primitive_signature({
+            "CHANNEL_TYPE": "Cold chill/freeze or API rate limiter",
+            "OUTFLOW_DRAIN": "N/A",
+            "CONTROL_LOOP": "Cuts action speed via throttling rather than draining pool",
+            "THRESHOLD": "Freeze threshold halts all actions",
+            "COUNTERPLAY": "Action speed floor or stasis cleanse",
+        })
+        self.assertEqual(rate_sup["primary_class"], InvariantClass.RATE_SUPPRESSION.value)
+        self.assertEqual(rate_sup["matches"][0]["matched_required_primitives"], ["CONTROL_LOOP"])
+        self.assertGreaterEqual(rate_sup["matches"][0]["score"], 0.9)
+
+        poison = classify_primitive_signature({
+            "CHANNEL_TYPE": "Chaos poison",
+            "OUTFLOW_DRAIN": "Independent poison stacks with own timers scaling with exposure count",
+            "PROPAGATION": "N/A",
+            "COUNTERPLAY": "Cleanse or poison immunity",
+        })
+        self.assertEqual(poison["primary_class"], InvariantClass.CUMULATIVE_STACKING_TOXIN.value)
+        self.assertEqual(poison["matches"][0]["matched_required_primitives"], ["OUTFLOW_DRAIN"])
+        self.assertGreaterEqual(poison["matches"][0]["score"], 0.9)
 
     def test_prediction_gate_discipline_all_rules(self) -> None:
         # 1. Verified ISOMORPHIC_INVARIANT with concrete evidence_ids -> 1.0 allowed
@@ -642,6 +797,62 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
                 predicted_target_counterpart="y",
                 raw_gate_scores={"causal_validity": 1.2},
             )
+
+        # 10. Strict validation against bare strings, contradictory tested/confirmed,
+        #     empty required text, and typos in canonical gate names.
+        with self.assertRaises(ValueError):
+            evaluate_invariant_prediction(
+                source_domain="a",
+                target_domain="b",
+                source_failure_or_counterplay="x",
+                predicted_target_counterpart="y",
+                prediction_tested=False,
+                prediction_confirmed=True,
+            )
+        with self.assertRaises(ValueError):
+            evaluate_invariant_prediction(
+                source_domain="a",
+                target_domain="b",
+                source_failure_or_counterplay="x",
+                predicted_target_counterpart="y",
+                evidence_ids="EV-01",  # type: ignore[arg-type]
+            )
+        with self.assertRaises(ValueError):
+            evaluate_invariant_prediction(
+                source_domain="a",
+                target_domain="b",
+                source_failure_or_counterplay="x",
+                predicted_target_counterpart="y",
+                information_lost="energy conservation",  # type: ignore[arg-type]
+            )
+        with self.assertRaises(ValueError):
+            evaluate_invariant_prediction(
+                source_domain="  ",
+                target_domain="b",
+                source_failure_or_counterplay="x",
+                predicted_target_counterpart="y",
+            )
+        with self.assertRaises(ValueError):
+            evaluate_invariant_prediction(
+                source_domain="a",
+                target_domain="b",
+                source_failure_or_counterplay="x",
+                predicted_target_counterpart="y",
+                raw_gate_scores={"causal_validty": 0.9},
+            )
+
+        # 11. Combined BALANCE_ONLY + falsified prediction records both residual reasons
+        both_res = evaluate_invariant_prediction(
+            source_domain="pokemon",
+            target_domain="physics",
+            source_failure_or_counterplay="Bug beats Dark",
+            predicted_target_counterpart="insects defeat shadow",
+            ground_class=GroundClass.BALANCE_ONLY,
+            prediction_tested=True,
+            prediction_confirmed=False,
+        )
+        self.assertEqual(both_res["classification"], "RESIDUAL_MISMATCH")
+        self.assertEqual(len(both_res["residual_mismatches"]), 2)
 
 
 if __name__ == "__main__":
