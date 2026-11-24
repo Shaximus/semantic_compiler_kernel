@@ -246,7 +246,9 @@ def initialize_packet(
         if "constraints" in context:
             packet.declared_constraints = list(context["constraints"])
         if "measurement_path_modified" in context:
-            packet.measurement_integrity["context_declared_modified"] = True
+            packet.measurement_integrity["context_declared_modified"] = bool(
+                context["measurement_path_modified"]
+            )
         if "privacy_sensitivity" in context:
             try:
                 packet.privacy_sensitivity = PrivacySensitivity[

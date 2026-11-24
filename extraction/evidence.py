@@ -95,7 +95,7 @@ def extract_evidence_inventory(
                     notes="Supplied constraint from context",
                 ))
 
-        if "measurement_path_modified" in context:
+        if context.get("measurement_path_modified"):
             evidence_items.append(_create_evidence_item(
                 content="Measurement path has been modified",
                 source_type="measurement",

@@ -6,7 +6,7 @@ from jsonschema import Draft202012Validator
 
 DOMAIN_TEMPLATE_SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "domain-template.schema.json"
 
-with open(DOMAIN_TEMPLATE_SCHEMA_PATH) as _f:
+with open(DOMAIN_TEMPLATE_SCHEMA_PATH, encoding="utf-8") as _f:
     DOMAIN_TEMPLATE_SCHEMA = json.load(_f)
 
 _VALIDATOR = Draft202012Validator(DOMAIN_TEMPLATE_SCHEMA)

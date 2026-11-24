@@ -12,9 +12,15 @@ Global Law: no_intuition_approval
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from semantic_compiler.core.types import AuthorityType
+
+_ARCHETYPE_KEYWORDS_RE = re.compile(
+    r"\b(?:powerful|strong|dragon|warrior|ancient|wise|legendary|supreme)\b",
+    re.IGNORECASE,
+)
 
 
 def check_authority_transfer(
@@ -76,12 +82,9 @@ def check_authority_transfer(
                 "reversible, and self-expiring."
             )
 
-    # Check for archetype-based authority claims
-    archetype_keywords = [
-        "powerful", "strong", "dragon", "warrior",
-        "ancient", "wise", "legendary", "supreme",
-    ]
-    if any(kw in basis.lower() for kw in archetype_keywords):
+    # Check for archetype-based authority claims (word-boundary match so e.g.
+    # "StrongBox" does not falsely trigger on "strong")
+    if _ARCHETYPE_KEYWORDS_RE.search(basis):
         if claimed_auth > AuthorityType.RECOMMEND:
             gate_passed = False
             errors.append(

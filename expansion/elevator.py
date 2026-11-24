@@ -81,6 +81,7 @@ DEFAULT_COMPILED_ENTRIES_DIR = _REPO_ROOT / "calibration_output" / "compiled_ent
 
 _TICKET_ID_RE = re.compile(r"^SC-TKT-[a-z0-9_]+-[0-9a-f]{12}$")
 _TOKEN_RE = re.compile(r"[a-z0-9][a-z0-9_\-\+]*")
+_SPLIT_RE = re.compile(r"[-_]+")
 _CITATION_TAG_RE = re.compile(r"\[([A-Z0-9][A-Z0-9\-_]{1,40})\]")
 
 _STOPWORDS: frozenset[str] = frozenset(
@@ -336,13 +337,51 @@ def _normalize_singular(tok: str) -> str | None:
     return None
 
 
-def _tokenize_with_stream(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Return (unique_index_tokens, ordered_word_stream) in O(|text|)."""
+_STEM_PREFIX_CUES: frozenset[str] = frozenset(
+    {
+        "deliberat", "propagat", "mitigat", "attenuat", "recalibrat",
+        "uncoupl", "parasit", "symbio", "dependen", "delegat", "remediat",
+    }
+)
+
+_EXACT_SHORT_CUES: frozenset[str] = frozenset(
+    {"ui", "gc", "kv", "ipc", "dns", "bgp", "max", "hud", "bus", "log"}
+)
+
+
+def _compile_cue_pattern(cues: Sequence[str]) -> re.Pattern[str]:
+    alts: list[str] = []
+    for cue in cues:
+        escaped = re.escape(cue).replace(r"\-", r"[-\s]")
+        if cue in _STEM_PREFIX_CUES:
+            alts.append(rf"\b{escaped}[a-z]*\b")
+        elif cue in _EXACT_SHORT_CUES:
+            alts.append(rf"\b{escaped}\b")
+        elif len(cue) <= 3:
+            alts.append(rf"\b{escaped}s?\b")
+        elif " " in cue or "-" in cue:
+            alts.append(rf"\b{escaped}\b")
+        else:
+            alts.append(rf"\b{escaped}(?:s|es|ed|ing)?\b")
+    return re.compile("|".join(alts))
+
+
+_DEPARTMENT_CUE_PATTERNS: dict[str, re.Pattern[str]] = {
+    dept: _compile_cue_pattern(cues) for dept, cues in _DEPARTMENT_CUES.items()
+}
+
+_PRIMITIVE_CUE_PATTERNS: dict[str, re.Pattern[str]] = {
+    key: _compile_cue_pattern(cues) for key, cues in _PRIMITIVE_CUES.items()
+}
+
+
+def _tokenize_all(text: str) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """Return (unique_index_tokens, content_word_stream, raw_word_stream) in O(|text|)."""
     if not text:
-        return (), ()
+        return (), (), ()
     lowered = text.lower()
     raw_matches = _TOKEN_RE.findall(lowered)
-    stream: list[str] = []
+    content_stream: list[str] = []
     unique_tokens: list[str] = []
     seen: set[str] = set()
 
@@ -353,11 +392,11 @@ def _tokenize_with_stream(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
 
     for raw in raw_matches:
         if len(raw) >= 2 and raw not in _STOPWORDS:
-            stream.append(raw)
+            content_stream.append(raw)
         _add(raw)
         if "-" in raw or "_" in raw:
             is_sc_code = raw.startswith("sc-")
-            parts = [p for p in re.split(r"[-_]+", raw) if p]
+            parts = [p for p in _SPLIT_RE.split(raw) if p]
             for part in parts:
                 if is_sc_code and (part.isdigit() or part in _TAG_BOILERPLATE_PARTS):
                     continue
@@ -365,35 +404,36 @@ def _tokenize_with_stream(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
                 sing = _normalize_singular(part)
                 if sing:
                     _add(sing)
-            if len(parts) > 1:
-                joined = " ".join(parts)
-                if joined not in seen:
-                    seen.add(joined)
         else:
             sing = _normalize_singular(raw)
             if sing:
                 _add(sing)
 
-    return tuple(unique_tokens), tuple(stream)
+    return tuple(unique_tokens), tuple(content_stream), tuple(raw_matches)
 
 
-def _extract_ngrams(stream: Sequence[str]) -> tuple[str, ...]:
-    """Return unique adjacent bigrams and trigrams from ordered word stream in O(|stream|)."""
+def _tokenize_with_stream(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Return (unique_index_tokens, ordered_word_stream) in O(|text|)."""
+    unique_tokens, content_stream, _raw_stream = _tokenize_all(text)
+    return unique_tokens, content_stream
+
+
+def _extract_ngrams(stream: Sequence[str], max_n: int = 3) -> tuple[str, ...]:
+    """Return unique adjacent 2..max_n n-grams from ordered word stream in O(|stream| * max_n)."""
     n = len(stream)
-    if n < 2:
+    if n < 2 or max_n < 2:
         return ()
     seen: set[str] = set()
     ngrams: list[str] = []
+    upper = min(max_n, n)
     for i in range(n - 1):
-        bg = f"{stream[i]} {stream[i + 1]}"
-        if bg not in seen:
-            seen.add(bg)
-            ngrams.append(bg)
-        if i + 2 < n:
-            tg = f"{stream[i]} {stream[i + 1]} {stream[i + 2]}"
-            if tg not in seen:
-                seen.add(tg)
-                ngrams.append(tg)
+        phrase = stream[i]
+        limit = min(upper, n - i)
+        for width in range(2, limit + 1):
+            phrase = f"{phrase} {stream[i + width - 1]}"
+            if phrase not in seen:
+                seen.add(phrase)
+                ngrams.append(phrase)
     return tuple(ngrams)
 
 
@@ -418,10 +458,10 @@ def _infer_component_departments(comp: Mapping[str, Any]) -> tuple[str, ...]:
             depts.append(d)
 
     text = f"{comp.get('name', '')} {comp.get('function', '')}".lower().replace("_", " ")
-    for dept, cues in _DEPARTMENT_CUES.items():
+    for dept, pattern in _DEPARTMENT_CUE_PATTERNS.items():
         if dept in seen:
             continue
-        if any(cue in text for cue in cues):
+        if pattern.search(text):
             seen.add(dept)
             depts.append(dept)
 
@@ -436,8 +476,8 @@ def _extract_primitives_from_text(text: str) -> tuple[str, ...]:
     lowered = text.lower().replace("_", " ")
     hits: list[str] = []
     for key in PRIMITIVE_GRAMMAR_KEYS:
-        cues = _PRIMITIVE_CUES.get(key, ())
-        if any(cue in lowered for cue in cues):
+        pattern = _PRIMITIVE_CUE_PATTERNS.get(key)
+        if pattern is not None and pattern.search(lowered):
             hits.append(key)
     return tuple(hits)
 
@@ -997,6 +1037,7 @@ class DomainElevator:
         self._entry_to_domain_hint: dict[str, str] = {}
         self._domain_comp_depts: dict[str, dict[str, tuple[str, ...]]] = {}
         self._domain_comp_prims: dict[str, dict[str, tuple[str, ...]]] = {}
+        self._domain_comp_tokens: dict[str, tuple[tuple[frozenset[str], frozenset[str]], ...]] = {}
         self._domain_dept_comps: dict[str, dict[str, tuple[str, ...]]] = {}
         self._domain_invariants_classes: dict[str, tuple[str, ...]] = {}
         self._domain_tags: dict[str, tuple[str, ...]] = {}
@@ -1159,11 +1200,19 @@ class DomainElevator:
             else self._compute_signature()
         )
 
-        # 1. Load all YAML domain templates ONCE
+        # 1. Load all YAML domain templates ONCE (shared via loader cache & registry index)
         templates = load_templates(self._template_dir)
         if not templates:
             raise ValueError(f"No domain templates found in {self._template_dir}")
         self.disk_read_count += len(templates)
+        try:
+            if self._template_dir.resolve() == TEMPLATE_DIR.resolve():
+                from semantic_compiler.expansion.registry import index as _reg_index
+
+                if _reg_index._TEMPLATES is None:
+                    _reg_index._TEMPLATES = dict(templates)
+        except OSError:
+            pass
 
         # 2. Load all compiled JSONL entries ONCE
         compiled_entries = self._load_compiled_entries()
@@ -1176,6 +1225,7 @@ class DomainElevator:
         entry_to_domain_hint: dict[str, str] = {}
         domain_comp_depts: dict[str, dict[str, tuple[str, ...]]] = {}
         domain_comp_prims: dict[str, dict[str, tuple[str, ...]]] = {}
+        domain_comp_tokens: dict[str, tuple[tuple[frozenset[str], frozenset[str]], ...]] = {}
         domain_dept_comps: dict[str, dict[str, tuple[str, ...]]] = {}
         domain_invariants_classes: dict[str, tuple[str, ...]] = {}
         domain_tags: dict[str, tuple[str, ...]] = {}
@@ -1190,7 +1240,7 @@ class DomainElevator:
                     # Diminishing reinforcement for repeated mentions across fields
                     raw_token_weights[tok][slot_id] = prev + weight * 0.15
             if add_phrases:
-                for ng in _extract_ngrams(stream):
+                for ng in _extract_ngrams(stream, max_n=3):
                     prev_p = raw_phrase_weights[ng].get(slot_id, 0.0)
                     raw_phrase_weights[ng][slot_id] = max(prev_p, weight * 1.15)
             return len(tokens)
@@ -1202,15 +1252,29 @@ class DomainElevator:
             *,
             is_code_tag: bool = False,
         ) -> None:
-            norm = " ".join(_TOKEN_RE.findall(phrase.lower()))
-            if not norm:
+            raw_tokens = _TOKEN_RE.findall(phrase.lower())
+            if not raw_tokens:
                 return
-            if " " in norm:
+            if len(raw_tokens) == 1:
+                single = raw_tokens[0]
+                prev_t = raw_token_weights[single].get(slot_id, 0.0)
+                raw_token_weights[single][slot_id] = max(prev_t, weight)
+            elif len(raw_tokens) <= 5:
+                norm = " ".join(raw_tokens)
                 prev_p = raw_phrase_weights[norm].get(slot_id, 0.0)
                 raw_phrase_weights[norm][slot_id] = max(prev_p, weight)
             else:
-                prev_t = raw_token_weights[norm].get(slot_id, 0.0)
-                raw_token_weights[norm][slot_id] = max(prev_t, weight)
+                # Decompose >5-word phrases into reachable 3..5-word raw sub-phrases
+                # and 2..3-word content n-grams so every phrase_index key is reachable.
+                sub_weight = weight * 0.85
+                for ng in _extract_ngrams(raw_tokens, max_n=5):
+                    if ng.count(" ") >= 2:  # 3..5 words
+                        prev_p = raw_phrase_weights[ng].get(slot_id, 0.0)
+                        raw_phrase_weights[ng][slot_id] = max(prev_p, sub_weight)
+                _toks_sub, content_sub = _tokenize_with_stream(phrase)
+                for ng in _extract_ngrams(content_sub, max_n=3):
+                    prev_p = raw_phrase_weights[ng].get(slot_id, 0.0)
+                    raw_phrase_weights[ng][slot_id] = max(prev_p, sub_weight)
             # Also index individual non-stopword tokens with moderated weight
             toks, _ = _tokenize_with_stream(phrase)
             for tok in toks:
@@ -1244,9 +1308,10 @@ class DomainElevator:
             # Description (strip bracketed/code SC-* prefixes handled via tags)
             tok_total += _index_text(slot_id, tmpl.description, 1.4, add_phrases=True)
 
-            # Components, department map, and 17-primitive map
+            # Components, department map, token cache, and 17-primitive map
             comp_depts_map: dict[str, tuple[str, ...]] = {}
             comp_prims_map: dict[str, tuple[str, ...]] = {}
+            comp_tokens_list: list[tuple[frozenset[str], frozenset[str]]] = []
             dept_to_comps_tmp: dict[str, list[str]] = defaultdict(list)
             domain_all_text_parts: list[str] = [tmpl.description]
 
@@ -1258,6 +1323,10 @@ class DomainElevator:
                 tok_total += _index_text(slot_id, cfunc, 1.1)
                 domain_all_text_parts.append(f"{cname} {cfunc}")
 
+                name_toks, _ = _tokenize_with_stream(cname)
+                full_toks, _ = _tokenize_with_stream(f"{cname} {cfunc}")
+                comp_tokens_list.append((frozenset(name_toks), frozenset(full_toks)))
+
                 depts = _infer_component_departments(comp)
                 comp_depts_map[cname] = depts
                 for d in depts:
@@ -1268,6 +1337,7 @@ class DomainElevator:
 
             domain_comp_depts[domain_name] = comp_depts_map
             domain_comp_prims[domain_name] = comp_prims_map
+            domain_comp_tokens[domain_name] = tuple(comp_tokens_list)
             domain_dept_comps[domain_name] = {
                 d: tuple(dept_to_comps_tmp.get(d, ())) for d in CANONICAL_DEPARTMENTS
             }
@@ -1447,6 +1517,7 @@ class DomainElevator:
         self._entry_to_domain_hint = entry_to_domain_hint
         self._domain_comp_depts = domain_comp_depts
         self._domain_comp_prims = domain_comp_prims
+        self._domain_comp_tokens = domain_comp_tokens
         self._domain_dept_comps = domain_dept_comps
         self._domain_invariants_classes = domain_invariants_classes
         self._domain_tags = domain_tags
@@ -1461,44 +1532,49 @@ class DomainElevator:
 
     @property
     def slots(self) -> dict[str, RackSlot]:
-        self._ensure_ready()
-        return dict(self._slots)
+        with self._lock:
+            self._ensure_ready()
+            return dict(self._slots)
 
     @property
     def domain_names(self) -> tuple[str, ...]:
-        self._ensure_ready()
-        return tuple(sorted(self._domain_templates.keys()))
+        with self._lock:
+            self._ensure_ready()
+            return tuple(sorted(self._domain_templates.keys()))
 
     @property
     def compiled_entry_ids(self) -> tuple[str, ...]:
-        self._ensure_ready()
-        return tuple(sorted(self._compiled_entries.keys()))
+        with self._lock:
+            self._ensure_ready()
+            return tuple(sorted(self._compiled_entries.keys()))
 
     @property
     def stats(self) -> dict[str, Any]:
-        self._ensure_ready()
-        return {
-            "built": self._built,
-            "build_count": self.build_count,
-            "disk_read_count": self.disk_read_count,
-            "query_count": self.query_count,
-            "last_build_ms": self.last_build_ms,
-            "domain_slots": len(self._domain_templates),
-            "compiled_entry_slots": len(self._compiled_entries),
-            "invariant_class_slots": len(self._invariant_specs),
-            "total_slots": len(self._slots),
-            "token_postings": len(self._token_index),
-            "phrase_postings": len(self._phrase_index),
-        }
+        with self._lock:
+            self._ensure_ready()
+            return {
+                "built": self._built,
+                "build_count": self.build_count,
+                "disk_read_count": self.disk_read_count,
+                "query_count": self.query_count,
+                "last_build_ms": self.last_build_ms,
+                "domain_slots": len(self._domain_templates),
+                "compiled_entry_slots": len(self._compiled_entries),
+                "invariant_class_slots": len(self._invariant_specs),
+                "total_slots": len(self._slots),
+                "token_postings": len(self._token_index),
+                "phrase_postings": len(self._phrase_index),
+            }
 
     def get_template(self, domain: str) -> DomainTemplate:
         """O(1) direct template lookup from the in-memory rack."""
-        self._ensure_ready()
-        if domain in self._domain_templates:
-            return self._domain_templates[domain]
-        if "universal_generic" in self._domain_templates:
-            return self._domain_templates["universal_generic"]
-        raise KeyError(f"Unknown domain {domain!r} and no universal_generic fallback found")
+        with self._lock:
+            self._ensure_ready()
+            if domain in self._domain_templates:
+                return self._domain_templates[domain]
+            if "universal_generic" in self._domain_templates:
+                return self._domain_templates["universal_generic"]
+            raise KeyError(f"Unknown domain {domain!r} and no universal_generic fallback found")
 
     def _get_cached_base_model(self, domain: str) -> dict[str, Any]:
         with self._lock:
@@ -1531,127 +1607,131 @@ class DomainElevator:
             raise ValueError(f"top_k must be a positive int, got {top_k!r}")
 
         t0 = time.perf_counter()
-        cache_hit = self._ensure_ready()
-        self.query_count += 1
+        tokens, content_stream, raw_stream = _tokenize_all(query_text)
+        raw_ngrams = _extract_ngrams(raw_stream, max_n=5)
+        content_ngrams = _extract_ngrams(content_stream, max_n=3)
+        ngrams = tuple(dict.fromkeys((*raw_ngrams, *content_ngrams)))
 
-        tokens, stream = _tokenize_with_stream(query_text)
-        ngrams = _extract_ngrams(stream)
+        with self._lock:
+            cache_hit = self._ensure_ready()
+            self.query_count += 1
 
-        scores: dict[str, float] = defaultdict(float)
-        matched_terms: dict[str, list[str]] = defaultdict(list)
-        matched_seen: dict[str, set[str]] = defaultdict(set)
+            scores: dict[str, float] = defaultdict(float)
+            matched_terms: dict[str, list[str]] = defaultdict(list)
+            matched_seen: dict[str, set[str]] = defaultdict(set)
 
-        # O(|tokens|) token posting lookups
-        for tok in tokens:
-            postings = self._token_index.get(tok)
-            if postings:
-                for sid, weight in postings:
-                    scores[sid] += weight
-                    if tok not in matched_seen[sid]:
-                        matched_seen[sid].add(tok)
-                        matched_terms[sid].append(tok)
+            # O(|tokens|) token posting lookups
+            for tok in tokens:
+                postings = self._token_index.get(tok)
+                if postings:
+                    for sid, weight in postings:
+                        scores[sid] += weight
+                        if tok not in matched_seen[sid]:
+                            matched_seen[sid].add(tok)
+                            matched_terms[sid].append(tok)
 
-        # O(|ngrams|) phrase posting lookups
-        for phrase in ngrams:
-            postings = self._phrase_index.get(phrase)
-            if postings:
-                for sid, weight in postings:
-                    scores[sid] += weight
-                    if phrase not in matched_seen[sid]:
-                        matched_seen[sid].add(phrase)
-                        matched_terms[sid].append(phrase)
+            # O(|ngrams|) phrase posting lookups (both stopword-preserving 2..5-grams and content 2..3-grams)
+            for phrase in ngrams:
+                postings = self._phrase_index.get(phrase)
+                if postings:
+                    for sid, weight in postings:
+                        scores[sid] += weight
+                        if phrase not in matched_seen[sid]:
+                            matched_seen[sid].add(phrase)
+                            matched_terms[sid].append(phrase)
 
-        # Direct exact domain slug boost if query literally names a domain
-        stripped_slug = query_text.strip().lower()
-        if stripped_slug in self._domain_templates:
-            sid = f"domain:{stripped_slug}"
-            scores[sid] += 25.0
-            if stripped_slug not in matched_seen[sid]:
-                matched_seen[sid].add(stripped_slug)
-                matched_terms[sid].append(stripped_slug)
+            # Direct exact domain slug boost if query literally names a domain
+            stripped_slug = query_text.strip().lower()
+            if stripped_slug in self._domain_templates:
+                sid = f"domain:{stripped_slug}"
+                scores[sid] += 25.0
+                if stripped_slug not in matched_seen[sid]:
+                    matched_seen[sid].add(stripped_slug)
+                    matched_terms[sid].append(stripped_slug)
 
-        # Partition touched slots by kind (never scans untouched slots!)
-        domain_hits: list[tuple[float, str]] = []
-        entry_hits: list[tuple[float, str]] = []
-        invariant_hits: list[tuple[float, str]] = []
+            # Partition touched slots by kind (never scans untouched slots!)
+            domain_hits: list[tuple[float, str]] = []
+            entry_hits: list[tuple[float, str]] = []
+            invariant_hits: list[tuple[float, str]] = []
 
-        explicit_generic = "universal_generic" in stripped_slug or "universal generic" in stripped_slug
-        for sid, score in scores.items():
-            if score <= 0.0:
-                continue
-            slot = self._slots[sid]
-            if slot.kind == "domain":
-                if slot.key == "universal_generic" and not explicit_generic:
+            explicit_generic = "universal_generic" in stripped_slug or "universal generic" in stripped_slug
+            for sid, score in scores.items():
+                if score <= 0.0:
                     continue
-                domain_hits.append((score, sid))
-            elif slot.kind == "compiled_entry":
-                entry_hits.append((score, sid))
-            elif slot.kind == "invariant_class":
-                invariant_hits.append((score, sid))
+                slot = self._slots[sid]
+                if slot.kind == "domain":
+                    if slot.key == "universal_generic" and not explicit_generic:
+                        continue
+                    domain_hits.append((score, sid))
+                elif slot.kind == "compiled_entry":
+                    entry_hits.append((score, sid))
+                elif slot.kind == "invariant_class":
+                    invariant_hits.append((score, sid))
 
-        domain_hits.sort(key=lambda pair: (-pair[0], pair[1]))
-        entry_hits.sort(key=lambda pair: (-pair[0], pair[1]))
-        invariant_hits.sort(key=lambda pair: (-pair[0], pair[1]))
+            domain_hits.sort(key=lambda pair: (-pair[0], pair[1]))
+            entry_hits.sort(key=lambda pair: (-pair[0], pair[1]))
+            invariant_hits.sort(key=lambda pair: (-pair[0], pair[1]))
 
-        # If a compiled entry matched very strongly (e.g. direct SC-LU-SAO-SUGOU-001 lookup)
-        # and its home domain wasn't top-1, give its home domain a clean cross-reference lift.
-        if entry_hits:
-            top_entry_score, top_entry_sid = entry_hits[0]
-            top_entry_id = self._slots[top_entry_sid].key
-            hint_domain = self._entry_to_domain_hint.get(top_entry_id)
-            if hint_domain and top_entry_score >= 8.0:
-                hint_sid = f"domain:{hint_domain}"
-                boosted = scores.get(hint_sid, 0.0) + min(top_entry_score * 0.65, 12.0)
-                scores[hint_sid] = boosted
-                if top_entry_id.lower() not in matched_seen[hint_sid]:
-                    matched_seen[hint_sid].add(top_entry_id.lower())
-                    matched_terms[hint_sid].append(top_entry_id)
-                domain_hits = [pair for pair in domain_hits if pair[1] != hint_sid]
-                domain_hits.append((boosted, hint_sid))
-                domain_hits.sort(key=lambda pair: (-pair[0], pair[1]))
+            # If a compiled entry matched very strongly (e.g. direct SC-LU-SAO-SUGOU-001 lookup)
+            # and its home domain wasn't top-1, give its home domain a clean cross-reference lift.
+            if entry_hits:
+                top_entry_score, top_entry_sid = entry_hits[0]
+                top_entry_id = self._slots[top_entry_sid].key
+                hint_domain = self._entry_to_domain_hint.get(top_entry_id)
+                if hint_domain and top_entry_score >= 8.0:
+                    hint_sid = f"domain:{hint_domain}"
+                    boosted = scores.get(hint_sid, 0.0) + min(top_entry_score * 0.65, 12.0)
+                    scores[hint_sid] = boosted
+                    if top_entry_id.lower() not in matched_seen[hint_sid]:
+                        matched_seen[hint_sid].add(top_entry_id.lower())
+                        matched_terms[hint_sid].append(top_entry_id)
+                    domain_hits = [pair for pair in domain_hits if pair[1] != hint_sid]
+                    domain_hits.append((boosted, hint_sid))
+                    domain_hits.sort(key=lambda pair: (-pair[0], pair[1]))
 
-        matched_domains = tuple(
-            DomainMatch(
-                domain=self._slots[sid].key,
-                score=round(score, 4),
-                matched_terms=tuple(matched_terms[sid]),
-                template=self._domain_templates[self._slots[sid].key],
-            )
-            for score, sid in domain_hits[:top_k]
-        )
-
-        primary_domain = (
-            matched_domains[0].domain
-            if matched_domains
-            else ("universal_generic" if "universal_generic" in self._domain_templates else next(iter(self._domain_templates)))
-        )
-        matched_template = self._domain_templates[primary_domain]
-
-        compiled_matches: tuple[CompiledEntryMatch, ...] = ()
-        if include_compiled_entries:
-            compiled_matches = tuple(
-                self._make_entry_match(self._slots[sid].key, score, matched_terms[sid])
-                for score, sid in entry_hits[:top_k]
-            )
-
-        inv_matches: tuple[InvariantMatch, ...] = ()
-        if include_invariants:
-            inv_matches = tuple(
-                InvariantMatch(
-                    invariant_class=self._slots[sid].key,
+            matched_domains = tuple(
+                DomainMatch(
+                    domain=self._slots[sid].key,
                     score=round(score, 4),
                     matched_terms=tuple(matched_terms[sid]),
-                    required_primitives=self._invariant_specs[self._slots[sid].key][
-                        "required_primitives"
-                    ],
-                    supporting_primitives=self._invariant_specs[self._slots[sid].key][
-                        "supporting_primitives"
-                    ],
+                    template=self._domain_templates[self._slots[sid].key],
                 )
-                for score, sid in invariant_hits[:top_k]
+                for score, sid in domain_hits[:top_k]
             )
 
-        system_model = self._get_cached_base_model(primary_domain)
+            primary_domain = (
+                matched_domains[0].domain
+                if matched_domains
+                else ("universal_generic" if "universal_generic" in self._domain_templates else next(iter(self._domain_templates)))
+            )
+            matched_template = self._domain_templates[primary_domain]
+
+            compiled_matches: tuple[CompiledEntryMatch, ...] = ()
+            if include_compiled_entries:
+                compiled_matches = tuple(
+                    self._make_entry_match(self._slots[sid].key, score, matched_terms[sid])
+                    for score, sid in entry_hits[:top_k]
+                )
+
+            inv_matches: tuple[InvariantMatch, ...] = ()
+            if include_invariants:
+                inv_matches = tuple(
+                    InvariantMatch(
+                        invariant_class=self._slots[sid].key,
+                        score=round(score, 4),
+                        matched_terms=tuple(matched_terms[sid]),
+                        required_primitives=self._invariant_specs[self._slots[sid].key][
+                            "required_primitives"
+                        ],
+                        supporting_primitives=self._invariant_specs[self._slots[sid].key][
+                            "supporting_primitives"
+                        ],
+                    )
+                    for score, sid in invariant_hits[:top_k]
+                )
+
+            system_model = self._get_cached_base_model(primary_domain)
+
         latency_ms = round((time.perf_counter() - t0) * 1000.0, 4)
 
         return BayDelivery(
@@ -1694,6 +1774,15 @@ class DomainElevator:
         domain: str | None = None,
     ) -> SemanticTicket:
         """Compress a full domain model or raw text into a compact SemanticTicket."""
+        with self._lock:
+            return self._park_locked(text_or_model, domain=domain)
+
+    def _park_locked(
+        self,
+        text_or_model: str | SemanticPacket | Mapping[str, Any] | Any,
+        *,
+        domain: str | None = None,
+    ) -> SemanticTicket:
         self._ensure_ready()
 
         # Normalize input kind
@@ -1782,13 +1871,10 @@ class DomainElevator:
             else:
                 q_tokens, _ = _tokenize_with_stream(raw_text)
                 q_token_set = set(q_tokens)
-                for idx, comp in enumerate(template.components):
-                    c_tokens, _ = _tokenize_with_stream(
-                        f"{comp['name']} {comp.get('function', '')}"
-                    )
-                    name_tokens, _ = _tokenize_with_stream(comp["name"])
+                comp_tokens_cached = self._domain_comp_tokens[resolved_domain]
+                for idx, (name_token_set, full_token_set) in enumerate(comp_tokens_cached):
                     # Activate component if name tokens overlap or >=2 function tokens overlap
-                    if (set(name_tokens) & q_token_set) or len(set(c_tokens) & q_token_set) >= 2:
+                    if (name_token_set & q_token_set) or len(full_token_set & q_token_set) >= 2:
                         active_mask |= 1 << idx
                 # If query matched the domain cleanly (or is empty/terse) without naming
                 # individual components, park the full template skeleton so retrieve() is complete.
@@ -1880,6 +1966,13 @@ class DomainElevator:
         ticket: SemanticTicket | str | Mapping[str, Any],
     ) -> RehydratedDomain:
         """Ride the elevator to losslessly rehydrate a SemanticTicket on demand."""
+        with self._lock:
+            return self._retrieve_locked(ticket)
+
+    def _retrieve_locked(
+        self,
+        ticket: SemanticTicket | str | Mapping[str, Any],
+    ) -> RehydratedDomain:
         self._ensure_ready()
 
         if isinstance(ticket, SemanticTicket):
@@ -2021,6 +2114,14 @@ class DomainElevator:
         target_domain: str,
     ) -> TurntableTranslation:
         """Rotate source onto the turntable alongside target_domain for direct translation."""
+        with self._lock:
+            return self._rotate_to_locked(source_text_or_ticket, target_domain)
+
+    def _rotate_to_locked(
+        self,
+        source_text_or_ticket: str | SemanticTicket | SemanticPacket | Mapping[str, Any] | Any,
+        target_domain: str,
+    ) -> TurntableTranslation:
         self._ensure_ready()
 
         if not isinstance(target_domain, str) or not target_domain.strip():

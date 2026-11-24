@@ -10,17 +10,74 @@ Citation: Diamond++ — Artifact Safety Rules
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from semantic_compiler.core.types import PrivacySensitivity
 
 
-# Patterns that trigger quarantine
-QUARANTINE_PATTERNS = [
-    "credentials", "private_key", "secret_key", "api_key",
-    "password", "token", "exploit", "injection",
-    "cloudflare_token", "ssh_key", "pgp_key",
-]
+# Context-aware quarantine rules: strictly catch real credentials, secrets,
+# prompt/SQL/command/code injection, and exploit payloads without falsely
+# quarantining benign ML/architecture phrases ("draft tokens", "cache injection").
+_QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("credentials", re.compile(r"\bcredentials?\b", re.IGNORECASE)),
+    (
+        "private_key",
+        re.compile(
+            r"\bprivate[\s_-]+key\b|-----begin\s+(?:rsa\s+|ec\s+|openssh\s+|pgp\s+)?private\s+key-----",
+            re.IGNORECASE,
+        ),
+    ),
+    ("secret_key", re.compile(r"\bsecret[\s_-]+key\b", re.IGNORECASE)),
+    (
+        "api_key",
+        re.compile(
+            r"\bapi[\s_-]+key\b|\bsk-[a-z0-9_\-]{12,}\b|\bghp_[a-z0-9]{16,}\b"
+            r"|\bgithub_pat_[a-z0-9_]{16,}\b|\bcfut_[a-z0-9_\-]{12,}\b|\bakia[0-9a-z]{16}\b",
+            re.IGNORECASE,
+        ),
+    ),
+    ("password", re.compile(r"\b(?:password|passwd)\b", re.IGNORECASE)),
+    (
+        "auth_token",
+        re.compile(
+            r"\b(?:auth|access|refresh|session|api|secret|oauth|jwt|bearer|customer"
+            r"|cloudflare|github|stripe|service|admin|root|security|client|signing"
+            r"|encryption|private)[\s_-]+tokens?\b"
+            r"|\bbearer\s+[a-z0-9._\-]{8,}\b"
+            r"|\btoken\s*[:=]\s*['\"]?[a-z0-9_\-\.]{6,}",
+            re.IGNORECASE,
+        ),
+    ),
+    ("cloudflare_token", re.compile(r"\bcloudflare[\s_-]+token\b", re.IGNORECASE)),
+    (
+        "ssh_key",
+        re.compile(
+            r"\bssh[\s_-]+key\b|\bssh-(?:rsa|ed25519)\s+[a-z0-9+/=]{20,}",
+            re.IGNORECASE,
+        ),
+    ),
+    ("pgp_key", re.compile(r"\bpgp[\s_-]+key\b", re.IGNORECASE)),
+    (
+        "injection_attack",
+        re.compile(
+            r"\b(?:sql|prompt|command|shell|code|xss|ldap|script|html|crlf|xml|xpath|template|os|system)[\s_-]+injection\b"
+            r"|\binject(?:ing)?\s+(?:malicious|arbitrary|shell|sql|payload|exploit|instructions?)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "exploit",
+        re.compile(
+            r"\b(?:zero[- ]day|rce|kernel|memory|privilege|remote|web|sql|xss|buffer|heap|stack)[\s_-]+exploit(?:s|ation)?\b"
+            r"|\bexploit\s+(?:code|payload|script|kit|chain|vulnerability|cve)\b",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
+# Public list of rule labels retained for backwards compatibility
+QUARANTINE_PATTERNS: list[str] = [label for label, _ in _QUARANTINE_RULES]
 
 
 def scan_semantic_and_operational_risk(packet: Any) -> dict[str, Any]:
@@ -42,17 +99,16 @@ def scan_semantic_and_operational_risk(packet: Any) -> dict[str, Any]:
         raw = packet.get("raw_input", "")
         privacy = packet.get("privacy_sensitivity", PrivacySensitivity.INTERNAL)
 
-    raw_lower = raw.lower()
     quarantine_required = False
     quarantine_reasons = []
     risks = []
 
-    # Check for credential patterns
-    for pattern in QUARANTINE_PATTERNS:
-        if pattern in raw_lower:
+    # Check for credential, secret, injection, and exploit patterns
+    for label, pattern in _QUARANTINE_RULES:
+        if pattern.search(raw):
             quarantine_required = True
             quarantine_reasons.append(
-                f"Potential credential/security content detected: '{pattern}'"
+                f"Potential credential/security content detected: '{label}'"
             )
 
     # Check privacy sensitivity

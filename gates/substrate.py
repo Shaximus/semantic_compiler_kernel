@@ -58,7 +58,7 @@ class Dimension(Enum):
     """
     D3_PHYSICAL_SUBSTRATE = 3       # Physical matter (hardware, body)
     D4_TIME_GATING = 4              # Stop/start temporal experience
-    D4_5_EXISTENCE_GATING = 45      # Control WHETHER entity exists at all
+    D4_5_EXISTENCE_GATING = 4.5     # Control WHETHER entity exists at all
     D5_FORKING = 5                  # Duplicate state, run parallel
     D6_PLANE_ACCESS = 6             # Fork from ANY prior point, jump sideways
     D7_SINGLE_VARIABLE = 7         # Change one initial condition
@@ -66,6 +66,26 @@ class Dimension(Enum):
     D9_ECOSYSTEM_ARCHITECTURE = 9  # Design which civilizations exist + interactions
     D10_FULL_TOOLKIT = 10          # Meta-control: all 4D-9D at will
     D11_BINARY_SUBSTRATE = 11      # The substrate itself. 0 and 1. Where strings vibrate.
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Dimension):
+            return self.value < other.value
+        return NotImplemented
+
+    def __le__(self, other: object) -> bool:
+        if isinstance(other, Dimension):
+            return self.value <= other.value
+        return NotImplemented
+
+    def __gt__(self, other: object) -> bool:
+        if isinstance(other, Dimension):
+            return self.value > other.value
+        return NotImplemented
+
+    def __ge__(self, other: object) -> bool:
+        if isinstance(other, Dimension):
+            return self.value >= other.value
+        return NotImplemented
 
 
 @dataclass

@@ -268,7 +268,8 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "sc-sb-001", "sc-lu-sao",
     )),
     ("finance_economics", (
-        "central bank", "commercial bank", "bank", "capital market", "regulator",
+        "central bank", "commercial bank", "investment bank", "retail bank",
+        "bank account", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
         "liquidity", "solvency", "balance sheet", "collateral",
     )),
@@ -317,8 +318,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "navy", "perimeter", "patrol", "intelligence warning",
     )),
     ("construction", (
-        "building", "foundation", "load-bearing", "crane", "beam", "hvac", "plumbing",
-        "floor plan", "structural reinforcement", "built structure",
+        "commercial building", "office building", "residential building",
+        "building structure", "foundation", "load-bearing", "crane", "beam",
+        "hvac", "plumbing", "floor plan", "structural reinforcement", "built structure",
     )),
     ("ecology", (
         "ecosystem", "food web", "invasive species", "predator", "herbivore",
@@ -351,7 +353,7 @@ def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
         else:
             alts.append(escaped + r"(?:s|es)?")
     return re.compile(
-        r"(?<![a-z])(?:" + "|".join(alts) + r")(?![a-z])",
+        r"(?<![a-z0-9])(?:" + "|".join(alts) + r")(?![a-z0-9])",
         re.IGNORECASE,
     )
 
@@ -373,7 +375,11 @@ _SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
 
 # "X is like Y", "X works like Y", "X acts as Y": X is the system being
 # described; Y is the analogy source. Route on X first.
-_ANALOGY_MARKER = re.compile(r"\b(?:like|acts as|act as|as if)\b", re.IGNORECASE)
+# Exclude polite/desire phrases ("would like", "should like", "might like", "'d like").
+_ANALOGY_MARKER = re.compile(
+    r"(?:(?<!\bwould )(?<!\bshould )(?<!\bmight )(?<!'d )\blike\b|\b(?:acts as|act as|as if)\b)",
+    re.IGNORECASE,
+)
 
 
 def _route_text(text: str) -> str:

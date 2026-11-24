@@ -171,6 +171,7 @@ def evaluate_measurement_paths(packet: Any) -> dict[str, Any]:
     return {
         "paths": findings,
         "any_degraded": any_degraded,
+        "context_declared_modified": context_modified,
         "gate_status": "FAILED" if any_degraded else "PASSED",
         "decisive_rule": (
             "Internal telemetry is degraded; "

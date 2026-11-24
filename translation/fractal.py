@@ -201,6 +201,28 @@ def translate_across_scales(
     source_impl = dept_map.get(source_scale, "Unknown")
     target_impl = dept_map.get(target_scale, "Unknown")
 
+    changed_variables = [
+        "substrate",
+        "scale_implementation",
+        "characteristic_timescale",
+        "failure_surface",
+    ]
+    aggregation_rule = (
+        f"Aggregate {source_scale}-scale {source_department.name} role ({source_impl}) "
+        f"to {target_scale}-scale counterpart ({target_impl}) preserving functional role only."
+    )
+    decomposition_rule = (
+        f"Decompose {target_scale}-scale {source_department.name} role ({target_impl}) "
+        f"into {source_scale}-scale mechanism ({source_impl}) without claiming substrate identity."
+    )
+    information_lost = (
+        f"Substrate physics, implementation mechanics, and scale-specific boundary "
+        f"details between {source_scale} and {target_scale}."
+    )
+    new_failure_modes = [
+        f"{target_scale}-scale failure modes not present at {source_scale} scale",
+    ]
+
     return {
         "department": source_department.name,
         "source": source_scale,
@@ -215,6 +237,22 @@ def translate_across_scales(
             "Required by any system of sufficient complexity",
             "Failure mode isomorphism",
         ],
+        "changed_variables": changed_variables,
+        "aggregation_rule": aggregation_rule,
+        "decomposition_rule": decomposition_rule,
+        "information_lost": information_lost,
+        "new_failure_modes": new_failure_modes,
+        "scale_transform": {
+            "source_scale": source_scale,
+            "target_scale": target_scale,
+            "aggregation_rule": aggregation_rule,
+            "decomposition_rule": decomposition_rule,
+            "changed_variables": changed_variables,
+            "information_lost": information_lost,
+            "new_failure_modes": new_failure_modes,
+            "authority_change": "none",
+            "confidence": 0.5,
+        },
         "residuals": [
             f"Source ({source_scale}) and target ({target_scale}) "
             f"have different substrates",
@@ -418,6 +456,10 @@ _KEYWORD_TO_DEPARTMENT: dict[str, FunctionalDepartment] = {}
 _PHRASE_TO_DEPARTMENT: dict[str, FunctionalDepartment] = {}
 # scale -> list of (department, segment tokens, is_head) from the table, in table order.
 _SEGMENTS: dict[str, list[tuple[FunctionalDepartment, tuple[str, ...], bool]]] = {}
+# scale -> first_token -> list of (department, segment tokens, is_head).
+_SEGMENTS_BY_FIRST: dict[str, dict[str, list[tuple[FunctionalDepartment, tuple[str, ...], bool]]]] = {}
+# scale -> first_token -> list of (department, reduced segment tokens without self_tokens).
+_REDUCED_SEGMENTS_BY_FIRST: dict[str, dict[str, list[tuple[FunctionalDepartment, tuple[str, ...]]]]] = {}
 # scale -> head token -> departments listing it, in table order.
 _HEAD_TOKEN_DEPARTMENTS: dict[str, dict[str, list[FunctionalDepartment]]] = {}
 
@@ -476,13 +518,22 @@ def _build_table_index() -> None:
             head, _, rest = impl.partition("(")
             gloss = rest.rsplit(")", 1)[0] if rest else ""
             segments = _SEGMENTS.setdefault(scale, [])
+            seg_by_first = _SEGMENTS_BY_FIRST.setdefault(scale, {})
+            reduced_by_first = _REDUCED_SEGMENTS_BY_FIRST.setdefault(scale, {})
+            self_tokens = _SCALE_SELF_TOKENS.get(scale, frozenset())
             head_tokens = _HEAD_TOKEN_DEPARTMENTS.setdefault(scale, {})
             for is_head, chunk in ((True, head), (False, gloss)):
                 for part in _SEGMENT_SPLIT_RE.split(chunk):
                     tokens = _segment_tokens(part)
                     if not tokens:
                         continue
-                    segments.append((dept, tokens, is_head))
+                    entry = (dept, tokens, is_head)
+                    segments.append(entry)
+                    seg_by_first.setdefault(tokens[0], []).append(entry)
+                    if len(tokens) >= 2:
+                        reduced = tuple(tok for tok in tokens if tok not in self_tokens)
+                        if len(reduced) >= 2 and reduced != tokens:
+                            reduced_by_first.setdefault(reduced[0], []).append((dept, reduced))
                     if is_head:
                         for token in tokens:
                             if _usable_token(token):
@@ -524,6 +575,24 @@ def _find_phrase(tokens: list[str | None], phrase: tuple[str, ...]) -> list[int]
     ]
 
 
+def _match_positions(
+    tokens: list[str | None],
+    positions: list[int],
+    phrase: tuple[str, ...],
+) -> list[int]:
+    """Return subset of candidate start positions where ``phrase`` matches contiguously."""
+    width = len(phrase)
+    if width == 1:
+        return positions
+    n = len(tokens)
+    return [
+        start
+        for start in positions
+        if start + width <= n
+        and all(tokens[start + k] == phrase[k] for k in range(1, width))
+    ]
+
+
 def _curated_phrase_tokens() -> dict[tuple[str, ...], FunctionalDepartment]:
     return {
         tuple(_stem(part) for part in re.split(r"[ ]", phrase)): dept
@@ -532,6 +601,10 @@ def _curated_phrase_tokens() -> dict[tuple[str, ...], FunctionalDepartment]:
 
 
 _CURATED_PHRASES = _curated_phrase_tokens()
+_CURATED_BY_FIRST: dict[str, list[tuple[tuple[str, ...], FunctionalDepartment]]] = {}
+for _phrase_toks, _phrase_dept in _CURATED_PHRASES.items():
+    if _phrase_toks:
+        _CURATED_BY_FIRST.setdefault(_phrase_toks[0], []).append((_phrase_toks, _phrase_dept))
 
 _SCALE_AMBIGUOUS_SINGLE_TOKENS: dict[tuple[str, str], tuple[FunctionalDepartment, ...]] = {
     ("llm", "attention"): (
@@ -574,36 +647,60 @@ def _sentence_departments(sentence: str, scale: str, self_tokens: frozenset[str]
         for k in range(start, start + width):
             consumed[k] = True
 
-    # 1. Table-segment phrases at the active scale. Segments are tried against
-    #    the surface text and against the text with the system's own name
-    #    removed, so "membrane receptors" matches the segment "cell membrane
-    #    receptors" and "cell membrane" matches "cell membrane".
+    # 1. Table-segment phrases at the active scale (indexed by first token).
+    #    Segments are tried against the surface text and against the text with
+    #    the system's own name removed, so "membrane receptors" matches the
+    #    segment "cell membrane receptors" and "cell membrane" matches "cell membrane".
+    surface_pos: dict[str, list[int]] = {}
+    for idx, tok in enumerate(surface):
+        if tok is not None:
+            surface_pos.setdefault(tok, []).append(idx)
+
     stripped_index = [i for i, tok in enumerate(surface) if tok is not None and tok not in self_tokens]
     stripped = [surface[i] for i in stripped_index]
+    stripped_pos: dict[str, list[int]] = {}
+    for idx, tok in enumerate(stripped):
+        if tok is not None:
+            stripped_pos.setdefault(tok, []).append(idx)
+
     heads_by_token = _HEAD_TOKEN_DEPARTMENTS.get(scale, {})
-    for dept, tokens, _is_head in _SEGMENTS.get(scale, ()):
-        if len(tokens) == 1:
-            token = tokens[0]
-            owners = heads_by_token.get(token, ())
-            distinctive = len(owners) == 1 and owners[0] == dept
-            if not distinctive or not _usable_token(token) or token in self_tokens:
-                continue
-            for start in _find_phrase(surface, tokens):
-                claim(start, 1, dept)
+    seg_by_first = _SEGMENTS_BY_FIRST.get(scale, {})
+    reduced_by_first = _REDUCED_SEGMENTS_BY_FIRST.get(scale, {})
+
+    for tok, starts in surface_pos.items():
+        candidates = seg_by_first.get(tok)
+        if not candidates:
             continue
-        for start in _find_phrase(surface, tokens):
-            claim(start, len(tokens), dept)
-        reduced = tuple(tok for tok in tokens if tok not in self_tokens)
-        if len(reduced) >= 2 and reduced != tokens:
-            for start in _find_phrase(stripped, reduced):
+        for dept, tokens, _is_head in candidates:
+            if len(tokens) == 1:
+                owners = heads_by_token.get(tok, ())
+                distinctive = len(owners) == 1 and owners[0] == dept
+                if not distinctive or not _usable_token(tok) or tok in self_tokens:
+                    continue
+                for start in starts:
+                    claim(start, 1, dept)
+                continue
+            for start in _match_positions(surface, starts, tokens):
+                claim(start, len(tokens), dept)
+
+    for tok, starts in stripped_pos.items():
+        red_candidates = reduced_by_first.get(tok)
+        if not red_candidates:
+            continue
+        for dept, reduced in red_candidates:
+            for start in _match_positions(stripped, starts, reduced):
                 for k in range(start, start + len(reduced)):
                     consumed[stripped_index[k]] = True
                 found.add(dept.name)
 
-    # 2. Curated multi-word synonyms.
-    for tokens, dept in _CURATED_PHRASES.items():
-        for start in _find_phrase(surface, tokens):
-            claim(start, len(tokens), dept)
+    # 2. Curated multi-word synonyms (indexed by first token).
+    for tok, starts in surface_pos.items():
+        cur_candidates = _CURATED_BY_FIRST.get(tok)
+        if not cur_candidates:
+            continue
+        for tokens, dept in cur_candidates:
+            for start in _match_positions(surface, starts, tokens):
+                claim(start, len(tokens), dept)
 
     # 3. Remaining words: curated single-word synonyms, then table head words.
     for index, token in enumerate(surface):
@@ -772,8 +869,9 @@ def map_fractal_similarity(
         target_systems = packet.get("target_systems", [])
 
     mappings = []
+    seen_pairs: set[tuple[str, str]] = set()
 
-    # For each source-target pair, try to map departments
+    # For each unique (source_scale, target_scale) pair, map departments once
     for source in source_frames:
         for target in target_systems:
             if resolve_frames:
@@ -784,6 +882,10 @@ def map_fractal_similarity(
                 target_scale = _legacy_scale_for_frame(target)
 
             if source_scale and target_scale and source_scale != target_scale:
+                pair = (source_scale, target_scale)
+                if pair in seen_pairs:
+                    continue
+                seen_pairs.add(pair)
                 dept_mappings = map_all_departments(source_scale, target_scale)
                 mappings.extend(dept_mappings)
 
