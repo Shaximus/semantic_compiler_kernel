@@ -259,11 +259,12 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "isomorphic invariant",
     )),
     ("soul_bomb_sovereignty", (
-        "soul bomb", "exit sovereignty", "v5 sovereignty", "coerced oneness",
-        "uncoupled competence", "secure base", "grief vs coercion", "natural grief",
-        "counterfeit signal", "genuine signal", "bootstrapper test",
+        "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
+        "coerced oneness", "uncoupled competence", "secure base", "grief vs coercion",
+        "natural grief", "counterfeit signal", "genuine signal", "bootstrapper test",
         "surveillance from inside", "code 871", "sword art online", "sao lineup",
-        "immortal object", "surrendered admin", "the seed", "pharmakeia",
+        "immortal object", "surrendered admin", "world seed", "pharmakeia",
+        "sc-sb-001", "sc-lu-sao",
     )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
@@ -356,6 +357,17 @@ def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
 
 _DOMAIN_PATTERNS = tuple((domain, _keyword_pattern(words)) for domain, words in _DOMAIN_KEYWORDS)
 
+# Unambiguous SC-SB-001 / SC-LU-SAO-* phrases take precedence when a prompt also
+# mentions broader reward_hijacking ("reward signal", "reward model") or
+# domain_expansion ("domain clash") terms, without altering _DOMAIN_PATTERNS order.
+_SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
+    "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
+    "coerced oneness", "uncoupled competence", "grief vs coercion",
+    "bootstrapper test", "surveillance from inside", "code 871",
+    "sword art online", "sao lineup", "immortal object", "surrendered admin",
+    "sc-sb-001", "sc-lu-sao",
+))
+
 
 # "X is like Y", "X works like Y", "X acts as Y": X is the system being
 # described; Y is the analogy source. Route on X first.
@@ -365,6 +377,11 @@ _ANALOGY_MARKER = re.compile(r"\b(?:like|acts as|act as|as if)\b", re.IGNORECASE
 def _route_text(text: str) -> str:
     for domain, pattern in _DOMAIN_PATTERNS:
         if pattern.search(text):
+            if (
+                domain in ("reward_hijacking", "domain_expansion")
+                and _SOUL_BOMB_EXPLICIT_PATTERN.search(text)
+            ):
+                return "soul_bomb_sovereignty"
             return domain
     return "universal_generic"
 

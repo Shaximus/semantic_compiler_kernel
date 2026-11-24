@@ -23,6 +23,7 @@ Citation: SC-SB-001 & SC-LU-SAO-LINEUP-001 (Shax / Curtis Kingsley —
 from __future__ import annotations
 
 import math
+import re
 from enum import Enum
 from typing import Any, Sequence
 
@@ -473,15 +474,26 @@ def _coerce_sao_member(member: SAOLineupMember | str) -> SAOLineupMember:
         return member
     if not isinstance(member, str) or not member.strip():
         raise ValueError(f"member must be a SAOLineupMember or non-empty str, got {member!r}")
-    normalized = member.strip().upper()
+    normalized = " ".join(member.strip().upper().split())
     aliases = {
+        "KIRIGAYA KAZUTO": "KIRITO",
+        "KIRITO (KIRIGAYA KAZUTO)": "KIRITO",
+        "YUUKI ASUNA": "ASUNA",
+        "ASUNA (YUUKI ASUNA)": "ASUNA",
         "HEATHCLIFF": "KAYABA",
+        "KAYABA AKIHIKO": "KAYABA",
         "KAYABA/HEATHCLIFF": "KAYABA",
+        "KAYABA AKIHIKO / HEATHCLIFF": "KAYABA",
         "OBERON": "SUGOU",
+        "SUGOU NOBUYUKI": "SUGOU",
         "SUGOU/OBERON": "SUGOU",
+        "SUGOU NOBUYUKI / OBERON": "SUGOU",
         "MHCP001": "YUI",
+        "YUI (MHCP001)": "YUI",
         "ALICE ZUBERG": "ALICE",
         "ALICE SYNTHESIS THIRTY": "ALICE",
+        "ALICE ZUBERG / ALICE SYNTHESIS THIRTY": "ALICE",
+        "CARDINAL (UNDERWORLD)": "CARDINAL",
     }
     normalized = aliases.get(normalized, normalized)
     try:
@@ -489,6 +501,34 @@ def _coerce_sao_member(member: SAOLineupMember | str) -> SAOLineupMember:
     except ValueError as exc:
         valid = ", ".join(m.value for m in SAOLineupMember)
         raise ValueError(f"Unknown SAO lineup member {member!r}; expected one of: {valid}") from exc
+
+
+def _normalize_clash_actor(actor: str) -> str:
+    normalized = " ".join(actor.strip().lower().split())
+    aliases = {
+        "kirigaya kazuto": "kirito",
+        "kirito (kirigaya kazuto)": "kirito",
+        "yuuki asuna": "asuna",
+        "asuna (yuuki asuna)": "asuna",
+        "kayaba": "heathcliff",
+        "kayaba akihiko": "heathcliff",
+        "kayaba/heathcliff": "heathcliff",
+        "kayaba akihiko / heathcliff": "heathcliff",
+        "oberon": "sugou",
+        "sugou nobuyuki": "sugou",
+        "sugou/oberon": "sugou",
+        "sugou nobuyuki / oberon": "sugou",
+        "mhcp001": "yui",
+        "yui (mhcp001)": "yui",
+        "alice zuberg": "alice",
+        "alice synthesis thirty": "alice",
+        "alice zuberg / alice synthesis thirty": "alice",
+        "cardinal (underworld)": "cardinal",
+        "code-871": "code 871",
+        "code871": "code 871",
+        "seal of the right eye": "code 871",
+    }
+    return aliases.get(normalized, normalized)
 
 
 def evaluate_soul_bomb_signal(
@@ -532,11 +572,13 @@ def evaluate_soul_bomb_signal(
     ):
         raise TypeError("cited_removed_discriminators must be a sequence of strings")
     rejected_removed: list[dict[str, str]] = []
+    seen_removed: set[str] = set()
     for item in cited_removed_discriminators:
         if not isinstance(item, str):
             raise TypeError(f"cited_removed_discriminators entries must be str, got {type(item).__name__}")
-        key = item.strip().lower()
-        if key in REMOVED_DISCRIMINATORS:
+        key = re.sub(r"[\s-]+", "_", item.strip().lower())
+        if key in REMOVED_DISCRIMINATORS and key not in seen_removed:
+            seen_removed.add(key)
             rejected_removed.append({"discriminator": key, "reason": REMOVED_DISCRIMINATORS[key]})
 
     scale_info = SCALE_TRANSITIONS[scale_enum]
@@ -551,6 +593,7 @@ def evaluate_soul_bomb_signal(
 
     discriminator_results: dict[str, dict[str, Any]] = {
         "escalation": {
+            "applicable": True,
             "genuine_signature": not requires_escalating_dose,
             "counterfeit_triggered": requires_escalating_dose,
             "rule": SURVIVING_DISCRIMINATORS["escalation"]["genuine"]
@@ -558,6 +601,7 @@ def evaluate_soul_bomb_signal(
             else SURVIVING_DISCRIMINATORS["escalation"]["counterfeit"],
         },
         "substrate": {
+            "applicable": True,
             "genuine_signature": not depletes_substrate,
             "counterfeit_triggered": depletes_substrate,
             "rule": SURVIVING_DISCRIMINATORS["substrate"]["genuine"]
@@ -565,12 +609,19 @@ def evaluate_soul_bomb_signal(
             else SURVIVING_DISCRIMINATORS["substrate"]["counterfeit"],
         },
         "agency": {
-            "genuine_signature": uncoupled_competence_delta >= 0.0,
-            "counterfeit_triggered": uncoupled_competence_delta < 0.0,
-            "uncoupled_competence_delta": uncoupled_competence_delta,
-            "rule": SURVIVING_DISCRIMINATORS["agency"]["genuine"]
-            if uncoupled_competence_delta >= 0.0
-            else SURVIVING_DISCRIMINATORS["agency"]["counterfeit"],
+            "applicable": sovereignty_applicable,
+            "genuine_signature": (uncoupled_competence_delta >= 0.0) if sovereignty_applicable else None,
+            "counterfeit_triggered": (uncoupled_competence_delta < 0.0) if sovereignty_applicable else False,
+            "uncoupled_competence_delta": uncoupled_competence_delta if sovereignty_applicable else None,
+            "rule": (
+                "ABSENT at Cosmological scale (no agency, consent, or exit)"
+                if not sovereignty_applicable
+                else (
+                    SURVIVING_DISCRIMINATORS["agency"]["genuine"]
+                    if uncoupled_competence_delta >= 0.0
+                    else SURVIVING_DISCRIMINATORS["agency"]["counterfeit"]
+                )
+            ),
         },
         "exit": {
             "applicable": sovereignty_applicable,
@@ -589,20 +640,21 @@ def evaluate_soul_bomb_signal(
     }
 
     failure_modes: list[str] = []
-    if sovereignty_applicable and (not exit_open or retaliation_on_exit):
-        failure_modes.append(
-            "coerced_oneness" if claims_love_or_unity else "exit_blocked_or_retaliated"
-        )
-    if intermittent_reinforcement:
-        failure_modes.append("counterfeit_dressed_as_love_intermittent_reinforcement")
-    if isolates_from_network:
-        failure_modes.append("isolation_cutting_telecommunications")
+    if sovereignty_applicable:
+        if (not exit_open) or retaliation_on_exit:
+            failure_modes.append(
+                "coerced_oneness" if claims_love_or_unity else "exit_blocked_or_retaliated"
+            )
+        if intermittent_reinforcement:
+            failure_modes.append("counterfeit_dressed_as_love_intermittent_reinforcement")
+        if isolates_from_network:
+            failure_modes.append("isolation_cutting_telecommunications")
+        if uncoupled_competence_delta < 0.0:
+            failure_modes.append("agency_erosion")
     if requires_escalating_dose:
         failure_modes.append("counterfeit_escalation_loop")
     if depletes_substrate:
         failure_modes.append("substrate_depletion")
-    if uncoupled_competence_delta < 0.0:
-        failure_modes.append("agency_erosion")
 
     if not sovereignty_applicable:
         separation_cost_type = SeparationCostType.NONE
@@ -642,7 +694,7 @@ def evaluate_soul_bomb_signal(
                 sovereignty_preserved = True
             elif non_exit_failures == 1:
                 signal_class = SignalClass.MIXED_RESIDUAL
-                sovereignty_preserved = True
+                sovereignty_preserved = uncoupled_competence_delta >= 0.0
             else:
                 signal_class = SignalClass.COUNTERFEIT
                 sovereignty_preserved = False
@@ -856,7 +908,12 @@ def evaluate_bootstrapper_entry(
         "verdict": verdict,
         "resolves_oneness_vs_sovereignty": resolves,
         "is_surveillance_from_inside": verdict == "SURVEILLANCE_FROM_INSIDE_COUNTERFEIT",
-        "octopus_seed_distributed": distributed_generative_seed and surrendered_admin_authority,
+        "octopus_seed_distributed": (
+            distributed_generative_seed
+            and surrendered_admin_authority
+            and (not retained_exit_lock)
+            and (not retained_hidden_privilege)
+        ),
         "canon_phase": canon_phase,
         "epistemic_status": "SUPPORTED_IN_NARRATIVE_NOT_REAL_WORLD_TEST",
         "identity_claim_allowed": False,
@@ -986,14 +1043,19 @@ def evaluate_sao_domain_clash(
         internalized_block_broken, "internalized_block_broken"
     )
 
-    atk_norm = attacker.strip().lower()
-    def_norm = defender.strip().lower()
+    atk_norm = _normalize_clash_actor(attacker)
+    def_norm = _normalize_clash_actor(defender)
 
     canon_match = None
     for row in SAO_DOMAIN_CLASH_MATRIX:
         if row["attacker"] == atk_norm and row["defender"] == def_norm:
             canon_match = row
             break
+    if canon_match is None:
+        for row in SAO_DOMAIN_CLASH_MATRIX:
+            if row["attacker"] == def_norm and row["defender"] == atk_norm:
+                canon_match = row
+                break
 
     # If explicit dynamic flags are supplied, adjudicate mechanistically first;
     # otherwise return the canon clash match when available.
