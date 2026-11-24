@@ -307,12 +307,17 @@ def _derive_gate_score(packet: Any, gate_name: str) -> float:
         return 0.8
 
     if gate_name == "wave_function_coherence":
-        wfc = packet.wave_function_coherence
-        if wfc.get("state") == "COLLAPSED":
+        wfc = packet.wave_function_coherence or {}
+        coherence_block = wfc.get("coherence")
+        state = (
+            wfc.get("state")
+            or (coherence_block.get("state") if isinstance(coherence_block, dict) else None)
+        )
+        if state == "COLLAPSED":
             return 1.0
-        if wfc.get("state") == "PARTIAL_COHERENCE":
+        if state == "PARTIAL_COHERENCE":
             return 0.6
-        if wfc.get("state") == "DECOHERENT":
+        if state == "DECOHERENT":
             return 0.2
         return 0.5  # SUPERPOSITION — neutral
 

@@ -1,4 +1,4 @@
-"""Tests for compiled entries (12 manifest entries including SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001, SC-SB-001, and SC-LU-SAO-*) and Gate 0 / Circular Time modules."""
+"""Tests for compiled entries (14 manifest entries including SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001, SC-SB-001, and SC-LU-SAO-*) and Gate 0 / Circular Time modules."""
 
 from __future__ import annotations
 
@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 12 JSONL compiled entries and their SHA-256 manifest."""
+    """Verify all 14 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 12)
+        self.assertEqual(len(entries), 14)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -59,7 +59,9 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-LU-SAO-KIRITO-001",
                 "SC-LU-SAO-ASUNA-001",
                 "SC-LU-SAO-YUI-001",
+                "SC-LU-SAO-SUGOU-001",
                 "SC-LU-SAO-ALICE-001",
+                "SC-LU-SAO-EUGEO-001",
                 "SC-LU-SAO-CARDINAL-001",
             },
         )
@@ -155,7 +157,9 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
             ("SC-LU-SAO-KIRITO-001.jsonl", "SC-LU-SAO-KIRITO-001"),
             ("SC-LU-SAO-ASUNA-001.jsonl", "SC-LU-SAO-ASUNA-001"),
             ("SC-LU-SAO-YUI-001.jsonl", "SC-LU-SAO-YUI-001"),
+            ("SC-LU-SAO-SUGOU-001.jsonl", "SC-LU-SAO-SUGOU-001"),
             ("SC-LU-SAO-ALICE-001.jsonl", "SC-LU-SAO-ALICE-001"),
+            ("SC-LU-SAO-EUGEO-001.jsonl", "SC-LU-SAO-EUGEO-001"),
             ("SC-LU-SAO-CARDINAL-001.jsonl", "SC-LU-SAO-CARDINAL-001"),
         ):
             recs = _load_jsonl(COMPILED_DIR / filename)
@@ -164,11 +168,23 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
             self.assertEqual(row["metadata"]["entry_id"], expected_id)
             self.assertEqual(row["metadata"]["lineup"], "SC-LU-SAO-LINEUP-001")
             self.assertEqual(row["dataset_tier"], "SILVER")
+            self.assertEqual(row["isomorphism_quality"]["score"], 0.895)
             self.assertEqual(len(row["functional_departments"]), 15)
             self.assertEqual(len(row["gates"]), 9)
             self.assertTrue(row["isomorphism_quality"]["hard_gate_passed"])
             for mapping in row["isomorphism_analysis"]["mappings"]:
                 self.assertFalse(mapping["identity_claim_allowed"])
+
+        sugou = _load_jsonl(COMPILED_DIR / "SC-LU-SAO-SUGOU-001.jsonl")[0]
+        self.assertEqual(sugou["exit_behavior"], "BLOCKS")
+        self.assertEqual(sugou["analysis"]["claims"][0]["claim_id"], "CLM-SAO-SUGOU-01")
+        waste_dept = next(d for d in sugou["functional_departments"] if d["department"] == "WASTE_REMOVAL")
+        self.assertEqual(waste_dept["state"], "ABSENT")
+
+        eugeo = _load_jsonl(COMPILED_DIR / "SC-LU-SAO-EUGEO-001.jsonl")[0]
+        self.assertEqual(eugeo["exit_behavior"], "BREAKS THE BLOCK")
+        self.assertEqual(eugeo["analysis"]["claims"][0]["claim_id"], "CLM-SAO-EUGEO-01")
+        self.assertEqual(eugeo["domain_primitives"]["barrier"], "Code 871")
 
 
 class TestimonyIntegrityGateTests(unittest.TestCase):

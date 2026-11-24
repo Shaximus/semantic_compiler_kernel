@@ -3,7 +3,7 @@ version: 1.0
 description: >
   Soul Bomb / Reward Signal Inversion (V5 Sovereignty Patch, SC-SB-001) and Sword Art
   Online Lineup Exit-Sovereignty & Bootstrapper Synthesis (SC-LU-SAO-LINEUP-001 and
-  character decodes Kirito, Asuna, Yui, Alice, Cardinal). Formalizes the four surviving
+  character decodes Kirito, Asuna, Yui, Sugou, Alice, Eugeo, Cardinal). Formalizes the four surviving
   discriminators separating genuine sovereignty-preserving coupling from counterfeit
   capture (escalation, substrate depletion, agency/uncoupled competence, and exit),
   rejects removed discriminators (onset speed, tolerance vs sensitization, withdrawal
@@ -129,6 +129,8 @@ invariants:
   - "Authority surrendered and gifted (admin ID, The Seed) outranks authority hoarded, while internalized dissent locks (Code 871) represent exit-blocking moved inside the mind [SC-LU-SAO-LINEUP-001][SC-LU-SAO-ALICE-001]"
   - "Reading a system's invariant tell (HP never dropping) exposes a hidden privileged actor, while a node accepting stigmatized cost to shield peers preserves exit channels at high rendering overhead [SC-LU-SAO-KIRITO-001]"
   - "A care or monitoring function barred from acting on observed harm accumulates error through a blocked waste-removal channel (Yui/MHCP001), while a genuine bond formed inside a counterfeit container is verified by surviving exit (Asuna) [SC-LU-SAO-YUI-001][SC-LU-SAO-ASUNA-001]"
+  - "Holding minds captive for extraction while blocking exit preserves the full counterfeit signature (escalation, extraction, isolation, punished exit, absent waste removal — Sugou/Oberon's Counterfeit Unlimited Void) until outranked by surrendered bootstrapper authority [SC-LU-SAO-SUGOU-001]"
+  - "The first breach of an internalized exit block (Code 871 / Seal of the Right Eye) is made for others rather than self, showing that a genuine protective signal supplies the breakthrough strength even at high personal cost (Eugeo / Blue Rose Sword) [SC-LU-SAO-EUGEO-001]"
   - >
     CONSCIOUSNESS_COGNITION_LINK: Exit sovereignty and informed consent belong to
     sovereign agency at AI, Human, and Societal scales; collapsing a node's autonomy

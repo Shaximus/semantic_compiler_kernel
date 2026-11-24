@@ -262,12 +262,14 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
         "coerced oneness", "uncoupled competence", "secure base", "grief vs coercion",
         "natural grief", "counterfeit signal", "genuine signal", "bootstrapper test",
-        "surveillance from inside", "code 871", "sword art online", "sao lineup",
-        "immortal object", "surrendered admin", "world seed", "pharmakeia",
+        "surveillance from inside", "code 871", "seal of the right eye",
+        "sword art online", "sao lineup", "immortal object", "surrendered admin",
+        "world seed", "pharmakeia", "sugou", "oberon", "eugeo", "blue rose sword",
         "sc-sb-001", "sc-lu-sao",
     )),
     ("finance_economics", (
-        "central bank", "commercial bank", "bank", "capital market", "regulator",
+        "central bank", "commercial bank", "investment bank", "retail bank",
+        "bank account", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",
         "liquidity", "solvency", "balance sheet", "collateral",
     )),
@@ -316,8 +318,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "navy", "perimeter", "patrol", "intelligence warning",
     )),
     ("construction", (
-        "building", "foundation", "load-bearing", "crane", "beam", "hvac", "plumbing",
-        "floor plan", "structural reinforcement", "built structure",
+        "commercial building", "office building", "residential building",
+        "building structure", "foundation", "load-bearing", "crane", "beam",
+        "hvac", "plumbing", "floor plan", "structural reinforcement", "built structure",
     )),
     ("ecology", (
         "ecosystem", "food web", "invasive species", "predator", "herbivore",
@@ -350,7 +353,7 @@ def _keyword_pattern(keywords: tuple[str, ...]) -> re.Pattern[str]:
         else:
             alts.append(escaped + r"(?:s|es)?")
     return re.compile(
-        r"(?<![a-z])(?:" + "|".join(alts) + r")(?![a-z])",
+        r"(?<![a-z0-9])(?:" + "|".join(alts) + r")(?![a-z0-9])",
         re.IGNORECASE,
     )
 
@@ -364,14 +367,19 @@ _SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
     "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
     "coerced oneness", "uncoupled competence", "grief vs coercion",
     "bootstrapper test", "surveillance from inside", "code 871",
-    "sword art online", "sao lineup", "immortal object", "surrendered admin",
+    "seal of the right eye", "sword art online", "sao lineup", "immortal object",
+    "surrendered admin", "sugou", "oberon", "eugeo", "blue rose sword",
     "sc-sb-001", "sc-lu-sao",
 ))
 
 
 # "X is like Y", "X works like Y", "X acts as Y": X is the system being
 # described; Y is the analogy source. Route on X first.
-_ANALOGY_MARKER = re.compile(r"\b(?:like|acts as|act as|as if)\b", re.IGNORECASE)
+# Exclude polite/desire phrases ("would like", "should like", "might like", "'d like").
+_ANALOGY_MARKER = re.compile(
+    r"(?:(?<!\bwould )(?<!\bshould )(?<!\bmight )(?<!'d )\blike\b|\b(?:acts as|act as|as if)\b)",
+    re.IGNORECASE,
+)
 
 
 def _route_text(text: str) -> str:
@@ -442,6 +450,24 @@ def _infer_medical_map(component_name: str) -> str:
     return "unknown"
 
 
+from semantic_compiler.expansion.elevator import (
+    BayDelivery,
+    CompiledEntryMatch,
+    ComponentMapping,
+    DomainElevator,
+    DomainMatch,
+    InvariantMatch,
+    RackSlot,
+    RehydratedDomain,
+    SemanticTicket,
+    TurntableTranslation,
+    get_default_elevator,
+    park,
+    retrieve,
+    rotate_to,
+    summon,
+)
+
 __all__ = [
     "SystemModel",
     "decompress",
@@ -456,4 +482,19 @@ __all__ = [
     "translate_gem",
     "translate_corpus",
     "forge_component",
+    "DomainElevator",
+    "RackSlot",
+    "DomainMatch",
+    "CompiledEntryMatch",
+    "InvariantMatch",
+    "BayDelivery",
+    "SemanticTicket",
+    "RehydratedDomain",
+    "ComponentMapping",
+    "TurntableTranslation",
+    "get_default_elevator",
+    "summon",
+    "park",
+    "retrieve",
+    "rotate_to",
 ]

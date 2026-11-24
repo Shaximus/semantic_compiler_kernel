@@ -31,7 +31,7 @@ from semantic_compiler.core.types import (
     PrivacySensitivity,
 )
 from semantic_compiler.core.scoring import score_packet
-from semantic_compiler.core.decisions import decide_packet
+from semantic_compiler.core.decisions import decide_packet, route_packet
 from semantic_compiler.core.audit import build_audit_record
 from semantic_compiler.core.dataset import build_dataset_row
 
@@ -84,16 +84,32 @@ def normalize_preserving_signal(text: str) -> str:
 def classify_source_context(
     input_text: str,
     context: Optional[dict[str, Any]] = None,
+    existing: Optional[SourceContext] = None,
 ) -> SourceContext:
-    """Classify the source context of the input."""
-    ctx = SourceContext()
+    """Classify the source context of the input, preserving existing provenance fields."""
+    ctx = SourceContext(
+        source_type=existing.source_type if existing else None,
+        origin=existing.origin if existing else None,
+        trust_level=existing.trust_level if existing else None,
+        intended_audience=existing.intended_audience if existing else None,
+        authority_level=existing.authority_level if existing else "none",
+        source_path=existing.source_path if existing else None,
+        source_hash=existing.source_hash if existing else None,
+        timestamp=existing.timestamp if existing else None,
+    )
     if context:
-        ctx.source_type = context.get("source_type")
-        ctx.origin = context.get("origin")
-        ctx.trust_level = context.get("trust_level")
-        ctx.intended_audience = context.get("intended_audience")
-        ctx.authority_level = context.get("authority_level", "none")
-        ctx.source_path = context.get("source_path")
+        if "source_type" in context:
+            ctx.source_type = context["source_type"]
+        if "origin" in context:
+            ctx.origin = context["origin"]
+        if "trust_level" in context:
+            ctx.trust_level = context["trust_level"]
+        if "intended_audience" in context:
+            ctx.intended_audience = context["intended_audience"]
+        if "authority_level" in context:
+            ctx.authority_level = context["authority_level"]
+        if "source_path" in context:
+            ctx.source_path = context["source_path"]
     return ctx
 
 
@@ -451,11 +467,18 @@ def discover_hidden_variables(packet: SemanticPacket) -> dict[str, Any]:
     # Check for missing owners
     skeleton = packet.structural_skeleton
     for resource in skeleton.get("resources", []):
-        if not resource.get("owner"):
+        if isinstance(resource, dict):
+            if not resource.get("owner"):
+                candidates.append({
+                    "type": "MISSING_OWNER",
+                    "resource": resource,
+                    "detail": "Resource has no identified owner.",
+                })
+        elif isinstance(resource, str) and resource.strip():
             candidates.append({
                 "type": "MISSING_OWNER",
                 "resource": resource,
-                "detail": "Resource has no identified owner.",
+                "detail": f"Resource '{resource}' has no identified owner.",
             })
 
     # Check for missing feedback loops
@@ -771,12 +794,26 @@ def generate_executive_translation(packet: SemanticPacket) -> str:
     return "\n".join(lines)
 
 
+_DECISION_TO_STATUS: dict[Decision, str] = {
+    Decision.COMPILED: "compiled",
+    Decision.COMPILED_WITH_GUARDRAILS: "compiled",
+    Decision.COMPILED_SUPERVISED_ONLY: "compiled",
+    Decision.COMPILED_PRIVATE_REDACTED_ONLY: "compiled",
+    Decision.NEEDS_REVISION: "needs_revision",
+    Decision.REJECT: "rejected",
+    Decision.QUARANTINE: "quarantined",
+    Decision.ROUTE_FOR_APPROVAL: "pending_approval",
+    Decision.ESCALATE: "escalated",
+}
+
+
 def build_routing_packet(packet: SemanticPacket) -> dict[str, Any]:
     """Build the routing packet for delivery."""
+    routes = list(packet.route_to) if packet.route_to else route_packet(packet)
     return {
         "packet_id": packet.packet_id,
         "decision": packet.decision.name if packet.decision else "PENDING",
-        "route_to": packet.route_to,
+        "route_to": routes,
         "priority": "HIGH" if packet.decision in (
             Decision.ESCALATE, Decision.QUARANTINE
         ) else "NORMAL",
@@ -1045,10 +1082,10 @@ def _finalize_packet(packet: SemanticPacket) -> None:
     from semantic_compiler.core.dataset import _classify_tier
 
     packet.dataset_tier = _classify_tier(packet)
+    packet.mark_compilation_end()
     packet.qwen_sft_output = build_qwen_sft_output(packet)
     packet.dataset_row = build_dataset_row(packet)
     packet.audit = build_audit_record(packet)
-    packet.mark_compilation_end()
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -1091,7 +1128,9 @@ def compile_semantic_packet(
     # Stage 1: Preserve and classify source (+ Gate 0: TIG)
     # ──────────────────────────────────────────────────────────
     packet.normalized_input = normalize_preserving_signal(input_text)
-    packet.source_context = classify_source_context(input_text, context)
+    packet.source_context = classify_source_context(
+        input_text, context, existing=packet.source_context
+    )
     packet.testimony_integrity_gate = classify_packet_testimony(packet, context)
     packet.claim_types = classify_claim_types(input_text, context)
     packet.mode = resolve_mode(packet, requested_mode=mode)
@@ -1115,11 +1154,27 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     # Stage 3: Build Semantic Intermediate Representation
     # ──────────────────────────────────────────────────────────
-    packet.source_frames = detect_source_frames(input_text, context)
-    packet.target_systems = infer_target_systems(input_text, context)
+    packet.source_frames = detect_source_frames(packet, registry)
+    packet.target_systems = infer_target_systems(packet)
     packet.semantic_ir = build_semantic_ir(packet)
 
+    # Security risk scan runs before Stage 3 early-exit so raw credential/secret
+    # dumps cannot bypass QUARANTINE when no target system resolves.
+    packet.risk_scan = scan_semantic_and_operational_risk(packet)
+
     if not packet.target_systems:
+        # Precedence 1: QUARANTINE overrides early-exit NEEDS_REVISION / REJECT.
+        if packet.risk_scan.get("quarantine_required"):
+            packet.decision = Decision.QUARANTINE
+            packet.status = "quarantined"
+            packet.route_to = route_packet(packet)
+            packet.routing_packet = build_routing_packet(packet)
+            packet.compiler_warnings.extend(
+                packet.risk_scan.get("quarantine_reasons", [])
+            )
+            _finalize_packet(packet)
+            return packet
+
         # v2.1.3: A semantic error can reject the input even when no target
         # frame resolves. Route hard reject classes to REJECT; otherwise keep
         # the legacy NEEDS_REVISION behavior.
@@ -1213,8 +1268,10 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     # Stage 7: Governance
     # ──────────────────────────────────────────────────────────
-    packet.risk_scan = scan_semantic_and_operational_risk(packet)
+    if not packet.risk_scan:
+        packet.risk_scan = scan_semantic_and_operational_risk(packet)
     packet.approval_scan = scan_approval_vectors(packet)
+    packet.route_to = route_packet(packet)
     packet.routing_packet = build_routing_packet(packet)
 
     # v2.0: Reality Orientation (if mode is active)
@@ -1248,22 +1305,21 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     packet.scores = {**packet.scores, **score_packet(packet)}
     packet.decision = decide_packet(packet)
+    packet.route_to = route_packet(packet)
 
-    # Refresh decision-dependent derivatives so routing_packet and translations
+    # Refresh decision-dependent derivatives so routing_packet and executive_translation
     # reflect the final decision rather than the pre-decision PENDING state.
     if packet.routing_packet:
         packet.routing_packet = build_routing_packet(packet)
         packet.route_to = list(packet.routing_packet.get("route_to", []))
-        packet.literal_translation = generate_literal_translation(packet)
-        packet.public_translation = generate_public_translation(packet)
         packet.executive_translation = generate_executive_translation(packet)
     else:
-        packet.route_to = packet.routing_packet.get("route_to", [])
+        packet.route_to = list(packet.routing_packet.get("route_to", []))
 
     # ──────────────────────────────────────────────────────────
     # Stage 10: Learn and audit
     # ──────────────────────────────────────────────────────────
-    packet.status = "compiled"
+    packet.status = _DECISION_TO_STATUS.get(packet.decision, "compiled")
     _finalize_packet(packet)
 
     return packet

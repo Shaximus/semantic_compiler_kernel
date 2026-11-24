@@ -16,6 +16,7 @@ import math
 import os
 import uuid
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -609,6 +610,13 @@ def _gates(packet: Any) -> dict[str, Any]:
     rs = packet.risk_scan or {}
     security_applicable = bool(rs)
     security_score = scores.get("security_safety")
+    if security_score is None and security_applicable:
+        if rs.get("quarantine_required"):
+            security_score = 0.0
+        elif rs.get("security_concern"):
+            security_score = 0.3
+        else:
+            security_score = 0.8
     security_passed = (
         security_score >= 0.40 if security_score is not None else None
     ) if security_applicable else None
@@ -1306,8 +1314,14 @@ def _training_ready(packet: Any) -> bool:
     return True
 
 
-def _build_quality(packet: Any, gates: dict[str, Any]) -> dict[str, Any]:
-    iso_analysis = _isomorphism_analysis(packet)
+def _build_quality(
+    packet: Any,
+    gates: dict[str, Any],
+    *,
+    iso_analysis: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if iso_analysis is None:
+        iso_analysis = _isomorphism_analysis(packet)
     aggregate_quality = iso_analysis["aggregate"]["aggregate_isomorphism_quality"]
     iso_hard_passed = all(
         m["scores"]["hard_gate_multiplier"] == 1 for m in iso_analysis["mappings"]
@@ -1498,6 +1512,7 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
     privacy, and audit envelopes.
     """
     gates = _gates(packet)
+    iso_analysis = _isomorphism_analysis(packet)
 
     row: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -1523,8 +1538,8 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
             "adversarial": _adversarial(packet),
             "v2_extensions": _v2_extensions(packet),
         },
-        "isomorphism_analysis": _isomorphism_analysis(packet),
-        "quality": _build_quality(packet, gates),
+        "isomorphism_analysis": iso_analysis,
+        "quality": _build_quality(packet, gates, iso_analysis=iso_analysis),
         "outputs": _build_outputs(packet),
         "training_payloads": _build_training_payloads(packet),
         "decision": _build_decision(packet),
@@ -1542,6 +1557,16 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
         )
 
     return row
+
+
+@lru_cache(maxsize=8)
+def _get_cached_validator(resolved_path_str: str, mtime_ns: int, size: int) -> Any:
+    """Load and compile a Draft202012Validator, cached by resolved path + mtime/size."""
+    from jsonschema import Draft202012Validator
+
+    with Path(resolved_path_str).open("r", encoding="utf-8") as f:
+        schema = json.load(f)
+    return Draft202012Validator(schema)
 
 
 def _default_schema_path(schema_version: str | None = None) -> Path:
@@ -1581,22 +1606,20 @@ def validate_dataset_row(
 
     Returns {"valid": bool, "errors": list[str]}.
     """
-    from jsonschema import Draft202012Validator
-
     if schema_path is not None:
         resolved_path = Path(schema_path)
     else:
         row_version = row.get("schema_version") if isinstance(row, dict) else None
         resolved_path = _default_schema_path(
-            "2.1.0" if row_version == "2.1.0" else None
+            row_version if row_version in ("2.1.0", "3.1.1") else None
         )
     try:
-        with resolved_path.open("r", encoding="utf-8") as f:
-            schema = json.load(f)
+        resolved_abs = resolved_path.resolve()
+        st = resolved_abs.stat()
+        validator = _get_cached_validator(str(resolved_abs), st.st_mtime_ns, st.st_size)
     except Exception as exc:
         return {"valid": False, "errors": [f"Could not load schema: {exc}"]}
 
-    validator = Draft202012Validator(schema)
     errors = [str(e.message) for e in validator.iter_errors(row)]
     return {"valid": len(errors) == 0, "errors": errors}
 
@@ -1610,7 +1633,8 @@ def export_rows_to_jsonl(
     Export dataset rows to JSONL.
 
     If validate=True, every row is validated before writing and invalid rows
-    are skipped with their errors recorded.
+    are skipped with their errors recorded. Rows already marked
+    ``row["audit"]["schema_valid"] is True`` skip redundant re-validation.
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1622,14 +1646,20 @@ def export_rows_to_jsonl(
     with output_path.open("w", encoding="utf-8") as f:
         for row in rows:
             if validate:
-                validation = validate_dataset_row(row)
-                if not validation["valid"]:
-                    skipped += 1
-                    error_log.append({
-                        "sample_id": row.get("sample_id"),
-                        "errors": validation["errors"],
-                    })
-                    continue
+                already_valid = (
+                    isinstance(row, dict)
+                    and isinstance(row.get("audit"), dict)
+                    and row["audit"].get("schema_valid") is True
+                )
+                if not already_valid:
+                    validation = validate_dataset_row(row)
+                    if not validation["valid"]:
+                        skipped += 1
+                        error_log.append({
+                            "sample_id": row.get("sample_id") if isinstance(row, dict) else None,
+                            "errors": validation["errors"],
+                        })
+                        continue
             f.write(json.dumps(row, ensure_ascii=False, default=str) + "\n")
             written += 1
 

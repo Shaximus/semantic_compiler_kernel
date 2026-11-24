@@ -359,10 +359,19 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
             evaluate_sao_member_exit_sovereignty("Heathcliff")["member"],
             SAOLineupMember.KAYABA.value,
         )
-        self.assertEqual(
-            evaluate_sao_member_exit_sovereignty("Oberon")["member"],
-            SAOLineupMember.SUGOU.value,
-        )
+        sugou_profile = evaluate_sao_member_exit_sovereignty("Oberon")
+        self.assertEqual(sugou_profile["member"], SAOLineupMember.SUGOU.value)
+        self.assertTrue(sugou_profile["has_character_entry"])
+        self.assertEqual(sugou_profile["dataset_tier"], "SILVER")
+        self.assertEqual(sugou_profile["exit_behavior"], ExitBehavior.BLOCKS.value)
+        self.assertIn("Counterfeit Unlimited Void", sugou_profile["domain_type"])
+
+        eugeo_profile = evaluate_sao_member_exit_sovereignty("Eugeo")
+        self.assertEqual(eugeo_profile["member"], SAOLineupMember.EUGEO.value)
+        self.assertTrue(eugeo_profile["has_character_entry"])
+        self.assertEqual(eugeo_profile["dataset_tier"], "SILVER")
+        self.assertEqual(eugeo_profile["exit_behavior"], ExitBehavior.BREAKS_THE_BLOCK.value)
+        self.assertIn("sovereignty breakthrough", eugeo_profile["domain_type"])
         self.assertEqual(
             evaluate_sao_member_exit_sovereignty("MHCP001")["member"],
             SAOLineupMember.YUI.value,
@@ -538,7 +547,9 @@ class SoulBombTemplateAndArtifactsTests(unittest.TestCase):
             "[SC-LU-SAO-KIRITO-001]",
             "[SC-LU-SAO-ASUNA-001]",
             "[SC-LU-SAO-YUI-001]",
+            "[SC-LU-SAO-SUGOU-001]",
             "[SC-LU-SAO-ALICE-001]",
+            "[SC-LU-SAO-EUGEO-001]",
             "[SC-LU-SAO-CARDINAL-001]",
         ):
             self.assertIn(tag, joined_invariants)
