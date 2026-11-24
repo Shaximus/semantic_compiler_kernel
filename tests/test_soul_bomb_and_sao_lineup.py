@@ -126,6 +126,16 @@ class SoulBombSignalEvaluationTests(unittest.TestCase):
         self.assertTrue(counterfeit["is_counterfeit"])
         self.assertFalse(counterfeit["sovereignty_preserved"])
 
+        agency_eroded_only = evaluate_soul_bomb_signal(
+            requires_escalating_dose=False,
+            depletes_substrate=False,
+            uncoupled_competence_delta=-0.8,
+            exit_open=True,
+        )
+        self.assertEqual(agency_eroded_only["signal_class"], SignalClass.MIXED_RESIDUAL.value)
+        self.assertFalse(agency_eroded_only["sovereignty_preserved"])
+        self.assertIn("agency_erosion", agency_eroded_only["failure_modes"])
+
     def test_removed_discriminators_are_rejected_per_clm_sb_006(self) -> None:
         res = evaluate_soul_bomb_signal(
             requires_escalating_dose=False,
@@ -134,25 +144,35 @@ class SoulBombSignalEvaluationTests(unittest.TestCase):
             exit_open=True,
             cited_removed_discriminators=[
                 "onset_speed",
+                "ONSET_SPEED",
+                "onset speed",
                 "tolerance_vs_sensitization",
-                "withdrawal_direction",
+                "withdrawal-direction",
                 "unknown_metric",
             ],
         )
-        rejected_keys = {item["discriminator"] for item in res["rejected_removed_discriminators"]}
-        self.assertEqual(rejected_keys, set(REMOVED_DISCRIMINATORS.keys()))
+        rejected_keys = [item["discriminator"] for item in res["rejected_removed_discriminators"]]
+        self.assertEqual(len(rejected_keys), len(set(rejected_keys)))
+        self.assertEqual(set(rejected_keys), set(REMOVED_DISCRIMINATORS.keys()))
 
     def test_cosmological_scale_marks_sovereignty_half_absent(self) -> None:
         res = evaluate_soul_bomb_signal(
             requires_escalating_dose=False,
             depletes_substrate=False,
-            uncoupled_competence_delta=0.0,
-            exit_open=True,
+            uncoupled_competence_delta=-0.9,
+            exit_open=False,
+            intermittent_reinforcement=True,
+            isolates_from_network=True,
             scale=SovereigntyScale.COSMOLOGICAL,
         )
+        self.assertEqual(res["signal_class"], SignalClass.GENUINE.value)
         self.assertFalse(res["sovereignty_applicable"])
         self.assertFalse(res["sovereignty_preserved"])
+        self.assertFalse(res["discriminator_results"]["agency"]["applicable"])
+        self.assertIsNone(res["discriminator_results"]["agency"]["genuine_signature"])
+        self.assertFalse(res["discriminator_results"]["agency"]["counterfeit_triggered"])
         self.assertIsNone(res["discriminator_results"]["exit"]["genuine_signature"])
+        self.assertEqual(res["failure_modes"], [])
         self.assertIn("Prigogine", res["scale_mapping"]["residual"])
         self.assertEqual(res["separation_cost_type"], SeparationCostType.NONE.value)
 
@@ -165,6 +185,10 @@ class SoulBombSignalEvaluationTests(unittest.TestCase):
         )
         self.assertEqual(dissipative["signal_class"], SignalClass.COUNTERFEIT.value)
         self.assertFalse(dissipative["sovereignty_applicable"])
+        self.assertEqual(
+            dissipative["failure_modes"],
+            ["counterfeit_escalation_loop", "substrate_depletion"],
+        )
 
     def test_strict_input_validation(self) -> None:
         with self.assertRaises(TypeError):
@@ -312,6 +336,17 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
         self.assertEqual(external["verdict"], "EXTERNAL_AUTHORITY_SURRENDERED")
         self.assertFalse(external["resolves_oneness_vs_sovereignty"])
 
+        # Retaining an exit lock contradicts genuine Seed distribution even if flags claim surrender.
+        contradictory = evaluate_bootstrapper_entry(
+            entered_as_participant=True,
+            retained_exit_lock=True,
+            retained_hidden_privilege=False,
+            surrendered_admin_authority=True,
+            distributed_generative_seed=True,
+        )
+        self.assertEqual(contradictory["verdict"], "SURVEILLANCE_FROM_INSIDE_COUNTERFEIT")
+        self.assertFalse(contradictory["octopus_seed_distributed"])
+
     def test_all_eight_sao_members_and_aliases(self) -> None:
         self.assertEqual(len(SAO_LINEUP_SPECIFICATIONS), 8)
         for member in SAOLineupMember:
@@ -335,6 +370,18 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
         self.assertEqual(
             evaluate_sao_member_exit_sovereignty("Alice Zuberg")["exit_behavior"],
             ExitBehavior.BREAKS_THE_BLOCK.value,
+        )
+        self.assertEqual(
+            evaluate_sao_member_exit_sovereignty("Kirigaya Kazuto")["member"],
+            SAOLineupMember.KIRITO.value,
+        )
+        self.assertEqual(
+            evaluate_sao_member_exit_sovereignty("Yuuki Asuna")["member"],
+            SAOLineupMember.ASUNA.value,
+        )
+        self.assertEqual(
+            evaluate_sao_member_exit_sovereignty("Cardinal (Underworld)")["member"],
+            SAOLineupMember.CARDINAL.value,
         )
 
     def test_cardinal_residual_judges_actions_not_teams(self) -> None:
@@ -391,6 +438,27 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
                 self.assertEqual(res["winner"], row["winner"])
                 self.assertEqual(res["mechanism"], row["mechanism"])
                 self.assertFalse(res["identity_claim_allowed"])
+
+        # Reversed argument order, aliases, and SAOLineupMember enums resolve cleanly.
+        self.assertEqual(evaluate_sao_domain_clash("Sugou", "Kirito")["winner"], "Kirito")
+        self.assertEqual(evaluate_sao_domain_clash("Kirito", "Oberon")["winner"], "Kirito")
+        self.assertEqual(evaluate_sao_domain_clash("Kirito", "Kayaba")["winner"], "Kirito")
+        self.assertEqual(evaluate_sao_domain_clash("Kayaba", "Kirito")["winner"], "Heathcliff")
+        self.assertEqual(
+            evaluate_sao_domain_clash(SAOLineupMember.KIRITO, SAOLineupMember.KAYABA)["winner"],
+            "Kirito",
+        )
+        self.assertEqual(
+            evaluate_sao_domain_clash(SAOLineupMember.KAYABA, SAOLineupMember.KIRITO)["winner"],
+            "Heathcliff",
+        )
+        self.assertEqual(evaluate_sao_domain_clash("Quinella", "Cardinal")["winner"], "Quinella")
+        self.assertEqual(evaluate_sao_domain_clash("Sugou", "Asuna")["winner"], "Sugou until Kirito arrived")
+        self.assertEqual(evaluate_sao_domain_clash("Code 871", "Alice Zuberg")["winner"], "Alice")
+        self.assertEqual(
+            evaluate_sao_domain_clash("MHCP001", "Cardinal System ban")["winner"],
+            "Yui (with Kirito)",
+        )
 
         gifted_beats_hoarded = evaluate_sao_domain_clash(
             "Kirito",
@@ -463,6 +531,17 @@ class SoulBombTemplateAndArtifactsTests(unittest.TestCase):
         self.assertTrue(comp_maps.isdisjoint(fail_maps))
         self.assertTrue(comp_maps.issubset(MEDICAL_ONTOLOGY))
         self.assertTrue(fail_maps.issubset(MEDICAL_ONTOLOGY))
+        joined_invariants = "\n".join(template.invariants)
+        for tag in (
+            "[SC-SB-001]",
+            "[SC-LU-SAO-LINEUP-001]",
+            "[SC-LU-SAO-KIRITO-001]",
+            "[SC-LU-SAO-ASUNA-001]",
+            "[SC-LU-SAO-YUI-001]",
+            "[SC-LU-SAO-ALICE-001]",
+            "[SC-LU-SAO-CARDINAL-001]",
+        ):
+            self.assertIn(tag, joined_invariants)
 
     def test_router_and_decompression_for_soul_bomb_sovereignty(self) -> None:
         text = (
@@ -474,6 +553,40 @@ class SoulBombTemplateAndArtifactsTests(unittest.TestCase):
         model = decompress(pkt)
         self.assertEqual(model["domain"], "soul_bomb_sovereignty")
         self.assertTrue(model["components"])
+
+        # Literal SC-SB-001 title and mixed reward/domain-clash prompts must route here,
+        # without stealing pure reward_hijacking, domain_expansion, or ecology prompts.
+        for sb_prompt in (
+            "Soul Bomb / Reward Signal Inversion (V5 Sovereignty Patch)",
+            "Compile SC-SB-001 'Soul Bomb / Reward Signal Inversion' with the V5 Sovereignty Patch.",
+            "A soul bomb domain clash between Kirito and Sugou",
+            "In Sword Art Online, Kirito vs Heathcliff domain clash tests exit sovereignty",
+            "Kayaba's reward model creates coerced oneness",
+            "Reward signal inversion separates genuine coupling from counterfeit capture",
+        ):
+            with self.subTest(sb_prompt=sb_prompt):
+                self.assertEqual(_infer_domain(SemanticPacket(raw_input=sb_prompt)), "soul_bomb_sovereignty")
+
+        self.assertEqual(
+            _infer_domain(
+                SemanticPacket(
+                    raw_input="A standard RLHF reward model suffers from dopamine reward hijacking and specification gaming"
+                )
+            ),
+            "reward_hijacking",
+        )
+        self.assertEqual(
+            _infer_domain(
+                SemanticPacket(
+                    raw_input="Gojo's Unlimited Void domain clash against Sukuna's Malevolent Shrine"
+                )
+            ),
+            "domain_expansion",
+        )
+        self.assertEqual(
+            _infer_domain(SemanticPacket(raw_input="The seed germinates in the forest ecosystem")),
+            "ecology",
+        )
 
 
 if __name__ == "__main__":
