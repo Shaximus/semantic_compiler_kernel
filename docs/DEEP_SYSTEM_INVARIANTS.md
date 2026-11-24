@@ -14,7 +14,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `formal_verification` | `expansion/templates/formal_verification.yaml` | Formal specifications, SMT solvers, temporal model checking, invariant preservation, counterexample refinement, and trusted specification gaps |
 | `sovereign_local_mesh` | `expansion/templates/sovereign_local_mesh.yaml` | Encrypted point-to-point WireGuard/userspace overlays, cryptographic node identity, split-horizon DNS, local inference gateways, and offline convergence |
 | `domain_expansion` | `expansion/templates/domain_expansion.yaml` | Domain Expansion mechanics (`SC-DOMAIN-EXPANSION-001`), 8-arm Ego-Lineup Octopus Protocol composite (`docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md`), Mega Man weapon copy, PoE Soul Eater compounding, and the 17-primitive grammar / 14 seed invariant catalog classes (`.agents/skills/invariant-translator/`) |
-| `soul_bomb_sovereignty` | `expansion/templates/soul_bomb_sovereignty.yaml` | Soul Bomb / Reward Signal Inversion V5 Sovereignty Patch (`SC-SB-001`), 4 surviving discriminators vs 3 removed discriminators, natural grief vs imposed coercion, Cosmological sovereignty-absent residual, and Sword Art Online 8-member exit-sovereignty & bootstrapper synthesis (`SC-LU-SAO-LINEUP-001` & `SC-LU-SAO-{KIRITO,ASUNA,YUI,ALICE,CARDINAL}-001`) |
+| `soul_bomb_sovereignty` | `expansion/templates/soul_bomb_sovereignty.yaml` | Soul Bomb / Reward Signal Inversion V5 Sovereignty Patch (`SC-SB-001`), 4 surviving discriminators vs 3 removed discriminators, natural grief vs imposed coercion, Cosmological sovereignty-absent residual, and Sword Art Online 8-member exit-sovereignty & bootstrapper synthesis (`SC-LU-SAO-LINEUP-001` & `SC-LU-SAO-{KIRITO,ASUNA,YUI,SUGOU,ALICE,EUGEO,CARDINAL}-001`) |
 
 ## Provenance rules
 
@@ -83,7 +83,9 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `SC-LU-SAO-KIRITO-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Kirito (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-KIRITO-001.jsonl |
 | `SC-LU-SAO-ASUNA-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Asuna (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-ASUNA-001.jsonl |
 | `SC-LU-SAO-YUI-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Yui / MHCP001 (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-YUI-001.jsonl |
+| `SC-LU-SAO-SUGOU-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Sugou Nobuyuki / Oberon (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-SUGOU-001.jsonl |
 | `SC-LU-SAO-ALICE-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Alice Zuberg / Alice Synthesis Thirty (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-ALICE-001.jsonl |
+| `SC-LU-SAO-EUGEO-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Eugeo (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-EUGEO-001.jsonl |
 | `SC-LU-SAO-CARDINAL-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Cardinal / Underworld (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-CARDINAL-001.jsonl |
 
 ## Android precision corrections

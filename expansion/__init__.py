@@ -262,8 +262,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
         "coerced oneness", "uncoupled competence", "secure base", "grief vs coercion",
         "natural grief", "counterfeit signal", "genuine signal", "bootstrapper test",
-        "surveillance from inside", "code 871", "sword art online", "sao lineup",
-        "immortal object", "surrendered admin", "world seed", "pharmakeia",
+        "surveillance from inside", "code 871", "seal of the right eye",
+        "sword art online", "sao lineup", "immortal object", "surrendered admin",
+        "world seed", "pharmakeia", "sugou", "oberon", "eugeo", "blue rose sword",
         "sc-sb-001", "sc-lu-sao",
     )),
     ("finance_economics", (
@@ -364,7 +365,8 @@ _SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
     "soul bomb", "reward signal inversion", "exit sovereignty", "v5 sovereignty",
     "coerced oneness", "uncoupled competence", "grief vs coercion",
     "bootstrapper test", "surveillance from inside", "code 871",
-    "sword art online", "sao lineup", "immortal object", "surrendered admin",
+    "seal of the right eye", "sword art online", "sao lineup", "immortal object",
+    "surrendered admin", "sugou", "oberon", "eugeo", "blue rose sword",
     "sc-sb-001", "sc-lu-sao",
 ))
 
@@ -442,6 +444,24 @@ def _infer_medical_map(component_name: str) -> str:
     return "unknown"
 
 
+from semantic_compiler.expansion.elevator import (
+    BayDelivery,
+    CompiledEntryMatch,
+    ComponentMapping,
+    DomainElevator,
+    DomainMatch,
+    InvariantMatch,
+    RackSlot,
+    RehydratedDomain,
+    SemanticTicket,
+    TurntableTranslation,
+    get_default_elevator,
+    park,
+    retrieve,
+    rotate_to,
+    summon,
+)
+
 __all__ = [
     "SystemModel",
     "decompress",
@@ -456,4 +476,19 @@ __all__ = [
     "translate_gem",
     "translate_corpus",
     "forge_component",
+    "DomainElevator",
+    "RackSlot",
+    "DomainMatch",
+    "CompiledEntryMatch",
+    "InvariantMatch",
+    "BayDelivery",
+    "SemanticTicket",
+    "RehydratedDomain",
+    "ComponentMapping",
+    "TurntableTranslation",
+    "get_default_elevator",
+    "summon",
+    "park",
+    "retrieve",
+    "rotate_to",
 ]

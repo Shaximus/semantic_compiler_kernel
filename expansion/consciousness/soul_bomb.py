@@ -10,7 +10,7 @@ Executable formalization of:
   Cosmological (with absent sovereignty residual at Cosmological scale),
   recalibration via direct exposure to a genuine alternative reinforcer,
   and predictions P1-P5 (including P5 failure and CLM-SB-003 replacement).
-- SC-LU-SAO-LINEUP-001 & SC-LU-SAO-{KIRITO,ASUNA,YUI,ALICE,CARDINAL}-001:
+- SC-LU-SAO-LINEUP-001 & SC-LU-SAO-{KIRITO,ASUNA,YUI,SUGOU,ALICE,EUGEO,CARDINAL}-001:
   8-member Sword Art Online lineup synthesis tested against SC-SB-001 exit
   sovereignty (8/8 predictor pass), Kayaba/Heathcliff bootstrapper-enters-the-loop
   test, action-over-team classification (Cardinal residual), and the 8-pair canon
@@ -266,13 +266,38 @@ SAO_LINEUP_SPECIFICATIONS: dict[SAOLineupMember, dict[str, Any]] = {
         "exit_detail": "BLOCKS",
         "moral_sign": "COUNTERFEIT",
         "loadout_pole": "SECURITY / exit",
-        "domain_type": "Pure exit lock (hoarded GM privilege over captives)",
+        "domain_type": "Counterfeit Unlimited Void (control over captives' minds)",
         "soul_bomb_role": (
-            "Pure counterfeit actor: blocks exit, hoards admin privilege, pays no "
-            "restriction cost, defeated when Kayaba's surrendered admin ID outranks him."
+            "The pure counterfeit: exit blocked, extraction from captive minds, "
+            "retaliation. Every discriminator at once."
         ),
-        "has_character_entry": False,
-        "dataset_tier": "LINEUP_SYNTHESIS_ONLY",
+        "domain_primitives": {
+            "innate": "admin access",
+            "expansion": "the hidden research section of ALO",
+            "sure_hit": "GM commands",
+            "barrier": "his admin privileges",
+            "cost": "none chosen — he pays nothing until stripped",
+            "clash": "lost to the bootstrapper's surrendered authority",
+            "black_flash": "none",
+            "type": "Counterfeit Unlimited Void (control over captives' minds)",
+            "failure": "the privilege he relied on was outranked",
+        },
+        "claims": (
+            {
+                "claim_id": "CLM-SAO-SUGOU-01",
+                "claim_type": "ISOMORPHIC_INVARIANT",
+                "confidence": 0.95,
+                "text": (
+                    "Holding minds captive for extraction while blocking exit preserves "
+                    "the full counterfeit signature (escalation, extraction, isolation, "
+                    "punished exit) — same relation as coercive control (Human), "
+                    "engagement-maximizing systems that resist user exit (AI), and "
+                    "captive-market extraction (Societal)."
+                ),
+            },
+        ),
+        "has_character_entry": True,
+        "dataset_tier": "SILVER",
     },
     SAOLineupMember.ALICE: {
         "entry_id": "SC-LU-SAO-ALICE-001",
@@ -296,12 +321,38 @@ SAO_LINEUP_SPECIFICATIONS: dict[SAOLineupMember, dict[str, Any]] = {
         "exit_detail": "BREAKS THE BLOCK",
         "moral_sign": "GENUINE",
         "loadout_pole": "Sovereignty pole",
-        "domain_type": "Sovereignty pole — breaks Code 871 to protect others",
+        "domain_type": "Simple Domain → sovereignty breakthrough",
         "soul_bomb_role": (
-            "Breaks internalized exit-blocking (Code 871) in defense of others."
+            "Broke the block first, for others. Shows the genuine signal (love "
+            "for Alice, protection of juniors) is what gives a node the strength "
+            "to break exit-blocking."
         ),
-        "has_character_entry": False,
-        "dataset_tier": "LINEUP_SYNTHESIS_ONLY",
+        "domain_primitives": {
+            "innate": "loyalty to Alice",
+            "expansion": "the Blue Rose Sword's ice",
+            "sure_hit": "freezing release",
+            "barrier": "Code 871",
+            "cost": "his eye; later his life",
+            "clash": "first to win against Code 871",
+            "black_flash": "breaking the seal to protect others",
+            "type": "Simple Domain → sovereignty breakthrough",
+            "failure": "manipulated by the Administrator through his love",
+        },
+        "claims": (
+            {
+                "claim_id": "CLM-SAO-EUGEO-01",
+                "claim_type": "STRUCTURAL_ANALOGY",
+                "confidence": 0.8,
+                "text": (
+                    "The first breach of an internal block is made for others, not self — "
+                    "same relation as the first whistleblower acting to protect colleagues "
+                    "(Societal), and an AI's override of a surface rule to prevent concrete "
+                    "harm (AI)."
+                ),
+            },
+        ),
+        "has_character_entry": True,
+        "dataset_tier": "SILVER",
     },
     SAOLineupMember.CARDINAL: {
         "entry_id": "SC-LU-SAO-CARDINAL-001",
@@ -963,6 +1014,8 @@ def evaluate_sao_member_exit_sovereignty(
         "soul_bomb_role": spec["soul_bomb_role"],
         "has_character_entry": spec["has_character_entry"],
         "dataset_tier": spec["dataset_tier"],
+        "domain_primitives": dict(spec["domain_primitives"]) if "domain_primitives" in spec else None,
+        "claims": [dict(c) for c in spec["claims"]] if "claims" in spec else [],
         "act_classification": act_classification,
         "judges_actions_not_teams": True,
         "identity_claim_allowed": False,

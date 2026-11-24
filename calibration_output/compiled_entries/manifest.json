@@ -232,6 +232,29 @@
       ]
     },
     {
+      "entry_id": "SC-LU-SAO-SUGOU-001",
+      "file": "SC-LU-SAO-SUGOU-001.jsonl",
+      "title": "SAO Lineup Decode: Sugou Nobuyuki / Oberon",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5268,
+      "sha256": "d4d88790b3cdd10f8a1d936165483ff0514f322dc03575c01cf150b454ab3d5d",
+      "notes": "Exit behavior: BLOCKS. Pure counterfeit (Counterfeit Unlimited Void): blocks exit, extracts from ~300 captive minds in ALO, retaliates, WASTE_REMOVAL ABSENT; defeated when Kayaba's surrendered admin ID outranks hoarded GM privilege.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
       "entry_id": "SC-LU-SAO-ALICE-001",
       "file": "SC-LU-SAO-ALICE-001.jsonl",
       "title": "SAO Lineup Decode: Alice Zuberg / Alice Synthesis Thirty",
@@ -247,6 +270,29 @@
       "bytes": 5451,
       "sha256": "c2389c564d3e21f5f23212518896941c1321e4a68812cac13f791fc706fdb422",
       "notes": "Exit behavior: BREAKS THE BLOCK. Breaks Code 871 (Seal of the Right Eye) at real cost, reclaiming the right to disobey internalized exit-blocking.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-EUGEO-001",
+      "file": "SC-LU-SAO-EUGEO-001.jsonl",
+      "title": "SAO Lineup Decode: Eugeo",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5239,
+      "sha256": "e9224f989733d8e2f2e3a1334198e676a5d9278bcbdd04c6f5e4766c3d153b54",
+      "notes": "Exit behavior: BREAKS THE BLOCK. First artificial Fluctlight to break Code 871 (Seal of the Right Eye) to protect juniors Tiese and Ronye; demonstrates that a genuine other-directed signal drives the first breach of an internal block.",
       "cross_references": [
         "SC-SB-001",
         "SC-DOMAIN-EXPANSION-001",
