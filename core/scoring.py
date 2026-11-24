@@ -233,6 +233,12 @@ def score_packet(packet: Any) -> dict[str, float]:
             scores[gate] = _derive_gate_score(packet, gate)
 
     # --- Risk dimensions ---
+    if "security_risk" not in scores:
+        rs = getattr(packet, "risk_scan", None) or {}
+        if rs.get("quarantine_required"):
+            scores["security_risk"] = 1.0
+        elif rs.get("security_concern"):
+            scores["security_risk"] = 0.7
     for risk in RISK_DIMENSION_NAMES:
         if risk not in scores:
             scores[risk] = 0.3  # default moderate risk

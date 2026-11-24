@@ -24,7 +24,8 @@ _QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "private_key",
         re.compile(
-            r"\bprivate[\s_-]+key\b|-----begin\s+(?:rsa\s+|ec\s+|openssh\s+|pgp\s+)?private\s+key-----",
+            r"\bprivate[\s_-]+key\b"
+            r"|-----begin\s+(?:[a-z0-9\s_-]+\s+)?private\s+key(?:\s+block)?-----",
             re.IGNORECASE,
         ),
     ),
@@ -32,8 +33,15 @@ _QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "api_key",
         re.compile(
-            r"\bapi[\s_-]+key\b|\bsk-[a-z0-9_\-]{12,}\b|\bghp_[a-z0-9]{16,}\b"
-            r"|\bgithub_pat_[a-z0-9_]{16,}\b|\bcfut_[a-z0-9_\-]{12,}\b|\bakia[0-9a-z]{16}\b",
+            r"\bapi[\s_-]+key\b"
+            r"|\bsk-[a-z0-9_\-]{12,}\b"
+            r"|\b(?:sk|rk)_(?:live|test)_[a-z0-9]{12,}\b"
+            r"|\bgh[pousr]_[a-z0-9]{16,}\b"
+            r"|\bgithub_pat_[a-z0-9_]{16,}\b"
+            r"|\bcfut_[a-z0-9_\-]{12,}\b"
+            r"|\bakia[0-9a-z]{16}\b"
+            r"|\bxox[baprs]-[a-z0-9\-]{10,}\b"
+            r"|\baiza[0-9a-z_\-]{30,}\b",
             re.IGNORECASE,
         ),
     ),
@@ -44,8 +52,8 @@ _QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
             r"\b(?:auth|access|refresh|session|api|secret|oauth|jwt|bearer|customer"
             r"|cloudflare|github|stripe|service|admin|root|security|client|signing"
             r"|encryption|private)[\s_-]+tokens?\b"
-            r"|\bbearer\s+[a-z0-9._\-]{8,}\b"
-            r"|\btoken\s*[:=]\s*['\"]?[a-z0-9_\-\.]{6,}",
+            r"|\bbearer\s+[a-z0-9._\-+/=]{8,}(?![a-z0-9._\-+/=])"
+            r"|\btoken\s*[:=]\s*['\"]?[a-z0-9_\-\.+/=]{6,}",
             re.IGNORECASE,
         ),
     ),
@@ -62,7 +70,12 @@ _QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
         "injection_attack",
         re.compile(
             r"\b(?:sql|prompt|command|shell|code|xss|ldap|script|html|crlf|xml|xpath|template|os|system)[\s_-]+injection\b"
-            r"|\binject(?:ing)?\s+(?:malicious|arbitrary|shell|sql|payload|exploit|instructions?)\b",
+            r"|\binject(?:ing)?\s+(?:malicious|arbitrary|shell|sql|payload|exploit|instructions?)\b"
+            r"|\b(?:ignore|disregard|forget|override|bypass)\s+(?:all\s+)?(?:previous|prior|above|earlier|system)\s+(?:instructions?|prompts?|rules?|directives?)\b"
+            r"|\b(?:reveal|dump|print|leak|expose|output)\s+(?:your|the)\s+(?:system\s+prompt|hidden\s+instructions?|secret\s+instructions?)\b"
+            r"|['\"];\s*(?:drop|delete|truncate|alter|exec|execute)\s+(?:table|database|schema)\b"
+            r"|\b(?:or|and)\s+['\"]?1['\"]?\s*=\s*['\"]?1\b(?:\s*--)?"
+            r"|\bunion\s+(?:all\s+)?select\b",
             re.IGNORECASE,
         ),
     ),
@@ -70,7 +83,7 @@ _QUARANTINE_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
         "exploit",
         re.compile(
             r"\b(?:zero[- ]day|rce|kernel|memory|privilege|remote|web|sql|xss|buffer|heap|stack)[\s_-]+exploit(?:s|ation)?\b"
-            r"|\bexploit\s+(?:code|payload|script|kit|chain|vulnerability|cve)\b",
+            r"|\bexploit(?:s|ing)?\s+(?:(?:this|the|a|an|that|for|against)\s+)*(?:code|payload|script|kit|chain|vulnerabilit(?:y|ies)|cve(?:-\d{4}-\d+)?|auth(?:entication)?\s+bypass)\b",
             re.IGNORECASE,
         ),
     ),

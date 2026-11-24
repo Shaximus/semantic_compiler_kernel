@@ -348,12 +348,31 @@ _EXACT_SHORT_CUES: frozenset[str] = frozenset(
     {"ui", "gc", "kv", "ipc", "dns", "bgp", "max", "hud", "bus", "log"}
 )
 
+_CUSTOM_CUE_REGEX: dict[str, str] = {
+    "auth": r"\bauth(?:enticat[a-z]*|oriz[a-z]*|ority|orities|oritative)?\b",
+    "attest": r"\battest(?:s|ed|ing|er|ers|ation|ations)?\b",
+    "verify": r"\bverif(?:y|ies|ied|ying|ier|iers|ication)\b",
+    "control": r"\bcontrol(?:s|led|ling|ler|lers)?\b",
+    "sovereign": r"\bsovereign(?:s|ty)?\b",
+    "safe": r"\bsafe(?:ty|ly)?\b",
+    "drop": r"\bdrop(?:s|ped|ping)?\b",
+    "emit": r"\b(?:emit(?:s|ted|ting|ter|ters)?|emissions?)\b",
+    "inspect": r"\binspect(?:s|ed|ing|or|ors|ion|ions)?\b",
+    "resist": r"\bresist(?:s|ed|ing|ant|ance)?\b",
+    "evict": r"\bevict(?:s|ed|ing|ion|ions)?\b",
+    "govern": r"\bgovern(?:s|ed|ing|or|ors|ance)?\b",
+    "detect": r"\bdetect(?:s|ed|ing|or|ors|ion|ions)?\b",
+    "base": r"\bbases?\b",
+}
+
 
 def _compile_cue_pattern(cues: Sequence[str]) -> re.Pattern[str]:
     alts: list[str] = []
     for cue in cues:
         escaped = re.escape(cue).replace(r"\-", r"[-\s]")
-        if cue in _STEM_PREFIX_CUES:
+        if cue in _CUSTOM_CUE_REGEX:
+            alts.append(_CUSTOM_CUE_REGEX[cue])
+        elif cue in _STEM_PREFIX_CUES:
             alts.append(rf"\b{escaped}[a-z]*\b")
         elif cue in _EXACT_SHORT_CUES:
             alts.append(rf"\b{escaped}\b")
@@ -361,6 +380,12 @@ def _compile_cue_pattern(cues: Sequence[str]) -> re.Pattern[str]:
             alts.append(rf"\b{escaped}s?\b")
         elif " " in cue or "-" in cue:
             alts.append(rf"\b{escaped}\b")
+        elif cue.endswith("y") and len(cue) >= 4 and cue[-2] not in "aeiou":
+            stem = re.escape(cue[:-1])
+            alts.append(rf"\b{stem}(?:y|ies|ied|ying)\b")
+        elif cue.endswith("e") and not cue.endswith(("ee", "oe", "ye")):
+            stem = re.escape(cue[:-1])
+            alts.append(rf"\b{stem}(?:e|es|ed|ing)\b")
         else:
             alts.append(rf"\b{escaped}(?:s|es|ed|ing)?\b")
     return re.compile("|".join(alts))
@@ -1610,7 +1635,18 @@ class DomainElevator:
         tokens, content_stream, raw_stream = _tokenize_all(query_text)
         raw_ngrams = _extract_ngrams(raw_stream, max_n=5)
         content_ngrams = _extract_ngrams(content_stream, max_n=3)
-        ngrams = tuple(dict.fromkeys((*raw_ngrams, *content_ngrams)))
+        expanded_raw: list[str] = []
+        has_compound = False
+        for raw in raw_stream:
+            if ("-" in raw or "_" in raw) and not raw.startswith("sc-"):
+                parts = [p for p in _SPLIT_RE.split(raw) if p]
+                if len(parts) > 1:
+                    has_compound = True
+                    expanded_raw.extend(parts)
+                    continue
+            expanded_raw.append(raw)
+        expanded_ngrams = _extract_ngrams(expanded_raw, max_n=5) if has_compound else ()
+        ngrams = tuple(dict.fromkeys((*raw_ngrams, *expanded_ngrams, *content_ngrams)))
 
         with self._lock:
             cache_hit = self._ensure_ready()

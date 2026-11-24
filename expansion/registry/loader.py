@@ -103,10 +103,18 @@ def _write_sidecar_cache(
             dir=str(cache_dir),
         )
         tmp_path = Path(tmp_name)
+        fd_owned = False
         try:
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh = os.fdopen(fd, "w", encoding="utf-8")
+            fd_owned = True
+            with fh:
                 fh.write(serialized)
         except Exception:
+            if not fd_owned:
+                try:
+                    os.close(fd)
+                except OSError:
+                    pass
             try:
                 tmp_path.unlink(missing_ok=True)
             except OSError:
@@ -137,12 +145,17 @@ def load_templates(template_dir: Path | None = None) -> dict[str, DomainTemplate
             return dict(cached[1])
 
     # 2. Persistent mtime+size-validated JSON sidecar cache in tempfile.gettempdir()
-    cache_path = _sidecar_cache_path(resolved_dir)
-    templates = _read_sidecar_cache(cache_path, sig)
-    if templates is not None:
-        with _MEM_CACHE_LOCK:
-            _MEM_CACHE[resolved_key] = (sig_key, templates)
-        return dict(templates)
+    try:
+        cache_path: Path | None = _sidecar_cache_path(resolved_dir)
+    except OSError:
+        cache_path = None
+
+    if cache_path is not None:
+        templates = _read_sidecar_cache(cache_path, sig)
+        if templates is not None:
+            with _MEM_CACHE_LOCK:
+                _MEM_CACHE[resolved_key] = (sig_key, templates)
+            return dict(templates)
 
     # 3. Cold parse + schema validation from YAML, then write sidecar cache
     templates = {}
@@ -154,7 +167,8 @@ def load_templates(template_dir: Path | None = None) -> dict[str, DomainTemplate
         tmpl = DomainTemplate(**data)
         templates[tmpl.domain] = tmpl
 
-    _write_sidecar_cache(cache_path, sig, templates)
+    if cache_path is not None:
+        _write_sidecar_cache(cache_path, sig, templates)
     with _MEM_CACHE_LOCK:
         _MEM_CACHE[resolved_key] = (sig_key, templates)
     return dict(templates)

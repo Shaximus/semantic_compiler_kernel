@@ -1167,6 +1167,9 @@ def compile_semantic_packet(
         if packet.risk_scan.get("quarantine_required"):
             packet.decision = Decision.QUARANTINE
             packet.status = "quarantined"
+            packet.scores.setdefault("security_safety", 0.0)
+            packet.scores.setdefault("security_risk", 1.0)
+            packet.scores.setdefault("hard_gates_passed", 0.0)
             packet.route_to = route_packet(packet)
             packet.routing_packet = build_routing_packet(packet)
             packet.compiler_warnings.extend(
