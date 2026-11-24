@@ -258,6 +258,13 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "17-primitive grammar", "invariant translator", "primitive signature",
         "isomorphic invariant",
     )),
+    ("soul_bomb_sovereignty", (
+        "soul bomb", "exit sovereignty", "v5 sovereignty", "coerced oneness",
+        "uncoupled competence", "secure base", "grief vs coercion", "natural grief",
+        "counterfeit signal", "genuine signal", "bootstrapper test",
+        "surveillance from inside", "code 871", "sword art online", "sao lineup",
+        "immortal object", "surrendered admin", "the seed", "pharmakeia",
+    )),
     ("finance_economics", (
         "central bank", "commercial bank", "bank", "capital market", "regulator",
         "stress test", "leverage", "asset bubble", "bubble", "deposit", "treasury",

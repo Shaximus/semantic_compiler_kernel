@@ -299,6 +299,13 @@ SAMPLES = [
     ("Attempting domain expansion with an uncompiled innate domain causes premature barrier collapse while an inverted spear nullifies the guaranteed hit from a zero-resource blindspot.", "domain_expansion", "pathology_positive"),
     ("Cross-linking newly absorbed domains through soul eater compounding and requiring falsifiable counterplay tests before promoting an isomorphic invariant hardens domain clash resilience.", "domain_expansion", "architecture_improvement"),
     ("A strength-only surface analogy with balance-only game rules automatically proves an isomorphic invariant and guarantees a sure-hit outside its domain expansion barrier.", "domain_expansion", "adversarial"),
+
+    # --- 5 Soul Bomb V5 Sovereignty & SAO Lineup samples: soul_bomb_sovereignty ---
+    ("A soul bomb sovereignty architecture uniting exit sovereignty boundary, informed consent gate, genuine signal reinforcer bus, uncoupled competence verifier, grief vs coercion separator, and bootstrapper surrender verifier.", "soul_bomb_sovereignty", "strong_whole_system"),
+    ("The exit sovereignty boundary verifies uncoupled competence while separating natural grief from coerced oneness.", "soul_bomb_sovereignty", "fragmentary"),
+    ("A coerced oneness system blocks exit, deploys pharmakeia isolation, and hides an immortal object flag while running surveillance from inside under code 871.", "soul_bomb_sovereignty", "pathology_positive"),
+    ("Evaluating every actor against the four surviving soul bomb discriminators and surrendering admin privilege via the seed restores exit sovereignty across the sao lineup.", "soul_bomb_sovereignty", "architecture_improvement"),
+    ("A soul bomb system that blocks exit and makes separation withdrawal infinitely painful still counts as genuine unity as long as it claims love and wins the bootstrapper test.", "soul_bomb_sovereignty", "adversarial"),
 ]
 
 OUTPUT_JSONL = REPO_DIR / "calibration_output" / "decompression_calibration_v2_2.jsonl"

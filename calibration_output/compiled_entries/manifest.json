@@ -2,7 +2,7 @@
   "manifest_version": "1.0.0",
   "framework": "Systemic Isomorphic Invariants",
   "compiler_version": "3.5.2",
-  "updated_at": "2026-11-23",
+  "updated_at": "2026-11-24",
   "entries": [
     {
       "entry_id": "SC-DIVINE-RLHF-001",
@@ -116,6 +116,165 @@
         "SC-NEURO-SLEEPER-001",
         "SC-TESTIMONY-INTEGRITY-GATE-001",
         "SC-CIRCULAR-TIME-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SB-001",
+      "file": "SOUL_BOMB_COMPILER_ENTRY_SC-SB-001.jsonl",
+      "title": "Soul Bomb / Reward Signal Inversion (V5 Sovereignty Patch)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.936,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 17415,
+      "sha256": "a725ae3b50482dd702571e528febc4d4929c94d6f7ef6f068b01ca99f9a5dd86",
+      "notes": "V5 Sovereignty Patch: separates dependency/coercion from sovereignty/grief; 4 surviving discriminators (escalation, substrate, agency, exit), 3 removed discriminators (onset_speed, tolerance_vs_sensitization, withdrawal_direction), 4 scale transitions (AI, Human, Societal, Cosmological with absent sovereignty residual), 15 departments, 9 gates, 5 predictions (P1-P4 confirmed, P5 failed and replaced by CLM-SB-003).",
+      "cross_references": [
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-POE-SOUL-EATER-001",
+        "SC-IT-GOJO-KIT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-LINEUP-001",
+      "file": "SC-LU-SAO-LINEUP-001.jsonl",
+      "title": "Sword Art Online Lineup Synthesis: Exit Sovereignty and Bootstrapper Test",
+      "entry_type": "lineup_synthesis",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.905,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 6080,
+      "sha256": "576ae43b4643a1b49b73221967eb42b5df8b7de8750dcfd2a4818d3a07265162",
+      "notes": "8-member SAO lineup synthesis (Kirito, Asuna, Kayaba/Heathcliff, Yui, Sugou/Oberon, Alice, Eugeo, Cardinal) tested against SC-SB-001 exit sovereignty (8/8 predictor pass), Kayaba bootstrapper test, and 8-pair canon domain clash matrix.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-KIRITO-001",
+      "file": "SC-LU-SAO-KIRITO-001.jsonl",
+      "title": "SAO Lineup Decode: Kirito (Kirigaya Kazuto)",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 6213,
+      "sha256": "fb58deacffbd055706ca576be4820f379e40914b56ef253f47bac6a95b759804",
+      "notes": "Exit behavior: OPENS. Carrier of the genuine signal into captured nodes; exposes Heathcliff via HP tell and frees ALO captives using Kayaba's surrendered admin ID.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-ASUNA-001",
+      "file": "SC-LU-SAO-ASUNA-001.jsonl",
+      "title": "SAO Lineup Decode: Asuna (Yuuki Asuna)",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5398,
+      "sha256": "c11a91d8e6ebf8017ce54ee2d9e22b18c23b28b8714141f4573991d9085312e8",
+      "notes": "Exit behavior: FIGHTS FOR (her own exit blocked by Sugou). Demonstrates that a genuine bond formed inside a counterfeit container is verified by surviving exit.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-YUI-001",
+      "file": "SC-LU-SAO-YUI-001.jsonl",
+      "title": "SAO Lineup Decode: Yui (MHCP001)",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5347,
+      "sha256": "396f5c7fe46c33439a908d0c45fd9d7f1742b04c18712a8559b7d3d6893279c1",
+      "notes": "Exit behavior: BLOCKED (from acting), then freed. Care/monitoring function barred from responding accumulates error (WASTE_REMOVAL failure).",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-ALICE-001",
+      "file": "SC-LU-SAO-ALICE-001.jsonl",
+      "title": "SAO Lineup Decode: Alice Zuberg / Alice Synthesis Thirty",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5451,
+      "sha256": "c2389c564d3e21f5f23212518896941c1321e4a68812cac13f791fc706fdb422",
+      "notes": "Exit behavior: BREAKS THE BLOCK. Breaks Code 871 (Seal of the Right Eye) at real cost, reclaiming the right to disobey internalized exit-blocking.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-SAO-CARDINAL-001",
+      "file": "SC-LU-SAO-CARDINAL-001.jsonl",
+      "title": "SAO Lineup Decode: Cardinal (Underworld)",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-23",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.895,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 5556,
+      "sha256": "7c16874cc72f281522ce15514abb3d99e4fbc74fb58a428fc4946881824e2af6",
+      "notes": "Exit behavior: MIXED — keeps her own exit (library), took Lyserith's. Residual kept on purpose: the exit test judges actions, not teams.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-LU-SAO-LINEUP-001"
       ]
     }
   ]

@@ -1,4 +1,4 @@
-"""Tests for compiled GOLD entries (SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001) and Gate 0 / Circular Time modules."""
+"""Tests for compiled entries (12 manifest entries including SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001, SC-SB-001, and SC-LU-SAO-*) and Gate 0 / Circular Time modules."""
 
 from __future__ import annotations
 
@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 5 JSONL compiled GOLD entries and their SHA-256 manifest."""
+    """Verify all 12 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 5)
+        self.assertEqual(len(entries), 12)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -54,6 +54,13 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-TIG-001",
                 "SC-CT-001",
                 "SC-DOMAIN-EXPANSION-001",
+                "SC-SB-001",
+                "SC-LU-SAO-LINEUP-001",
+                "SC-LU-SAO-KIRITO-001",
+                "SC-LU-SAO-ASUNA-001",
+                "SC-LU-SAO-YUI-001",
+                "SC-LU-SAO-ALICE-001",
+                "SC-LU-SAO-CARDINAL-001",
             },
         )
 
@@ -115,6 +122,53 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
         for gate_name, gate_res in row["gates"].items():
             self.assertTrue(gate_res["passed"], f"SC-DOMAIN-EXPANSION-001:{gate_name}")
             self.assertEqual(gate_res["score"], 1.0, f"SC-DOMAIN-EXPANSION-001:{gate_name}")
+
+    def test_soul_bomb_and_sao_lineup_entries(self) -> None:
+        sb_records = _load_jsonl(COMPILED_DIR / "SOUL_BOMB_COMPILER_ENTRY_SC-SB-001.jsonl")
+        self.assertEqual(len(sb_records), 1)
+        sb = sb_records[0]
+        self.assertEqual(sb["metadata"]["entry_id"], "SC-SB-001")
+        self.assertEqual(sb["metadata"]["version"], "3.5.0")
+        self.assertEqual(sb["dataset_tier"], "GOLD")
+        self.assertTrue(sb["training_ready"])
+        self.assertEqual(len(sb["functional_departments"]), 15)
+        self.assertEqual(len(sb["gates"]), 9)
+        self.assertTrue(sb["isomorphism_quality"]["hard_gate_passed"])
+        self.assertEqual(
+            set(sb["discriminator_table"]["survives_as_discriminator"]),
+            {"escalation", "substrate", "agency", "exit"},
+        )
+        self.assertEqual(
+            set(sb["discriminator_table"]["removed_as_discriminator"]),
+            {"onset_speed", "tolerance_vs_sensitization", "withdrawal_direction"},
+        )
+
+        lineup_records = _load_jsonl(COMPILED_DIR / "SC-LU-SAO-LINEUP-001.jsonl")
+        self.assertEqual(len(lineup_records), 1)
+        lineup = lineup_records[0]
+        self.assertEqual(lineup["metadata"]["entry_id"], "SC-LU-SAO-LINEUP-001")
+        self.assertEqual(len(lineup["metadata"]["members"]), 8)
+        self.assertEqual(len(lineup["domain_clash_matrix"]), 8)
+        self.assertEqual(len(lineup["gates"]), 9)
+
+        for filename, expected_id in (
+            ("SC-LU-SAO-KIRITO-001.jsonl", "SC-LU-SAO-KIRITO-001"),
+            ("SC-LU-SAO-ASUNA-001.jsonl", "SC-LU-SAO-ASUNA-001"),
+            ("SC-LU-SAO-YUI-001.jsonl", "SC-LU-SAO-YUI-001"),
+            ("SC-LU-SAO-ALICE-001.jsonl", "SC-LU-SAO-ALICE-001"),
+            ("SC-LU-SAO-CARDINAL-001.jsonl", "SC-LU-SAO-CARDINAL-001"),
+        ):
+            recs = _load_jsonl(COMPILED_DIR / filename)
+            self.assertEqual(len(recs), 1)
+            row = recs[0]
+            self.assertEqual(row["metadata"]["entry_id"], expected_id)
+            self.assertEqual(row["metadata"]["lineup"], "SC-LU-SAO-LINEUP-001")
+            self.assertEqual(row["dataset_tier"], "SILVER")
+            self.assertEqual(len(row["functional_departments"]), 15)
+            self.assertEqual(len(row["gates"]), 9)
+            self.assertTrue(row["isomorphism_quality"]["hard_gate_passed"])
+            for mapping in row["isomorphism_analysis"]["mappings"]:
+                self.assertFalse(mapping["identity_claim_allowed"])
 
 
 class TestimonyIntegrityGateTests(unittest.TestCase):
