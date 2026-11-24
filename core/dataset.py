@@ -623,11 +623,15 @@ def _gates(packet: Any) -> dict[str, Any]:
 
     # Wave function coherence: only applicable in that mode or when explicitly probed.
     wfc = packet.wave_function_coherence or {}
+    wfc_state = _extract_wfc_state(wfc)
     wave_applicable = (
         packet.mode == CompilerMode.WAVE_FUNCTION_COHERENCE
-        or bool(wfc.get("state"))
+        or wfc_state is not None
     )
     wave_score = scores.get("wave_function_coherence")
+    if wave_score is None and wave_applicable:
+        from semantic_compiler.core.scoring import _derive_gate_score
+        wave_score = _derive_gate_score(packet, "wave_function_coherence")
     wave_passed = (
         wave_score >= 0.40 if wave_score is not None else None
     ) if wave_applicable else None
@@ -711,9 +715,34 @@ def _adversarial(packet: Any) -> dict[str, Any]:
     }
 
 
+def _extract_wfc_state(wfc: dict[str, Any]) -> Any:
+    """Extract wave function state from flat or nested evaluate_wave_function_coherence output.
+
+    Returns None when wave_function_coherence was never probed with inner+outer data.
+    """
+    if not wfc:
+        return None
+    if wfc.get("state") is not None:
+        return wfc.get("state")
+    coherence_block = wfc.get("coherence")
+    if isinstance(coherence_block, dict):
+        has_measurement = (
+            "inner_token_count" in coherence_block
+            or bool(coherence_block.get("measured"))
+            or float(coherence_block.get("coherence", 0.0) or 0.0) > 0.0
+        )
+        if has_measurement and coherence_block.get("state") is not None:
+            return coherence_block.get("state")
+    return None
+
+
 def _v2_extensions(packet: Any) -> dict[str, Any]:
     wfc = packet.wave_function_coherence or {}
-    state = wfc.get("state")
+    state = _extract_wfc_state(wfc)
+    if state is None and packet.mode == CompilerMode.WAVE_FUNCTION_COHERENCE:
+        coherence_block = wfc.get("coherence")
+        if isinstance(coherence_block, dict):
+            state = coherence_block.get("state")
     if state is None:
         wave_state = "NOT_APPLICABLE"
     elif hasattr(state, "name"):

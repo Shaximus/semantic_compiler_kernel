@@ -278,8 +278,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "fiscal policy", "hedge fund", "pricing", "currency", "recession",
     )),
     ("psychology", (
-        "mind", "remember", "trauma", "therapy", "threat detector", "anxiety",
-        "defense mechanism", "cognition", "emotion",
+        "mind", "patient remembers", "memory recall", "episodic memory",
+        "working memory", "traumatic memory", "trauma", "therapy",
+        "threat detector", "anxiety", "defense mechanism", "cognition", "emotion",
     )),
     ("reflexion", (
         "reflexion", "self-checking", "self-check", "checks its own", "its own output",
