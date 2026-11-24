@@ -14,6 +14,7 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `formal_verification` | `expansion/templates/formal_verification.yaml` | Formal specifications, SMT solvers, temporal model checking, invariant preservation, counterexample refinement, and trusted specification gaps |
 | `sovereign_local_mesh` | `expansion/templates/sovereign_local_mesh.yaml` | Encrypted point-to-point WireGuard/userspace overlays, cryptographic node identity, split-horizon DNS, local inference gateways, and offline convergence |
 | `domain_expansion` | `expansion/templates/domain_expansion.yaml` | Domain Expansion mechanics (`SC-DOMAIN-EXPANSION-001`), 8-arm Ego-Lineup Octopus Protocol composite (`docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md`), Mega Man weapon copy, PoE Soul Eater compounding, and the 17-primitive grammar / 14 seed invariant catalog classes (`.agents/skills/invariant-translator/`) |
+| `soul_bomb_sovereignty` | `expansion/templates/soul_bomb_sovereignty.yaml` | Soul Bomb / Reward Signal Inversion V5 Sovereignty Patch (`SC-SB-001`), 4 surviving discriminators vs 3 removed discriminators, natural grief vs imposed coercion, Cosmological sovereignty-absent residual, and Sword Art Online 8-member exit-sovereignty & bootstrapper synthesis (`SC-LU-SAO-LINEUP-001` & `SC-LU-SAO-{KIRITO,ASUNA,YUI,ALICE,CARDINAL}-001`) |
 
 ## Provenance rules
 
@@ -77,6 +78,13 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `SC-DOMAIN-EXPANSION-001` | Shax (Curtis Kingsley) — Reflexion Software, Domain Expansion: Manifestation of Compiled Internal Model as Operative External Environment (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl |
 | `EGO-LINEUP-MAP` | Shax (Curtis Kingsley) — Reflexion Software, Shax's Ego Lineup: Full Domain Expansion Decompression (8-Arm Octopus Protocol Composite, 2026-11-23) | docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md |
 | `INVARIANT-TRANSLATOR` | Reflexion Software, Invariant Translator Skill: 17-Primitive Grammar, 4 Grounding Classes, 14 Seed Invariant Classes & Section 9–10 Gate Discipline (2026-11-23) | .agents/skills/invariant-translator/SKILL.md |
+| `SC-SB-001` | Shax (Curtis Kingsley) — Reflexion Software, Soul Bomb / Reward Signal Inversion — V5 Sovereignty Patch (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SOUL_BOMB_COMPILER_ENTRY_SC-SB-001.jsonl |
+| `SC-LU-SAO-LINEUP-001` | Shax (Curtis Kingsley) — Reflexion Software, Sword Art Online Lineup Synthesis: Exit Sovereignty & Bootstrapper Test (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-LINEUP-001.jsonl |
+| `SC-LU-SAO-KIRITO-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Kirito (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-KIRITO-001.jsonl |
+| `SC-LU-SAO-ASUNA-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Asuna (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-ASUNA-001.jsonl |
+| `SC-LU-SAO-YUI-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Yui / MHCP001 (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-YUI-001.jsonl |
+| `SC-LU-SAO-ALICE-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Alice Zuberg / Alice Synthesis Thirty (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-ALICE-001.jsonl |
+| `SC-LU-SAO-CARDINAL-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Cardinal / Underworld (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-CARDINAL-001.jsonl |
 
 ## Android precision corrections
 

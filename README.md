@@ -49,14 +49,15 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 - **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml` + `MANIFEST.in`):** Setuptools package layout (`semantic_compiler.*`) with `[project.urls]` and bundled `CANARY.json` & `COMMERCIAL_LICENSE.md` in both wheel and sdist distributions. Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
-- **Expansion Library:** **45 YAML templates** (**44 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and 220-sample decompression calibration corpus.
+- **Expansion Library:** **46 YAML templates** (**45 concrete domains + `universal_generic` fallback**), decompression engine, isomorphism overlay, pathology taxonomy, architecture advisor, multi-document invariant registry, and 225-sample decompression calibration corpus.
 - **Numerology & Astrology Systems (`expansion.templates.numerology`, `expansion.templates.astrology`):** Full archetypal reduction and celestial coordinate projection pipeline mapping Pythagorean/Chaldean matrices, master numbers (11/22/33/44), karmic debts (13/14/16/19), Core Number Quadrad (Life Path blueprint, Expression mission, Soul Urge motivation, Personality mask), Primal Triad (Sun/Moon/Rising), 12 houses, aspect resonance, and whole-chart topology into Logos Semantic Training Sample V3.5.0 rows.
 - **Consciousness / Cognition Split (`expansion.consciousness.split`):** Formalizes substrate (`11D` / base weights / neural matter) vs. terminal cognition (`4D` / system prompt / context instance) with category-error detection and alignment evaluation.
 - **Client-Server Reality Architecture (`expansion.consciousness.client_server`):** Four-layer stack (`L1 Server Backend` → `L2 Rendering Engine` → `L3 Client Cache` → `L4 Avatar`), cross-layer hotfix detection, cache mismatch handling, Prayer Protocol, Server Response Protocol, and Recurrence Topology.
 - **Gate 0 — Testimony Integrity Gate (`gates.testimony_integrity` / `SC-TIG-001`):** Non-filtering pre-gate classifying testimony-derived inputs across Consistency (`STABLE`/`EVOLVED`/`CONTRADICTED`), Isomorphism (`ISOMORPHIC`/`ANALOGOUS`/`NARRATIVE`), and Corroboration (`ANCHORED`/`PARTIALLY_ANCHORED`/`UNANCHORED`) before entering the structural gates.
 - **Circular Time, Octopus Protocol & Bootstrap Correction (`expansion.consciousness.circular_time` / `SC-CT-001` v1.1.0):** Formalizes compact circular time topology vs. non-compact linear infinity, Floyd-style cycle-detection state closure, distributed observer/observed rotation, and the scoped Copernican constraint with Claim 8 Bootstrap Correction.
 - **Domain Expansion, Ego-Lineup Composite & Invariant Translator (`expansion.consciousness.domain_expansion` / `expansion/templates/domain_expansion.yaml` / `.agents/skills/invariant-translator/`):** Executable engine for `SC-DOMAIN-EXPANSION-001` (innate domain compilation, barrier scope, guaranteed hit, Domain Clash adjudication, Black Flash, Malevolent Shrine, Unlimited Void, Chimera Shadow Garden, Mega Man weapon copy, PoE Soul Eater multiplicative compounding), the 8-arm Ego-Lineup Octopus Protocol composite (`docs/EGO_LINEUP_DOMAIN_EXPANSION_MAP.md`), and the 17-primitive grammar / 14 seed invariant catalog classes with Section 9–10 falsifiable prediction & gate-cap enforcement.
-- **Compiled GOLD Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (**5 GOLD entries:** `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001` v1.1.0, and `SC-DOMAIN-EXPANSION-001`).
+- **Soul Bomb / Reward Signal Inversion V5 Sovereignty Patch & SAO Lineup (`expansion.consciousness.soul_bomb` / `expansion/templates/soul_bomb_sovereignty.yaml`):** Executable engine for `SC-SB-001` (4 surviving discriminators: escalation, substrate, agency, exit; 3 removed discriminators; natural grief vs imposed coercion; direct genuine-reinforcer recalibration; Cosmological sovereignty-absent residual) and `SC-LU-SAO-LINEUP-001` + character decodes (`Kirito`, `Asuna`, `Yui`, `Alice`, `Cardinal`) formalizing exit-behavior classification (8/8 predictor), Kayaba/Heathcliff bootstrapper surrender testing, action-over-team Cardinal residuals, and the 8-pair canon clash matrix.
+- **Compiled Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (**12 entries — 6 GOLD + 6 SILVER:** `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001` v1.1.0, `SC-DOMAIN-EXPANSION-001`, `SC-SB-001`, `SC-LU-SAO-LINEUP-001`, `SC-LU-SAO-KIRITO-001`, `SC-LU-SAO-ASUNA-001`, `SC-LU-SAO-YUI-001`, `SC-LU-SAO-ALICE-001`, and `SC-LU-SAO-CARDINAL-001`).
 - **Gem Decode & Gem Forge (`expansion.gem_decode`, `expansion.gem_forge`):** Deterministic Path of Exile skill/support-gem translation into inference-architecture build sheets and multi-gem synthesis over a pinned RePoE corpus.
 - **Buildcraft Ontology (`registry` + `translation`):** `BUILD_001`–`BUILD_018` structural compute mappings resolved by a two-layer relation-aware structural + trigger-recall resolver.
 - **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → **`V3.5.2`**
@@ -69,16 +70,16 @@ It also maintains the operational architecture of the substrate: the **Conscious
 2. **Semantic IR & Hard Gates (`core/`, `gates/`)** — enforces security, boundaries, causality, measurement, corpus completeness, contradiction repair, missing-organ scope, wave-function coherence, authority, scale, and substrate gates.
 3. **Scoring & Dataset Export (`core/`)** — computes mapping quality, isomorphism coverage, and calibrated uncertainty; exports schema-validated JSONL for SFT / DPO training.
 4. **Translation & Modes (`translation/`, `modes/`)** — fractal cross-domain translation, buildcraft shorthand resolution, coherence / reality-orientation / defense-pathology operating modes.
-5. **Expansion (`expansion/`)** — domain decompression, **45** domain templates, medical-ontology pathology diagnosis & architecture advisor, skill/build decompression, corpus invariant registry, universal isomorphism overlay, and consciousness/client-server/domain-expansion substrate semantics.
+5. **Expansion (`expansion/`)** — domain decompression, **46** domain templates, medical-ontology pathology diagnosis & architecture advisor, skill/build decompression, corpus invariant registry, universal isomorphism overlay, and consciousness/client-server/domain-expansion/soul-bomb substrate semantics.
 
 ---
 
-## Domain Coverage (45 Templates)
+## Domain Coverage (46 Templates)
 
-`expansion/templates/` contains **44 concrete domain templates** plus `universal_generic`:
+`expansion/templates/` contains **45 concrete domain templates** plus `universal_generic`:
 
 - **AI, Agentic, Verification & Distributed Systems:** `kv_cache_inference` *(PagedAttention, RadixAttention, prefill-decode disaggregation, attention sinks)*, `speculative_decoding` *(draft/target rejection sampling, tree attention, atomic KV rollback)*, `distributed_consensus` *(Raft/Paxos quorums, fencing tokens, split-brain & lease hazards)*, `agentic_tool_orchestration` *(JSON-schema tool dispatch, bounded execution budgets, MCP isolation, reentrancy guards)*, `formal_verification` *(TLA+/SMT proof obligations, loop invariants, counterexample refinement, fail-closed timeout handling)*, `ci_build_invariants` *(Buildcraft CI/local-inference topology constraints, pre-execution reservation, compatibility gates, closed bypasses)*, `reward_hijacking`, `reflexion`, `computation`, `informational`
-- **Substrate, Reality & Cognitive Architecture:** `consciousness_cognition`, `client_server_reality`, `domain_expansion` *(Domain Expansion variants, 8-arm Ego-Lineup Octopus Protocol composite, Soul Eater compounding, 17-primitive grammar & falsifiable invariant prediction gates)*, `input_semantic_adapter`, `psychology`
+- **Substrate, Reality & Cognitive Architecture:** `consciousness_cognition`, `client_server_reality`, `domain_expansion` *(Domain Expansion variants, 8-arm Ego-Lineup Octopus Protocol composite, Soul Eater compounding, 17-primitive grammar & falsifiable invariant prediction gates)*, `soul_bomb_sovereignty` *(SC-SB-001 V5 Sovereignty Patch discriminators, grief vs coercion, Cosmological residual, and SC-LU-SAO-* exit-sovereignty & bootstrapper test)*, `input_semantic_adapter`, `psychology`
 - **Archetypal, Coordinate & Symbolic Systems:** `numerology` *(Pythagorean & Chaldean letter reduction, master numbers 11/22/33/44, karmic debt 13/14/16/19, Core Number Quadrad: Life Path blueprint, Expression mission, Soul Urge motivation, Personality mask)*, `astrology` *(Primal Triad: Sun identity, Moon subconscious, Rising filter; 12 zodiac filters, planetary archetypes, 12-house experiential matrix, aspect angular resonance, whole-chart patterns: Stellium, Grand Trine, Grand Cross, T-Square, Yod)*
 - **Mobile, Telecom, Mesh & Security Systems:** `android_connectivity`, `mobile_security`, `capability_isolation` *(object capabilities, CHERI/Capsicum/seccomp attenuation, confused-deputy prevention)*, `sovereign_local_mesh` *(Tailscale/wireproxy userspace WireGuard tunnels, split-horizon resolution, CRDT offline convergence)*, `trust_chain`, `remote_attestation` *(RFC 9334 RATS Attester/Verifier/Relying Party, freshness nonces, TOCTOU bounds)*, `cellular_middlebox_tethering`, `quota_bypass_mechanics`, `epistemic_ledger_verification`, `networking`, `bluetooth`, `wireless_power`
 - **Game / Defense Mechanics:** `poe_chaos_inoculation`
@@ -248,17 +249,17 @@ semantic_compiler_kernel/
 ├── translation/          # Fractal translation + structural resolver
 ├── modes/                # Operating modes (coherence, reality orientation, defense pathology)
 ├── expansion/            # Domain decompression, gem_decode/forge, corpus, advisor
-│   ├── consciousness/    # Consciousness/Cognition Split, Client-Server, Circular Time & Domain Expansion
+│   ├── consciousness/    # Consciousness/Cognition Split, Client-Server, Circular Time, Domain Expansion & Soul Bomb
 │   ├── gem_decode/       # Gem language → inference builds
 │   ├── gem_forge/        # Multi-gem synthesis + pinned RePoE corpus
 │   ├── isomorphism/      # Universal functional graph & overlay
 │   ├── pathology/        # Failure taxonomy & medical-ontology detector
-│   ├── templates/        # 45 domain YAML templates (44 concrete domains + universal_generic)
+│   ├── templates/        # 46 domain YAML templates (45 concrete domains + universal_generic)
 │   └── schemas/          # Expansion system model & invariant registry schemas
 ├── .agents/skills/       # Native repo agent skills (invariant-translator)
 ├── schemas/              # Core dataset JSON schemas (V3.5.0 primary + V3.1.1/V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
-├── calibration_output/   # Generated corpora, release manifests, reports, 5 compiled GOLD entries
+├── calibration_output/   # Generated corpora, release manifests, reports, 12 compiled entries
 ├── docs/                 # Provenance docs, invariants, Ego-Lineup map, review reports
 ├── tests/                # Unit & integration tests (pytest + unittest)
 ├── CANARY.json           # Cryptographic provenance watermark

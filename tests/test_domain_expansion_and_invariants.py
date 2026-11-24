@@ -75,7 +75,7 @@ class DomainExpansionArtifactTests(unittest.TestCase):
     def test_domain_expansion_template_registered_and_routable(self) -> None:
         domains = set(list_domains())
         self.assertIn("domain_expansion", domains)
-        self.assertEqual(len(domains), 45)
+        self.assertEqual(len(domains), 46)
 
         template = get_template("domain_expansion")
         comp_names = {c["name"] for c in template.components}

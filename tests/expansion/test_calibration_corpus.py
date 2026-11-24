@@ -61,6 +61,7 @@ def test_calibration_corpus_category_coverage():
         "numerology",
         "astrology",
         "domain_expansion",
+        "soul_bomb_sovereignty",
     }
     for row in corpus:
         if row["domain"] in wired:

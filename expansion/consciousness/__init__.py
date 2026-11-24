@@ -70,6 +70,29 @@ from semantic_compiler.expansion.consciousness.domain_expansion import (
     evaluate_soul_eater_compounding,
 )
 
+from semantic_compiler.expansion.consciousness.soul_bomb import (
+    MOST_SURPRISING_CLASH,
+    REMOVED_DISCRIMINATORS,
+    SAO_DOMAIN_CLASH_MATRIX,
+    SAO_LINEUP_SPECIFICATIONS,
+    SAO_SHARED_INVARIANT_CANDIDATES,
+    SCALE_TRANSITIONS,
+    SOUL_BOMB_PREDICTIONS,
+    SURVIVING_DISCRIMINATORS,
+    ExitBehavior,
+    SAOLineupMember,
+    SeparationCostType,
+    SignalClass,
+    SovereigntyScale,
+    evaluate_bootstrapper_entry,
+    evaluate_recalibration_path,
+    evaluate_sao_domain_clash,
+    evaluate_sao_lineup_composite,
+    evaluate_sao_member_exit_sovereignty,
+    evaluate_separation_cost,
+    evaluate_soul_bomb_signal,
+)
+
 __all__ = [
     # split.py
     "SubstrateLayer",
@@ -117,4 +140,25 @@ __all__ = [
     "evaluate_ego_lineup_composite",
     "evaluate_invariant_prediction",
     "evaluate_soul_eater_compounding",
+    # soul_bomb.py (SC-SB-001 V5 Sovereignty Patch + SC-LU-SAO-* Lineup)
+    "MOST_SURPRISING_CLASH",
+    "REMOVED_DISCRIMINATORS",
+    "SAO_DOMAIN_CLASH_MATRIX",
+    "SAO_LINEUP_SPECIFICATIONS",
+    "SAO_SHARED_INVARIANT_CANDIDATES",
+    "SCALE_TRANSITIONS",
+    "SOUL_BOMB_PREDICTIONS",
+    "SURVIVING_DISCRIMINATORS",
+    "ExitBehavior",
+    "SAOLineupMember",
+    "SeparationCostType",
+    "SignalClass",
+    "SovereigntyScale",
+    "evaluate_bootstrapper_entry",
+    "evaluate_recalibration_path",
+    "evaluate_sao_domain_clash",
+    "evaluate_sao_lineup_composite",
+    "evaluate_sao_member_exit_sovereignty",
+    "evaluate_separation_cost",
+    "evaluate_soul_bomb_signal",
 ]

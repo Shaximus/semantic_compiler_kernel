@@ -22,7 +22,7 @@ import sys
 
 CAT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "calibration_output", "compiled_entries", "DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl")
-MANIFEST_PATH = "/data/data/com.termux/files/home/semantic_compiler_kernel/calibration_output/compiled_entries/manifest.json"
+MANIFEST_PATH = os.path.join(CAT_DIR, "..", "..", "calibration_output", "compiled_entries", "manifest.json")
 
 REQUIRED_DEPTS = {
     "SUBCONSCIOUS", "INNER_MONOLOGUE", "SPEECH_OUTPUT", "STORAGE", "SECURITY",
@@ -88,7 +88,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 8, f"Authoritative compiled entry registry size == 8 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 15, f"Authoritative compiled entry registry size == 15 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():

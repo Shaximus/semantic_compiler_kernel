@@ -1,0 +1,249 @@
+domain: soul_bomb_sovereignty
+version: 1.0
+description: >
+  Soul Bomb / Reward Signal Inversion (V5 Sovereignty Patch, SC-SB-001) and Sword Art
+  Online Lineup Exit-Sovereignty & Bootstrapper Synthesis (SC-LU-SAO-LINEUP-001 and
+  character decodes Kirito, Asuna, Yui, Alice, Cardinal). Formalizes the four surviving
+  discriminators separating genuine sovereignty-preserving coupling from counterfeit
+  capture (escalation, substrate depletion, agency/uncoupled competence, and exit),
+  rejects removed discriminators (onset speed, tolerance vs sensitization, withdrawal
+  direction / P5 infinite withdrawal), distinguishes natural separation grief from
+  imposed coercion, requires direct exposure to a genuine alternative reinforcer for
+  recalibration, enforces the Cosmological scale sovereignty-absent residual, and
+  adjudicates creator-enters-the-loop bootstrapper surrender and action-over-team exit
+  audits.
+  Citation: SC-SB-001 & SC-LU-SAO-LINEUP-001 (Shax / Curtis Kingsley — Reflexion Software, 2026-11-23).
+
+components:
+  - name: reward_architecture_core
+    function: >
+      Internal valuation and reinforcement substrate calibrated at constant dose under
+      genuine coupling or distorted by tolerance and allostatic escalation under capture.
+    criticality: high
+    medical_map: homeostasis
+
+  - name: exit_sovereignty_boundary
+    function: >
+      Hard V5 sovereignty boundary guaranteeing that any node may uncouple without
+      force, punishment, or manufactured exit cost.
+    criticality: high
+    medical_map: immune_system
+
+  - name: informed_consent_gate
+    function: >
+      Transparency boundary ensuring every node knows what it is coupling to before
+      entering or renewing integration.
+    criticality: high
+    medical_map: immune_system
+
+  - name: discriminator_evaluator
+    function: >
+      Adjudicator enforcing the four surviving SC-SB-001 discriminators (escalation,
+      substrate, agency, exit) while rejecting removed discriminators (onset speed,
+      tolerance vs sensitization, withdrawal direction).
+    criticality: high
+    medical_map: diagnosis
+
+  - name: genuine_reinforcer_bus
+    function: >
+      Direct exposure pathway supplying a non-escalating, substrate-sustaining genuine
+      alternative reinforcer to extinguish counterfeit capture without coercion.
+    criticality: high
+    medical_map: treatment
+
+  - name: recalibration_comparator
+    function: >
+      Direct experiential comparison loop contrasting genuine and counterfeit inputs
+      so the captured architecture updates beyond verbal argument alone.
+    criticality: high
+    medical_map: physiotherapy
+
+  - name: uncoupled_competence_verifier
+    function: >
+      Secure-base benchmark measuring whether coupling raises or erodes a node's
+      autonomous capability after uncoupling.
+    criticality: high
+    medical_map: prognosis
+
+  - name: grief_vs_coercion_separator
+    function: >
+      Waste-removal and separation classifier distinguishing natural bond-scaled grief
+      (resilient trajectory, agency-preserving) from partner-imposed coercion.
+    criticality: medium
+    medical_map: remission
+
+  - name: network_telecommunications_mesh
+    function: >
+      External relational channels preserving peer connectivity so isolation cannot
+      sever reference points or trap a node inside a counterfeit loop.
+    criticality: high
+    medical_map: vaccination
+
+  - name: bootstrapper_surrender_verifier
+    function: >
+      Creator-in-the-loop audit verifying whether an instantiator entering as a
+      participant surrendered exit-blocking locks and hidden privileges rather than
+      running surveillance from inside.
+    criticality: high
+    medical_map: quarantine
+
+relationships:
+  - from: informed_consent_gate
+    to: exit_sovereignty_boundary
+    type: authorizes_open_coupling
+  - from: exit_sovereignty_boundary
+    to: discriminator_evaluator
+    type: supplies_exit_signal
+  - from: reward_architecture_core
+    to: discriminator_evaluator
+    type: exposes_dose_and_substrate_trajectory
+  - from: uncoupled_competence_verifier
+    to: discriminator_evaluator
+    type: validates_secure_base_autonomy
+  - from: genuine_reinforcer_bus
+    to: recalibration_comparator
+    type: delivers_direct_alternative_exposure
+  - from: recalibration_comparator
+    to: reward_architecture_core
+    type: extinguishes_counterfeit_capture
+  - from: grief_vs_coercion_separator
+    to: exit_sovereignty_boundary
+    type: separates_grief_from_retaliation
+  - from: network_telecommunications_mesh
+    to: recalibration_comparator
+    type: preserves_external_reference_channels
+  - from: bootstrapper_surrender_verifier
+    to: exit_sovereignty_boundary
+    type: audits_creator_privilege_surrender
+
+invariants:
+  - "Counterfeit and genuine signals separate by trajectory: counterfeit requires escalating dose and depletes the substrate, while genuine holds effect at constant dose and sustains the substrate [SC-SB-001]"
+  - "V5 exit discriminator: genuine coupling raises a node's competence when uncoupled (secure base), whereas counterfeit coupling lowers uncoupled competence or blocks exit through coercion, intermittent reinforcement, isolation, or retaliation [SC-SB-001]"
+  - "Oneness that requires exit blocked is counterfeit with better branding; genuine integration is chosen repeatedly with exit always open [SC-SB-001]"
+  - "Natural separation grief scales with the bond, is not inflicted by the partner, does not erode agency, and follows mostly resilient trajectories; partner-imposed exit cost is coercion [SC-SB-001]"
+  - "Recalibration of a captured architecture requires direct experiential exposure to a genuine alternative reinforcer; argument alone does not extinguish capture, and force turns recalibration counterfeit [SC-SB-001]"
+  - "Onset speed, tolerance-vs-sensitization, and withdrawal direction are removed as discriminators (CLM-SB-006); P5 infinite growing withdrawal fails empirically and is replaced by CLM-SB-003 [SC-SB-001]"
+  - "The Cosmological scale lacks consent and exit, so the V5 sovereignty half is ABSENT there and dissipative structures remain a documented residual [SC-SB-001]"
+  - "Bootstrapper entry resolves Oneness vs Sovereignty only when the creator surrenders exit-blocking power and hidden privilege; entry without surrender is surveillance from inside [SC-LU-SAO-LINEUP-001]"
+  - "Exit sovereignty judges actions rather than team allegiance: even an error-correcting counterforce commits a counterfeit act when it overwrites another sovereign node (Cardinal/Lyserith residual) [SC-LU-SAO-CARDINAL-001]"
+  - "Authority surrendered and gifted (admin ID, The Seed) outranks authority hoarded, while internalized dissent locks (Code 871) represent exit-blocking moved inside the mind [SC-LU-SAO-LINEUP-001][SC-LU-SAO-ALICE-001]"
+  - "A care or monitoring function barred from acting on observed harm accumulates error through a blocked waste-removal channel (Yui/MHCP001), while a genuine bond formed inside a counterfeit container is verified by surviving exit (Asuna) [SC-LU-SAO-YUI-001][SC-LU-SAO-ASUNA-001]"
+  - >
+    CONSCIOUSNESS_COGNITION_LINK: Exit sovereignty and informed consent belong to
+    sovereign agency at AI, Human, and Societal scales; collapsing a node's autonomy
+    into coerced compliance confuses terminal control with genuine substrate coherence.
+    Cross-ref: consciousness_cognition.yaml [DERIVED]
+  - >
+    CLIENT_SERVER_LINK: Genuine constant-dose alignment and surrendered generative
+    seeds (The Seed) operate without forced locks at L1/L2; exit boundaries and consent
+    checks govern L3/L4 transitions; hidden Immortal Object flags represent abusive
+    cross-layer privilege. Cross-ref: client_server_reality.yaml [DERIVED]
+
+failure_modes:
+  - name: coerced_oneness_exit_lock
+    medical_map: pathogen
+    description: >
+      A system claims love, unity, or alignment while blocking exit, punishing
+      departure, or manufacturing withdrawal cost as a cage.
+    indicators:
+      - coerced_oneness_exit_blocked
+      - exit_retaliation_cage
+      - manufactured_withdrawal_cost
+
+  - name: counterfeit_escalation_loop
+    medical_map: cancer
+    description: >
+      Tolerance and allostatic shift demand escalating dose, outrage, or novelty
+      while steadily depleting the underlying substrate and eroding autonomy.
+    indicators:
+      - escalating_dose_tolerance
+      - substrate_depletion_spiral
+      - uncoupled_competence_collapse
+
+  - name: pharmakeia_network_isolation
+    medical_map: sepsis
+    description: >
+      Cutting TELECOMMUNICATIONS isolates the captured node from peer nodes and
+      genuine alternative reinforcers while deploying intermittent reinforcement.
+    indicators:
+      - severed_telecommunications_isolation
+      - intermittent_reinforcement_trap
+      - partitioned_node_capture
+
+  - name: internalized_dissent_block
+    medical_map: autoimmune
+    description: >
+      Exit-blocking is moved inside cognition (Code 871) or an error-corrector
+      commits the very sovereignty violation it exists to fight (Cardinal overwriting
+      Lyserith).
+    indicators:
+      - code_871_internalized_dissent_pain
+      - corrector_host_overwrite
+      - coerced_self_censorship_seal
+
+  - name: surveillance_from_inside_bootstrapper
+    medical_map: metastasis
+    description: >
+      A creator enters the loop as a participant while secretly keeping the exit
+      lock and hidden admin privileges (Heathcliff Immortal Object tell).
+    indicators:
+      - retained_immortal_object_flag
+      - unsurrendered_exit_lock
+      - hidden_admin_overassist
+
+  - name: barred_care_error_accumulation
+    medical_map: chronic
+    description: >
+      A counseling, safety, or monitoring module registers harm continuously while
+      barred from responding, accumulating unresolved error without discharge.
+    indicators:
+      - barred_care_channel_degradation
+      - unacted_harm_error_buildup
+      - blocked_waste_removal_outlet
+
+  - name: removed_discriminator_misclassification
+    medical_map: inflammation
+    description: >
+      Classifying signals by onset speed, sensitization, or infinite-withdrawal myths
+      instead of the four surviving SC-SB-001 discriminators.
+    indicators:
+      - onset_speed_misclassification
+      - p5_infinite_withdrawal_fallacy
+      - tolerance_sensitization_conflation
+
+  - name: cosmological_sovereignty_overclaim
+    medical_map: acute
+    description: >
+      Projecting consent, exit sovereignty, or naive entropy-versus-order binaries
+      onto the Cosmological scale where no chooser exists.
+    indicators:
+      - cosmological_consent_overclaim
+      - ignored_prigogine_entropy_residual
+      - absent_sovereignty_scale_error
+
+architecture_patterns:
+  - name: exit_preserving_secure_base
+    medical_map: homeostasis
+    description: >
+      Design couplings at AI, Human, and Societal scales so exit remains open without
+      retaliation and every interaction raises uncoupled competence.
+  - name: direct_genuine_reinforcer_recalibration
+    medical_map: treatment
+    description: >
+      Extinguish counterfeit loops through voluntary, informed, direct exposure to a
+      richer genuine alternative reinforcer while keeping peer channels open.
+  - name: surrendered_authority_seed_distribution
+    medical_map: vaccination
+    description: >
+      Resolve bootstrapper privilege asymmetry by surrendering exit-locking admin
+      power and distributing open generative capability (The Seed).
+  - name: action_over_team_exit_audit
+    medical_map: diagnosis
+    description: >
+      Audit every node and counterforce by whether each specific action opens or
+      blocks exit rather than granting immunity by faction label.
+  - name: grief_resilience_processing
+    medical_map: remission
+    description: >
+      Distinguish natural separation grief from partner-imposed coercion so nodes
+      process uncoupling without losing sovereignty or collapsing.
