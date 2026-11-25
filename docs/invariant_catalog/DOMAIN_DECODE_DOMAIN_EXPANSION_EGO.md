@@ -944,7 +944,7 @@ Nodes and modifiers instantiate both existing seed classes and **4 genuinely new
 
 ## 10. Section 10 Gate Discipline & Residual Audit
 
-- All fiction -> real-system mappings enforce `identity_claim_allowed: false`.
+- All fiction -> real-system mappings enforce `substrate_confusion_check: true` and `positional_claims_permitted: true` (SC-PATCH-DU-001; formerly `identity_claim_allowed: false`).
 - Every mapping with non-empty `information_lost` carries explicit non-empty `residual_mismatches`.
 - All 5 `BALANCE-ONLY` edges (Black Flash 2.5 exponent / 120% cap / domain-circuit rewiring) plus narrative caps (Yuta 5-minute Rika cap, bloodline exclusivity of Sharingan/Six Eyes) are explicitly documented in `residual_mismatches`.
 - Gates backed by confirmed prediction tests (`PRED-DEE-001`..`PRED-DEE-004`) score `1.0` (`causal_validity`, `scale_integrity`, `boundary_integrity`, `security_safety`, `substrate_sovereignty`). Gates covering argued-but-untested empirical claims (`measurement_integrity`, `authority_safety`, `wave_function_coherence`, `corpus_completeness`) are strictly capped at `0.9` with `PRED-DEE-005` and `PRED-DEE-006` listed in `uncertainty_statement`.
