@@ -116,3 +116,9 @@ The names “Vegeta Last Crown” and “Goku Open Compiler” were given as cro
 | SC-SB-001 | Yes — compiled V5 JSONL, plus the DRAFT three-claim patch in `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
 | Vegeta Last Crown | No entry under that title |
 | Goku Open Compiler | No entry under that title |
+
+---
+
+## Cross-reference note (2026-11-25, t570u)
+
+Shax: "Vegeta is Lucifer. Satan is Frieza, the Frieza race." In his model Frieza and the Frieza race are the external owning entity (Satan), and Vegeta is the Sovereignty pole (Lucifer) held in Frieza's service. Recorded as Shax's interpretation in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`. The compiled `SC-LU-FRIEZA-001` JSONL is not changed by this note. `SC-LU-VEGETA-001` is not in this repository and is not stubbed.

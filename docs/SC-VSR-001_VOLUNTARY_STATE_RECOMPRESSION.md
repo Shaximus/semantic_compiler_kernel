@@ -154,5 +154,5 @@ Full source table: `/workspace/incoming/2026-11-25e/SOURCE_NOTES.md` on the buil
 
 1. Promote to a compiled JSONL entry now, or keep collecting examples first?
 2. If compiled, target tier? A cautious reading: the operation is CANON-backed for one example (Uldyssian) and INTERPRETATION elsewhere, which points at SILVER or below until a second, independent example passes all five invariants.
-3. Does "voluntary restriction" require the consent of everyone affected, or only of the agent? Uldyssian passes the second and fails the first.
+3. ~~Does "voluntary restriction" require the consent of everyone affected, or only of the agent?~~ **Answered by Shax, 2026-11-25 (t569u): "not alone".** Voluntary restriction is not a solitary choice; it is shared or consented. Recorded as Shax's answer. Under this reading Uldyssian passes at the agent level and fails at the population level, so he stays the primary example of the operation but not a full pass of invariant 3. The same condition appears as "mutual acceptance" in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`.
 4. Is partial information preservation (lineage kept, memory erased) enough for invariant 4?

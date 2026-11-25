@@ -167,6 +167,7 @@
 
 - **Draft entries (2026-11-25), no class assigned:** Spirit Bomb three-claim patch notes, DRAFT 0.3 with the COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`, compiled as `SC-LU-FRIEZA-001`); Sovereign Mirror Duality (`SC-MD-001`, compiled as `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §2–§3.
 - **Draft entries (2026-11-25e), not compiled, no class assigned:** Voluntary State Recompression (`SC-VSR-001`); governance principle Measurement, Not Indulgence (`SC-GOV-001`); cyclic feedback patch notes for `SC-MIRROR-001` (`SC-PATCH-MIRROR-001`). See `DOMAIN_LEDGER.md` §3.
+- **Draft entry (2026-11-25f), not compiled, no class assigned:** Vessel Equilibrium (`SC-VESSEL-001`). See `DOMAIN_LEDGER.md` §3.
 
 ---
 
