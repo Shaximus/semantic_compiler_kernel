@@ -32,14 +32,14 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 ### Support, Funding & Payment Rails
 
+- **Private Release Vault & Storefront (Live):** [semantic-compiler-api.kingsley-w-m-curtis.workers.dev/buy](https://semantic-compiler-api.kingsley-w-m-curtis.workers.dev/buy)
 - **Stripe Checkout (Reflexion Ecosystem — Live):**
-  - **[Lifetime Founding Access ($249 one-time)](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00)** — Permanent access to Reflexion tools, evidence vaults, and priority developer channels.
-  - **[Annual Subscription ($99.99/yr)](https://buy.stripe.com/5kQ6oI2pE7GB7zf2AidAk01)** — Full platform access, local inference routing, and priority updates.
-  - **[Monthly Subscription ($9.99/mo)](https://buy.stripe.com/8x27sMaWa4up7zf1wedAk02)** — Full access, cancel anytime.
+  - **[Lifetime Founding Access ($249 one-time)](https://buy.stripe.com/6oUbJ2e8m2mhcTz1wedAk00)** — Permanent access to V3.8.0+ packages, private repository invite, Edge Brain API + Remote MCP key (`5,000 req/day`), and priority architect channels.
+  - **[Annual Builder Pass ($99.99/yr)](https://buy.stripe.com/5kQ6oI2pE7GB7zf2AidAk01)** — Authenticated V3.8.0+ Release Vault downloads, Edge Brain API + Remote MCP key (`2,000 req/day`), and priority updates.
+  - **[Monthly Access ($9.99/mo)](https://buy.stripe.com/8x27sMaWa4up7zf1wedAk02)** — Authenticated Edge Brain API, Remote MCP Server (`1,000 req/day`), and release downloads, cancel anytime.
 - **Buy Me a Coffee:** [buymeacoffee.com/kingsleywmk](https://buymeacoffee.com/kingsleywmk)
 - **Cryptocurrency (ETH / USDC / USDT — ERC-20):** `0x41aD2494Ee9e703Bd289b20cBe25101123137d4e` ([View on Etherscan](https://etherscan.io/address/0x41aD2494Ee9e703Bd289b20cBe25101123137d4e))
-- **GitHub Sponsors:** Enrollment pending (not yet active).
-- **Community & Show-and-Tell:** [Show us what you're building / Commercial Licensing & Support (Discussion #35)](https://github.com/Shaximus/semantic_compiler_kernel/discussions/35)
+- **Direct Commercial Licensing:** `shaximusoverride6@gmail.com` · [reflexionsoftware.com](https://reflexionsoftware.com)
 
 ---
 
