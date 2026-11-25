@@ -367,6 +367,30 @@
         "SC-CP-001",
         "SC-CT-001"
       ]
+    },
+    {
+      "entry_id": "SC-OMNI-001",
+      "file": "SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl",
+      "title": "Spirit Bomb Reflection: Integration Threshold and Attenuation (the Omni State)",
+      "entry_type": "compiler_entry",
+      "version": "2.0.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-24",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.937,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 16170,
+      "sha256": "3a6eafa11e614beb692b5ee8b9edfb0197d9ca5bb37a03dbbbd2628ba0750ad9",
+      "notes": "Revision 2.0.0: core mechanism centered on reflection event + dose threshold + Attenuation Protocol (time, support, intent) anchored across biological (vaccination), computational (adversarial training perturbation budgets), and psychological (graded exposure + social support) scales; 11 TIG-graded claims, 15/15 departments, 4 predictions (P1-P4), 7-entry circuit position. Companion docs: docs/RELD_V3.md & docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-HS-001",
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-CP-001",
+        "SC-CT-001"
+      ]
     }
   ]
 }

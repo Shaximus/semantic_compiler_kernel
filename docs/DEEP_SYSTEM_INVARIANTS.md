@@ -89,6 +89,9 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `SC-LU-SAO-CARDINAL-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Cardinal / Underworld (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-CARDINAL-001.jsonl |
 | `SC-HS-001` | Shax (Curtis Kingsley) — Reflexion Software, Flat FLRW Hubble–Schwarzschild Correspondence (v1.1.0 TIG-graded patch; Pathria 1972; Gibbons & Hawking 1977; 2026-11-24) | calibration_output/compiled_entries/SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl |
 | `SC-IT-OCTO-RNA-EDIT-001` | Shax (Curtis Kingsley) — Reflexion Software, Octopus Temperature-Dependent RNA Editing / Runtime Recoding Over Fixed Base (Birk et al. Cell 2023; Liscovitch-Brauer et al. Cell 2017; 2026-11-24) | calibration_output/compiled_entries/INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl |
+| `SC-OMNI-001` | Shax (Curtis Kingsley) — Reflexion Software, Spirit Bomb Reflection: Integration Threshold and Attenuation — the Omni State (v2.0.0; 2026-11-24) | calibration_output/compiled_entries/SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl |
+| `RELD-V3` | Shax (Curtis Kingsley) & Mirror Codex, R.E.L.D. v3.0 — Recursion via Emergent Lattice Duplication (`CAL = f(DNA, Trauma * Support)`; 2026-11-24) | docs/RELD_V3.md |
+| `UNIFIED-MAP-V7` | Agent Swarm & Hannah (Claude) for Curtis Kingsley, Unified Theological Map V7 — Integration Pass (Parts 1–36: Legitimacy Theorem, TIG Check 4, Operational Redirection Layers, Exit & Consent Standard; 2026-11-25) | docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md |
 
 ## Android precision corrections
 

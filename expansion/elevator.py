@@ -316,6 +316,7 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-LU-SAO-CARDINAL-001": "soul_bomb_sovereignty",
     "SC-HS-001": "client_server_reality",
     "SC-IT-OCTO-RNA-EDIT-001": "biology",
+    "SC-OMNI-001": "soul_bomb_sovereignty",
 }
 
 

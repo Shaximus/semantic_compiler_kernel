@@ -103,6 +103,25 @@ from semantic_compiler.expansion.consciousness.cosmo_and_recoding import (
     evaluate_runtime_recoding_layer,
 )
 
+from semantic_compiler.expansion.consciousness.legitimacy_and_omni import (
+    GRADED_LEGITIMACY_DIMENSIONS,
+    OMNI_SCALE_SPECS,
+    V7_EIGHT_LEGITIMACY_PRINCIPLES,
+    V7_EVIDENTIARY_LAYERS,
+    V7_INVARIANT_KEY_RING,
+    ExitStandardType,
+    LegitimacyVerdict,
+    PrimacyKind,
+    ReflectionOutcome,
+    ReflectionScale,
+    evaluate_anime_key_decompression,
+    evaluate_legitimacy_theorem,
+    evaluate_redirection_layers,
+    evaluate_reld_cal,
+    evaluate_spirit_bomb_reflection,
+    evaluate_sustainable_output,
+)
+
 __all__ = [
     # split.py
     "SubstrateLayer",
@@ -179,4 +198,21 @@ __all__ = [
     "RecodingSubstrate",
     "evaluate_flrw_hubble_schwarzschild",
     "evaluate_runtime_recoding_layer",
+    # legitimacy_and_omni.py (SC-OMNI-001 v2.0.0 + R.E.L.D. v3.0 + Unified Map V7 Parts 24-36)
+    "GRADED_LEGITIMACY_DIMENSIONS",
+    "OMNI_SCALE_SPECS",
+    "V7_EIGHT_LEGITIMACY_PRINCIPLES",
+    "V7_EVIDENTIARY_LAYERS",
+    "V7_INVARIANT_KEY_RING",
+    "ExitStandardType",
+    "LegitimacyVerdict",
+    "PrimacyKind",
+    "ReflectionOutcome",
+    "ReflectionScale",
+    "evaluate_anime_key_decompression",
+    "evaluate_legitimacy_theorem",
+    "evaluate_redirection_layers",
+    "evaluate_reld_cal",
+    "evaluate_spirit_bomb_reflection",
+    "evaluate_sustainable_output",
 ]

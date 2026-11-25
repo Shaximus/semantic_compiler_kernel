@@ -56,6 +56,26 @@ class CorroborationClass(str, Enum):
     UNANCHORED = "UNANCHORED"
 
 
+class PredictiveDiscriminationClass(str, Enum):
+    """Gate 4 of TIG (V7 Part 33.1) — tests whether an interpretation predicts what rivals do not."""
+
+    DISCRIMINATING = "DISCRIMINATING"
+    NON_DISCRIMINATING = "NON_DISCRIMINATING"
+    FAILED = "FAILED"
+    PENDING = "PENDING"
+
+
+class EvidenceMaturityLevel(str, Enum):
+    """V7 Part 33.3 six-rung Evidence Maturity Ladder."""
+
+    OBSERVATION = "OBSERVATION"
+    CORROBORATION = "CORROBORATION"
+    STRUCTURAL_CORRESPONDENCE = "STRUCTURAL_CORRESPONDENCE"
+    PREDICTIVE_VALIDATION = "PREDICTIVE_VALIDATION"
+    INDEPENDENT_REPLICATION = "INDEPENDENT_REPLICATION"
+    EXPLANATORY_SUPERIORITY = "EXPLANATORY_SUPERIORITY"
+
+
 _FIRST_PERSON_TESTIMONY_PATTERNS = (
     re.compile(r"\b(i experienced|i witnessed|i saw|my experience|in my own life|personally experienced)\b", re.I),
     re.compile(r"\b(testimony|first-person|lived experience|synchronicit(?:y|ies))\b", re.I),
@@ -90,6 +110,10 @@ class TIGClassification:
     evolution_history: list[str] = field(default_factory=list)
     corroboration_anchors: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    predictive_discrimination: Optional[PredictiveDiscriminationClass] = None
+    prediction_preregistered: Optional[bool] = None
+    three_confidences: Optional[dict[str, Optional[float]]] = None
+    evidence_maturity: Optional[EvidenceMaturityLevel] = None
     entry_id: str = "SC-TIG-001"
     gate_number: int = 0
 
@@ -98,7 +122,7 @@ class TIGClassification:
         return f"{self.consistency.value} + {self.isomorphism.value} + {self.corroboration.value}"
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload: dict[str, Any] = {
             "entry_id": self.entry_id,
             "gate_number": self.gate_number,
             "is_testimony": self.is_testimony,
@@ -115,6 +139,55 @@ class TIGClassification:
             "corroboration_anchors": list(self.corroboration_anchors),
             "notes": list(self.notes),
         }
+        if self.predictive_discrimination is not None:
+            payload["predictive_discrimination"] = self.predictive_discrimination.value
+            payload["prediction_preregistered"] = self.prediction_preregistered
+        if self.three_confidences is not None:
+            payload["three_confidences"] = dict(self.three_confidences)
+        if self.evidence_maturity is not None:
+            payload["evidence_maturity"] = self.evidence_maturity.value
+        return payload
+
+
+def evaluate_predictive_discrimination(
+    *,
+    preregistered_before_observation: bool,
+    outcome_observed: Optional[bool] = None,
+    distinguishes_from_competing_interpretations: bool = False,
+) -> dict[str, Any]:
+    """Evaluate TIG Check 4: Predictive Discrimination (V7 Part 33.1).
+
+    Enforces the V7 pre-registration rule: a prediction written *after* the
+    outcome is already known can never be scored ``DISCRIMINATING``.
+    """
+    if outcome_observed is None:
+        state = PredictiveDiscriminationClass.PENDING
+        reason = "Prediction recorded; test outcome not yet observed."
+    elif outcome_observed is False:
+        state = PredictiveDiscriminationClass.FAILED
+        reason = "Pre-specified prediction was not observed."
+    elif not preregistered_before_observation:
+        state = PredictiveDiscriminationClass.NON_DISCRIMINATING
+        reason = (
+            "Post-hoc prediction written after observation cannot be scored DISCRIMINATING "
+            "(V7 Part 33.1 pre-registration rule)."
+        )
+    elif distinguishes_from_competing_interpretations:
+        state = PredictiveDiscriminationClass.DISCRIMINATING
+        reason = "Pre-registered prediction distinguishes the interpretation from competing alternatives and was observed."
+    else:
+        state = PredictiveDiscriminationClass.NON_DISCRIMINATING
+        reason = "Competing interpretations explain the same observed outcome equally."
+
+    return {
+        "check_number": 4,
+        "check_name": "predictive_discrimination",
+        "state": state.value,
+        "preregistered_before_observation": bool(preregistered_before_observation),
+        "outcome_observed": outcome_observed,
+        "distinguishes_from_competing_interpretations": bool(distinguishes_from_competing_interpretations),
+        "reason": reason,
+    }
 
 
 def _compute_structural_weight(
@@ -163,6 +236,13 @@ def evaluate_testimony_integrity(
     requires_unverified_assumption: Optional[bool] = None,
     corroboration_anchors: Optional[list[str]] = None,
     partial_anchoring: bool = False,
+    preregistered_before_observation: Optional[bool] = None,
+    prediction_outcome_observed: Optional[bool] = None,
+    prediction_distinguishes_rivals: bool = False,
+    structural_confidence: Optional[float] = None,
+    empirical_confidence: Optional[float] = None,
+    interpretive_confidence: Optional[float] = None,
+    evidence_maturity: Optional[EvidenceMaturityLevel | str] = None,
 ) -> dict[str, Any]:
     """
     Run Gate 0 (Testimony Integrity Gate / SC-TIG-001) on a claim.
@@ -268,6 +348,35 @@ def evaluate_testimony_integrity(
         consistency, isomorphism, corroboration
     )
 
+    # ── Gate 4 (Optional, V7 Part 33.1): Predictive Discrimination ──
+    pred_disc: Optional[PredictiveDiscriminationClass] = None
+    if preregistered_before_observation is not None:
+        pd_eval = evaluate_predictive_discrimination(
+            preregistered_before_observation=preregistered_before_observation,
+            outcome_observed=prediction_outcome_observed,
+            distinguishes_from_competing_interpretations=prediction_distinguishes_rivals,
+        )
+        pred_disc = PredictiveDiscriminationClass(pd_eval["state"])
+        notes.append(f"TIG Check 4 ({pred_disc.value}): {pd_eval['reason']}")
+
+    # ── Three Separate Confidences (V7 Part 33.2: never collapsed into one number) ──
+    three_conf: Optional[dict[str, Optional[float]]] = None
+    if any(c is not None for c in (structural_confidence, empirical_confidence, interpretive_confidence)):
+        three_conf = {
+            "structural": structural_confidence,
+            "empirical": empirical_confidence,
+            "interpretive": interpretive_confidence,
+        }
+
+    # ── Evidence Maturity Ladder (V7 Part 33.3) ──
+    maturity_enum: Optional[EvidenceMaturityLevel] = None
+    if evidence_maturity is not None:
+        maturity_enum = (
+            evidence_maturity
+            if isinstance(evidence_maturity, EvidenceMaturityLevel)
+            else EvidenceMaturityLevel(str(evidence_maturity).strip().upper())
+        )
+
     result = TIGClassification(
         is_testimony=effective_is_testimony,
         consistency=consistency,
@@ -281,6 +390,10 @@ def evaluate_testimony_integrity(
         evolution_history=evolution_history,
         corroboration_anchors=anchors,
         notes=notes,
+        predictive_discrimination=pred_disc,
+        prediction_preregistered=preregistered_before_observation,
+        three_confidences=three_conf,
+        evidence_maturity=maturity_enum,
     )
     return result.to_dict()
 

@@ -98,7 +98,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 19, f"Authoritative local compiled entry registry size == 19 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 20, f"Authoritative local compiled entry registry size == 20 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():
@@ -288,7 +288,30 @@ hs_map = hs_obj["isomorphism_analysis"]["mappings"][0]
 check(hs_map["identity_claim_allowed"] is False and len(hs_map["residual_mismatches"]) == 3,
       "SC-HS-001 / MAP:HS-001: identity_claim_allowed=False & 3 residual_mismatches")
 
-# 5. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 24 classes
+omni_jsonl_path = os.path.join(COMPILED_DIR, "SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl")
+reld_md_path = os.path.join(REPO_ROOT, "docs", "RELD_V3.md")
+v7_md_path = os.path.join(REPO_ROOT, "docs", "CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md")
+check(os.path.exists(omni_jsonl_path), "SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl exists in compiled_entries")
+check(os.path.exists(reld_md_path), "docs/RELD_V3.md exists")
+check(os.path.exists(v7_md_path), "docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md exists")
+with open(omni_jsonl_path, encoding="utf-8") as f:
+    omni_obj = json.loads(f.readline())
+check(omni_obj["metadata"]["entry_id"] == "SC-OMNI-001" and omni_obj["metadata"]["entry_revision"] == "2.0.0",
+      "SC-OMNI-001: entry_id and revision 2.0.0 match")
+check(len(omni_obj["analysis"]["claims"]) == 11, "SC-OMNI-001: exact 11 claims present")
+omni_depts = [d["department"] for d in omni_obj["functional_departments"]]
+check(len(omni_depts) == 15 and set(omni_depts) == REQUIRED_DEPTS, "SC-OMNI-001: exact 15/15 departments")
+check(len(omni_obj["gates"]) == 9 and all(g["passed"] for g in omni_obj["gates"].values()),
+      "SC-OMNI-001: 9/9 gates passed")
+check(omni_obj["isomorphism_quality"]["score"] == 0.937 and omni_obj["dataset_tier"] == "GOLD",
+      "SC-OMNI-001: GOLD score 0.937")
+check(set(omni_obj["attenuation_protocol"].keys()) == {"time", "support", "intent"},
+      "SC-OMNI-001: Attenuation Protocol has time/support/intent")
+for mp in omni_obj["isomorphism_analysis"]["mappings"]:
+    check(mp["identity_claim_allowed"] is False and len(mp["residual_mismatches"]) > 0,
+          f"SC-OMNI-001 / {mp['mapping_id']}: identity_claim_allowed=False & non-empty residuals")
+
+# 5. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 25 classes
 allowed_doc_ids = valid_entry_ids | EXTERNAL_UPSTREAM_IDS
 for md_name in ["INVARIANT_CATALOG.md", "DOMAIN_LEDGER.md"]:
     mp = os.path.join(CAT_DIR, md_name)
@@ -302,8 +325,8 @@ for md_name in ["INVARIANT_CATALOG.md", "DOMAIN_LEDGER.md"]:
 with open(os.path.join(CAT_DIR, "INVARIANT_CATALOG.md"), encoding="utf-8") as f:
     cat_txt = f.read()
 class_headers = re.findall(r"^### Class (\d+):", cat_txt, re.MULTILINE)
-check([int(x) for x in class_headers] == list(range(1, 25)),
-      f"INVARIANT_CATALOG.md: exact Classes 1..24 present (found {len(class_headers)})")
+check([int(x) for x in class_headers] == list(range(1, 26)),
+      f"INVARIANT_CATALOG.md: exact Classes 1..25 present (found {len(class_headers)})")
 
 # 6. Zero "etc." elisions across ALL emitted .md and .jsonl files
 for fp in sorted(glob.glob(os.path.join(CAT_DIR, "*.md")) + glob.glob(os.path.join(CAT_DIR, "*.jsonl"))):

@@ -1,14 +1,14 @@
 # INVARIANT CATALOG — Reflexion Semantic Compiler (v3.5.0)
 
 - **Maintained by:** Invariant Translator (`UNIVERSAL_DECOMPRESSION`)
-- **Updated:** 2026-11-24
-- **Total Catalog Classes:** **24** (`14` seed classes + `10` compiled irreducible extensions: Classes 15–19 from Domain Expansion/Ego & Pokemon passes; Classes 20–24 merged from Claude Catalog Extensions `#15`–`#19` covering Soul Eater substrate collapse, Gojo single-channel defense & enabler dependency, Soul Bomb V5 sovereignty, and Octopus temperature-dependent RNA editing)
-- **Verified Local Compiled Entry Registry (Zero Dangling Local IDs):** `SC-DOMAIN-EXPANSION-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`, `SC-IT-POKEMON-001`, `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001`, `SC-SB-001`, `SC-HS-001`, `SC-IT-OCTO-RNA-EDIT-001`, `SC-IT-BATCH-2026-11-23`
+- **Updated:** 2026-11-25
+- **Total Catalog Classes:** **25** (`14` seed classes + `11` compiled irreducible extensions: Classes 15–19 from Domain Expansion/Ego & Pokemon passes; Classes 20–24 merged from Claude Catalog Extensions `#15`–`#19`; Class 25 `REFLECTION_INTEGRATION_THRESHOLD (OMNI_STATE)` from `SC-OMNI-001` v2.0.0)
+- **Verified Local Compiled Entry Registry (Zero Dangling Local IDs):** `SC-DOMAIN-EXPANSION-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`, `SC-IT-POKEMON-001`, `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001`, `SC-SB-001`, `SC-HS-001`, `SC-IT-OCTO-RNA-EDIT-001`, `SC-OMNI-001`, `SC-IT-BATCH-2026-11-23`
 - **Audited Upstream Session Cross-Links (queued for standalone JSONL drop):** `SC-CP-001`, `SC-IT-POE-SOUL-EATER-001`, `SC-IT-GOJO-KIT-001`
 
 ---
 
-## 1. Master Invariant Class Index (Classes 1–24)
+## 1. Master Invariant Class Index (Classes 1–25)
 
 ### Class 1: `STRESS-ACCUMULATION -> THRESHOLD -> INSTANT RELEASE` (`SEED`)
 - **Primitive Signature:** `POOL` (stored tension/stress) + `THRESHOLD` (rupture/alignment limit) + `TRIGGER` + `RELEASE` (instant dump + aftershock).
@@ -154,6 +154,12 @@
 - **Falsifiable Counterplay / Weakness Prediction:** Heavy runtime recoding freezes the underlying base at attachment sites (`P1`, confirmed in cephalopod genome conservation & AI adapter-base lock), operates orders of magnitude faster than base change (`P2`, confirmed), concentrates on environment-exposed components (`P3`, confirmed in biology / untested in AI), and hits a ceiling beyond which base change is required (`P4`, untested).
 - **Prediction Status:** **`confirmed`** — `P1` and `P2` confirmed; `P3` confirmed in biology / `untested` in AI; `P4` `untested`.
 
+### Class 25: `REFLECTION_INTEGRATION_THRESHOLD (OMNI_STATE)` (`NEW` — compiled 2026-11-24, `SC-OMNI-001` v2.0.0)
+- **Primitive Signature:** `INFLOW / REGEN` (voluntarily donated multi-node information payload preserving donor sovereignty) + `TRIGGER` (unplanned reflection event returning payload onto the vessel) + `THRESHOLD` (dose survivability boundary separating shatter from integration) + `FILTER / MITIGATION` (Attenuation Protocol via time, support, and benevolent intent).
+- **Cross-Domain Instances & Entry Links:** Spirit Bomb reflection -> Ultra Instinct Sign (`SC-OMNI-001` v2.0.0), attenuated/inactivated vaccination imprinting immunity, ML adversarial training within perturbation budgets (Tsipras et al. 2019), red-team findings fed back into defending institutions, graded trauma exposure with social support (Brewin, Andrews & Valentine 2000; R.E.L.D. v3.0 `CAL = f(DNA, Trauma * Support)`), and theological Incarnation mapping (residual: physical cosmology has no intent).
+- **Falsifiable Counterplay / Weakness Prediction:** Attack information reflected under protective framing builds capability (`P1`, confirmed), exceeding the dose threshold damages/shatters the vessel (`P2`, confirmed), time and support lower effective dose (`P3`, confirmed for time/support; intent `partial`), and forced absorption is unstable/reversible whereas voluntary donated integration persists (`P4`, confirmed in canon).
+- **Prediction Status:** **`confirmed`** — `P1`, `P2`, `P4` confirmed; `P3` confirmed for time & support / `partial` for intent.
+
 ---
 
 ## 2. Verified Class Compositions (Multi-Class Invariant Complexes)
@@ -200,3 +206,6 @@
 | `PRED-OR-002` (`P2`) | `SC-IT-OCTO-RNA-EDIT-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Runtime recoding is orders of magnitude faster than base change (hours vs generations; seconds/hours vs pretraining months). |
 | `PRED-OR-003` (`P3`) | `SC-IT-OCTO-RNA-EDIT-001` | **`partial`** | `STRUCTURAL_ANALOGY` | Most environment-exposed components get most runtime tuning: confirmed in octopus (membrane and Ca2+-binding proteins), untested in AI. |
 | `PRED-OR-004` (`P4`) | `SC-IT-OCTO-RNA-EDIT-001` | **`untested`** | `STRUCTURAL_ANALOGY` | Runtime recoding has an adaptive ceiling beyond which base modification is required. |
+| `PRED-OM-001..002` (`P1`–`P2`) | `SC-OMNI-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Reflected attack information under protective framing produces capability (vaccination, adversarial training, red-teaming) strictly below the vessel's dose threshold. |
+| `PRED-OM-003` (`P3`) | `SC-OMNI-001` | **`partial`** | `ISOMORPHIC_INVARIANT` | Time (graded exposure / prime-boost) and support (social support / helper T-cells) lower effective dose (confirmed); intent attenuation remains partial. |
+| `PRED-OM-004` (`P4`) | `SC-OMNI-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Forced aggregation (Cell, Buu, Moro) is unstable and reversible; voluntarily donated integration persists while leaving donors sovereign. |

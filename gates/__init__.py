@@ -34,7 +34,10 @@ from semantic_compiler.gates.testimony_integrity import (
     ConsistencyClass,
     IsomorphismClass,
     CorroborationClass,
+    PredictiveDiscriminationClass,
+    EvidenceMaturityLevel,
     TIGClassification,
+    evaluate_predictive_discrimination,
     evaluate_testimony_integrity,
     classify_packet_testimony,
 )
@@ -55,7 +58,10 @@ __all__ = [
     "ConsistencyClass",
     "IsomorphismClass",
     "CorroborationClass",
+    "PredictiveDiscriminationClass",
+    "EvidenceMaturityLevel",
     "TIGClassification",
+    "evaluate_predictive_discrimination",
     "evaluate_testimony_integrity",
     "classify_packet_testimony",
 ]

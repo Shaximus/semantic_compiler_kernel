@@ -57,9 +57,9 @@ class RackIndexingAndCachingTests(unittest.TestCase):
 
             stats = elevator.stats
             self.assertEqual(stats["domain_slots"], 46)
-            self.assertEqual(stats["compiled_entry_slots"], 16)
+            self.assertEqual(stats["compiled_entry_slots"], 17)
             self.assertEqual(stats["invariant_class_slots"], 14)
-            self.assertEqual(stats["total_slots"], 76)
+            self.assertEqual(stats["total_slots"], 77)
             self.assertGreater(stats["token_postings"], 500)
 
             # Repeated summon / park / retrieve / rotate calls must NOT re-read YAML or JSONL files.
@@ -211,6 +211,7 @@ class SummoningAccuracyTests(unittest.TestCase):
             ("SC-DOMAIN-EXPANSION-001", "domain_expansion"),
             ("SC-HS-001", "client_server_reality"),
             ("SC-IT-OCTO-RNA-EDIT-001", "biology"),
+            ("SC-OMNI-001", "soul_bomb_sovereignty"),
         )
         for entry_id, expected_domain in bare_cases:
             with self.subTest(entry_id=entry_id):
