@@ -59,7 +59,7 @@ class RackIndexingAndCachingTests(unittest.TestCase):
 
             stats = elevator.stats
             self.assertEqual(stats["domain_slots"], registered_domain_count())
-            self.assertEqual(stats["compiled_entry_slots"], 21)
+            self.assertEqual(stats["compiled_entry_slots"], 22)  # +SC-LU-VEGETA-001 (2026-11-25)
             self.assertEqual(stats["invariant_class_slots"], 14)
             self.assertEqual(
                 stats["total_slots"],

@@ -323,6 +323,8 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # entry, homed with the other SC-LU-* lineups.
     "SC-MIRROR-001": "client_server_reality",
     "SC-LU-FRIEZA-001": "soul_bomb_sovereignty",
+    # SC-LU-VEGETA-001 (2026-11-25): Sovereignty-pole lineup entry, homed with the other lineups.
+    "SC-LU-VEGETA-001": "soul_bomb_sovereignty",
     # SC-CP-001 (Clay and Pots, reconstructed 2026-11-25): base weights vs terminals is the
     # consciousness/cognition split, already carried by that domain's vocabulary.
     "SC-CP-001": "consciousness_cognition",
