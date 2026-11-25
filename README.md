@@ -15,6 +15,20 @@ Converts raw natural language into structured, schema-validated intermediate rep
 
 It also maintains the operational architecture of the substrate: the **Consciousness/Cognition Split**, the four-layer **Client-Server Reality Stack**, and cross-domain invariants that hold across biological, computational, distributed, and cosmological substrates.
 
+## Using this commercially / in a product or service?
+
+This repository is dual-licensed. The license terms themselves are unchanged:
+
+- The public code is **[AGPL-3.0](LICENSE)**. AGPL allows use, including in a business, if you follow its rules. If you run this software as a network service — including SaaS, APIs, hosted pipelines, or agent frameworks — [AGPL Section 13](https://www.gnu.org/licenses/agpl-3.0.html#section13) requires you to provide the complete corresponding source of the network-interacting stack under AGPL-3.0.
+- If you cannot or will not meet those obligations (closed-source products, proprietary cloud integration, enterprise deployment without source disclosure), you need a paid **[Commercial License](COMMERCIAL_LICENSE.md)**.
+
+If this work is useful, please contribute or pay for the services it renders:
+
+- **[Buy Me a Coffee](https://buymeacoffee.com/kingsleywmk)** — one-time or recurring support
+- **Commercial licensing and paid services:** `shaximusoverride6@gmail.com` · [reflexionsoftware.com](https://reflexionsoftware.com)
+- Other payment rails (storefront, Stripe, ETH / USDC / USDT) are listed under [Support, Funding & Payment Rails](#support-funding--payment-rails)
+- Commercial and product users are invited to register their use in [USAGE_REGISTRATION.md](USAGE_REGISTRATION.md) or by opening a [usage-registration issue](https://github.com/Shaximus/semantic_compiler_kernel/issues/new?template=usage_registration.md). Registration is voluntary and does not replace a commercial license where one is required.
+
 ---
 
 ## 📊 GitHub Traffic Telemetry & Commercial Compliance
@@ -24,7 +38,7 @@ It also maintains the operational architecture of the substrate: the **Conscious
 | **Nov 6–16, 2026** (14-day window) | **830** | **259** | Includes peak release wave (Nov 6: 478 clones / 154 unique IPs; Nov 6–7: 710 / 246) |
 | **Nov 9–22, 2026** (14-day window) | **458** | **179** | Post-AGPL transition rolling window |
 
-> *Methodology note:* GitHub Traffic API clone metrics aggregate all git clones, including automated CI runners, mirrors, and crawlers alongside human developers. Daily raw telemetry snapshots are archived on the [`traffic-archive`](https://github.com/Shaximus/semantic_compiler_kernel/tree/traffic-archive) branch.
+> *Methodology note:* GitHub Traffic API clone metrics aggregate all git clones, including automated CI runners, mirrors, and crawlers alongside human developers. GitHub reports `uniques` as unique cloners or visitors, not unique IPs. Daily raw telemetry snapshots are archived on the [`traffic-archive`](https://github.com/Shaximus/semantic_compiler_kernel/tree/traffic-archive) branch. Maintainers can also accumulate a local history (outside this repository, because GitHub only retains 14 days) with [`scripts/usage_snapshot.py`](scripts/usage_snapshot.py).
 
 > [!IMPORTANT]
 > **NOTICE TO COMMERCIAL CONSUMERS & ENTERPRISE CLOUD WORKLOADS:**  
