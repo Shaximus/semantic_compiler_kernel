@@ -4,7 +4,8 @@
 **Date:** 2026-11-25  
 **Source:** Shax (Curtis Kingsley) — Reflexion Software  
 **Source notes:** 2026-11-25 14:51 ADT (t560u)  
-**Status:** DRAFT / hypothesis. Markdown entry, not a compiled JSONL entry. Canon facts are labelled separately from hypotheses.
+**Status:** DRAFT / hypothesis. Markdown source draft. Canon facts are labelled separately from hypotheses.  
+**Compiled as:** `SC-LU-FRIEZA-001` (`calibration_output/compiled_entries/SC-LU-FRIEZA-001.jsonl`, SILVER, 2026-11-25), a standalone lineup entry homed in the `soul_bomb_sovereignty` domain. All five layers are carried into it.
 
 ---
 

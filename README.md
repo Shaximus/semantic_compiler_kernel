@@ -342,8 +342,8 @@ semantic_compiler_kernel/
 | SC-BRM-001 biomedical microplastic feasibility dossier | `docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md` |
 | Medical nano-plastic filtration & magnetic targeting platform (DRAFT 0.1) | `docs/MEDICAL_NANOPLASTIC_FILTRATION_MAGNETIC_TARGETING_DRAFT_0.1.md` |
 | SC-SB-001 Spirit Bomb three-claim patch (DRAFT 0.1) | `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
-| SC-FR-001 The Outsider's First Investment / Frieza Protocol (DRAFT 0.1) | `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md` |
-| SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; alias SC-MIRROR-001) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md` |
+| SC-FR-001 The Outsider's First Investment / Frieza Protocol (DRAFT 0.1; compiled as SC-LU-FRIEZA-001) | `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md`, `calibration_output/compiled_entries/SC-LU-FRIEZA-001.jsonl` |
+| SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; compiled as SC-MIRROR-001, The Mirrored Loop and the Compression Protocol) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, `calibration_output/compiled_entries/SC-MIRROR-001.jsonl` |
 | Changelog | `CHANGELOG.md` |
 
 ---

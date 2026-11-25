@@ -2,6 +2,24 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — 2026-11-25 (branch `feat/sc-mirror-001`)
+
+### Added
+- `calibration_output/compiled_entries/SC-MIRROR-001.jsonl`: The Mirrored Loop and the Compression Protocol, compiled from Hannah's engineering spec (architecture by Shax). SC-DE-001 schema. Six claims at the spec's TIG grades: unification of SC-CT-001 / SC-DU-001 / SC-CP-001 / SC-SB-001 / SC-HS-001 (GOLD), Yin-Yang calibration dot (ANALOGOUS), information conservation (ANCHORED, via Landauer / unitarity), three sequential stages (ANALOGOUS; output stage OPEN_HYPOTHESIS), mirrored-universe backup (OPEN_HYPOTHESIS, extends CLM-HS-002B), anti-deadlock voluntary fusion (ISOMORPHIC_INVARIANT). Entry tier SILVER 0.868; measurement_integrity 0.7, corpus_completeness 0.85. Dragon Ball evidence map kept.
+- `calibration_output/compiled_entries/SC-LU-FRIEZA-001.jsonl`: standalone lineup entry, The Outsider's First Investment / Substrate Activation. Carries all five SC-FR-001 layers, including the black-hole origin owned by another entity and the outside invasion (OPEN_HYPOTHESIS), plus the ch. 87 chamber and Black Frieza (CANON). SILVER 0.825.
+- Manifest: 20 entries (SHA-256 and byte counts for both new files).
+- `docs/SC-MIRROR-001_ENGINEERING_SPEC.md`: Hannah's spec, verbatim.
+- `tests/test_sc_mirror_and_frieza.py`: schema parity with SC-DE-001, TIG grades, gate caps, section 8 rules, cross-reference honesty, routing.
+
+### Changed
+- `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` → DRAFT 0.2: child invariant COLLECTIVE INPUT / STRUCTURAL RESPONSE written out (Vegeta survives, Frieza survives, Kid Buu destroyed). "Only fatality" scoped to the DBZ manga (Turles and Omega Shenron are Spirit Bomb kills outside it). Claim 3 (magnitude confound) kept.
+- Routing: SC-LU-FRIEZA-001 is homed in `soul_bomb_sovereignty` with the other SC-LU-* lineups (hint, two template invariants, context keywords "frieza", "black frieza", "substrate activation", "outsider's first investment", "mirror match"). SC-MIRROR-001 is homed in `client_server_reality` with SC-CT-001 / SC-HS-001 (hint, one template invariant, keywords "mirrored loop", "calibration dot", "compression protocol"). The `frieza_outsider` acceptance case now expects `soul_bomb_sovereignty`. `frieza_para_2` routes correctly, so its expected-failure marker is removed. Shadow run on the 963-input corpus: 0 decision or target changes against main.
+- Both entries keep a short `input` (patch-entry convention); the full spec is in `docs/SC-MIRROR-001_ENGINEERING_SPEC.md`. A long input had pulled generic prompts toward the entry's home domain through the router's compiled-entry lift.
+- `validate_catalog.py`: registry size 23; SC-MIRROR-001 is no longer an upstream alias; SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001 and SC-LU-BUU-001 are tracked as unresolved spec references.
+
+### Unresolved references (not stubbed)
+- SC-CP-001 (no compiled JSONL here), SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001, SC-LU-BUU-001.
+
 ## [Unreleased] — 2026-11-25 (branch `feat/router-feeds-compile`)
 
 ### Changed

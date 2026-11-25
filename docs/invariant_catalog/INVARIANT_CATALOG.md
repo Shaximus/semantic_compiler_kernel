@@ -165,7 +165,7 @@
 - **SC-PATCH-DU-001 (2026-11-25), attached to The Duality (`SC-DU-001`):** **Gate correction (SC-PATCH-DU-001):** The `identity_claim_allowed: false` gate was replaced by `substrate_confusion_check: true` across all entries. Identity is a pot's perspective — positional awareness of where one sits in the structure. The gate now blocks substrate confusion (claiming to BE another substrate's material) while permitting positional claims (occupying a structural position the framework describes as reachable by anyone).
   - *Placement note:* the patch addresses this note to "class #20 (The Duality)". In this catalog, Class 20 is `SUBSTRATE_TRANSCENDENCE_FAILURE` and The Duality has no class yet, so the note sits here, keyed to `SC-DU-001`, until the author assigns its class.
 
-- **Draft entries (2026-11-25), not compiled, no class assigned:** Spirit Bomb three-claim patch (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`); Sovereign Mirror Duality (`SC-MD-001`, alias `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §3.
+- **Draft entries (2026-11-25), no class assigned:** Spirit Bomb three-claim patch notes, DRAFT 0.2 with the COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`, compiled as `SC-LU-FRIEZA-001`); Sovereign Mirror Duality (`SC-MD-001`, compiled as `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §2–§3.
 
 ---
 

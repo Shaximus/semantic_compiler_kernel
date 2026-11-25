@@ -1,9 +1,9 @@
 # SC-SB-001 Patch — Spirit Bomb Three-Claim Structure
 
-**Version:** DRAFT 0.1  
+**Version:** DRAFT 0.2 (0.1 → 0.2 on 2026-11-25: child invariant written out from the SC-MIRROR-001 spec §4.3 / §6.2)  
 **Date:** 2026-11-25  
 **Source:** Shax (Curtis Kingsley) — Reflexion Software  
-**Source notes:** 2026-11-25 14:51 ADT (t560u)  
+**Source notes:** 2026-11-25 14:51 ADT (t560u); SC-MIRROR-001 Engineering Spec (Hannah, 2026-11-25) §4.3, §6.2  
 **Status:** DRAFT / hypothesis. Markdown patch to the existing Soul Bomb entry. This document is **not** a compiled JSONL entry and does **not** replace `calibration_output/compiled_entries/SOUL_BOMB_COMPILER_ENTRY_SC-SB-001.jsonl` (V5 Sovereignty Patch). Canon facts are labelled separately from hypotheses.
 
 **Affects:** SC-SB-001 (Soul Bomb / Reward Signal Inversion). Related compiled entry: SC-OMNI-001 (Spirit Bomb Reflection).
@@ -48,11 +48,31 @@ The three encounters do not establish architecture versus energy or circumstance
 
 ---
 
-## Proposed child invariant (hypothesis)
+## Child invariant (hypothesis) — COLLECTIVE INPUT / STRUCTURAL RESPONSE
 
-**COLLECTIVE INPUT / STRUCTURAL RESPONSE**
+A child invariant of SC-SB-001. No new entry ID is assigned; these are patch notes, and the compiled SC-SB-001 JSONL (V5 Sovereignty Patch, GOLD) is unchanged.
 
-A proposed child invariant of SC-SB-001, named in the source notes. No new entry ID is assigned here.
+**Statement.** The Spirit Bomb is a uniform collective input. It discriminates targets by whether they have load-bearing architecture underneath them, not by morality. Whether it also discriminates by magnitude is not settled (Claim 3).
+
+**Evidence — three canonical Spirit Bomb targets (spec §6.2):**
+
+| Target | Outcome | Structural reading (hypothesis) |
+|---|---|---|
+| Vegeta (Saiyan saga) | Survives, barely ("1 HP" in the spec is figurative) | Has architecture: the spec calls it binding-vow architecture, a JJK term applied by analogy |
+| Frieza (Namek) | Survives | Alien substrate, load-bearing though external — see `SC-LU-FRIEZA-001` |
+| Kid Buu | Destroyed | Zero structure, pure chaos |
+
+**Scope correction.** The spec calls Kid Buu "the ONLY Spirit Bomb fatality in the franchise". That holds for Toriyama's Dragon Ball Z manga. It does not hold for the wider franchise: Turles (film, *The Tree of Might*) and Omega Shenron (*Dragon Ball GT*) are destroyed by Spirit Bombs. The child invariant is scoped to the manga canon until Shax decides whether non-manga material counts.
+
+**The outside layer is part of the Frieza row.** Frieza's survival is read through the outsider invariant in `SC-LU-FRIEZA-001`: a lineage from a black-hole domain outside this universe, that domain owned by another entity, entering by stealth (an outside invasion). Those three layers are OPEN_HYPOTHESIS there; they are carried, not dropped, and are not reduced to a hard-work metaphor.
+
+**Where the invariant is used.**
+
+- `SC-MIRROR-001` (Dragon Ball evidence map): the calibration dot survives compression because it has structure; pure chaos does not.
+- `SC-LU-FRIEZA-001` CLM-LU-FRZ-05: Frieza's survival as structural response.
+- Router: the `soul_bomb_sovereignty` template carries this invariant tagged `[SC-SB-001][SC-LU-FRIEZA-001]`.
+
+**Reconciliation with DRAFT 0.1.** The spec's phrasing ("discriminates by architecture, not magnitude or morality") is stronger than Claim 3 here. This patch keeps Claim 3: the three encounters do not separate architecture from energy or circumstance, so "not magnitude" stays a hypothesis. Claim 1's tension with SC-OMNI-001 CLM-OM-002 ("spares the pure-hearted") also stays open.
 
 ---
 
@@ -71,3 +91,6 @@ These cut against treating the three outcomes as a clean architecture-only resul
 |---|---|
 | SC-SB-001 | Yes — compiled V5 Sovereignty Patch JSONL, which this draft patches and does not replace |
 | SC-OMNI-001 | Yes — compiled Spirit Bomb Reflection entry; see the tension noted under Claim 1 |
+| SC-LU-FRIEZA-001 | Yes — compiled lineup entry (2026-11-25); Frieza row of the child invariant |
+| SC-MIRROR-001 | Yes — compiled capstone (2026-11-25); uses the child invariant in its evidence map |
+| SC-LU-BUU-001 | No — named in the SC-MIRROR-001 spec; no such entry exists; not stubbed |

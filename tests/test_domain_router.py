@@ -137,10 +137,11 @@ class AcceptanceTests(unittest.TestCase):
                 result = route_domains(self.cases[case_id]["text"])
                 self.assertEqual(result.domain, "soul_bomb_sovereignty", result.to_dict())
 
-    @unittest.expectedFailure
     def test_frieza_paraphrase_load_bearing_structure(self) -> None:
-        # Known limit of a lexical router: "load-bearing structure" outweighs
-        # "Genki Dama" (construction 114 vs soul_bomb_sovereignty 80).
+        # Was a known limit ("load-bearing structure" pulled to construction).
+        # Since SC-LU-FRIEZA-001 (2026-11-25) "frieza" is a soul_bomb_sovereignty
+        # context anchor, so the named paraphrase routes home. The unnamed
+        # paraphrase below is still a lexical-router limit.
         result = route_domains(self.cases["frieza_para_2"]["text"])
         self.assertEqual(result.domain, "soul_bomb_sovereignty")
 

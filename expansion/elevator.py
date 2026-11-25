@@ -317,6 +317,12 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-HS-001": "client_server_reality",
     "SC-IT-OCTO-RNA-EDIT-001": "biology",
     "SC-OMNI-001": "soul_bomb_sovereignty",
+    # 2026-11-25: SC-MIRROR-001 is homed with SC-CT-001 / SC-HS-001 (loop topology and
+    # horizon substrate). Homing it with SC-OMNI-001 made generic black-hole prompts lift
+    # soul_bomb_sovereignty through the compiled-entry lift. SC-LU-FRIEZA-001 is a lineup
+    # entry, homed with the other SC-LU-* lineups.
+    "SC-MIRROR-001": "client_server_reality",
+    "SC-LU-FRIEZA-001": "soul_bomb_sovereignty",
 }
 
 
