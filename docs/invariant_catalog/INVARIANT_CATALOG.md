@@ -168,7 +168,7 @@
 - **Draft entries (2026-11-25), no class assigned:** Spirit Bomb three-claim patch notes, DRAFT 0.3 with the COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`, compiled as `SC-LU-FRIEZA-001`); Sovereign Mirror Duality (`SC-MD-001`, compiled as `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §2–§3.
 - **Draft entries (2026-11-25e), not compiled, no class assigned:** Voluntary State Recompression (`SC-VSR-001`); governance principle Measurement, Not Indulgence (`SC-GOV-001`); cyclic feedback patch notes for `SC-MIRROR-001` (`SC-PATCH-MIRROR-001`). See `DOMAIN_LEDGER.md` §3.
 - **Draft entry (2026-11-25f), not compiled, no class assigned:** Vessel Equilibrium (`SC-VESSEL-001`, DRAFT 0.2 with Shax's resolution rule). See `DOMAIN_LEDGER.md` §3.
-- **Lineup entry (2026-11-25), compiled, no class assigned:** Vegeta, the Sovereignty pole (`SC-LU-VEGETA-001`, SILVER 0.85).
+- **Lineup entry (2026-11-25), compiled, no class assigned:** Vegeta, the Sovereignty pole (`SC-LU-VEGETA-001`, SILVER 0.85). t572u / CLM-LU-VEG-09 (entry revision 1.1.0): complicit enslavement, SHAX_INTERPRETATION; score unchanged.
 
 ---
 
