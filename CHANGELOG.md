@@ -2,6 +2,16 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — docs/sc-vsr-gov-2026-11-25e
+
+### Added
+- `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md`: DRAFT 0.1, Voluntary State Recompression. Five candidate invariants (prior emergence, self-evaluation, voluntary restriction, information preservation, latent reversibility); Uldyssian primary (Blizzard-verified); Tal Rasha explicitly excluded; latent-causation and restoration-model categories; lore corrections. Not compiled, no tier.
+- `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md`: DRAFT 0.1 governance principle in Shax's words (protect kids, leave underage kids out of everything, don't take away everything people enjoy, constructive fear, measured harm, restoration). Alignment with `authority_safety` / `security_safety`; records that no minor-specific gate exists. No code changed.
+- `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md`: DRAFT patch notes. Turns SC-MIRROR-001's three-stage pipeline cyclic; links SC-DU-001, SC-CP-001, SC-SB-001, SC-LU-FRIEZA-001; latent causation; "seven" kept as a pattern to track, not a law. No compiled JSONL changed.
+
+### Changed
+- Invariant catalog and DOMAIN_LEDGER rows for the three drafts. `validate_catalog.py` lists `SC-VSR-001`, `SC-GOV-001`, `SC-PATCH-MIRROR-001` as markdown-only IDs and `SC-ADL-001`, `SC-TSC-001`, `SC-ICC-001`, `SC-NEPH-001` as named-but-missing (unresolved, never stubbed).
+
 ## [Unreleased] — feat/frieza-mirror-universe
 
 ### Changed
