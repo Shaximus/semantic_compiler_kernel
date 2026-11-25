@@ -213,6 +213,32 @@ class CrossReferenceHonestyTests(unittest.TestCase):
         self.assertEqual(backup["tig_grade"], "OPEN_HYPOTHESIS")
         self.assertIn("SC-LU-FRIEZA-001", backup["cross_entry_notes"][0])
 
+    def test_binary_invariant_ruling_links_duality_entries_without_score_changes(self) -> None:
+        # Shax ruling t568u: DU-001 and MD-001 are one binary invariant; MIRROR-006 is the hub.
+        hub = next(c for c in MIRROR["analysis"]["claims"] if c["claim_id"] == "CLM-MIRROR-006")
+        self.assertEqual(hub["tig_grade"], "ISOMORPHIC_INVARIANT")
+        self.assertIn("mutual destruction", hub["text"])
+        ruling = hub["binary_invariant_ruling"]
+        self.assertEqual(ruling["ruling_id"], "RUL-BINARY-001")
+        self.assertEqual(ruling["grade"], "ISOMORPHIC_INVARIANT")
+        self.assertEqual(set(ruling["identity"]) >= {"SC-DU-001", "SC-MD-001"}, True)
+        god_satan = next(i for i in ruling["instances"] if i["pair"] == "God / Satan")
+        self.assertIn("co-equal", god_satan["tension"])
+        self.assertIn("not a refutation", god_satan["tension"])
+        cpt = next(i for i in ruling["instances"] if "CPT" in i["pair"])
+        self.assertIn("not confirmed", cpt["instance_grade_unchanged"])
+        du = _single("SC-DU-001_THE_DUALITY.jsonl")
+        cp = _single("SC-CP-001_CLAY_AND_POTS.jsonl")
+        for entry in (du, cp, MIRROR, FRIEZA):
+            self.assertTrue(any(a.get("ruling_id") == "RUL-BINARY-001" for a in entry["metadata"]["addenda"]))
+        self.assertEqual((du["dataset_tier"], du["isomorphism_quality"]["score"]), ("GOLD", 0.925))
+        self.assertEqual((cp["dataset_tier"], cp["isomorphism_quality"]["score"]), ("GOLD", 0.926))
+        self.assertEqual((MIRROR["dataset_tier"], MIRROR["isomorphism_quality"]["score"]), ("SILVER", 0.868))
+        self.assertEqual((FRIEZA["dataset_tier"], FRIEZA["isomorphism_quality"]["score"]), ("SILVER", 0.825))
+        layers_claim = next(c for c in FRIEZA["analysis"]["claims"] if c["claim_id"] == "CLM-LU-FRZ-02")
+        self.assertEqual(layers_claim["layer_d_detail"]["binary_invariant"]["ruling_id"], "RUL-BINARY-001")
+        self.assertEqual(layers_claim["layer_d_detail"]["physics_anchor"]["grade"], "PUBLISHED_MODEL (not confirmed)")
+
     def test_sb_patch_notes_carry_child_invariant(self) -> None:
         notes = (REPO_ROOT / "docs" / "SC-SB-001_THREE_CLAIM_STRUCTURE.md").read_text(encoding="utf-8")
         self.assertIn("COLLECTIVE INPUT / STRUCTURAL RESPONSE", notes)

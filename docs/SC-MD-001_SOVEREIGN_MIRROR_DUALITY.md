@@ -68,6 +68,17 @@ Separate questions, left open:
 
 **Anti-deadlock protocol:** resolution of a sovereign mirror match is voluntary fusion preserving both sovereignties.
 
+### Ruling RUL-BINARY-001: SC-MD-001 and SC-DU-001 are one invariant (Shax, 2026-11-25, t568u)
+
+> "Yes Oneness/ sovreignty / god/Satan/ mirrored universe. Binary./mutual co operation or mutual destruction. Its all the same invariant."
+
+- **Identity:** this draft (Sovereign Mirror Duality) and `SC-DU-001` (The Duality) are the same invariant: a binary of two poles from one source, whose only stable outcomes are **mutual cooperation** (integration; output exceeds either pole) or **mutual destruction** (both poles lost). If one pole dominates the other, that is not a third stable outcome; it ends in one of the two.
+- **Instances:** Oneness/Sovereignty (`SC-CP-001`); God/Satan (theological mapping); our universe and the CPT-mirrored universe (`SC-LU-FRIEZA-001` layer D, `SC-MIRROR-001` CLM-MIRROR-005).
+- **Hub:** `SC-MIRROR-001` CLM-MIRROR-006, which now states both branches explicitly. Destruction-branch canon: Kami and King Piccolo share one life; the Supreme Kai and God of Destruction lives are paired (Super); Anu and Tathamet destroy each other (Diablo).
+- **Grade:** ISOMORPHIC_INVARIANT. This is a structural equivalence claim made by Shax. It does not upgrade any instance: the CPT mirror stays a published model, not confirmed; the God/Satan mapping stays ANALOGOUS interpretation, not doctrine. No score changes.
+- **Tension (recorded, not a refutation):** Revelation does not present Satan as God's co-equal half. The dragon is a created rebel who is defeated and cast down (Rev 12:7–9; 20:10), so the text's outcome is defeat, not cooperation or mutual destruction. The ruling is about the shape of the structure; the text is about the standing of the parties. This caveat was raised in the earlier pasted GPT analysis.
+- **Residual:** the CPT model names no cooperation or destruction dynamic between the two universes; matter–antimatter annihilation is an analogy only.
+
 ---
 
 ## Next research step
@@ -93,3 +104,5 @@ This draft points at `SC-HS-001` and `docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRES
 | SC-OMNI-001 | Yes — compiled Spirit Bomb Reflection |
 | SC-CT-001 | Yes — compiled circular-time entry |
 | SC-MD-001 / SC-MIRROR-001 | SC-MD-001 is this draft; SC-MIRROR-001 is the compiled entry built from it (2026-11-25) |
+| SC-DU-001 | Yes — compiled; same invariant as this draft (ruling RUL-BINARY-001, t568u) |
+| SC-CP-001 | Yes — compiled reconstruction; Oneness/Sovereignty instance of RUL-BINARY-001 |
