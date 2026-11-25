@@ -301,6 +301,7 @@ semantic_compiler_kernel/
 | SC-DU-001 The Duality (compiled entry) | `calibration_output/compiled_entries/SC-DU-001_THE_DUALITY.jsonl` |
 | SC-THEO-002 The Omni State (entry patch) | `docs/SC-THEO-002_OMNI_STATE.md` |
 | SC-BRM-001 biomedical microplastic feasibility dossier | `docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md` |
+| Medical nano-plastic filtration & magnetic targeting platform (DRAFT 0.1) | `docs/MEDICAL_NANOPLASTIC_FILTRATION_MAGNETIC_TARGETING_DRAFT_0.1.md` |
 | Changelog | `CHANGELOG.md` |
 
 ---
