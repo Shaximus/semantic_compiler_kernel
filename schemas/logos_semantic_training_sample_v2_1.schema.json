@@ -2463,7 +2463,9 @@
             "ROUTE_FOR_APPROVAL",
             "ESCALATE",
             "QUARANTINE",
-            "REJECT"
+            "REJECT",
+            "PASS_THROUGH",
+            "AMBIGUOUS"
           ]
         },
         "route_to": {

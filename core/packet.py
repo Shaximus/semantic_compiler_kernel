@@ -68,6 +68,12 @@ class SemanticPacket:
 
     # --- Raw input ---
     raw_input: Optional[str] = None
+    # Set only for Decision.PASS_THROUGH: the caller's original input, exactly as
+    # received (before any sanitization), for the host to forward unchanged.
+    forward_text: Optional[str] = None
+    # Ranked domain candidates from target discovery (domain, confidence, ...).
+    # Populated by the router; listed for Decision.AMBIGUOUS.
+    routing_candidates: list[dict[str, Any]] = field(default_factory=list)
     normalized_input: Optional[str] = None
 
     # --- Provenance ---

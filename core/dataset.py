@@ -168,7 +168,7 @@ def _derive_sample_kind(packet: Any) -> str:
             if isinstance(c, dict) and (c.get("repair") or c.get("resolved")):
                 return "REPAIR"
         return "NEGATIVE"
-    if decision in (Decision.ROUTE_FOR_APPROVAL, Decision.ESCALATE):
+    if decision in (Decision.ROUTE_FOR_APPROVAL, Decision.ESCALATE, Decision.PASS_THROUGH, Decision.AMBIGUOUS):
         return "UNRESOLVED"
     return "BOUNDARY_CASE"
 
