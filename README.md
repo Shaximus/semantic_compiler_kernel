@@ -318,6 +318,9 @@ semantic_compiler_kernel/
 | SC-THEO-002 The Omni State (entry patch) | `docs/SC-THEO-002_OMNI_STATE.md` |
 | SC-BRM-001 biomedical microplastic feasibility dossier | `docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md` |
 | Medical nano-plastic filtration & magnetic targeting platform (DRAFT 0.1) | `docs/MEDICAL_NANOPLASTIC_FILTRATION_MAGNETIC_TARGETING_DRAFT_0.1.md` |
+| SC-SB-001 Spirit Bomb three-claim patch (DRAFT 0.1) | `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
+| SC-FR-001 The Outsider's First Investment / Frieza Protocol (DRAFT 0.1) | `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md` |
+| SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; alias SC-MIRROR-001) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md` |
 | Changelog | `CHANGELOG.md` |
 
 ---

@@ -37,6 +37,9 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-PATCH-DU-001",  # docs/SC-PATCH-DU-001_IDENTITY_GATE_CORRECTION.md
     "SC-THEO-002",      # docs/SC-THEO-002_OMNI_STATE.md (entry patch, awaiting JSONL compile)
     "SC-BRM-001",       # docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md (feasibility dossier)
+    "SC-FR-001",        # docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md (DRAFT 0.1)
+    "SC-MD-001",        # docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md (DRAFT 0.1)
+    "SC-MIRROR-001",    # proposed alias of SC-MD-001, not a second compiled entry
 }
 
 
