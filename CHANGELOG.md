@@ -11,7 +11,10 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
   - Also updated: the invariant-translator skill, the `domain_expansion.yaml` template and `validate_catalog.py`.
   - **Behavior change:** `evaluate_invariant_prediction` no longer returns `identity_claim_allowed`. Real-to-real `ISOMORPHIC_INVARIANT` mappings previously returned `true`; every mapping now carries the two new fields, plus `fiction_to_real`.
   - `TurntableTranslation` fields are renamed to match.
-  - No gate or isomorphism scores change: `core/dataset.py` scores the new field the same as the old one.
+  - **Score impact** (measured against `7e63996`; see the full-catalog score diff):
+    - Compile path (`compile_semantic_packet` + `build_dataset_row`): no change across 956 inputs and 970 mappings in all 46 domains. Packet scores, `overclaim_control`, `final_isomorphism_quality` and decisions are identical.
+    - Evaluator path (`evaluate_invariant_prediction` scored by `core/dataset._mapping_scores`): real-to-real `ISOMORPHIC_INVARIANT` `overclaim_control` goes from 0.5 to 1.0 in all 46 domains. Fiction-to-real, gate scores and `final_isomorphism_quality` are unchanged.
+    - The new `gates/substrate_confusion.py` classifier is informational: nothing in scoring or decisions calls it yet.
   - Frozen dataset corpora and schemas, which use `identity_claim_allowed` as a dataset-row field, are untouched.
 
 ### Added
