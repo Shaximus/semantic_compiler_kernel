@@ -19,8 +19,8 @@ def test_training_ready_implies_schema_valid_on_compiled_row() -> None:
         Decision.COMPILED_SUPERVISED_ONLY,
     )
     row = dataset_mod.build_dataset_row(packet)
-    if row["quality"]["training_ready"]:
-        assert row["audit"]["schema_valid"] is True
+    assert row["quality"]["training_ready"] is True
+    assert row["audit"]["schema_valid"] is True
 
 
 def test_invalid_schema_clears_row_and_mapping_training_ready(monkeypatch) -> None:
