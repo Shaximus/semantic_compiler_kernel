@@ -491,14 +491,7 @@ def registry_verdict(
     supporting_doc_ids: Sequence[str],
     disconfirmations: Sequence[Any],
 ) -> str:
-    """Apply the module docstring's HOLDS / STRAINS / UNRESOLVED rule.
-
-    ``compile_corpus`` today only auto-appends ``searched_but_not_found``
-    records (``SURVIVED`` / ``UNTESTED``), so this branch is not reached
-    from that auto-list alone. Callers or tests can supply FAILED/WEAKENED
-    records. This helper does not invent a harvest of packet-level negative
-    tests into the registry.
-    """
+    """HOLDS, STRAINS, or UNRESOLVED per the module docstring's verdict rule."""
     if _has_real_counterexample(disconfirmations):
         return CorpusVerdict.STRAINS.value
     if len(supporting_doc_ids) >= 2 and not _fingerprint_is_empty(signature):

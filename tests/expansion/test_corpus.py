@@ -269,7 +269,7 @@ def test_empty_fingerprint_does_not_hold_across_two_documents():
     assert registry_verdict(empty, ["d1", "d2", "d3"], []) == "UNRESOLVED"
 
 
-def test_compile_corpus_empty_signature_is_unresolved_not_holds():
+def test_compile_corpus_empty_signature_is_unresolved_not_holds(monkeypatch):
     empty_sig = {
         "claim_types": [],
         "relationship_types": [],
@@ -286,23 +286,18 @@ def test_compile_corpus_empty_signature_is_unresolved_not_holds():
 
         return _Packet()
 
-    # structural_signature reads the packet; stub the compile_fn to force
-    # an empty fingerprint through compile_corpus itself.
+    # structural_signature reads the packet; stub it so compile_corpus sees
+    # an empty fingerprint. Use the pytest fixture so the original is restored.
     from semantic_compiler.expansion import corpus as corpus_mod
-
-    real_signature = corpus_mod.structural_signature
 
     def _empty_signature(_packet):
         return dict(empty_sig)
 
-    corpus_mod.structural_signature = _empty_signature
-    try:
-        report = compile_corpus(
-            [("d1", "aaa"), ("d2", "bbb")],
-            compile_fn=_empty_compile,
-        )
-    finally:
-        corpus_mod.structural_signature = real_signature
+    monkeypatch.setattr(corpus_mod, "structural_signature", _empty_signature)
+    report = compile_corpus(
+        [("d1", "aaa"), ("d2", "bbb")],
+        compile_fn=_empty_compile,
+    )
 
     verdicts = {inv["verdict"] for inv in report["invariant_registry"]}
     assert "HOLDS" not in verdicts
