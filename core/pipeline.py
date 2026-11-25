@@ -1121,6 +1121,11 @@ def _finalize_packet(packet: SemanticPacket) -> None:
 
 
 EMPTY_INPUT_ERROR_CLASS = "EMPTY_INPUT"
+PASS_THROUGH_ROUTE = "HOST_AI"
+PASS_THROUGH_REASON = (
+    "PASS_THROUGH: no target system resolved; the input is outside the "
+    "compiler's domains. Forward the original prompt unchanged to the host AI."
+)
 
 _LONE_SURROGATE_RE = re.compile("[\ud800-\udfff]")
 
@@ -1157,6 +1162,7 @@ def compile_semantic_packet(
     # Lone UTF-16 surrogates (e.g. a half emoji from a mobile text bridge) cannot
     # be UTF-8 encoded, so they would crash hashing and dataset export. Replace
     # each with U+FFFD before anything else sees the input.
+    original_input = input_text
     input_text = _LONE_SURROGATE_RE.sub("\ufffd", input_text)
     # Fail fast on an unknown mode, before any work is done.
     normalize_requested_mode(mode)
@@ -1248,9 +1254,14 @@ def compile_semantic_packet(
                 f"SEMANTIC_ERROR: {packet.semantic_error_class}"
             )
         else:
-            packet.needs_revision(
-                "No target system resolved; interpretation would be forced."
-            )
+            # No target and no error: the input is outside every known domain.
+            # Mobile hosts forward the prompt unchanged to their own AI.
+            packet.decision = Decision.PASS_THROUGH
+            packet.status = "pass_through"
+            packet.forward_text = original_input
+            packet.compiler_warnings.append(PASS_THROUGH_REASON)
+            # No routing_packet: early exits never invent Stage 7 derivatives.
+            packet.route_to = [PASS_THROUGH_ROUTE]
         _finalize_packet(packet)
         return packet
 

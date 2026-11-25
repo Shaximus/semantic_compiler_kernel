@@ -2,6 +2,20 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — 2026-11-25 (branch `feat/pass-through-decision`)
+
+### Added
+- `Decision.PASS_THROUGH`: input with no resolved target system and no semantic error is no longer `NEEDS_REVISION`.
+  - It gets `status="pass_through"`, `route_to=["HOST_AI"]`, no `semantic_error_class`, no `compiler_errors`, and the `PASS_THROUGH_REASON` warning.
+  - `SemanticPacket.forward_text` holds the caller's original input byte-for-byte (before lone-surrogate sanitization) so a mobile host can forward it unchanged.
+  - The dataset `sample_kind` is `UNRESOLVED`.
+- `Decision.AMBIGUOUS`: reserved for close top-2 domain routing. It is emitted once the router feed lands.
+- Both members are appended to the enum, so existing integer values are unchanged. The three `logos_semantic_training_sample` schemas accept both in `routing.status`.
+- README section "Decisions for host apps."
+
+### Changed
+- **Behavior change:** the Kernel Mobile bench prompts 01, 04 and 05 and "Purple sleeps horizontally under Tuesday." now return `PASS_THROUGH` instead of `NEEDS_REVISION`; their tests are updated. Empty input stays `REJECT`, and low-fit input with a target stays `NEEDS_REVISION`.
+
 ## [Unreleased] — 2026-11-25 (branch `fix/skeleton-clause-boundaries`)
 
 ### Fixed

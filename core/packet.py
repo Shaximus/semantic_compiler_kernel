@@ -68,6 +68,9 @@ class SemanticPacket:
 
     # --- Raw input ---
     raw_input: Optional[str] = None
+    # Set only for Decision.PASS_THROUGH: the caller's original input, exactly as
+    # received (before any sanitization), for the host to forward unchanged.
+    forward_text: Optional[str] = None
     normalized_input: Optional[str] = None
 
     # --- Provenance ---

@@ -62,10 +62,10 @@ class SemanticErrorRoutingTests(unittest.TestCase):
             "ANTHROPOMORPHIC_CAUSATION",
         )
 
-    def test_unresolvable_input_without_error_is_needs_revision(self) -> None:
-        """Inputs that simply lack a target frame but no semantic error remain NEEDS_REVISION."""
+    def test_unresolvable_input_without_error_is_pass_through(self) -> None:
+        """Inputs that simply lack a target frame but no semantic error are PASS_THROUGH."""
         packet = compile_semantic_packet("Purple sleeps horizontally under Tuesday.")
-        self.assertEqual(packet.decision, Decision.NEEDS_REVISION)
+        self.assertEqual(packet.decision, Decision.PASS_THROUGH)
         self.assertIsNone(packet.semantic_error_class)
 
     def test_loyal_sun_rejects(self) -> None:

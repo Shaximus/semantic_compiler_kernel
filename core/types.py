@@ -235,6 +235,14 @@ class Decision(Enum):
     ESCALATE = auto()
     QUARANTINE = auto()
     REJECT = auto()
+    # v3.8.x: no target system resolved; the input is outside every domain the
+    # compiler knows. Not an error: the host should forward the prompt unchanged.
+    # Appended last so existing auto() values are unchanged.
+    PASS_THROUGH = auto()
+    # Two or more domains matched with no clear winner; candidates are listed in
+    # SemanticPacket.routing_candidates. Not NEEDS_REVISION: the input is fine,
+    # the host or user must pick the domain.
+    AMBIGUOUS = auto()
 
 
 # ---------------------------------------------------------------------------
