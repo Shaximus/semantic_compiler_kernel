@@ -1,0 +1,1 @@
+An Android phone with a fused boot ROM, verified boot chain, rollback fuses, per-app sandboxes, SELinux, a TrustZone secure world holding keys, and remote attestation.
