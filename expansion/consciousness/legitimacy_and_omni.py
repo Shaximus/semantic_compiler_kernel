@@ -228,7 +228,8 @@ def evaluate_spirit_bomb_reflection(
             "support": float(support_attenuation),
             "intent": float(intent_attenuation),
         },
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
         "residual_mismatches": list(spec["residuals"]),
     }
 
@@ -454,7 +455,8 @@ def evaluate_anime_key_decompression(
         "missing_decompression_parts": missing,
         "classification": "REASONING_INTERFACE" if valid_interface else "SLOGAN_ONLY",
         "valid_invariant_key": valid_interface,
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
     }
 
 

@@ -928,7 +928,13 @@ def _mapping_scores(
     evidence_support = _assess(packet_scores.get("evidence_quality"))
     alt_pressure = _assess(scores.get("alternative_explanation_pressure"))
     overclaim_control = 0.7
-    if mapping.get("identity_claim_allowed") is False:
+    # SC-PATCH-DU-001: ``substrate_confusion_check: true`` replaces the old
+    # ``identity_claim_allowed: false`` on SC entry mappings and scores the same.
+    # Dataset rows that still carry ``identity_claim_allowed`` (MATERIAL_IDENTITY
+    # schema field) keep their existing behavior.
+    if mapping.get("substrate_confusion_check") is True:
+        overclaim_control = 1.0
+    elif mapping.get("identity_claim_allowed") is False:
         overclaim_control = 1.0
     elif mapping.get("identity_claim_allowed") is True:
         overclaim_control = 0.5
@@ -1581,6 +1587,14 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
     validation = validate_dataset_row(row)
     row["audit"]["schema_valid"] = validation["valid"]
     if not validation["valid"]:
+        # training_ready is computed in _build_quality before validation
+        # runs; a schema-invalid row is not a clean training target.
+        row["quality"]["training_ready"] = False
+        iso = row.get("isomorphism_analysis")
+        if isinstance(iso, dict):
+            for mapping in iso.get("mappings") or []:
+                if isinstance(mapping, dict) and "training_ready" in mapping:
+                    mapping["training_ready"] = False
         row["audit"]["reproducibility_notes"] = (
             "Schema validation failed: " + "; ".join(validation["errors"][:5])
         )

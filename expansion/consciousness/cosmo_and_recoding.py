@@ -17,7 +17,7 @@ Formalizes:
    - Apparent horizon vs cosmological event horizon distinction (equal only in pure
      de Sitter, ``R_H = sqrt(3 / Lambda)``) (CLM-HS-004)
    - Gibbons–Hawking area-law horizon entropy ``S = k_B c^3 A / (4 G hbar)`` (CLM-HS-005)
-   - Strict TIG epistemic separation: ``identity_claim_allowed = False`` with explicit
+   - Strict TIG epistemic separation: ``substrate_confusion_check = True`` (SC-PATCH-DU-001) with explicit
      residual mismatches (MAP:HS-001, CLM-HS-006).
 
 2. ``SC-IT-OCTO-RNA-EDIT-001`` (Catalog Class #24 / Claude Catalog #19:
@@ -250,7 +250,8 @@ def evaluate_flrw_hubble_schwarzschild(
         "horizon_entropy_j_per_k": entropy_j_per_k,
         "mapping_id": "MAP:HS-001",
         "mapping_class": "STRUCTURAL_ANALOGY",
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
         "tig_claim_status": {
             "CLM-HS-001": "ANCHORED",
             "CLM-HS-002A": "ANCHORED",
@@ -335,7 +336,8 @@ def evaluate_runtime_recoding_layer(
         "invariants_satisfied": invariants_satisfied,
         "mapping_class": spec["mapping_class"],
         "topology_match": spec["topology_match"],
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
         "prediction_status": {
             "P1_frozen_base_attachment_cost": "CONFIRMED",
             "P2_orders_of_magnitude_faster": "CONFIRMED",

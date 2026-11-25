@@ -51,7 +51,9 @@ class HubbleSchwarzschildTests(unittest.TestCase):
         )
         mapping = row["isomorphism_analysis"]["mappings"][0]
         self.assertEqual(mapping["mapping_id"], "MAP:HS-001")
-        self.assertFalse(mapping["identity_claim_allowed"])
+        self.assertTrue(mapping["substrate_confusion_check"])
+        self.assertTrue(mapping["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", mapping)
         self.assertEqual(len(mapping["residual_mismatches"]), 3)
 
     def test_exact_hubble_schwarzschild_equality_and_misner_sharp_ratio(self) -> None:
@@ -64,7 +66,9 @@ class HubbleSchwarzschildTests(unittest.TestCase):
         self.assertEqual(res["theta_in_sign"], 0)
         self.assertTrue(res["is_apparent_horizon"])
         self.assertFalse(res["coincides_with_event_horizon"])
-        self.assertFalse(res["identity_claim_allowed"])
+        self.assertTrue(res["substrate_confusion_check"])
+        self.assertTrue(res["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", res)
         self.assertGreater(res["dimensionless_entropy_s_over_kb"], 1e120)
         self.assertEqual(res["residual_mismatches"], list(HS_RESIDUAL_MISMATCHES))
 
@@ -131,7 +135,9 @@ class OctopusRnaEditingAndRecodingTests(unittest.TestCase):
         self.assertTrue(all(g["passed"] for g in row["gates"].values()))
         self.assertEqual(len(row["prediction_tests"]), 4)
         for mp in row["isomorphism_analysis"]["mappings"]:
-            self.assertFalse(mp["identity_claim_allowed"])
+            self.assertTrue(mp["substrate_confusion_check"])
+            self.assertTrue(mp["positional_claims_permitted"])
+            self.assertNotIn("identity_claim_allowed", mp)
             self.assertTrue(mp["residual_mismatches"])
 
     def test_runtime_recoding_evaluator_across_substrates(self) -> None:
@@ -139,7 +145,9 @@ class OctopusRnaEditingAndRecodingTests(unittest.TestCase):
         self.assertTrue(bio["invariants_satisfied"])
         self.assertTrue(bio["substrate_sovereignty_preserved"])
         self.assertTrue(bio["base_freeze_cost_active"])
-        self.assertFalse(bio["identity_claim_allowed"])
+        self.assertTrue(bio["substrate_confusion_check"])
+        self.assertTrue(bio["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", bio)
         self.assertEqual(bio["catalog_class_number"], 24)
         self.assertEqual(bio["prediction_status"]["P3_environment_exposed_most_tuned"], "CONFIRMED")
 

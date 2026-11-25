@@ -105,7 +105,12 @@ A real invariant transfers **weaknesses and counterplay**, not just strengths:
 - Use the 9 gates from `SC-DE-001`.
 - Whenever `information_lost` is non-empty, `residual_mismatches` MUST NOT be empty.
 - A gate score of `1.0` requires `evidence_ids` pointing to a **passed prediction test**; argued-but-untested gates cap at **`0.9`**.
-- Fiction/game -> real-system mappings MUST set `identity_claim_allowed: false`.
+- Cross-substrate mappings (including fiction/game -> real-system) MUST set `substrate_confusion_check: true` and `positional_claims_permitted: true` (SC-PATCH-DU-001, replaces the former identity-claim gate):
+  - `substrate_confusion_check: true` for cross-substrate mappings.
+  - Blocks: "X IS Y's material" (substrate confusion).
+  - Permits: "X occupies position P in the structure" (positional awareness).
+  - Test: is the claim about what something is MADE OF, or WHERE it SITS?
+  - Positional claims asserting exclusive/permanent authority are FLAGGED for review (the position is reproducible).
 - `BALANCE-ONLY` edges are ALWAYS recorded as `residual_mismatches`.
 - `uncertainty_statement` MUST list every untested prediction.
 

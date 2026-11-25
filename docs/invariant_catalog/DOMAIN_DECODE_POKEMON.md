@@ -1095,6 +1095,6 @@ Pokemon instantiates 11 of the 14 seed classes directly plus Class 15 (`COMPILED
 
 ## 10. Section 10 Gate Discipline & Residual Audit
 
-- All game -> real-system mappings strictly enforce `identity_claim_allowed: false`.
+- All game -> real-system mappings strictly enforce `substrate_confusion_check: true` and `positional_claims_permitted: true` (SC-PATCH-DU-001; formerly `identity_claim_allowed: false`).
 - All **11** `BALANCE-ONLY` edges plus the 7 predicted missing physical edges (`PME-PKM-01..07`) are recorded explicitly inside `residual_mismatches`.
 - Gates backed by confirmed prediction tests (`PRED-PKM-001`..`PRED-PKM-005`) earn `1.0` (`causal_validity`, `scale_integrity`, `boundary_integrity`, `measurement_integrity`, `security_safety`, `substrate_sovereignty`). Gates covering argued-but-untested dimensions (`authority_safety`, `wave_function_coherence`, `corpus_completeness`) are strictly capped at `0.9`, with `PRED-PKM-006` listed explicitly in `uncertainty_statement`.

@@ -35,7 +35,8 @@ class BuildcraftMapping:
             "source_substrate": "game_build_system",
             "target_substrate": "computer_hardware_and_software",
             "mapping_class": "STRUCTURAL_ANALOGY",
-            "identity_claim_allowed": False,
+            "substrate_confusion_check": True,
+            "positional_claims_permitted": True,
             "preserved_invariants": list(self.preserved_invariants),
             "residuals": list(self.residuals),
             "guardrails": [
