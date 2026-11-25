@@ -14,6 +14,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+from tests.domain_inventory import registered_domain_count
+
 from semantic_compiler.core.packet import SemanticPacket
 from semantic_compiler.expansion import (
     DomainElevator,
@@ -56,10 +58,15 @@ class RackIndexingAndCachingTests(unittest.TestCase):
             self.assertGreater(reads_after_build, 0)
 
             stats = elevator.stats
-            self.assertEqual(stats["domain_slots"], 46)
+            self.assertEqual(stats["domain_slots"], registered_domain_count())
             self.assertEqual(stats["compiled_entry_slots"], 18)
             self.assertEqual(stats["invariant_class_slots"], 14)
-            self.assertEqual(stats["total_slots"], 78)
+            self.assertEqual(
+                stats["total_slots"],
+                stats["domain_slots"]
+                + stats["compiled_entry_slots"]
+                + stats["invariant_class_slots"],
+            )
             self.assertGreater(stats["token_postings"], 500)
 
             # Repeated summon / park / retrieve / rotate calls must NOT re-read YAML or JSONL files.

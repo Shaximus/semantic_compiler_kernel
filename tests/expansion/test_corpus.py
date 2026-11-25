@@ -189,3 +189,116 @@ def test_structural_signature_deterministic():
     sig2 = structural_signature(_FakePacket("OBSERVATION", ["biology", "computation"]))
     assert sig1 == sig2  # sorted, order-insensitive
     assert signature_key(sig1) == signature_key(sig2)
+
+
+def test_registry_verdict_strains_on_result_failed_not_status():
+    from semantic_compiler.expansion.counter_mapping import counterexample_found
+    from semantic_compiler.expansion.corpus import registry_verdict
+
+    signature = {
+        "claim_types": ["OBSERVATION"],
+        "relationship_types": [],
+        "populated_structure": [],
+        "source_frames": ["biology"],
+    }
+    failed = counterexample_found(
+        "cross-document counterexample",
+        "doc B falsifies the shared fingerprint",
+    ).to_negative_test("nt-failed")
+    assert "status" not in failed
+    assert failed["result"] == "FAILED"
+    assert registry_verdict(signature, ["d1", "d2"], [failed]) == "STRAINS"
+
+    # The old `status` field must not be what trips STRAINS.
+    status_only = {
+        "test_id": "nt-status-only",
+        "status": "FAILED",
+        "result": "SURVIVED",
+        "counterexample": None,
+    }
+    assert registry_verdict(signature, ["d1", "d2"], [status_only]) == "HOLDS"
+
+
+def test_registry_verdict_strains_on_result_weakened():
+    from semantic_compiler.expansion.counter_mapping import counterexample_found
+    from semantic_compiler.expansion.corpus import registry_verdict
+
+    signature = {
+        "claim_types": ["OBSERVATION"],
+        "relationship_types": [],
+        "populated_structure": [],
+        "source_frames": ["biology"],
+    }
+    weakened = counterexample_found(
+        "partial counterexample",
+        "weakening case",
+        weakened_only=True,
+    ).to_negative_test("nt-weakened")
+    assert weakened["result"] == "WEAKENED"
+    assert registry_verdict(signature, ["d1", "d2"], [weakened]) == "STRAINS"
+
+
+def test_searched_but_not_found_does_not_strain():
+    from semantic_compiler.expansion.counter_mapping import searched_but_not_found
+    from semantic_compiler.expansion.corpus import registry_verdict
+
+    signature = {
+        "claim_types": ["OBSERVATION"],
+        "relationship_types": [],
+        "populated_structure": [],
+        "source_frames": ["biology"],
+    }
+    absent = searched_but_not_found(
+        "fingerprint absent from one searched document",
+        documents_searched=["d3"],
+        queries_used=["key"],
+    ).to_negative_test("nt-absent")
+    assert absent["result"] == "SURVIVED"
+    assert registry_verdict(signature, ["d1", "d2"], [absent]) == "HOLDS"
+
+
+def test_empty_fingerprint_does_not_hold_across_two_documents():
+    from semantic_compiler.expansion.corpus import registry_verdict
+
+    empty = {
+        "claim_types": [],
+        "relationship_types": [],
+        "populated_structure": [],
+        "source_frames": [],
+    }
+    assert registry_verdict(empty, ["d1", "d2", "d3"], []) == "UNRESOLVED"
+
+
+def test_compile_corpus_empty_signature_is_unresolved_not_holds(monkeypatch):
+    empty_sig = {
+        "claim_types": [],
+        "relationship_types": [],
+        "populated_structure": [],
+        "source_frames": [],
+    }
+
+    def _empty_compile(text, context=None):
+        class _Packet:
+            decision = None
+            semantic_ir = type("IR", (), {"claims": [], "relationships": []})()
+            structural_skeleton = {}
+            source_frames = []
+
+        return _Packet()
+
+    # structural_signature reads the packet; stub it so compile_corpus sees
+    # an empty fingerprint. Use the pytest fixture so the original is restored.
+    from semantic_compiler.expansion import corpus as corpus_mod
+
+    def _empty_signature(_packet):
+        return dict(empty_sig)
+
+    monkeypatch.setattr(corpus_mod, "structural_signature", _empty_signature)
+    report = compile_corpus(
+        [("d1", "aaa"), ("d2", "bbb")],
+        compile_fn=_empty_compile,
+    )
+
+    verdicts = {inv["verdict"] for inv in report["invariant_registry"]}
+    assert "HOLDS" not in verdicts
+    assert verdicts == {"UNRESOLVED"}
