@@ -39,7 +39,11 @@ The outside lineage entered this universe via stealth / deception (infiltration)
 
 **Canon (DBS manga ch. 87):** Frieza found a room where time flows differently, like the Room of Spirit and Time, on one of his conquered planets, and trained there for ten years. He gives it as the reason Gas's strongest-in-the-universe wish did not count him. The known chambers are weaker: the Lookout's (one year per outside day, two-day limit in DBZ) and the Galactic Patrol's (three days per outside day).
 
-**Shax's interpretation (2026-11-25, hypothesis):** Frieza left this universe and entered another universe that held a more capable time-manipulating chamber. The conquered planet holds the doorway; the chamber is on the other side. This repeats layers A–C: the outsider crosses the universe boundary again to invest, then re-enters (E). Canon does not say the chamber is in another universe; the wish exemption is consistent with it. Compiled in `SC-LU-FRIEZA-001` (layer D detail).
+**Canon detail:** asked how he beat Gas, Frieza says it may be because he was in another dimension, outside this universe, while he trained, so the strongest-in-the-universe wish did not count him.
+
+**Shax's interpretation (2026-11-25, hypothesis):** Frieza left this universe and trained in another universe that held a more capable time-manipulating chamber. That universe is the Duality's mirrored universe, the CPT-mirror universe in which time runs in reverse relative to ours (Shax, t566u). The conquered planet holds the doorway; the chamber is on the mirror side. This repeats layers A–C: the outsider crosses the universe boundary again to invest, then re-enters (E).
+
+**Grading.** The mirror universe is a published model, not a confirmed one: Boyle, Finn & Turok, "CPT-Symmetric Universe", *Phys. Rev. Lett.* 121, 251301 (2018). The chamber being there is Shax's interpretation (OPEN_HYPOTHESIS). Structural fit (ANALOGOUS): a reverse-time domain would account for the extreme time relation to ours. Residuals: in the model, time in the mirror runs the other way from the Big Bang, which is a reversed arrow rather than a different clock rate; the mirror sits on the other side of the Big Bang, so reaching it needs the SC-HS-001 / SC-MIRROR-001 black-hole framing (OPEN_HYPOTHESIS); and if the commonly reported ten days outside is right, the rate equals the Lookout's 365:1. Compiled in `SC-LU-FRIEZA-001` (layer D detail).
 
 ### E. Black Frieza — CANON
 
