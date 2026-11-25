@@ -47,6 +47,16 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-LU-GOKU-001",
     "SC-LU-VEGETA-001",
     "SC-LU-BUU-001",
+    # 2026-11-25e drafts (markdown only, not compiled):
+    "SC-VSR-001",           # docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md (DRAFT 0.1)
+    "SC-GOV-001",           # docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md (DRAFT 0.1)
+    "SC-PATCH-MIRROR-001",  # docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md (patch notes)
+    # Named in the t567u source conversation but not present in this repository
+    # (recorded as unresolved; never stubbed):
+    "SC-ADL-001",
+    "SC-TSC-001",
+    "SC-ICC-001",
+    "SC-NEPH-001",
 }
 
 
