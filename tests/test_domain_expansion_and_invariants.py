@@ -28,6 +28,7 @@ from semantic_compiler.expansion.consciousness import (
 )
 from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY
 from semantic_compiler.expansion.registry import get_template, list_domains
+from tests.domain_inventory import registered_domain_count
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -75,7 +76,7 @@ class DomainExpansionArtifactTests(unittest.TestCase):
     def test_domain_expansion_template_registered_and_routable(self) -> None:
         domains = set(list_domains())
         self.assertIn("domain_expansion", domains)
-        self.assertEqual(len(domains), 46)
+        self.assertEqual(len(domains), registered_domain_count())
 
         template = get_template("domain_expansion")
         comp_names = {c["name"] for c in template.components}

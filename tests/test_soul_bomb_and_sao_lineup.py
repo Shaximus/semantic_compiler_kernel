@@ -35,6 +35,7 @@ from semantic_compiler.expansion.consciousness import (
 )
 from semantic_compiler.expansion.ontology.medical_ontology import MEDICAL_ONTOLOGY
 from semantic_compiler.expansion.registry import get_template, list_domains
+from tests.domain_inventory import registered_domain_count
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPILED_DIR = REPO_ROOT / "calibration_output" / "compiled_entries"
@@ -527,7 +528,7 @@ class SoulBombTemplateAndArtifactsTests(unittest.TestCase):
 
     def test_template_registered_valid_and_disjoint_medical_maps(self) -> None:
         domains = list_domains()
-        self.assertEqual(len(domains), 46)
+        self.assertEqual(len(domains), registered_domain_count())
         self.assertIn("soul_bomb_sovereignty", domains)
 
         template = get_template("soul_bomb_sovereignty")
