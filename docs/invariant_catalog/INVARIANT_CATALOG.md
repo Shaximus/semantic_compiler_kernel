@@ -1,13 +1,14 @@
 # INVARIANT CATALOG — Reflexion Semantic Compiler (v3.5.0)
 
 - **Maintained by:** Invariant Translator (`UNIVERSAL_DECOMPRESSION`)
-- **Updated:** 2026-11-23
-- **Total Catalog Classes:** **19** (`14` seed classes + `5` newly compiled irreducible classes: Classes 15–19)
-- **Verified Compiled Entry Registry (Zero Dangling IDs):** `SC-DOMAIN-EXPANSION-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`, `SC-IT-POKEMON-001`, `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001`, `SC-IT-BATCH-2026-11-23`
+- **Updated:** 2026-11-24
+- **Total Catalog Classes:** **24** (`14` seed classes + `10` compiled irreducible extensions: Classes 15–19 from Domain Expansion/Ego & Pokemon passes; Classes 20–24 merged from Claude Catalog Extensions `#15`–`#19` covering Soul Eater substrate collapse, Gojo single-channel defense & enabler dependency, Soul Bomb V5 sovereignty, and Octopus temperature-dependent RNA editing)
+- **Verified Local Compiled Entry Registry (Zero Dangling Local IDs):** `SC-DOMAIN-EXPANSION-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`, `SC-IT-POKEMON-001`, `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001`, `SC-SB-001`, `SC-HS-001`, `SC-IT-OCTO-RNA-EDIT-001`, `SC-IT-BATCH-2026-11-23`
+- **Audited Upstream Session Cross-Links (queued for standalone JSONL drop):** `SC-CP-001`, `SC-IT-POE-SOUL-EATER-001`, `SC-IT-GOJO-KIT-001`
 
 ---
 
-## 1. Master Invariant Class Index (Classes 1–19)
+## 1. Master Invariant Class Index (Classes 1–24)
 
 ### Class 1: `STRESS-ACCUMULATION -> THRESHOLD -> INSTANT RELEASE` (`SEED`)
 - **Primitive Signature:** `POOL` (stored tension/stress) + `THRESHOLD` (rupture/alignment limit) + `TRIGGER` + `RELEASE` (instant dump + aftershock).
@@ -42,7 +43,7 @@
 ### Class 6: `RESTRICTION-FOR-IMMUNITY TRADE` (`SEED`)
 - **Primitive Signature:** `TRADE / RESTRICTION` (total permanent deletion of vulnerability surface) + `IMMUNITY` (hard 0x on deleted channel) + shifted `FAILURE MODE` (zero backup buffer on orthogonal layer).
 - **Cross-Domain Instances & Entry Links:** Toji 0-CE Heavenly Restriction & Malevolent Shrine open-escape Binding Vow (`SC-IT-DOMAIN-EXPANSION-EGO-001`), Simple Domain & Itachi sacrificial exile (`SC-IT-DOMAIN-EXPANSION-EGO-001`), Pokemon Ghost / Flying / Levitate / Dark / Fairy / Roost (`SC-IT-POKEMON-001`), PoE Chaos Inoculation (`SC-IT-BATCH-2026-11-23`), air-gapped networks, neurodivergent outside-paradigm immunity (`SC-NEURO-SLEEPER-001`).
-- **Falsifiable Counterplay / Weakness Prediction:** Shared counterplay weakness: anything targeting the orthogonal un-deleted layer (Malevolent Shrine Dismantle, USB Stuxnet, Stealth Rock vs Flying, Gravity vs Levitate) is immediately lethal with zero backup pool.
+- **Falsifiable Counterplay / Weakness Prediction:** Shared counterplay weakness: anything targeting the orthogonal un-deleted layer (Malevolent Shrine Dismantle, USB Stuxnet, Stealth Rock vs Flying, Gravity vs Levitate) is immediately lethal with zero backup pool. *(2026-11-23 refinement from `SC-IT-GOJO-KIT-001`: the "bypass = lethal" vulnerability arises from concentrating defense in a single channel rather than from the restriction trade itself and is now isolated in Class 21 / Claude `#16`; CI and air-gapping belong to both Class 6 and Class 21, while Gojo belongs only to Class 21 because he deleted no pool.)*
 - **Prediction Status:** **`confirmed`** — `PRED-DEE-001` confirmed (Toji 0-CE == Chaos Inoculation == Stuxnet air-gap USB bypass).
 
 ### Class 7: `BUFFER WITH RECHARGE DELAY` (`SEED`)
@@ -123,6 +124,36 @@
 - **Falsifiable Counterplay / Weakness Prediction:** Stacking specialized filters increases average resistance breadth while silently creating lethal multiplicative single-point failures wherever both layers share an unmitigated channel.
 - **Prediction Status:** **`confirmed`** — `PRED-PKM-004` confirmed in correlated cloud BGP/DNS outages and aerospace common-mode failures.
 
+### Class 20: `SUBSTRATE_TRANSCENDENCE_FAILURE` (`NEW` — Claude Catalog `#15`, compiled 2026-11-23)
+- **Primitive Signature:** `REGULATION_ESCAPE` (Class 3: all internal caps/decay/duration regulators defeated) + `EXTRACTIVE_COUPLING` (Class 4: draws from host substrate without paying rendering cost) + `SELF-SUSTAINING CHAIN REACTION` (Class 2: self-replenishing fuel feed) + `SUBSTRATE_FAILURE` (`FAILURE MODE`: hosting platform collapses while the entity persists).
+- **Cross-Domain Instances & Entry Links:** PoE pre-3.24 uncapped Soul Eater + Beyond (`SC-IT-POE-SOUL-EATER-001`), reward-hacking synthetic-loop model collapse / GPU OOM, manic/addiction physical collapse, monopoly market crash (2008), metastatic cancer host death, fork bomb / crypto-mining worm saturation, cosmological black-hole accretion (residual: entity merges with substrate).
+- **Falsifiable Counterplay / Weakness Prediction:** Counterplay must come from *outside* the domain as a hard external cap (PoE 3.24 45-soul cap, antitrust breakup, hospitalization, `kill -9`), never merely a rate adjustment.
+- **Prediction Status:** **`confirmed`** — Confirmed across PoE 3.24 cap necessity, 2008 market intervention, and clinical addiction intervention; cosmological quantum-substrate failure remains `partial`, and minimum regulatory defeat ratio remains `untested`.
+
+### Class 21: `SINGLE-CHANNEL_ABSOLUTE_DEFENSE` (`NEW` — Claude Catalog `#16`, compiled 2026-11-23)
+- **Primitive Signature:** `CHANNEL / TYPE` (all protection concentrated in one total layer inside its own channel) + `IMMUNITY` (zero penetration along classified traversal) + `FAILURE MODE` (threat model collapses to unclassified channels, compute exhaustion, or adaptive attackers).
+- **Cross-Domain Instances & Entry Links:** Gojo Satoru's Infinity (`SC-IT-GOJO-KIT-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`), PoE Chaos Inoculation ES (overlaps Class 6), Maginot Line (bypassed via Ardennes 1940), air-gapped network (bypassed via USB Stuxnet), single AI input classifier gate (bypassed via OOD or sponge/compute-exhaustion inputs).
+- **Falsifiable Counterplay / Weakness Prediction:** Dies strictly to unclassified channels (Toji / World-Cutting Slash / Ardennes / Stuxnet), active computation-budget exhaustion (Prison Realm / algorithmic-complexity attacks), or adaptive attackers over repeated exposure (Mahoraga / antibiotic resistance).
+- **Prediction Status:** **`confirmed`** — Confirmed across JJK 3/3 canon defeats, Maginot Line, Stuxnet, and sponge attacks; whether adding a second differently-typed layer eliminates the class or only relocates the gap remains `untested`.
+
+### Class 22: `EFFICIENCY_ENABLER_DEPENDENCY` (`NEW` — Claude Catalog `#17`, compiled 2026-11-23)
+- **Primitive Signature:** `INFLOW / REGEN` + `FILTER / MITIGATION` (catalyst/enabler slashes operational cost of an otherwise unaffordable mechanism so it can run continuously) + `FAILURE MODE` (removing the enabler collapses the dependent mechanism on cost).
+- **Cross-Domain Instances & Entry Links:** Gojo Six Eyes enabling Limitless (`SC-IT-GOJO-KIT-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`), biological enzymes/catalysts, observability making control loops cheap, cheap compute enabling always-on inference, military logistics chains, ADAR enabling runtime proteome tuning (`SC-IT-OCTO-RNA-EDIT-001`).
+- **Falsifiable Counterplay / Weakness Prediction:** Targeting the efficiency enabler collapses the headline capability without needing to overpower it directly.
+- **Prediction Status:** **`partial`** — Confirmed for biological catalysts and military logistics; Six Eyes disabling was never shown in canon.
+
+### Class 23: `REWARD_SIGNAL_INVERSION (SOUL BOMB)` (`NEW` — Claude Catalog `#18`, compiled 2026-11-23, V5 Sovereignty Patch)
+- **Primitive Signature:** `HOST / COUPLING` (counterfeit extractive reward capture vs genuine mutual coupling) + `CONTROL LOOP` (recalibration requires direct exposure to a genuine signal with **exit always open**) + `COUNTERPLAY` (4 surviving discriminators: escalation, substrate depletion, agency erosion, and exit sovereignty; 3 removed: onset speed, tolerance-vs-sensitization, withdrawal direction).
+- **Cross-Domain Instances & Entry Links:** Soul Bomb V5 Sovereignty Patch (`SC-SB-001`), SAO 8-member exit-sovereignty lineup (`SC-LU-SAO-LINEUP-001`, Kirito/Asuna/Yui/Sugou/Alice/Eugeo/Cardinal), addiction/trauma bonding vs secure attachment, engagement-maximizing AI vs capability-raising alignment, outrage economies vs trust networks, cosmological dissipation (residual: no consent/sovereignty at cosmic scale).
+- **Falsifiable Counterplay / Weakness Prediction:** Genuine coupling raises uncoupled competence and separation costs natural grief rather than retaliation; systems that block exit exhibit the counterfeit signature regardless of branding (`PRED-SB-001`–`004` confirmed; `PRED-SB-005` "withdrawal from love grows without limit" **failed** and replaced by grief != coercion).
+- **Prediction Status:** **`confirmed`** — 4/5 confirmed (`PRED-SB-001`–`004`), 1/5 failed & patched (`PRED-SB-005` -> `CLM-SB-003`).
+
+### Class 24: `RUNTIME_RECODING_OVER_FIXED_BASE` (`NEW` — Claude Catalog `#19`, compiled 2026-11-24)
+- **Primitive Signature:** `STORAGE` (fixed base code insulated from runtime writes) + `PROCESSOR` / `CONTROL LOOP` (fast, reversible, environment-driven recoding layer between code and output) + `TRADE / RESTRICTION` (frozen-base cost: base sequence/weights must stay conserved wherever the recoding layer attaches).
+- **Cross-Domain Instances & Entry Links:** Octopus bimaculoides cold-induced ADAR A-to-I RNA editing at >20,000 sites / >13,000 codons (`SC-IT-OCTO-RNA-EDIT-001`, Birk et al. Cell 2023; Liscovitch-Brauer et al. Cell 2017), AI LoRA adapters / system prompts / in-context learning over frozen base weights, human physiological acclimatization over genome, societal regulations & sunset clauses under a constitution, temperature-dependent material phases (physical residual: no adaptive editor), linked to `SC-CP-001` (clay fixed, pot reshaped) and `SC-CT-001` (Octopus Protocol).
+- **Falsifiable Counterplay / Weakness Prediction:** Heavy runtime recoding freezes the underlying base at attachment sites (`P1`, confirmed in cephalopod genome conservation & AI adapter-base lock), operates orders of magnitude faster than base change (`P2`, confirmed), concentrates on environment-exposed components (`P3`, confirmed in biology / untested in AI), and hits a ceiling beyond which base change is required (`P4`, untested).
+- **Prediction Status:** **`confirmed`** — `P1` and `P2` confirmed; `P3` confirmed in biology / `untested` in AI; `P4` `untested`.
+
 ---
 
 ## 2. Verified Class Compositions (Multi-Class Invariant Complexes)
@@ -136,6 +167,9 @@
 | `Class 8 + Class 19` | **Typed Filter with Cap + Common-Mode 4x Composition** | Pokemon Dual-Typing (Scizor Bug/Steel, Swampert Water/Ground) & layered defense-in-depth infrastructure: unmatched average resistance paired with a single catastrophic 4x common-mode hole (`PRED-PKM-004` confirmed). |
 | `Class 14 + Class 6` | **Generation/Control Cycles + Restriction-for-Immunity** | Pokemon Dark-Psychic-Fighting triangle (Psychic->Dark 0x) & Gen VI Dragon-Fairy-Steel triad (Dragon->Fairy 0x): asymmetric hard zeros embedded inside cyclic balance loops. |
 | `Class 11 + Class 7` | **Cumulative Stacking Toxin + Buffer with Recharge Delay** | Pokemon Toxic vs Regenerator/Rest stalls & PoE Poison vs Energy Shield: stacking DoT prevents buffer recharge while scaling drain quadratically (`PRED-PKM-003` confirmed). |
+| `Class 2 + Class 3 + Class 4 -> Class 20` | **Substrate Transcendence Failure Complex** | Uncapped positive-feedback consumption (PoE pre-3.24 Soul Eater, synthetic-loop model collapse, fork bomb): defeats all internal caps until the hosting substrate crashes (`SC-IT-POE-SOUL-EATER-001`). |
+| `Class 21 + Class 22 + Class 7` | **Enabled Single-Channel Absolute Defense** | Gojo Satoru's Limitless + Six Eyes + RCT (`SC-IT-GOJO-KIT-001`): efficiency enabler makes an absolute single-channel shield always-on; fails only to unclassified channels or enabler/budget exhaustion. |
+| `Class 24 + Class 22 + Class 8` | **Enabler-Driven Runtime Recoding Over Frozen Base** | Octopus ADAR A-to-I editing (`SC-IT-OCTO-RNA-EDIT-001`) & AI LoRA adapters: fast reversible layer concentrates tuning on exposed sites while locking conserved base sequence/weights. |
 
 ---
 
@@ -160,3 +194,9 @@
 | `PRED-BATCH-003` | `SC-IT-BATCH-2026-11-23` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Edge-Inversion Counterplay Law: Absorb-Convert (Pokemon abilities, Dante Royal Guard, PoE Leech) forces attackers onto orthogonal channels. |
 | `PRED-BATCH-004` | `SC-IT-BATCH-2026-11-23` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Small-Release Rupture Dampening across Class 1 domains (seismology, controlled burns, CI small batches). |
 | `PRED-BATCH-005` | `SC-IT-BATCH-2026-11-23` | **`failed`** | `RESIDUAL_MISMATCH` | Tested hypothesis: 'Pokemon Steel conducts Electric at 2x like real metal and PoE Lightning.' FAILED in Pokemon (actual=1x neutral; Electric->Steel 2x is missing; Steel->Electric is 0.5x BALANCE-ONLY) -> recorded as structural break & residual_mismatch! |
+| `PRED-SB-001..004` | `SC-SB-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Genuine coupling raises uncoupled competence; counterfeit signals escalate dose; richer genuine alternative reduces counterfeit-seeking; exit-blocking exposes counterfeit regardless of branding. |
+| `PRED-SB-005` | `SC-SB-001` | **`failed`** | `RESIDUAL_MISMATCH` | Tested hypothesis: 'Withdrawal from love grows without limit.' FAILED against resilient grief trajectories; replaced by V5 grief != coercion (`CLM-SB-003`). |
+| `PRED-OR-001` (`P1`) | `SC-IT-OCTO-RNA-EDIT-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Heavy runtime recoding freezes the base where it attaches (cephalopod genome conservation, Liscovitch-Brauer 2017; AI adapter-base coupling). |
+| `PRED-OR-002` (`P2`) | `SC-IT-OCTO-RNA-EDIT-001` | **`confirmed`** | `ISOMORPHIC_INVARIANT` | Runtime recoding is orders of magnitude faster than base change (hours vs generations; seconds/hours vs pretraining months). |
+| `PRED-OR-003` (`P3`) | `SC-IT-OCTO-RNA-EDIT-001` | **`partial`** | `STRUCTURAL_ANALOGY` | Most environment-exposed components get most runtime tuning: confirmed in octopus (membrane and Ca2+-binding proteins), untested in AI. |
+| `PRED-OR-004` (`P4`) | `SC-IT-OCTO-RNA-EDIT-001` | **`untested`** | `STRUCTURAL_ANALOGY` | Runtime recoding has an adaptive ceiling beyond which base modification is required. |

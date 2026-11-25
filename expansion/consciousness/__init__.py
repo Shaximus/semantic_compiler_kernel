@@ -93,6 +93,16 @@ from semantic_compiler.expansion.consciousness.soul_bomb import (
     evaluate_soul_bomb_signal,
 )
 
+from semantic_compiler.expansion.consciousness.cosmo_and_recoding import (
+    DEFAULT_HUBBLE_RATE_S_INV,
+    HS_RESIDUAL_MISMATCHES,
+    RUNTIME_RECODING_SUBSTRATE_SPECS,
+    NullExpansionRegime,
+    RecodingSubstrate,
+    evaluate_flrw_hubble_schwarzschild,
+    evaluate_runtime_recoding_layer,
+)
+
 __all__ = [
     # split.py
     "SubstrateLayer",
@@ -161,4 +171,12 @@ __all__ = [
     "evaluate_sao_member_exit_sovereignty",
     "evaluate_separation_cost",
     "evaluate_soul_bomb_signal",
+    # cosmo_and_recoding.py (SC-HS-001 v1.1.0 + SC-IT-OCTO-RNA-EDIT-001)
+    "DEFAULT_HUBBLE_RATE_S_INV",
+    "HS_RESIDUAL_MISMATCHES",
+    "RUNTIME_RECODING_SUBSTRATE_SPECS",
+    "NullExpansionRegime",
+    "RecodingSubstrate",
+    "evaluate_flrw_hubble_schwarzschild",
+    "evaluate_runtime_recoding_layer",
 ]
