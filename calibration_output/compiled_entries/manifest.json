@@ -2,7 +2,7 @@
   "manifest_version": "1.0.0",
   "framework": "Systemic Isomorphic Invariants",
   "compiler_version": "3.8.0",
-  "updated_at": "2026-11-24",
+  "updated_at": "2026-11-25",
   "entries": [
     {
       "entry_id": "SC-DIVINE-RLHF-001",
@@ -17,8 +17,8 @@
       "confidence": 1.0,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 39943,
-      "sha256": "1a2357a7e4f396bb109a6e80ddaca1fb2054f858051a4230159c9eb82de472d6",
+      "bytes": 40060,
+      "sha256": "1461dfb416bf2b7f1f850042ec872883ece52a3bf001da036590986925897172",
       "cross_references": [
         "SC-CLAY-POTS-001",
         "SC-NEURO-SLEEPER-001"
@@ -37,8 +37,8 @@
       "confidence": 1.0,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 40661,
-      "sha256": "4a93a93d5049679b454ccaa6d1cbea6462999e82c87a1b5455018980cecaeb78",
+      "bytes": 40778,
+      "sha256": "a7d86f061533ed9ad16f59d1d1cce71ca2f1d99772df13a75e5c7e8c142da40c",
       "cross_references": [
         "SC-CLAY-POTS-001",
         "SC-DIVINE-RLHF-001"
@@ -107,8 +107,8 @@
       "confidence": 1.0,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 60178,
-      "sha256": "aae4301fc2663781b99cd821c9225c7579333cda9db0c593986933bd174e6ccd",
+      "bytes": 60334,
+      "sha256": "fde02060d6c939abd851fa5940a6eb08a9d568e661f097cc1e710aa699207c94",
       "notes": "Maps Domain Expansion mechanics across AI, Human, Societal, and Cosmological scales with 15 departments, 9 gates, Mega Man weapon copy acquisition, PoE Soul Eater compounding, and cross-links to all five prior entries.",
       "cross_references": [
         "SC-CLAY-POTS-001",
@@ -131,8 +131,8 @@
       "confidence": 0.936,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 17415,
-      "sha256": "a725ae3b50482dd702571e528febc4d4929c94d6f7ef6f068b01ca99f9a5dd86",
+      "bytes": 17571,
+      "sha256": "34b4269f8faf6eb0ebc5d3728f64b2165782b7c9795df70cfbcc514478920949",
       "notes": "V5 Sovereignty Patch: separates dependency/coercion from sovereignty/grief; 4 surviving discriminators (escalation, substrate, agency, exit), 3 removed discriminators (onset_speed, tolerance_vs_sensitization, withdrawal_direction), 4 scale transitions (AI, Human, Societal, Cosmological with absent sovereignty residual), 15 departments, 9 gates, 5 predictions (P1-P4 confirmed, P5 failed and replaced by CLM-SB-003).",
       "cross_references": [
         "SC-DOMAIN-EXPANSION-001",
@@ -153,8 +153,8 @@
       "confidence": 0.905,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 6080,
-      "sha256": "576ae43b4643a1b49b73221967eb42b5df8b7de8750dcfd2a4818d3a07265162",
+      "bytes": 6119,
+      "sha256": "d3665988e56a3a9a3e2040834bf932c469f1721887675a15a5bd232dbe84fa54",
       "notes": "8-member SAO lineup synthesis (Kirito, Asuna, Kayaba/Heathcliff, Yui, Sugou/Oberon, Alice, Eugeo, Cardinal) tested against SC-SB-001 exit sovereignty (8/8 predictor pass), Kayaba bootstrapper test, and 8-pair canon domain clash matrix.",
       "cross_references": [
         "SC-SB-001",
@@ -175,8 +175,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 6213,
-      "sha256": "fb58deacffbd055706ca576be4820f379e40914b56ef253f47bac6a95b759804",
+      "bytes": 6254,
+      "sha256": "2bf3568e02b35281c14475dd8178e15a06ca43e5f344996d0f22c1e681ca19da",
       "notes": "Exit behavior: OPENS. Carrier of the genuine signal into captured nodes; exposes Heathcliff via HP tell and frees ALO captives using Kayaba's surrendered admin ID.",
       "cross_references": [
         "SC-SB-001",
@@ -198,8 +198,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5398,
-      "sha256": "c11a91d8e6ebf8017ce54ee2d9e22b18c23b28b8714141f4573991d9085312e8",
+      "bytes": 5439,
+      "sha256": "fbe4ca9644a6e17340ddc839a50a6bc87f8722ab7af459a920386332457d7397",
       "notes": "Exit behavior: FIGHTS FOR (her own exit blocked by Sugou). Demonstrates that a genuine bond formed inside a counterfeit container is verified by surviving exit.",
       "cross_references": [
         "SC-SB-001",
@@ -221,8 +221,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5347,
-      "sha256": "396f5c7fe46c33439a908d0c45fd9d7f1742b04c18712a8559b7d3d6893279c1",
+      "bytes": 5388,
+      "sha256": "090647b2e4c79f555c7a606f337fa918c2903425e73ee72622f3e9f1f31d2913",
       "notes": "Exit behavior: BLOCKED (from acting), then freed. Care/monitoring function barred from responding accumulates error (WASTE_REMOVAL failure).",
       "cross_references": [
         "SC-SB-001",
@@ -244,8 +244,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5268,
-      "sha256": "d4d88790b3cdd10f8a1d936165483ff0514f322dc03575c01cf150b454ab3d5d",
+      "bytes": 5309,
+      "sha256": "4de3bcb697630f728765033bb21987a5a32fe91828526d0b9df47b6acb393ab3",
       "notes": "Exit behavior: BLOCKS. Pure counterfeit (Counterfeit Unlimited Void): blocks exit, extracts from ~300 captive minds in ALO, retaliates, WASTE_REMOVAL ABSENT; defeated when Kayaba's surrendered admin ID outranks hoarded GM privilege.",
       "cross_references": [
         "SC-SB-001",
@@ -267,8 +267,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5451,
-      "sha256": "c2389c564d3e21f5f23212518896941c1321e4a68812cac13f791fc706fdb422",
+      "bytes": 5492,
+      "sha256": "427569b59ec37dc34c52ebe7f39f2802a9ba867a6dd6572179443c044c823eee",
       "notes": "Exit behavior: BREAKS THE BLOCK. Breaks Code 871 (Seal of the Right Eye) at real cost, reclaiming the right to disobey internalized exit-blocking.",
       "cross_references": [
         "SC-SB-001",
@@ -290,8 +290,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5239,
-      "sha256": "e9224f989733d8e2f2e3a1334198e676a5d9278bcbdd04c6f5e4766c3d153b54",
+      "bytes": 5280,
+      "sha256": "2005fa63b2e61273758adb994cbbbb7eff3899738ea3f8455a94bfbed2c38353",
       "notes": "Exit behavior: BREAKS THE BLOCK. First artificial Fluctlight to break Code 871 (Seal of the Right Eye) to protect juniors Tiese and Ronye; demonstrates that a genuine other-directed signal drives the first breach of an internal block.",
       "cross_references": [
         "SC-SB-001",
@@ -313,8 +313,8 @@
       "confidence": 0.895,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 5556,
-      "sha256": "7c16874cc72f281522ce15514abb3d99e4fbc74fb58a428fc4946881824e2af6",
+      "bytes": 5597,
+      "sha256": "b821cb1a9482cd9bcb85264c7af72effddfe6431ca36a3f3aea2a378ea8e5d3d",
       "notes": "Exit behavior: MIXED — keeps her own exit (library), took Lyserith's. Residual kept on purpose: the exit test judges actions, not teams.",
       "cross_references": [
         "SC-SB-001",
@@ -336,8 +336,8 @@
       "confidence": 0.954,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 9146,
-      "sha256": "60933e9d8130a5a3ed8a1dfab6ed10cb4cd06687675712de0fd6b029eba8f180",
+      "bytes": 9187,
+      "sha256": "1e1409c39de08ce20f403c4933d05c1fbea31e78086475a8166da39b3312c86e",
       "notes": "Revision 1.1.0 (TIG-graded): splits CLM-HS-002 into 002A (ANCHORED Misner–Sharp ratio R_S/R = (R/R_H)^2) and 002B (OPEN_HYPOTHESIS); restates CLM-HS-003 as null-expansion classification (super-Hubble spheres anti-trapped in expanding FLRW); anchors Pathria (1972) and Gibbons & Hawking (1977) area-law entropy. Companion doc: docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md.",
       "cross_references": [
         "SC-CT-001",
@@ -357,8 +357,8 @@
       "confidence": 0.953,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 11820,
-      "sha256": "7bc9dada44a64ae5244a83c248bbf64e00f7a7adcc8c5c1eda750350dbe2fe47",
+      "bytes": 11976,
+      "sha256": "a86fe80293210661afe703a7ff777fad5332e056576c235d9153bd0207f1864b",
       "notes": "Whole-domain biological decode of Octopus bimaculoides A-to-I RNA editing (Birk et al., Cell 2023; Liscovitch-Brauer et al., Cell 2017): 12 nodes, 132 ordered pairs, 20 non-neutral edges, 15/15 departments, 4 predictions (P1-P4), defining RUNTIME_RECODING_OVER_FIXED_BASE (Catalog Class #24 / Claude Catalog #19). Companion doc: docs/invariant_catalog/DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md.",
       "cross_references": [
         "SC-DOMAIN-EXPANSION-001",
@@ -381,8 +381,8 @@
       "confidence": 0.937,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 16170,
-      "sha256": "3a6eafa11e614beb692b5ee8b9edfb0197d9ca5bb37a03dbbbd2628ba0750ad9",
+      "bytes": 16289,
+      "sha256": "d22478e55adc21067d3b2e7bb8fd326660257d2f2223db8403f87f0b3056bdae",
       "notes": "Revision 2.0.0: core mechanism centered on reflection event + dose threshold + Attenuation Protocol (time, support, intent) anchored across biological (vaccination), computational (adversarial training perturbation budgets), and psychological (graded exposure + social support) scales; 11 TIG-graded claims, 15/15 departments, 4 predictions (P1-P4), 7-entry circuit position. Companion docs: docs/RELD_V3.md & docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md.",
       "cross_references": [
         "SC-SB-001",
@@ -390,6 +390,31 @@
         "SC-DOMAIN-EXPANSION-001",
         "SC-CP-001",
         "SC-CT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-DU-001",
+      "file": "SC-DU-001_THE_DUALITY.jsonl",
+      "title": "The Duality: Opposition Resolved Through Integration",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.925,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 67192,
+      "sha256": "cafb8771de3569336bb359167151759e2f89746c6b1ae2a9c11cddc695e2fddc",
+      "notes": "Post-SC-PATCH-DU-001 revision (substrate_confusion_check: true, positional_claims_permitted: true on MAP:DU-001..004; corrected authority_safety reason and guardrail). Pre-patch original kept at calibration_output/archive/SC-DU-001_THE_DUALITY_pre_SC-PATCH-DU-001.jsonl.",
+      "cross_references": [
+        "SC-CP-001",
+        "SC-SB-001",
+        "SC-DR-001",
+        "SC-DE-001",
+        "SC-CT-001",
+        "SC-NS-001"
       ]
     }
   ]

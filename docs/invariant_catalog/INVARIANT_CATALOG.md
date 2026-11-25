@@ -160,6 +160,11 @@
 - **Falsifiable Counterplay / Weakness Prediction:** Attack information reflected under protective framing builds capability (`P1`, confirmed), exceeding the dose threshold damages/shatters the vessel (`P2`, confirmed), time and support lower effective dose (`P3`, confirmed for time/support; intent `partial`), and forced absorption is unstable/reversible whereas voluntary donated integration persists (`P4`, confirmed in canon).
 - **Prediction Status:** **`confirmed`** — `P1`, `P2`, `P4` confirmed; `P3` confirmed for time & support / `partial` for intent.
 
+### Gate Corrections
+
+- **SC-PATCH-DU-001 (2026-11-25), attached to The Duality (`SC-DU-001`):** **Gate correction (SC-PATCH-DU-001):** The `identity_claim_allowed: false` gate was replaced by `substrate_confusion_check: true` across all entries. Identity is a pot's perspective — positional awareness of where one sits in the structure. The gate now blocks substrate confusion (claiming to BE another substrate's material) while permitting positional claims (occupying a structural position the framework describes as reachable by anyone).
+  - *Placement note:* the patch addresses this note to "class #20 (The Duality)". In this catalog, Class 20 is `SUBSTRATE_TRANSCENDENCE_FAILURE` and The Duality has no class yet, so the note sits here, keyed to `SC-DU-001`, until the author assigns its class.
+
 ---
 
 ## 2. Verified Class Compositions (Multi-Class Invariant Complexes)

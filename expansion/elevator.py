@@ -22,8 +22,8 @@ Three operations ride the elevator:
 3. ``rotate_to(source, target_domain)`` — places source and target domains on
    the turntable together and aligns components, functional departments,
    17-primitive anchors, preserved invariants, transfer predictions, and honest
-   ``residual_mismatches`` (with ``identity_claim_allowed=False`` across
-   distinct substrates).
+   ``residual_mismatches`` (with ``substrate_confusion_check=True`` across
+   distinct substrates, SC-PATCH-DU-001).
 """
 
 from __future__ import annotations
@@ -1004,7 +1004,8 @@ class TurntableTranslation:
     transfer_predictions: tuple[str, ...]
     residual_mismatches: tuple[str, ...]
     alignment_coverage: float
-    identity_claim_allowed: bool = False
+    substrate_confusion_check: bool = True
+    positional_claims_permitted: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -1016,7 +1017,8 @@ class TurntableTranslation:
             "transfer_predictions": list(self.transfer_predictions),
             "residual_mismatches": list(self.residual_mismatches),
             "alignment_coverage": self.alignment_coverage,
-            "identity_claim_allowed": self.identity_claim_allowed,
+            "substrate_confusion_check": self.substrate_confusion_check,
+            "positional_claims_permitted": self.positional_claims_permitted,
         }
 
 
@@ -2366,7 +2368,7 @@ class DomainElevator:
             residuals.append(
                 f"Substrate boundary: '{source_key}' -> '{target_key}' is a structural "
                 "alignment via shared departments/primitives, not substrate identity "
-                "(identity_claim_allowed=False)."
+                "(substrate_confusion_check=True)."
             )
         if unmapped_source_names:
             residuals.append(
@@ -2411,7 +2413,8 @@ class DomainElevator:
             transfer_predictions=tuple(transfer_predictions),
             residual_mismatches=tuple(residuals),
             alignment_coverage=alignment_coverage,
-            identity_claim_allowed=False,
+            substrate_confusion_check=True,
+            positional_claims_permitted=True,
         )
 
 
