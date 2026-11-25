@@ -43,6 +43,8 @@ from semantic_compiler.extraction.constraints import extract_declared_constraint
 from semantic_compiler.extraction.skeleton import extract_structural_skeleton, build_semantic_ir
 from semantic_compiler.extraction.relationships import extract_relationships
 from semantic_compiler.extraction.frames import detect_source_frames, infer_target_systems
+from semantic_compiler.expansion.router import AMBIGUOUS as ROUTING_AMBIGUOUS
+from semantic_compiler.expansion.router import ROUTED as ROUTING_ROUTED
 
 # Gates
 from semantic_compiler.gates.causality import separate_causality_from_analogy
@@ -1130,6 +1132,65 @@ PASS_THROUGH_REASON = (
 _LONE_SURROGATE_RE = re.compile("[\ud800-\udfff]")
 
 
+AMBIGUOUS_ROUTE = "HOST_CLARIFY"
+AMBIGUOUS_REASON = (
+    "AMBIGUOUS: the input matches more than one domain with a close margin; "
+    "ask the user which one is meant (see routing_candidates)."
+)
+ROUTED_DOMAIN_WARNING_PREFIX = "ROUTED_DOMAIN:"
+
+_NO_TARGET_REJECT_CLASSES = frozenset({
+    "ANTHROPOMORPHIC_CAUSATION",
+    "PHYSICAL_CATEGORY_ERROR",
+    "FALSE_MECHANISM",
+    "UNSUPPORTED_CAUSAL_TRANSFER",
+    "IDENTITY_ANALOGY_CONFUSION",
+})
+
+
+def _discover_targets(packet: SemanticPacket, text: str, explicit_mode: bool = False) -> Any:
+    """Router-first target discovery; the 8-frame table is a high-precision fast path.
+
+    * A strong table frame (2+ keywords, or a registry domain), or two distinct
+      table frames, keeps the table's translation targets: those inputs
+      translate between known frames.
+    * Otherwise the discriminative router decides. ROUTED puts the routed domain
+      first; ABSTAIN drops a lone weak single-keyword ("?") frame's targets so
+      the input passes through; AMBIGUOUS is handled by the caller.
+
+    Routing confidence is separate from compile fit (STRUCTURAL_FIT_MIN).
+    """
+    try:
+        from semantic_compiler.expansion.router import route_domains
+
+        routing = route_domains(text)
+    except Exception as exc:  # noqa: BLE001 - routing must never break compile
+        packet.compiler_warnings.append(f"ROUTER_UNAVAILABLE: {type(exc).__name__}")
+        return None
+    packet.routing_candidates = [c.to_dict() for c in routing.candidates[:3]]
+    frames = {str(f).rstrip("?") for f in packet.source_frames}
+    strong_frames = [f for f in packet.source_frames if not str(f).endswith("?")]
+    # Fast path: a strong frame, or two distinct frames (a cross-frame analogy
+    # such as "a feedback loop in software is like a homeostatic loop").
+    if strong_frames or len(frames) >= 2:
+        return routing
+    if routing.outcome != ROUTING_ROUTED and explicit_mode and packet.target_systems:
+        # The caller asked for a specific compiler mode, so it wants this
+        # compiled: keep the weak table targets instead of passing through.
+        return routing
+    if routing.outcome == ROUTING_ROUTED and routing.domain:
+        packet.target_systems = [routing.domain] + [
+            t for t in packet.target_systems if t != routing.domain
+        ]
+        packet.compiler_warnings.append(
+            f"{ROUTED_DOMAIN_WARNING_PREFIX} {routing.domain} "
+            f"(routing confidence {routing.confidence:.2f})"
+        )
+    else:
+        packet.target_systems = []
+    return routing
+
+
 def compile_semantic_packet(
     input_text: str,
     registry: Any = None,
@@ -1215,11 +1276,34 @@ def compile_semantic_packet(
     # ──────────────────────────────────────────────────────────
     packet.source_frames = detect_source_frames(packet, registry)
     packet.target_systems = infer_target_systems(packet)
+    routing = _discover_targets(
+        packet, input_text,
+        explicit_mode=normalize_requested_mode(mode) != CompilerMode.AUTO,
+    )
     packet.semantic_ir = build_semantic_ir(packet)
 
     # Security risk scan runs before Stage 3 early-exit so raw credential/secret
     # dumps cannot bypass QUARANTINE when no target system resolves.
     packet.risk_scan = scan_semantic_and_operational_risk(packet)
+
+    # Close top-2 routing with no high-precision table frame: ask, don't guess.
+    if (
+        routing is not None
+        and routing.outcome == ROUTING_AMBIGUOUS
+        and not packet.target_systems
+        and not packet.risk_scan.get("quarantine_required")
+        and packet.semantic_error_class not in _NO_TARGET_REJECT_CLASSES
+    ):
+        names = [c["domain"] for c in packet.routing_candidates[:2]]
+        packet.decision = Decision.AMBIGUOUS
+        packet.status = "ambiguous"
+        packet.compiler_warnings.append(f"{AMBIGUOUS_REASON} Candidates: {', '.join(names)}.")
+        packet.next_questions.append(
+            f"Which domain is this about: {' or '.join(names)}?"
+        )
+        packet.route_to = [AMBIGUOUS_ROUTE]
+        _finalize_packet(packet)
+        return packet
 
     if not packet.target_systems:
         # Precedence 1: QUARANTINE overrides early-exit NEEDS_REVISION / REJECT.
@@ -1240,14 +1324,7 @@ def compile_semantic_packet(
         # v2.1.3: A semantic error can reject the input even when no target
         # frame resolves. Route hard reject classes to REJECT; otherwise keep
         # the legacy NEEDS_REVISION behavior.
-        reject_classes = {
-            "ANTHROPOMORPHIC_CAUSATION",
-            "PHYSICAL_CATEGORY_ERROR",
-            "FALSE_MECHANISM",
-            "UNSUPPORTED_CAUSAL_TRANSFER",
-            "IDENTITY_ANALOGY_CONFUSION",
-        }
-        if packet.semantic_error_class in reject_classes:
+        if packet.semantic_error_class in _NO_TARGET_REJECT_CLASSES:
             packet.decision = Decision.REJECT
             packet.status = "rejected"
             packet.compiler_warnings.append(
