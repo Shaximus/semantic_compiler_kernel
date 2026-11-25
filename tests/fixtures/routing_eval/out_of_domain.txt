@@ -1,0 +1,33 @@
+# Ordinary prompts with no compiler domain. Expected: router ABSTAIN, compile PASS_THROUGH.
+# One prompt per line. Sections: phone questions, general conversation, unknown technical subjects.
+Is my phone battery dying faster because of the new update?
+Summarize my last 3 emails and draft a reply to the one from my landlord.
+remind me to call mom at 6
+Set an alarm for 7am tomorrow
+What's the weather going to be like this weekend?
+How do I turn off notifications for this app?
+Why does my screen keep dimming by itself?
+Can you text Sarah that I'm running late?
+How much storage do I have left on my phone?
+Take a screenshot and share it with Mike
+Hey, how's it going?
+Tell me a joke about cats
+What should I make for dinner tonight?
+Thanks, that was really helpful!
+What's a good name for a golden retriever puppy?
+I'm bored, any movie recommendations?
+Can you help me plan a birthday party for my daughter?
+Translate "where is the train station" into Spanish
+What's the capital of Australia?
+How many cups are in a gallon?
+Write a short poem about autumn leaves
+Who won the hockey game last night?
+What's the torque spec for the lug nuts on a 2012 Honda Civic?
+How do I descale an espresso machine?
+What grit sandpaper should I use before staining oak?
+How long should I boil an egg for a runny yolk?
+What's the best way to remove a stripped screw?
+How do I knit a purl stitch?
+What does a sommelier look for when tasting wine?
+How do I tune a ukulele to standard tuning?
+Purple sleeps horizontally under Tuesday.

@@ -266,6 +266,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "sword art online", "sao lineup", "immortal object", "surrendered admin",
         "world seed", "pharmakeia", "sugou", "oberon", "eugeo", "blue rose sword",
         "sc-sb-001", "sc-lu-sao",
+        # SC-SB-001 three-claim patch (DRAFT, docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md):
+        # Spirit Bomb vocabulary and the child invariant COLLECTIVE INPUT / STRUCTURAL RESPONSE.
+        "spirit bomb", "genki dama", "kid buu", "collective input",
     )),
     ("finance_economics", (
         "central bank", "commercial bank", "investment bank", "retail bank",

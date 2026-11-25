@@ -2,6 +2,22 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — 2026-11-25 (branch `fix/router-discriminative-abstain`)
+
+### Added
+- `expansion/router.py`: a discriminative domain router (`route_domains()`, `DomainRouter`, `RoutingResult`). It returns `ROUTED`, `AMBIGUOUS` or `ABSTAIN` with ranked candidates, a routing confidence, and the top-1 vs top-2 margin.
+  - Filler and stop words are suppressed. The relational words `not, without, before, after, only, never, no, unless, except` are never stripped: they stay in the phrase stream but don't count as standalone evidence.
+  - Weighting is IDF-style: a token counts only if at most 25% of domains use it. Phrase matches get a boost, and the subject clause outweighs the source clause of an analogy.
+  - A domain needs a phrase match, two distinct evidence units, or one very specific term to qualify. If the top two are within a 0.15 margin, the result is `AMBIGUOUS`. If confidence is below 0.35, the router abstains.
+  - Curated keyword anchors and the PoE-specific Buildcraft triggers (for `ci_build_invariants`) boost a domain that already has evidence. A literal compiled-entry ID (`SC-…-NNN`) routes to its home domain.
+- `BayDelivery.routing` carries the router verdict.
+- Fixtures under `tests/fixtures/routing_eval/`, plus `tests/test_domain_router.py`.
+
+### Fixed
+- `summon()` no longer picks a domain on filler. When the router abstains, `matched_domains` is empty and `primary_domain` is `universal_generic`. Dogfood examples: "phone battery" previously went to `poe_chaos_inoculation` and "landlord email" to `speculative_decoding`. The README example still routes to `ci_build_invariants`, its intended Buildcraft-derived domain, but now on the phrase "support gems" rather than "support" + "vram".
+- Measured results: 31/31 out-of-domain fixture prompts abstain (previously 1/31). On the 225-sample labeled calibration corpus, summon's primary is correct for 212 (previously 213; 4 now abstain). Router precision is 0.977 and recall 0.942. Decompress routing changed for none of the 1,181 corpus inputs.
+- `soul_bomb_sovereignty` decompress keywords gain "spirit bomb", "genki dama", "kid buu" and "collective input" (SC-SB-001 patch vocabulary).
+
 ## [Unreleased] — 2026-11-25 (branch `feat/pass-through-decision`)
 
 ### Added

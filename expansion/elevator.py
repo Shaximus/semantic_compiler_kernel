@@ -742,11 +742,16 @@ class BayDelivery:
     system_model: dict[str, Any]
     latency_ms: float
     cache_hit: bool
+    # Discriminative routing verdict (expansion.router.RoutingResult): ROUTED,
+    # AMBIGUOUS or ABSTAIN. On ABSTAIN, primary_domain is universal_generic and
+    # matched_domains is empty.
+    routing: Any = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "query": self.query,
             "primary_domain": self.primary_domain,
+            "routing": self.routing.to_dict() if self.routing is not None else None,
             "matched_domains": [m.to_dict() for m in self.matched_domains],
             "compiled_entries": [e.to_dict() for e in self.compiled_entries],
             "invariant_classes": [i.to_dict() for i in self.invariant_classes],
@@ -1637,7 +1642,17 @@ class DomainElevator:
             raise ValueError(f"top_k must be a positive int, got {top_k!r}")
 
         t0 = time.perf_counter()
+        # Discriminative routing verdict over the same index (outside the lock).
+        from semantic_compiler.expansion.router import ABSTAIN, DomainRouter, _is_filler
+
+        pre_ready = self._ensure_ready()
+        router = self.__dict__.get("_router")
+        if router is None:
+            router = self.__dict__.setdefault("_router", DomainRouter(self))
+        routing = router.route(query_text, top_k=top_k)
         tokens, content_stream, raw_stream = _tokenize_all(query_text)
+        # Filler words (pronouns, chat verbs, "because", "new", ...) are not domain evidence.
+        tokens = tuple(t for t in tokens if not _is_filler(t))
         raw_ngrams = _extract_ngrams(raw_stream, max_n=5)
         content_ngrams = _extract_ngrams(content_stream, max_n=3)
         expanded_raw: list[str] = []
@@ -1654,7 +1669,7 @@ class DomainElevator:
         ngrams = tuple(dict.fromkeys((*raw_ngrams, *expanded_ngrams, *content_ngrams)))
 
         with self._lock:
-            cache_hit = self._ensure_ready()
+            cache_hit = self._ensure_ready() and pre_ready
             self.query_count += 1
 
             scores: dict[str, float] = defaultdict(float)
@@ -1739,6 +1754,11 @@ class DomainElevator:
                 )
                 for score, sid in domain_hits[:top_k]
             )
+            # Out-of-domain prompts abstain instead of picking a random domain.
+            # An explicit slug or a strong compiled-entry ID still counts.
+            explicit_domain = stripped_slug in self._domain_templates
+            if routing.outcome == ABSTAIN and not explicit_domain and not explicit_generic:
+                matched_domains = ()
 
             primary_domain = (
                 matched_domains[0].domain
@@ -1785,6 +1805,7 @@ class DomainElevator:
             system_model=system_model,
             latency_ms=latency_ms,
             cache_hit=cache_hit,
+            routing=routing,
         )
 
     def _make_entry_match(
