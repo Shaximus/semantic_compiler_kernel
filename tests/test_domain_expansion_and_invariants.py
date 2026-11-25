@@ -662,8 +662,10 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
         self.assertEqual(confirmed["max_allowed_gate_score"], 1.0)
         self.assertFalse(confirmed["gate_cap_applied"])
         self.assertEqual(confirmed["gate_scores"]["causal_validity"], 1.0)
-        # Fiction/game -> real system MUST forbid identity claims
-        self.assertFalse(confirmed["identity_claim_allowed"])
+        # SC-PATCH-DU-001: fiction/game -> real carries substrate_confusion_check (material blocked, positional permitted)
+        self.assertTrue(confirmed["substrate_confusion_check"])
+        self.assertTrue(confirmed["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", confirmed)
 
         # 2. Untested prediction caps gates at 0.9 and populates uncertainty_statement
         untested = evaluate_invariant_prediction(
@@ -710,7 +712,9 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
         )
         self.assertEqual(analogy["classification"], "STRUCTURAL_ANALOGY")
         self.assertEqual(analogy["max_allowed_gate_score"], 0.9)
-        self.assertFalse(analogy["identity_claim_allowed"])
+        self.assertTrue(analogy["substrate_confusion_check"])
+        self.assertTrue(analogy["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", analogy)
 
         # 5. BALANCE_ONLY -> ALWAYS mandatory residual mismatch, never ISOMORPHIC_INVARIANT
         balance = evaluate_invariant_prediction(
@@ -728,7 +732,9 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
         self.assertTrue(balance["residual_mismatches"])
         self.assertEqual(balance["max_allowed_gate_score"], 0.9)
         self.assertEqual(balance["gate_scores"]["causal_validity"], 0.9)
-        self.assertFalse(balance["identity_claim_allowed"])
+        self.assertTrue(balance["substrate_confusion_check"])
+        self.assertTrue(balance["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", balance)
 
         # 6. Non-empty information_lost guarantees non-empty residual_mismatches
         lossy = evaluate_invariant_prediction(
@@ -759,7 +765,9 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
             evidence_ids=["EV-IEEE-142"],
         )
         self.assertEqual(real_to_real["classification"], "ISOMORPHIC_INVARIANT")
-        self.assertTrue(real_to_real["identity_claim_allowed"])
+        self.assertTrue(real_to_real["substrate_confusion_check"])
+        self.assertTrue(real_to_real["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", real_to_real)
 
         # 8. Falsified tested prediction -> RESIDUAL_MISMATCH + non-empty residuals
         falsified = evaluate_invariant_prediction(
@@ -776,7 +784,9 @@ class PrimitiveGrammarAndPredictionTests(unittest.TestCase):
         self.assertEqual(falsified["ground_class"], GroundClass.BIOLOGICAL_ECOLOGICAL.value)
         self.assertTrue(falsified["residual_mismatches"])
         self.assertEqual(falsified["gate_scores"]["causal_validity"], 0.9)
-        self.assertFalse(falsified["identity_claim_allowed"])
+        self.assertTrue(falsified["substrate_confusion_check"])
+        self.assertTrue(falsified["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", falsified)
 
         # 9. SKILL.md display string "BALANCE-ONLY" and invalid gate scores validation
         bal_str = evaluate_invariant_prediction(

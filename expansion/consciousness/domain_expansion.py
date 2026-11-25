@@ -26,6 +26,8 @@ import re
 from enum import Enum
 from typing import Any, Mapping, Sequence
 
+from semantic_compiler.gates.substrate_confusion import substrate_confusion_fields
+
 
 class DomainVariant(str, Enum):
     """Canonical Domain Expansion architectural variants from SC-DOMAIN-EXPANSION-001."""
@@ -962,7 +964,9 @@ def evaluate_invariant_prediction(
       non-empty.
     - Untested or un-evidenced gates are strictly capped at ``0.9`` (``1.0`` requires
       a passed prediction test with concrete ``evidence_ids``).
-    - Fiction/game -> real-system mappings always enforce ``identity_claim_allowed: False``.
+    - Every cross-substrate mapping (including fiction/game -> real-system) carries
+      ``substrate_confusion_check: True`` and ``positional_claims_permitted: True``
+      (SC-PATCH-DU-001: block material claims, permit positional claims).
     - ``uncertainty_statement`` explicitly lists every untested prediction.
     """
     src_domain = _validate_non_empty_str("source_domain", source_domain)
@@ -1054,12 +1058,11 @@ def evaluate_invariant_prediction(
         else:
             capped_gate_scores[gate] = round(score, 6)
 
+    # SC-PATCH-DU-001: the former ``identity_claim_allowed`` gate is replaced by
+    # ``substrate_confusion_check`` (block material claims, permit positional
+    # claims) on every cross-substrate mapping, including fiction/game -> real.
     fiction_to_real = bool(source_is_fiction_or_game and target_is_real_system)
-    identity_claim_allowed = bool(
-        not fiction_to_real
-        and resolved_ground != GroundClass.BALANCE_ONLY
-        and classification == "ISOMORPHIC_INVARIANT"
-    )
+    gate_fields = substrate_confusion_fields()
 
     if untested_predictions and resolved_ground == GroundClass.BALANCE_ONLY:
         uncertainty_statement = (
@@ -1105,6 +1108,7 @@ def evaluate_invariant_prediction(
         "max_allowed_gate_score": max_allowed_gate_score,
         "gate_cap_applied": gate_cap_applied,
         "gate_scores": capped_gate_scores,
-        "identity_claim_allowed": identity_claim_allowed,
+        "fiction_to_real": fiction_to_real,
+        **gate_fields,
         "uncertainty_statement": uncertainty_statement,
     }

@@ -7,7 +7,8 @@ Independently parses and validates all emitted .jsonl and .md files against:
   3. Exact 225/225 DOMAIN_EXPANSION_EGO pairs & 110/110 non-neutral grounded edges
   4. All 15 functional departments present in every JSONL and MD decode
   5. Strict Section 10 gate discipline (residual_mismatches non-empty when information_lost set,
-     identity_claim_allowed == False, BALANCE-ONLY edges in residuals, 0.9 cap on untested gates,
+     substrate_confusion_check == True & positional_claims_permitted == True per SC-PATCH-DU-001,
+     BALANCE-ONLY edges in residuals, 0.9 cap on untested gates,
      uncertainty_statement lists all untested predictions)
   6. Zero dangling cross-reference IDs across all JSONL and MD catalog/ledger files
   7. Zero "etc." elisions across all emitted artifacts
@@ -32,7 +33,20 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-CP-001",
     "SC-IT-POE-SOUL-EATER-001",
     "SC-IT-GOJO-KIT-001",
+    # 2026-11-25 drops tracked as markdown patch/source docs (not compiled JSONL):
+    "SC-PATCH-DU-001",  # docs/SC-PATCH-DU-001_IDENTITY_GATE_CORRECTION.md
+    "SC-THEO-002",      # docs/SC-THEO-002_OMNI_STATE.md (entry patch, awaiting JSONL compile)
+    "SC-BRM-001",       # docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md (feasibility dossier)
 }
+
+
+def substrate_gate_ok(mp):
+    """SC-PATCH-DU-001 mapping-object gate fields (old identity_claim_allowed removed)."""
+    return (
+        mp.get("substrate_confusion_check") is True
+        and mp.get("positional_claims_permitted") is True
+        and "identity_claim_allowed" not in mp
+    )
 
 REQUIRED_DEPTS = {
     "SUBCONSCIOUS", "INNER_MONOLOGUE", "SPEECH_OUTPUT", "STORAGE", "SECURITY",
@@ -98,7 +112,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 20, f"Authoritative local compiled entry registry size == 20 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 21, f"Authoritative local compiled entry registry size == 21 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():
@@ -142,13 +156,13 @@ for eid, (fname, obj) in loaded_entries.items():
             check(gval["score"] <= 0.9,
                   f"{fname}: gate `{gname}` non-1.0 score <= 0.9 (actual={gval['score']})")
 
-    # Isomorphism mappings: non-empty residual_mismatches when information_lost set; identity_claim_allowed == False
+    # Isomorphism mappings: non-empty residual_mismatches when information_lost set; SC-PATCH-DU-001 gate fields
     mappings = obj["isomorphism_analysis"]["mappings"]
     check(len(mappings) >= 1, f"{fname}: has >=1 isomorphism mappings ({len(mappings)})")
     all_residuals_text = []
     for mp in mappings:
-        check(mp["identity_claim_allowed"] is False,
-              f"{fname} / {mp['mapping_id']}: identity_claim_allowed == False")
+        check(substrate_gate_ok(mp),
+              f"{fname} / {mp['mapping_id']}: substrate_confusion_check & positional_claims_permitted == True")
         info_lost = mp["scale_transform"]["information_lost"]
         res = mp["residual_mismatches"]
         if info_lost and str(info_lost).strip():
@@ -263,8 +277,8 @@ check(octo_obj["isomorphism_quality"]["score"] == 0.953 and octo_obj["dataset_ti
       "SC-IT-OCTO-RNA-EDIT-001: GOLD score 0.953")
 check(len(octo_obj["prediction_tests"]) == 4, "SC-IT-OCTO-RNA-EDIT-001: 4 prediction tests (P1..P4)")
 for mp in octo_obj["isomorphism_analysis"]["mappings"]:
-    check(mp["identity_claim_allowed"] is False and len(mp["residual_mismatches"]) > 0,
-          f"SC-IT-OCTO-RNA-EDIT-001 / {mp['mapping_id']}: identity_claim_allowed=False & non-empty residuals")
+    check(substrate_gate_ok(mp) and len(mp["residual_mismatches"]) > 0,
+          f"SC-IT-OCTO-RNA-EDIT-001 / {mp['mapping_id']}: substrate_confusion_check=True & non-empty residuals")
 with open(octo_md_path, encoding="utf-8") as f:
     octo_md = f.read()
 check(all(d in octo_md for d in REQUIRED_DEPTS), "DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md: all 15 departments present")
@@ -285,8 +299,8 @@ check(len(hs_obj["gates"]) == 9 and all(g["passed"] for g in hs_obj["gates"].val
 check(hs_obj["isomorphism_quality"]["score"] == 0.954 and hs_obj["dataset_tier"] == "GOLD",
       "SC-HS-001: GOLD score 0.954")
 hs_map = hs_obj["isomorphism_analysis"]["mappings"][0]
-check(hs_map["identity_claim_allowed"] is False and len(hs_map["residual_mismatches"]) == 3,
-      "SC-HS-001 / MAP:HS-001: identity_claim_allowed=False & 3 residual_mismatches")
+check(substrate_gate_ok(hs_map) and len(hs_map["residual_mismatches"]) == 3,
+      "SC-HS-001 / MAP:HS-001: substrate_confusion_check=True & 3 residual_mismatches")
 
 omni_jsonl_path = os.path.join(COMPILED_DIR, "SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl")
 reld_md_path = os.path.join(REPO_ROOT, "docs", "RELD_V3.md")
@@ -308,8 +322,34 @@ check(omni_obj["isomorphism_quality"]["score"] == 0.937 and omni_obj["dataset_ti
 check(set(omni_obj["attenuation_protocol"].keys()) == {"time", "support", "intent"},
       "SC-OMNI-001: Attenuation Protocol has time/support/intent")
 for mp in omni_obj["isomorphism_analysis"]["mappings"]:
-    check(mp["identity_claim_allowed"] is False and len(mp["residual_mismatches"]) > 0,
-          f"SC-OMNI-001 / {mp['mapping_id']}: identity_claim_allowed=False & non-empty residuals")
+    check(substrate_gate_ok(mp) and len(mp["residual_mismatches"]) > 0,
+          f"SC-OMNI-001 / {mp['mapping_id']}: substrate_confusion_check=True & non-empty residuals")
+
+# SC-DU-001 (The Duality) — post SC-PATCH-DU-001 revision
+du_jsonl_path = os.path.join(COMPILED_DIR, "SC-DU-001_THE_DUALITY.jsonl")
+check(os.path.exists(du_jsonl_path), "SC-DU-001_THE_DUALITY.jsonl exists in compiled_entries")
+with open(du_jsonl_path, encoding="utf-8") as f:
+    du_obj = json.loads(f.readline())
+check(du_obj["metadata"]["entry_id"] == "SC-DU-001", "SC-DU-001: entry_id matches")
+du_maps = du_obj["isomorphism_analysis"]["mappings"]
+check(len(du_maps) == 4 and all(substrate_gate_ok(mp) for mp in du_maps),
+      "SC-DU-001: 4/4 mappings carry substrate_confusion_check & positional_claims_permitted")
+check(len(du_obj["gates"]) == 9 and all(g["passed"] for g in du_obj["gates"].values()),
+      "SC-DU-001: 9/9 gates passed")
+check("substrate confusion" in du_obj["gates"]["authority_safety"]["reason"].lower(),
+      "SC-DU-001: authority_safety reason references substrate confusion")
+check("substrate confusion" in du_obj["outputs"]["guardrails"][0].lower(),
+      "SC-DU-001: guardrails reference substrate confusion")
+
+# SC-PATCH-DU-001 checklist: no compiled or catalog entry carries the old gate field
+for fp in sorted(glob.glob(os.path.join(COMPILED_DIR, "*.jsonl")) + glob.glob(os.path.join(CAT_DIR, "*.jsonl"))):
+    with open(fp, encoding="utf-8") as f:
+        raw = f.read()
+    check("identity_claim_allowed" not in raw,
+          f"{os.path.basename(fp)}: no `identity_claim_allowed` (SC-PATCH-DU-001)")
+    for ln in raw.splitlines():
+        if ln.strip():
+            json.loads(ln)
 
 # 5. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 25 classes
 allowed_doc_ids = valid_entry_ids | EXTERNAL_UPSTREAM_IDS

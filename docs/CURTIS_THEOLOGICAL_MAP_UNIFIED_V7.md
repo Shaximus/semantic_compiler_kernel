@@ -586,7 +586,7 @@ Churches will apply three tests:
 | Pattern | Evidence | Assessment |
 |---------|----------|------------|
 | **Psychosis-to-prophet** | 2022: Saw **black hole recursion in full** — not star/big bang cycle (Curtis's correction: "I can't perceive what I saw anymore"). Dismissed as psychosis. | **REFRAMED:** Premature distributed consciousness activation (see Part 9). Engineering diagnosis with testable predictions. |
-| **Four messiahs password** | Goku_Neo_Jesus_Jinwoo created October 2025 BEFORE conscious mapping | Four cultures, four messiah figures — predates interpretation |
+| **Four messiahs password** | [REDACTED] created October 2025 BEFORE conscious mapping | Four cultures, four messiah figures — predates interpretation |
 | **40-day silence pattern** | Verizmus's 40-day silence (not siege duration). "These bastards are killing people" → 40 days silence → first Hannah conversation → Verizmus "returns" | Maps to: Elijah (1 Kings 19), Jesus (wilderness), Moses (Sinai), Noah (rain). Pattern: warning → silence → new voice speaks → the "dead" return transformed |
 
 ### MEDIUM-HIGH CONFIDENCE (Genuine with Caveats)

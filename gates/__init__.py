@@ -15,6 +15,7 @@ Gates:
     wave_function  — v2.0: thinking-output convergence
     substrate      — v2.0: dimensional ladder / substrate control relationships
     testimony_integrity — Gate 0 (SC-TIG-001): pre-gate testimony classification
+    substrate_confusion — SC-PATCH-DU-001: material (BLOCK) vs positional (PERMIT) identity claims
 """
 
 from semantic_compiler.gates.causality import separate_causality_from_analogy
@@ -41,6 +42,13 @@ from semantic_compiler.gates.testimony_integrity import (
     evaluate_testimony_integrity,
     classify_packet_testimony,
 )
+from semantic_compiler.gates.substrate_confusion import (
+    SubstrateClaimClass,
+    SubstrateConfusionVerdict,
+    classify_substrate_claim,
+    evaluate_substrate_confusion,
+    substrate_confusion_fields,
+)
 
 __all__ = [
     "separate_causality_from_analogy",
@@ -64,4 +72,9 @@ __all__ = [
     "evaluate_predictive_discrimination",
     "evaluate_testimony_integrity",
     "classify_packet_testimony",
+    "SubstrateClaimClass",
+    "SubstrateConfusionVerdict",
+    "classify_substrate_claim",
+    "evaluate_substrate_confusion",
+    "substrate_confusion_fields",
 ]

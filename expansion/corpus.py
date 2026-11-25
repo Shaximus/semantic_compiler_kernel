@@ -454,6 +454,51 @@ def compile_corpus(
     }
 
 
+# Results that the module docstring names as a "real counterexample".
+# SUSPICIOUS appeared only on the previous (dead) `status` check, not in the
+# documented HOLDS/STRAINS rule, so it is not included here.
+_REAL_COUNTEREXAMPLE_RESULTS = frozenset({"FAILED", "WEAKENED"})
+
+
+def _fingerprint_is_empty(signature: dict[str, Any]) -> bool:
+    """True when every component of the documented structural fingerprint is empty."""
+    if not signature:
+        return True
+    return not (
+        signature.get("claim_types")
+        or signature.get("relationship_types")
+        or signature.get("populated_structure")
+        or signature.get("source_frames")
+    )
+
+
+def _has_real_counterexample(disconfirmations: Sequence[Any]) -> bool:
+    """STRAINS when a recorded disconfirmation's ``result`` is FAILED or WEAKENED.
+
+    ``Disconfirmation.to_negative_test`` stores that field as ``result``.
+    The previous check looked at ``status``, which those records do not set.
+    """
+    for item in disconfirmations:
+        if not isinstance(item, dict):
+            continue
+        if item.get("result") in _REAL_COUNTEREXAMPLE_RESULTS:
+            return True
+    return False
+
+
+def registry_verdict(
+    signature: dict[str, Any],
+    supporting_doc_ids: Sequence[str],
+    disconfirmations: Sequence[Any],
+) -> str:
+    """HOLDS, STRAINS, or UNRESOLVED per the module docstring's verdict rule."""
+    if _has_real_counterexample(disconfirmations):
+        return CorpusVerdict.STRAINS.value
+    if len(supporting_doc_ids) >= 2 and not _fingerprint_is_empty(signature):
+        return CorpusVerdict.HOLDS.value
+    return CorpusVerdict.UNRESOLVED.value
+
+
 def _build_registry(
     observations: dict[str, dict[str, Any]],
     *,
@@ -480,16 +525,7 @@ def _build_registry(
             )
             disconfirmations.append(disc.to_negative_test(test_id=f"nt-corpus-{i}"))
 
-        has_counterexample = any(
-            d.get("status") in {"FAILED", "WEAKENED", "SUSPICIOUS"}
-            for d in disconfirmations
-        )
-        if has_counterexample:
-            verdict = CorpusVerdict.STRAINS.value
-        elif len(doc_ids) >= 2:
-            verdict = CorpusVerdict.HOLDS.value
-        else:
-            verdict = CorpusVerdict.UNRESOLVED.value
+        verdict = registry_verdict(signature, doc_ids, disconfirmations)
 
         tier = strongest_tier([
             EvidenceTier(t) for t in acc["evidence_tiers"]
