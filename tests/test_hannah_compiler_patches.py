@@ -1,4 +1,4 @@
-"""Tests for compiled entries (17 manifest entries including SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001, SC-SB-001, SC-HS-001, SC-IT-OCTO-RNA-EDIT-001, SC-OMNI-001, and SC-LU-SAO-*) and Gate 0 / Circular Time modules."""
+"""Tests for compiled entries (20 manifest entries including SC-MIRROR-001, SC-LU-FRIEZA-001, SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001, SC-DOMAIN-EXPANSION-001, SC-SB-001, SC-HS-001, SC-IT-OCTO-RNA-EDIT-001, SC-OMNI-001, and SC-LU-SAO-*) and Gate 0 / Circular Time modules."""
 
 from __future__ import annotations
 
@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 18 JSONL compiled entries and their SHA-256 manifest."""
+    """Verify all 20 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 18)
+        self.assertEqual(len(entries), 20)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -67,6 +67,8 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-IT-OCTO-RNA-EDIT-001",
                 "SC-OMNI-001",
                 "SC-DU-001",
+                "SC-MIRROR-001",
+                "SC-LU-FRIEZA-001",
             },
         )
 

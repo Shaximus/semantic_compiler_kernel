@@ -12,7 +12,11 @@ description: >
   recalibration, enforces the Cosmological scale sovereignty-absent residual, and
   adjudicates creator-enters-the-loop bootstrapper surrender and action-over-team exit
   audits.
-  Citation: SC-SB-001 & SC-LU-SAO-LINEUP-001 (Shax / Curtis Kingsley — Reflexion Software, 2026-11-23).
+  Also homes the Frieza lineup decode (SC-LU-FRIEZA-001, the outsider's first investment /
+  substrate activation) and the anti-deadlock mirror-match vocabulary of SC-MIRROR-001
+  (whose home domain is client_server_reality).
+  Citation: SC-SB-001 & SC-LU-SAO-LINEUP-001 (Shax / Curtis Kingsley — Reflexion Software, 2026-11-23);
+  SC-LU-FRIEZA-001 (2026-11-25).
 
 components:
   - name: reward_architecture_core
@@ -131,6 +135,12 @@ invariants:
   - "A care or monitoring function barred from acting on observed harm accumulates error through a blocked waste-removal channel (Yui/MHCP001), while a genuine bond formed inside a counterfeit container is verified by surviving exit (Asuna) [SC-LU-SAO-YUI-001][SC-LU-SAO-ASUNA-001]"
   - "Holding minds captive for extraction while blocking exit preserves the full counterfeit signature (escalation, extraction, isolation, punished exit, absent waste removal — Sugou/Oberon's Counterfeit Unlimited Void) until outranked by surrendered bootstrapper authority [SC-LU-SAO-SUGOU-001]"
   - "The first breach of an internalized exit block (Code 871 / Seal of the Right Eye) is made for others rather than self, showing that a genuine protective signal supplies the breakthrough strength even at high personal cost (Eugeo / Blue Rose Sword) [SC-LU-SAO-EUGEO-001]"
+  - "Collective input, structural response: a uniform collective input (the Spirit Bomb) discriminates targets by load-bearing architecture rather than morality or magnitude alone — Vegeta survives, Frieza survives, Kid Buu is destroyed; the magnitude confound stays open (child invariant, DRAFT 0.2 patch notes) [SC-SB-001][SC-LU-FRIEZA-001]"
+  # Routing aid only. The full five-layer text (black-hole origin domain, owning entity,
+  # outside invasion, ch. 87 chamber, Black Frieza) lives in SC-LU-FRIEZA-001. Generic
+  # cosmology words ("black hole", "horizon") are kept out of this template so that
+  # ordinary black-hole prompts do not route here.
+  - "The outsider's first investment: an entity from an external substrate — Frieza's lineage, from an origin domain outside the universe owned by another entity, entering by stealth infiltration as an outside invasion — breaks the local hierarchy on its first long investment (ten years in a time-dilated chamber, Black Frieza); substrate activation is distinct from binding vow and deliberate investment [SC-LU-FRIEZA-001]"
   - >
     CONSCIOUSNESS_COGNITION_LINK: Exit sovereignty and informed consent belong to
     sovereign agency at AI, Human, and Societal scales; collapsing a node's autonomy

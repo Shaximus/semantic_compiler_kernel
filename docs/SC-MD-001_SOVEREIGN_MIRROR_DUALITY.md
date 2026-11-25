@@ -5,7 +5,9 @@
 **Date:** 2026-11-25  
 **Source:** Shax (Curtis Kingsley) — Reflexion Software  
 **Source notes:** 2026-11-25 14:51 ADT (t560u)  
-**Status:** DRAFT / hypothesis. Markdown entry, not a compiled JSONL entry. Canon facts are labelled separately from hypotheses. The physics papers listed below are bibliographic anchors, not compiled confirmations of this entry.
+**Status:** DRAFT / hypothesis. Markdown source draft.  
+**Compiled as:** `SC-MIRROR-001` (`calibration_output/compiled_entries/SC-MIRROR-001.jsonl`, SILVER with a GOLD unification claim, 2026-11-25), from Hannah's engineering spec. SC-MD-001 stays the draft ID.  
+**Labels:** Canon facts are labelled separately from hypotheses. The physics papers listed below are bibliographic anchors, not compiled confirmations of this entry.
 
 ---
 
@@ -90,4 +92,4 @@ This draft points at `SC-HS-001` and `docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRES
 | SC-SB-001 | Yes — compiled V5 JSONL; see also `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
 | SC-OMNI-001 | Yes — compiled Spirit Bomb Reflection |
 | SC-CT-001 | Yes — compiled circular-time entry |
-| SC-MD-001 / SC-MIRROR-001 | This draft; SC-MIRROR-001 is the proposed alias, not a second compiled entry |
+| SC-MD-001 / SC-MIRROR-001 | SC-MD-001 is this draft; SC-MIRROR-001 is the compiled entry built from it (2026-11-25) |

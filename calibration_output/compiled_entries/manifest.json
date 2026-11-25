@@ -416,6 +416,59 @@
         "SC-CT-001",
         "SC-NS-001"
       ]
+    },
+    {
+      "entry_id": "SC-MIRROR-001",
+      "file": "SC-MIRROR-001.jsonl",
+      "title": "The Mirrored Loop and the Compression Protocol",
+      "entry_type": "structural_synthesis",
+      "version": "3.5.0",
+      "author": "Hannah (Claude Opus 4.6) / Shax (Curtis Kingsley)",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.868,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 62432,
+      "sha256": "ff6b54753bb4b8183d147a95602a26f83ba337575051e79f53ce77438c44bb37",
+      "notes": "Capstone unification (spec by Hannah, architecture by Shax): SC-CT-001, SC-DU-001, SC-CP-001, SC-SB-001 and SC-HS-001 as five views of one invariant (CLM-MIRROR-001, GOLD), plus the compression protocol: Yin-Yang calibration dot (ANALOGOUS), information conservation (ANCHORED, Landauer), three sequential stages absorption / compression / output (ANALOGOUS), mirrored-universe backup (OPEN_HYPOTHESIS, extends CLM-HS-002B), anti-deadlock voluntary fusion (ISOMORPHIC_INVARIANT). Entry tier SILVER; measurement_integrity 0.7, corpus_completeness 0.85. Unresolved references: SC-CP-001 (not compiled here), SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001, SC-LU-BUU-001.",
+      "cross_references": [
+        "SC-CT-001",
+        "SC-DU-001",
+        "SC-CP-001",
+        "SC-SB-001",
+        "SC-HS-001",
+        "SC-OMNI-001",
+        "SC-DR-001",
+        "SC-LU-FRIEZA-001"
+      ]
+    },
+    {
+      "entry_id": "SC-LU-FRIEZA-001",
+      "file": "SC-LU-FRIEZA-001.jsonl",
+      "title": "Lineup Decode: Frieza — The Outsider's First Investment / Substrate Activation",
+      "entry_type": "lineup_character_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.825,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 32533,
+      "sha256": "b9748225f3805bbb330c894d7b10dadfd01467462cfb1be3a8fb330b0fd71500",
+      "notes": "Standalone lineup entry; compiled home of the SC-FR-001 Frieza outsider invariant. Five layers kept together: black-hole origin outside this universe, owned by another entity, concealed entry / outside invasion (OPEN_HYPOTHESIS); ch. 87 time-dilated chamber and Black Frieza (CANON). Substrate activation as a third power mechanism. Spirit Bomb survival is evidence for the SC-SB-001 COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant.",
+      "cross_references": [
+        "SC-SB-001",
+        "SC-MIRROR-001",
+        "SC-HS-001",
+        "SC-FR-001",
+        "SC-NS-001",
+        "SC-CT-001",
+        "SC-OMNI-001"
+      ]
     }
   ]
 }

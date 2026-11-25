@@ -39,7 +39,14 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-BRM-001",       # docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md (feasibility dossier)
     "SC-FR-001",        # docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md (DRAFT 0.1)
     "SC-MD-001",        # docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md (DRAFT 0.1)
-    "SC-MIRROR-001",    # proposed alias of SC-MD-001, not a second compiled entry
+    # SC-MIRROR-001 is compiled since 2026-11-25 (calibration_output/compiled_entries/SC-MIRROR-001.jsonl);
+    # SC-MD-001 stays the markdown source-draft ID.
+    # Named in the SC-MIRROR-001 spec section 5 but not present in this repository
+    # (recorded as unresolved in the entry; never stubbed):
+    "SC-LU-PICCOLO-001",
+    "SC-LU-GOKU-001",
+    "SC-LU-VEGETA-001",
+    "SC-LU-BUU-001",
 }
 
 
@@ -115,7 +122,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 21, f"Authoritative local compiled entry registry size == 21 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 23, f"Authoritative local compiled entry registry size == 23 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():
