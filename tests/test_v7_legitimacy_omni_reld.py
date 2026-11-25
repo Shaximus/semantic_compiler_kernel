@@ -76,7 +76,9 @@ class OmniStateAndReldTests(unittest.TestCase):
         )
         self.assertEqual(shatter["outcome"], ReflectionOutcome.VESSEL_SHATTER.value)
         self.assertFalse(shatter["integrated"])
-        self.assertFalse(shatter["identity_claim_allowed"])
+        self.assertTrue(shatter["substrate_confusion_check"])
+        self.assertTrue(shatter["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", shatter)
 
         # Same raw dose attenuated by time (2x) and support (3x) -> effective 0.667 <= 1.0 -> integrates!
         integrated = evaluate_spirit_bomb_reflection(

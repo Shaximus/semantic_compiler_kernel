@@ -57,7 +57,9 @@ class BuildcraftOntologyTests(unittest.TestCase):
             "The RTX PRO 6000 Blackwell 96 GB is a mirror-tier 10 link bow."
         )
         premium = next(mapping for mapping in mappings if mapping["mapping_id"] == "BUILD_014")
-        self.assertFalse(premium["identity_claim_allowed"])
+        self.assertTrue(premium["substrate_confusion_check"])
+        self.assertTrue(premium["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", premium)
         self.assertEqual(premium["mapping_class"], "STRUCTURAL_ANALOGY")
 
     def test_dense_statement_recovers_hierarchy(self) -> None:
@@ -99,7 +101,9 @@ class BuildcraftOntologyTests(unittest.TestCase):
         ids = {mapping["mapping_id"] for mapping in mappings}
         self.assertIn("BUILD_017", ids)
         mtp = next(mapping for mapping in mappings if mapping["mapping_id"] == "BUILD_017")
-        self.assertFalse(mtp["identity_claim_allowed"])
+        self.assertTrue(mtp["substrate_confusion_check"])
+        self.assertTrue(mtp["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", mtp)
         self.assertEqual(mtp["mapping_class"], "STRUCTURAL_ANALOGY")
         joined = " ".join(mtp["preserved_invariants"]).lower()
         self.assertIn("acceptance rate", joined)
@@ -126,7 +130,9 @@ class BuildcraftOntologyTests(unittest.TestCase):
             self.assertIn("static at craft time", guardrails, mapping_id)
             self.assertIn("optimization structure", guardrails, mapping_id)
             self.assertIn("breakpoints", guardrails, mapping_id)
-            self.assertFalse(mapping.to_fractal_mapping()["identity_claim_allowed"], mapping_id)
+            self.assertTrue(mapping.to_fractal_mapping()["substrate_confusion_check"], mapping_id)
+            self.assertTrue(mapping.to_fractal_mapping()["positional_claims_permitted"], mapping_id)
+            self.assertNotIn("identity_claim_allowed", mapping.to_fractal_mapping())
 
 
 class BuildcraftResolverRegressionTests(unittest.TestCase):

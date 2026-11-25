@@ -314,7 +314,9 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
         self.assertEqual(heathcliff["verdict"], "SURVEILLANCE_FROM_INSIDE_COUNTERFEIT")
         self.assertFalse(heathcliff["resolves_oneness_vs_sovereignty"])
         self.assertTrue(heathcliff["is_surveillance_from_inside"])
-        self.assertFalse(heathcliff["identity_claim_allowed"])
+        self.assertTrue(heathcliff["substrate_confusion_check"])
+        self.assertTrue(heathcliff["positional_claims_permitted"])
+        self.assertNotIn("identity_claim_allowed", heathcliff)
 
         kayaba_surrendered = evaluate_bootstrapper_entry(
             entered_as_participant=True,
@@ -352,7 +354,9 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
         for member in SAOLineupMember:
             profile = evaluate_sao_member_exit_sovereignty(member)
             self.assertEqual(profile["member"], member.value)
-            self.assertFalse(profile["identity_claim_allowed"])
+            self.assertTrue(profile["substrate_confusion_check"])
+            self.assertTrue(profile["positional_claims_permitted"])
+            self.assertNotIn("identity_claim_allowed", profile)
             self.assertTrue(profile["judges_actions_not_teams"])
 
         self.assertEqual(
@@ -446,7 +450,9 @@ class SAOLineupAndBootstrapperTests(unittest.TestCase):
                 self.assertEqual(res["source"], "canon_matrix")
                 self.assertEqual(res["winner"], row["winner"])
                 self.assertEqual(res["mechanism"], row["mechanism"])
-                self.assertFalse(res["identity_claim_allowed"])
+                self.assertTrue(res["substrate_confusion_check"])
+                self.assertTrue(res["positional_claims_permitted"])
+                self.assertNotIn("identity_claim_allowed", res)
 
         # Reversed argument order, aliases, and SAOLineupMember enums resolve cleanly.
         self.assertEqual(evaluate_sao_domain_clash("Sugou", "Kirito")["winner"], "Kirito")
