@@ -22,6 +22,8 @@ This repository is dual-licensed. The license terms themselves are unchanged:
 - The public code is **[AGPL-3.0](LICENSE)**. AGPL allows use, including in a business, if you follow its rules. If you run this software as a network service — including SaaS, APIs, hosted pipelines, or agent frameworks — [AGPL Section 13](https://www.gnu.org/licenses/agpl-3.0.html#section13) requires you to provide the complete corresponding source of the network-interacting stack under AGPL-3.0.
 - If you cannot or will not meet those obligations (closed-source products, proprietary cloud integration, enterprise deployment without source disclosure), you need a paid **[Commercial License](COMMERCIAL_LICENSE.md)**.
 
+**A Semantic Compiler mobile app — a bolt-in add-on for AI mobile apps — is in development, and it needs funding to continue.** If you want to see it ship, support it through [Buy Me a Coffee](https://buymeacoffee.com/kingsleywmk) or a [Commercial License](COMMERCIAL_LICENSE.md).
+
 If this work is useful, please contribute or pay for the services it renders:
 
 - **[Buy Me a Coffee](https://buymeacoffee.com/kingsleywmk)** — one-time or recurring support
