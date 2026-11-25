@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 17 JSONL compiled entries and their SHA-256 manifest."""
+    """Verify all 18 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 17)
+        self.assertEqual(len(entries), 18)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -66,6 +66,7 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-HS-001",
                 "SC-IT-OCTO-RNA-EDIT-001",
                 "SC-OMNI-001",
+                "SC-DU-001",
             },
         )
 
@@ -176,7 +177,9 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
             self.assertEqual(len(row["gates"]), 9)
             self.assertTrue(row["isomorphism_quality"]["hard_gate_passed"])
             for mapping in row["isomorphism_analysis"]["mappings"]:
-                self.assertFalse(mapping["identity_claim_allowed"])
+                self.assertTrue(mapping["substrate_confusion_check"])
+                self.assertTrue(mapping["positional_claims_permitted"])
+                self.assertNotIn("identity_claim_allowed", mapping)
 
         sugou = _load_jsonl(COMPILED_DIR / "SC-LU-SAO-SUGOU-001.jsonl")[0]
         self.assertEqual(sugou["exit_behavior"], "BLOCKS")

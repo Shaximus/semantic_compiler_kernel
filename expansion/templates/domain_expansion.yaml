@@ -82,7 +82,8 @@ components:
     function: >
       Falsifiable counterplay transfer verifier separating ISOMORPHIC_INVARIANT from
       STRUCTURAL_ANALOGY and RESIDUAL_MISMATCH while enforcing BALANCE_ONLY residuals,
-      the 0.9 untested gate cap, and identity_claim_allowed=false on fiction-to-real maps.
+      the 0.9 untested gate cap, and substrate_confusion_check=true on all cross-substrate
+      maps (SC-PATCH-DU-001: blocks material claims, permits positional claims).
     criticality: high
     medical_map: prognosis
 

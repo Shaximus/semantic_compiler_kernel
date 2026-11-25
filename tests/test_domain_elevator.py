@@ -57,9 +57,9 @@ class RackIndexingAndCachingTests(unittest.TestCase):
 
             stats = elevator.stats
             self.assertEqual(stats["domain_slots"], 46)
-            self.assertEqual(stats["compiled_entry_slots"], 17)
+            self.assertEqual(stats["compiled_entry_slots"], 18)
             self.assertEqual(stats["invariant_class_slots"], 14)
-            self.assertEqual(stats["total_slots"], 77)
+            self.assertEqual(stats["total_slots"], 78)
             self.assertGreater(stats["token_postings"], 500)
 
             # Repeated summon / park / retrieve / rotate calls must NOT re-read YAML or JSONL files.
@@ -399,14 +399,15 @@ class TurntableRotationTests(unittest.TestCase):
         self.assertIsInstance(rot, TurntableTranslation)
         self.assertEqual(rot.source_domain, "poe_chaos_inoculation")
         self.assertEqual(rot.target_domain, "mobile_security")
-        self.assertFalse(rot.identity_claim_allowed)
+        self.assertTrue(rot.substrate_confusion_check)
+        self.assertTrue(rot.positional_claims_permitted)
         self.assertGreater(len(rot.component_mappings), 0)
         self.assertGreater(rot.alignment_coverage, 0.0)
         self.assertTrue(rot.preserved_invariants)
         self.assertTrue(rot.transfer_predictions)
         self.assertTrue(rot.residual_mismatches)
         self.assertTrue(
-            any("identity_claim_allowed=False" in r for r in rot.residual_mismatches)
+            any("substrate_confusion_check=True" in r for r in rot.residual_mismatches)
         )
 
         # Rotate starting from a serialized SemanticTicket JSON
@@ -415,7 +416,8 @@ class TurntableRotationTests(unittest.TestCase):
         self.assertEqual(rot_tkt.source_domain, "soul_bomb_sovereignty")
         self.assertEqual(rot_tkt.target_domain, "kv_cache_inference")
         self.assertEqual(rot_tkt.source_ticket.ticket_id, sb_ticket.ticket_id)
-        self.assertFalse(rot_tkt.identity_claim_allowed)
+        self.assertTrue(rot_tkt.substrate_confusion_check)
+        self.assertTrue(rot_tkt.positional_claims_permitted)
         self.assertGreater(len(rot_tkt.component_mappings), 0)
         self.assertTrue(rot_tkt.residual_mismatches)
 

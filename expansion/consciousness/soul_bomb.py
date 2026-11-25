@@ -967,7 +967,8 @@ def evaluate_bootstrapper_entry(
         ),
         "canon_phase": canon_phase,
         "epistemic_status": "SUPPORTED_IN_NARRATIVE_NOT_REAL_WORLD_TEST",
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
     }
 
 
@@ -1018,7 +1019,8 @@ def evaluate_sao_member_exit_sovereignty(
         "claims": [dict(c) for c in spec["claims"]] if "claims" in spec else [],
         "act_classification": act_classification,
         "judges_actions_not_teams": True,
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
     }
 
 
@@ -1069,7 +1071,8 @@ def evaluate_sao_lineup_composite(
             "The 8/8 result shows the story's author shares the exit intuition; "
             "it is supporting evidence, not independent real-world confirmation."
         ),
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
     }
 
 
@@ -1128,7 +1131,8 @@ def evaluate_sao_domain_clash(
             "winner": canon_match["winner"],
             "mechanism": canon_match["mechanism"],
             "status": canon_match["status"],
-            "identity_claim_allowed": False,
+            "substrate_confusion_check": True,
+            "positional_claims_permitted": True,
         }
 
     if surrendered_authority_used and hoarded_privilege_used:
@@ -1163,7 +1167,8 @@ def evaluate_sao_domain_clash(
         "winner": winner,
         "mechanism": mechanism,
         "canon_reference": canon_match["pair"] if canon_match is not None else None,
-        "identity_claim_allowed": False,
+        "substrate_confusion_check": True,
+        "positional_claims_permitted": True,
     }
 
 
