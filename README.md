@@ -45,7 +45,7 @@ It also maintains the operational architecture of the substrate: the **Conscious
 
 ## Status
 
-**Current release:** `V3.5.2` (2026-11-23) — supersedes `V3.5.1`
+**Current release:** `V3.8.0` (2026-11-24) — supersedes `V3.5.2`
 
 - **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml` + `MANIFEST.in`):** Setuptools package layout (`semantic_compiler.*`) with `[project.urls]` and bundled `CANARY.json` & `COMMERCIAL_LICENSE.md` in both wheel and sdist distributions. Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
@@ -62,7 +62,7 @@ It also maintains the operational architecture of the substrate: the **Conscious
 - **Compiled Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (**16 entries — 8 GOLD + 8 SILVER:** `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001` v1.1.0, `SC-DOMAIN-EXPANSION-001`, `SC-SB-001`, `SC-HS-001` v1.1.0, `SC-IT-OCTO-RNA-EDIT-001`, `SC-LU-SAO-LINEUP-001`, `SC-LU-SAO-KIRITO-001`, `SC-LU-SAO-ASUNA-001`, `SC-LU-SAO-YUI-001`, `SC-LU-SAO-SUGOU-001`, `SC-LU-SAO-ALICE-001`, `SC-LU-SAO-EUGEO-001`, and `SC-LU-SAO-CARDINAL-001`).
 - **Gem Decode & Gem Forge (`expansion.gem_decode`, `expansion.gem_forge`):** Deterministic Path of Exile skill/support-gem translation into inference-architecture build sheets and multi-gem synthesis over a pinned RePoE corpus.
 - **Buildcraft Ontology (`registry` + `translation`):** `BUILD_001`–`BUILD_018` structural compute mappings resolved by a two-layer relation-aware structural + trigger-recall resolver.
-- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → **`V3.5.2`**
+- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → `V3.5.2` → **`V3.8.0`**
 
 ---
 
@@ -250,8 +250,9 @@ semantic_compiler_kernel/
 ├── registry/             # Terms, constants, departments, buildcraft ontology (V3.5.0)
 ├── translation/          # Fractal translation + structural resolver
 ├── modes/                # Operating modes (coherence, reality orientation, defense pathology)
-├── expansion/            # Domain decompression, gem_decode/forge, corpus, advisor
-│   ├── consciousness/    # Consciousness/Cognition Split, Client-Server, Circular Time, Domain Expansion & Soul Bomb
+├── expansion/            # Domain decompression, Domain Elevator, gem_decode/forge, corpus, advisor
+│   ├── consciousness/    # Consciousness/Cognition, Client-Server, Circular Time, Domain Expansion, Soul Bomb, Cosmo & Recoding
+│   ├── elevator.py       # O(1) Domain Elevator, SemanticTicket park/retrieve, cross-domain turntable
 │   ├── gem_decode/       # Gem language → inference builds
 │   ├── gem_forge/        # Multi-gem synthesis + pinned RePoE corpus
 │   ├── isomorphism/      # Universal functional graph & overlay
@@ -261,8 +262,8 @@ semantic_compiler_kernel/
 ├── .agents/skills/       # Native repo agent skills (invariant-translator)
 ├── schemas/              # Core dataset JSON schemas (V3.5.0 primary + V3.1.1/V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
-├── calibration_output/   # Generated corpora, release manifests, reports, 14 compiled entries
-├── docs/                 # Provenance docs, invariants, Ego-Lineup map, review reports
+├── calibration_output/   # Generated corpora, release manifests, reports, 16 compiled entries
+├── docs/                 # Provenance docs, invariants, 24-class invariant catalog, Ego-Lineup & FLRW notes
 ├── tests/                # Unit & integration tests (pytest + unittest)
 ├── CANARY.json           # Cryptographic provenance watermark
 ├── COMMERCIAL_LICENSE.md # Enterprise / closed-source dual-licensing terms
@@ -276,11 +277,15 @@ semantic_compiler_kernel/
 
 | Artifact | Path |
 |---|---|
+| Release manifest (V3.8.0) | `calibration_output/RELEASE_MANIFEST_V3_8_0.json` |
 | Release manifest (V3.5.2) | `calibration_output/RELEASE_MANIFEST_V3_5_2.json` |
 | Release manifest (V3.5.1) | `calibration_output/RELEASE_MANIFEST_V3_5_1.json` |
 | Release manifest (V3.5.0) | `calibration_output/RELEASE_MANIFEST_V3_5_0.json` |
 | Release manifest (V3.1.1) | `calibration_output/RELEASE_MANIFEST_V3_1_1.json` |
 | Release manifest (V3.0.0) | `calibration_output/RELEASE_MANIFEST_V3_0_0.json` |
+| Compiled entries manifest (16 entries) | `calibration_output/compiled_entries/manifest.json` |
+| Invariant catalog (24 classes) | `docs/invariant_catalog/INVARIANT_CATALOG.md` |
+| Flat FLRW Hubble–Schwarzschild note | `docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md` |
 | Known limitations | `calibration_output/KNOWN_LIMITATIONS_V2_1_3.md` |
 | SFT pilot train | `calibration_output/SFT_PILOT_DATASET_V1.jsonl` |
 | SFT pilot eval | `calibration_output/SFT_PILOT_EVALUATION_SET_V1.jsonl` |
