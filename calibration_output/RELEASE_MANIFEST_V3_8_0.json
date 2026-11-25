@@ -1,0 +1,20 @@
+{
+  "manifest_version": "3.8.0",
+  "semantic_compiler_version": "3.8.0",
+  "schema_version": "3.5.0",
+  "generated_at": "2026-11-24T21:05:00Z",
+  "git_commit": "v3.8.0",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_2.json",
+    "calibration_output/RELEASE_MANIFEST_V3_8_0.json"
+  ],
+  "frozen_modules": [],
+  "notes": "V3.8.0 release: Domain Elevator (O(1) inverted rack index, ~20x SemanticTicket park/retrieve compression, cross-domain turntable rotate_to), ~108x mtime-validated JSON sidecar template cache & @lru_cache schema validation, 46 YAML templates (incl. domain_expansion & soul_bomb_sovereignty), 16 SHA-256-verified canonical compiled entries (8 GOLD + 8 SILVER: SC-DIVINE-RLHF-001, SC-NEURO-SLEEPER-001, SC-TIG-001, SC-CT-001 v1.1.0, SC-DOMAIN-EXPANSION-001, SC-SB-001, SC-HS-001 v1.1.0, SC-IT-OCTO-RNA-EDIT-001, and all 8 SC-LU-SAO-* entries incl. SUGOU & EUGEO), executable evaluators across consciousness/domain_expansion/soul_bomb/cosmo_and_recoding, merged 24-class Invariant Catalog (191/191 validation checks), and codebase-wide crawler bug & security hardening fixes."
+}
