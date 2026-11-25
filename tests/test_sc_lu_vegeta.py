@@ -1,4 +1,4 @@
-"""SC-LU-VEGETA-001 (Sovereignty-pole lineup) and the SC-VESSEL-001 DRAFT 0.2 answers, 2026-11-25 (t570s3000).
+"""SC-LU-VEGETA-001 (Sovereignty-pole lineup), SC-VESSEL-001, and t572u complicit enslavement.
 
 Checks SC-DE-001 schema parity, honest grading (anime-original flag, Shax
 interpretation, VSR verdict), the additive cross-reference resolution in
@@ -150,13 +150,59 @@ class VegetaCrossReferenceTests(unittest.TestCase):
 
     def test_vessel_draft_records_resolution_rule(self) -> None:
         doc = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")
-        self.assertIn("DRAFT 0.3", doc)
+        self.assertIn("DRAFT 0.4", doc)
         self.assertIn("The Almighty wins", doc)
         self.assertIn("calibration dot", doc)
         self.assertIn("RUL-BINARY-001", doc)
         self.assertIn("Ch. 268", doc)
         self.assertNotIn("**Not in this repository** (unresolved since", doc)
         self.assertNotIn("4. **Mutual acceptance:**", doc)
+
+
+    def test_complicit_enslavement_is_shax_interpretation_with_separate_layers(self) -> None:
+        c = CLAIMS["CLM-LU-VEG-09"]
+        self.assertIn("SHAX_INTERPRETATION", c["tig_grade"])
+        self.assertIn("ANALOGOUS", c["tig_grade"])
+        self.assertLessEqual(c["confidence"], 0.5)
+        self.assertIn("t572u", c["text"])
+        self.assertIn("complicit enslavement", c["text"].lower())
+        self.assertIn("partly self-chosen", c["text"])
+        self.assertIn("does not contain a line", c["text"])
+        layers = {layer["layer"]: layer for layer in c["layers"]}
+        self.assertEqual(set(layers), {"SHAX_INTERPRETATION", "CANON", "ANIME_ORIGINAL", "TRADITION"})
+        self.assertIn("t572u", layers["SHAX_INTERPRETATION"]["source"])
+        sources = " ".join(e["source"] for e in layers["CANON"]["evidence"])
+        for cite in ("ch. 213", "ch. 249", "ch. 308", "ch. 456", "ch. 69"):
+            self.assertIn(cite, sources)
+        self.assertIn("ANIME_ORIGINAL", layers["ANIME_ORIGINAL"]["grade"])
+        self.assertIn("Arlia", layers["ANIME_ORIGINAL"]["source"])
+        tradition = layers["TRADITION"]
+        self.assertIn("literature, not scripture", tradition["grade"])
+        self.assertIn("Paradise Lost", tradition["source"])
+        self.assertIn("I.263", tradition["text"] + tradition["source"])
+        self.assertNotIn("scripture", tradition["source"].lower())
+        self.assertEqual(c["ruling_link"]["ruling_id"], "RUL-BINARY-001")
+        self.assertEqual(c["ruling_link"]["revision"], 2)
+        self.assertIn("refusal state", c["ruling_link"]["reading"])
+        self.assertIn("SHAX_INTERPRETATION", c["ruling_link"]["grade"])
+        residuals = " ".join(c["residuals"])
+        self.assertIn("no line", residuals.lower())
+        self.assertIn("Battle of Gods", residuals)
+        self.assertIn("ch. 69", residuals)
+        self.assertIn("owner", residuals.lower())
+
+    def test_complicit_enslavement_does_not_change_tier_or_score(self) -> None:
+        self.assertEqual(VEGETA["metadata"]["entry_revision"], "1.1.0")
+        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.85)
+        self.assertEqual(VEGETA["dataset_tier"], "SILVER")
+        self.assertTrue(any(a.get("by") == "Shax (t572u)" for a in VEGETA["metadata"]["addenda"]))
+
+    def test_vessel_draft_records_t572u_cross_reference(self) -> None:
+        doc = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")
+        self.assertIn("t572u", doc)
+        self.assertIn("not like Lucifer didn't enjoy", doc)
+        self.assertIn("complicit enslavement", doc)
+        self.assertIn("CLM-LU-VEG-09", doc)
 
 
 

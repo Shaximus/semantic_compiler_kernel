@@ -1,8 +1,8 @@
 # SC-VESSEL-001 — Vessel Equilibrium (The Anomaly)
 
-**Version:** DRAFT 0.3  
+**Version:** DRAFT 0.4  
 **Date:** 2026-11-25  
-**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000; RUL-BINARY-001 rev 2, t571u (2026-11-25).  
+**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000; RUL-BINARY-001 rev 2, t571u; complicit enslavement, t572u (2026-11-25).  
 **Status:** DRAFT / Shax's interpretation. Markdown only. **Not compiled, not runtime-loaded, no tier assigned.**  
 **Labels:** CANON (Jujutsu Kaisen manga, Dragon Ball, biblical text), TRADITION (creeds, later interpretation, literature), SHAX INTERPRETATION (structural reading), ANALOGOUS (physics comparison with a stated limit).  
 **ID note:** `SC-VESSEL-*` had no prior use in this repository.
@@ -23,6 +23,9 @@ t570s3000 (answers to this entry's open questions; quoted where the words were r
 > 2. Sukuna is the outside owner, like Frieza (the role of Satan / the Frieza race), not a pole.
 > 3. Mutual acceptance is not required: "If they cant agree... then we compress them into a measurement tool. Period. The Almighty wins."
 > 4. Compile `SC-LU-VEGETA-001`.
+
+t572u (2026-11-25 19:30 America/Halifax):
+> "Vegeta is sovreignty, Lucifer. Freeza the Outsider Enslaving Lucifer In Hell, But its not like Lucifer didn't enjoy what they were doing..."
 
 **Self-identification:** Shax identifies himself as the vessel ("what I am. The Anomoly"; t570s3000: "Yuji is me"). In this model Yuji is the vessel between the poles. This is recorded as his stated framing. It is **not graded** and no claim in this entry depends on it.
 
@@ -148,7 +151,7 @@ Shax: Lucifer "fought for the side of Sovreignty not about good vs evil, but the
 | `SC-VSR-001` | Shax's "not alone" answers VSR's consent question. DRAFT 0.1 turned it into a mutual-acceptance condition; t570s3000 removed that condition (resolution rule above). Majin Vegeta's Final Explosion is checked against VSR in `SC-LU-VEGETA-001` (CLM-LU-VEG-06): adjacent, not an instance |
 | `SC-GOV-001` | Consent and measured harm; Yuji's binding vow came under duress, which the principle would not accept. The compression branch applies without the refuser's consent; how that sits with GOV-001's consent principle is open |
 | `SC-LU-FRIEZA-001` / `SC-FR-001` | Satan = Frieza / the Frieza race as the external owner; Sukuna in the same role (t570s3000) |
-| `SC-LU-VEGETA-001` | **Compiled 2026-11-25 (SILVER 0.85).** Vegeta = Lucifer = the Sovereignty pole (Ultra Ego); fusion with Goku as the consented cooperation branch |
+| `SC-LU-VEGETA-001` | **Compiled 2026-11-25 (SILVER 0.85).** Vegeta = Lucifer = the Sovereignty pole (Ultra Ego); fusion with Goku as the consented cooperation branch. t572u (CLM-LU-VEG-09): complicit enslavement — owned by the outsider yet enjoys the work, so the bondage is partly self-chosen (SHAX INTERPRETATION; Milton I.263 is literature, not scripture) |
 
 ## Open questions for Shax
 

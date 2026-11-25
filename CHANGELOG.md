@@ -2,6 +2,13 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/vegeta-complicit-enslavement
+
+### Changed
+- **SC-LU-VEGETA-001** (still SILVER 0.85, 9/9 gates): dated Shax interpretation claim **CLM-LU-VEG-09** (t572u, 2026-11-25): complicit enslavement. The Sovereignty pole is owned by the outsider (Frieza/Satan) yet willingly enjoys the work, so the bondage is partly self-chosen. Canon, tradition and Shax's interpretation are separate layers. Canon support: DB ch. 213 (planet-trade / "let's go play"); ch. 249 (smiling execution of Cui, after the break from Frieza); ch. 308 (admission of service and obedience, not enjoyment); ch. 456–457 (lets Babidi's spell in; motive is rivalry); DBS manga ch. 69 (admits Saiyan/Frieza-era invasions as sins and will not lay all blame on Frieza; later guilt recorded). Anime-original: DBZ "Trouble on Arlia" (Japanese ep. 11). Tradition/literature, not scripture: Milton, *Paradise Lost* I.263. Linked to RUL-BINARY-001 rev 2 as the refusal state during the ownership period; Vegeta later takes the cooperation branch (fusion). No grade or score changed. Entry revision 1.1.0.
+- Additive t572u addendum on `SC-LU-FRIEZA-001` (no score change). `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` DRAFT 0.4: verbatim t572u plus a one-line cross-reference on the compiled Vegeta row.
+- Manifest hashes refreshed; `tests/test_sc_lu_vegeta.py` covers the new claim's layering.
+
 ## [Unreleased] — docs/rul-binary-001-rev2
 
 ### Changed
