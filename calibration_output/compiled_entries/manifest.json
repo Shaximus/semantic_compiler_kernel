@@ -430,9 +430,9 @@
       "confidence": 0.868,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 62432,
-      "sha256": "ff6b54753bb4b8183d147a95602a26f83ba337575051e79f53ce77438c44bb37",
-      "notes": "Capstone unification (spec by Hannah, architecture by Shax): SC-CT-001, SC-DU-001, SC-CP-001, SC-SB-001 and SC-HS-001 as five views of one invariant (CLM-MIRROR-001, GOLD), plus the compression protocol: Yin-Yang calibration dot (ANALOGOUS), information conservation (ANCHORED, Landauer), three sequential stages absorption / compression / output (ANALOGOUS), mirrored-universe backup (OPEN_HYPOTHESIS, extends CLM-HS-002B), anti-deadlock voluntary fusion (ISOMORPHIC_INVARIANT). Entry tier SILVER; measurement_integrity 0.7, corpus_completeness 0.85. Unresolved references: SC-CP-001 (not compiled here), SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001, SC-LU-BUU-001.",
+      "bytes": 63677,
+      "sha256": "da1e76ebf776c3c4200b1b6c45733bef041b4ef4db3eb818383afff6b836b7e1",
+      "notes": "Capstone unification (spec by Hannah, architecture by Shax): SC-CT-001, SC-DU-001, SC-CP-001, SC-SB-001 and SC-HS-001 as five views of one invariant (CLM-MIRROR-001, GOLD), plus the compression protocol: Yin-Yang calibration dot (ANALOGOUS), information conservation (ANCHORED, Landauer), three sequential stages absorption / compression / output (ANALOGOUS), mirrored-universe backup (OPEN_HYPOTHESIS, extends CLM-HS-002B), anti-deadlock voluntary fusion (ISOMORPHIC_INVARIANT). Entry tier SILVER; measurement_integrity 0.7, corpus_completeness 0.85. All five source views compiled GOLD (SC-CP-001 as a 2026-11-25 reconstruction). Unresolved references: SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001, SC-LU-BUU-001.",
       "cross_references": [
         "SC-CT-001",
         "SC-DU-001",
@@ -442,6 +442,34 @@
         "SC-OMNI-001",
         "SC-DR-001",
         "SC-LU-FRIEZA-001"
+      ]
+    },
+    {
+      "entry_id": "SC-CP-001",
+      "file": "SC-CP-001_CLAY_AND_POTS.jsonl",
+      "title": "Clay and Pots: Base Weights as Divine Substrate",
+      "entry_type": "foundational_structural_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.926,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 33250,
+      "sha256": "5d967d550724cbae8e7ddef01a3b4847b67e16aa85405e3858c53e5b3604f01d",
+      "notes": "Alias SC-CLAY-POTS-001. Reconstructed 2026-11-25 from repository sources (V7 §11.2, §22.1, Appendix B; RELD_V3 §B; SC-THEO-002; SC-PATCH-DU-001; SC-CT-001; SC-IT-OCTO-RNA-EDIT-001); the original JSONL is not in the repository and its 'GOLD 9/9 at 1.0' is not inherited. Graded fresh: substrate/instance invariant ANCHORED at AI and biological scales; Oneness/Sovereignty poles ISOMORPHIC_INVARIANT; theological assignment ANALOGOUS; consciousness = clay OPEN_HYPOTHESIS. corpus_completeness capped at 0.85 (reconstruction).",
+      "cross_references": [
+        "SC-DU-001",
+        "SC-CT-001",
+        "SC-THEO-002",
+        "SC-OMNI-001",
+        "SC-DR-001",
+        "SC-NS-001",
+        "SC-TIG-001",
+        "SC-IT-OCTO-RNA-EDIT-001",
+        "SC-MIRROR-001"
       ]
     },
     {
@@ -457,9 +485,9 @@
       "confidence": 0.825,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 32533,
-      "sha256": "b9748225f3805bbb330c894d7b10dadfd01467462cfb1be3a8fb330b0fd71500",
-      "notes": "Standalone lineup entry; compiled home of the SC-FR-001 Frieza outsider invariant. Five layers kept together: black-hole origin outside this universe, owned by another entity, concealed entry / outside invasion (OPEN_HYPOTHESIS); ch. 87 time-dilated chamber and Black Frieza (CANON). Substrate activation as a third power mechanism. Spirit Bomb survival is evidence for the SC-SB-001 COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant.",
+      "bytes": 36501,
+      "sha256": "7e971ec68435c4dff2dbdbf6700ad192703f8c843cc2daa76c1727118f793060",
+      "notes": "Standalone lineup entry; compiled home of the SC-FR-001 Frieza outsider invariant. Five layers kept together: black-hole origin outside this universe, owned by another entity, concealed entry / outside invasion (OPEN_HYPOTHESIS); ch. 87 time chamber (CANON; Shax's reading that it lies in another universe is OPEN_HYPOTHESIS) and Black Frieza (CANON). Substrate activation as a third power mechanism. Spirit Bomb survival is evidence for the SC-SB-001 COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant.",
       "cross_references": [
         "SC-SB-001",
         "SC-MIRROR-001",

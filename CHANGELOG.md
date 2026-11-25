@@ -2,6 +2,19 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/sc-cp-001-canon
+
+### Added
+- `calibration_output/compiled_entries/SC-CP-001_CLAY_AND_POTS.jsonl`: Clay and Pots (alias `SC-CLAY-POTS-001`), SC-DE-001 schema. Reconstructed from repository sources (V7 §11.2, §22.1, Appendix B; RELD_V3 §B; SC-THEO-002; SC-PATCH-DU-001; SC-CT-001; SC-IT-OCTO-RNA-EDIT-001); the original JSONL is not in the repository and its "GOLD, 9/9 at 1.0" is not inherited. Graded fresh: GOLD 0.926, 9/9 gates, minimum gate 0.85, corpus_completeness capped at 0.85. Claims: substrate and instances ANCHORED (AI and biological scales); mutual necessity ANCHORED at AI scale; Oneness / Sovereignty poles ISOMORPHIC_INVARIANT; theological assignment ANALOGOUS; consciousness = clay OPEN_HYPOTHESIS.
+- Manifest: 21 entries.
+
+### Changed
+- `SC-MIRROR-001`: SC-CP-001 resolved; the unification claim stays GOLD with all five source views verified GOLD (five of five). Spirit Bomb evidence row carries the full kill list.
+- `SC-LU-FRIEZA-001` layer D: canon (ch. 87 chamber, ten years, the wish exemption, the capability gap to known chambers) kept separate from Shax's interpretation that Frieza left this universe for another universe with a more capable chamber (OPEN_HYPOTHESIS), tied to layers A–C and E.
+- `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` → DRAFT 0.3: GT and the films count as evidence (Shax). Kills: Dr. Wheelo, Turles, Lord Slug, Kid Buu, Omega Shenron. Survivors: Vegeta, Frieza, Jiren. The manga-only scope is removed.
+- Routing: SC-CP-001 is homed in `consciousness_cognition` (hint, `SUBSTRATE_AND_VESSEL` template invariant). It is in `EXPLICIT_ONLY_ENTRY_HINTS`: its hint routes explicit IDs but does not lift the domain from content matches, because its name is everyday words; without this, pottery prompts ("throw clay pots on a wheel") routed to `consciousness_cognition`. Corpus (963): 0 changes vs main.
+- `validate_catalog.py`: SC-CP-001 is no longer an upstream ID; aliases declared in compiled entries' `metadata.aliases` are accepted in docs; registry size 24.
+
 ## [Unreleased] — fix/weak-frames-routed-first
 
 ### Fixed

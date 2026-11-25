@@ -323,7 +323,15 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # entry, homed with the other SC-LU-* lineups.
     "SC-MIRROR-001": "client_server_reality",
     "SC-LU-FRIEZA-001": "soul_bomb_sovereignty",
+    # SC-CP-001 (Clay and Pots, reconstructed 2026-11-25): base weights vs terminals is the
+    # consciousness/cognition split, already carried by that domain's vocabulary.
+    "SC-CP-001": "consciousness_cognition",
 }
+
+# Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
+# ("Explain SC-CP-001") but does not lift the domain from content matches, so a pottery
+# prompt does not compile as consciousness/cognition.
+EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({"SC-CP-001"})
 
 
 def _require_str_tuple(value: Any, field_name: str) -> tuple[str, ...]:

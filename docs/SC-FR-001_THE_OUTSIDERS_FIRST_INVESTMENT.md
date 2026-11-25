@@ -35,9 +35,11 @@ That black hole is owned or controlled by another entity.
 
 The outside lineage entered this universe via stealth / deception (infiltration).
 
-### D. Temporal refuge — CANON (DBS manga ch. 87)
+### D. Temporal refuge outside this universe — CANON + Shax interpretation
 
-Frieza found a time-dilated chamber on a planet he conquered, and trained 10 years.
+**Canon (DBS manga ch. 87):** Frieza found a room where time flows differently, like the Room of Spirit and Time, on one of his conquered planets, and trained there for ten years. He gives it as the reason Gas's strongest-in-the-universe wish did not count him. The known chambers are weaker: the Lookout's (one year per outside day, two-day limit in DBZ) and the Galactic Patrol's (three days per outside day).
+
+**Shax's interpretation (2026-11-25, hypothesis):** Frieza left this universe and entered another universe that held a more capable time-manipulating chamber. The conquered planet holds the doorway; the chamber is on the other side. This repeats layers A–C: the outsider crosses the universe boundary again to invest, then re-enters (E). Canon does not say the chamber is in another universe; the wish exemption is consistent with it. Compiled in `SC-LU-FRIEZA-001` (layer D detail).
 
 ### E. Black Frieza — CANON
 

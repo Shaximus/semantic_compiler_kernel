@@ -30,7 +30,7 @@ MANIFEST_PATH = os.path.join(COMPILED_DIR, "manifest.json")
 # Upstream session entry IDs formally tracked in DOMAIN_LEDGER.md Section 3
 # awaiting standalone JSONL drops (never silently ignored as accidental typos).
 EXTERNAL_UPSTREAM_IDS = {
-    "SC-CP-001",
+    # SC-CP-001 is compiled since 2026-11-25 (SC-CP-001_CLAY_AND_POTS.jsonl, reconstruction).
     "SC-IT-POE-SOUL-EATER-001",
     "SC-IT-GOJO-KIT-001",
     # 2026-11-25 drops tracked as markdown patch/source docs (not compiled JSONL):
@@ -122,7 +122,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 23, f"Authoritative local compiled entry registry size == 23 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 24, f"Authoritative local compiled entry registry size == 24 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():
@@ -362,7 +362,16 @@ for fp in sorted(glob.glob(os.path.join(COMPILED_DIR, "*.jsonl")) + glob.glob(os
             json.loads(ln)
 
 # 5. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 25 classes
-allowed_doc_ids = valid_entry_ids | EXTERNAL_UPSTREAM_IDS
+# Aliases declared by compiled entries (metadata.aliases), e.g. SC-CLAY-POTS-001 -> SC-CP-001.
+declared_aliases = set()
+for item in manifest["entries"]:
+    with open(os.path.join(COMPILED_DIR, item["file"]), encoding="utf-8") as f:
+        first = next((ln for ln in f if ln.strip()), "")
+    try:
+        declared_aliases.update(json.loads(first).get("metadata", {}).get("aliases", []) or [])
+    except Exception:
+        pass
+allowed_doc_ids = valid_entry_ids | EXTERNAL_UPSTREAM_IDS | declared_aliases
 for md_name in ["INVARIANT_CATALOG.md", "DOMAIN_LEDGER.md"]:
     mp = os.path.join(CAT_DIR, md_name)
     with open(mp, encoding="utf-8") as f:
