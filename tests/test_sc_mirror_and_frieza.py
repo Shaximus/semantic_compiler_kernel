@@ -186,6 +186,33 @@ class CrossReferenceHonestyTests(unittest.TestCase):
         for layer in ("(A)", "(B)", "(C)", "(E)"):
             self.assertIn(layer, detail["tie_to_outsider_layers"])
 
+    def test_frieza_chamber_is_in_the_duality_mirror_graded_honestly(self) -> None:
+        # Shax (t566u): the chamber's universe is the Duality's mirrored universe.
+        layers_claim = next(c for c in FRIEZA["analysis"]["claims"] if c["claim_id"] == "CLM-LU-FRZ-02")
+        detail = layers_claim["layer_d_detail"]
+        self.assertIn("Duality's mirrored universe", detail["interpretation"]["text"])
+        self.assertIn("reverse", detail["interpretation"]["text"])
+        self.assertEqual(detail["interpretation"]["grade"], "OPEN_HYPOTHESIS")
+        anchor = detail["physics_anchor"]
+        self.assertIn("251301", anchor["citation"])
+        self.assertIn("not confirmed", anchor["grade"])
+        self.assertNotIn("ANCHORED", anchor["grade"])
+        self.assertEqual(detail["structural_fit"]["grade"], "ANALOGOUS")
+        self.assertTrue(detail["structural_fit"]["residuals"])
+        for ref in ("SC-DU-001", "SC-HS-001"):
+            self.assertIn(ref, detail["ties"])
+        self.assertIn("SC-DU-001", FRIEZA["metadata"]["cross_references"])
+        self.assertFalse(any("Which universe holds the chamber" in q for q in FRIEZA["analysis"]["open_investigations"]))
+
+    def test_duality_and_mirror_notes_are_additive_only(self) -> None:
+        du = _single("SC-DU-001_THE_DUALITY.jsonl")
+        self.assertEqual(du["dataset_tier"], "GOLD")
+        self.assertEqual(du["isomorphism_quality"]["score"], 0.925)
+        self.assertIn("mirrored universe", du["metadata"]["addenda"][0]["note"])
+        backup = next(c for c in MIRROR["analysis"]["claims"] if c["claim_id"] == "CLM-MIRROR-005")
+        self.assertEqual(backup["tig_grade"], "OPEN_HYPOTHESIS")
+        self.assertIn("SC-LU-FRIEZA-001", backup["cross_entry_notes"][0])
+
     def test_sb_patch_notes_carry_child_invariant(self) -> None:
         notes = (REPO_ROOT / "docs" / "SC-SB-001_THREE_CLAIM_STRUCTURE.md").read_text(encoding="utf-8")
         self.assertIn("COLLECTIVE INPUT / STRUCTURAL RESPONSE", notes)

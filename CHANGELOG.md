@@ -2,6 +2,14 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/frieza-mirror-universe
+
+### Changed
+- `SC-LU-FRIEZA-001` layer D: open question resolved by Shax (t566u). The ch. 87 chamber is in the Duality's mirrored universe, the CPT-mirror universe in which time runs in reverse relative to ours. Graded: Frieza's own statement that he was outside this universe is CANON; the mirror universe is a published model, not confirmed (Boyle, Finn & Turok, Phys. Rev. Lett. 121, 251301 (2018)); the chamber being there is OPEN_HYPOTHESIS; the reverse-time account of the chamber's time relation is ANALOGOUS, with residuals (a reversed arrow is not a clock-rate difference; the model's mirror lies across the Big Bang; the commonly reported ten days outside gives the Lookout's 365:1 rate). Cross-reference to `SC-DU-001` added. Gates and tier unchanged (SILVER 0.825).
+- `SC-MIRROR-001` CLM-MIRROR-005 and the `SC-LU-FRIEZA-001` resolution: additive notes. Grades unchanged.
+- `SC-DU-001`: additive `metadata.addenda` note only; no claim, gate or score changed (GOLD 0.925).
+- Manifest SHA-256 and byte counts refreshed for all three files.
+
 ## [Unreleased] — feat/router-leads-strong-frames
 
 ### Changed
