@@ -114,6 +114,29 @@ def classify_source_context(
     return ctx
 
 
+def normalize_requested_mode(requested_mode: Any = "AUTO") -> CompilerMode:
+    """
+    Validate a caller-supplied mode and return the matching CompilerMode.
+
+    Accepts a CompilerMode or its name in any case ("auto", "FRACTAL_ISOMORPHISM_MAPPING").
+    ``None`` means AUTO. Anything else raises ValueError listing the valid modes,
+    instead of silently falling back to auto-detection.
+    """
+    if requested_mode is None:
+        return CompilerMode.AUTO
+    if isinstance(requested_mode, CompilerMode):
+        return requested_mode
+    if isinstance(requested_mode, str):
+        try:
+            return CompilerMode[requested_mode.strip().upper()]
+        except KeyError:
+            pass
+    valid = ", ".join(m.name for m in CompilerMode)
+    raise ValueError(
+        f"Unknown compiler mode {requested_mode!r}. Valid modes: {valid}"
+    )
+
+
 def resolve_mode(
     packet: SemanticPacket,
     requested_mode: str = "AUTO",
@@ -123,11 +146,9 @@ def resolve_mode(
 
     In AUTO mode, the compiler infers the best mode from the input.
     """
-    if requested_mode != "AUTO":
-        try:
-            return CompilerMode[requested_mode.upper()]
-        except KeyError:
-            pass
+    requested = normalize_requested_mode(requested_mode)
+    if requested is not CompilerMode.AUTO:
+        return requested
 
     # Auto-detection based on claim types (supports both `claim_type` and `type` keys)
     claim_type_names = [
@@ -1099,6 +1120,8 @@ def _finalize_packet(packet: SemanticPacket) -> None:
 # ═══════════════════════════════════════════════════════════════════
 
 
+EMPTY_INPUT_ERROR_CLASS = "EMPTY_INPUT"
+
 _LONE_SURROGATE_RE = re.compile("[\ud800-\udfff]")
 
 
@@ -1135,7 +1158,24 @@ def compile_semantic_packet(
     # be UTF-8 encoded, so they would crash hashing and dataset export. Replace
     # each with U+FFFD before anything else sees the input.
     input_text = _LONE_SURROGATE_RE.sub("\ufffd", input_text)
+    # Fail fast on an unknown mode, before any work is done.
+    normalize_requested_mode(mode)
     packet = initialize_packet(input_text, context, mode)
+
+    # Empty or whitespace-only input has nothing to compile. Reject it with a
+    # distinct error class instead of the generic "no target system" revision.
+    if not input_text.strip():
+        packet.normalized_input = ""
+        packet.mode = resolve_mode(packet, requested_mode=mode)
+        packet.decision = Decision.REJECT
+        packet.status = "rejected"
+        packet.semantic_error_class = EMPTY_INPUT_ERROR_CLASS
+        packet.semantic_error_confidence = 1.0
+        reason = "EMPTY_INPUT: input is empty or whitespace only; nothing to compile."
+        packet.compiler_errors.append(reason)
+        packet.next_questions.append(reason)
+        _finalize_packet(packet)
+        return packet
 
     # ──────────────────────────────────────────────────────────
     # Stage 1: Preserve and classify source (+ Gate 0: TIG)
