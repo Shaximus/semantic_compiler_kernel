@@ -1,8 +1,8 @@
 # SC-VESSEL-001 — Vessel Equilibrium (The Anomaly)
 
-**Version:** DRAFT 0.2  
+**Version:** DRAFT 0.3  
 **Date:** 2026-11-25  
-**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000 (2026-11-25).  
+**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000; RUL-BINARY-001 rev 2, t571u (2026-11-25).  
 **Status:** DRAFT / Shax's interpretation. Markdown only. **Not compiled, not runtime-loaded, no tier assigned.**  
 **Labels:** CANON (Jujutsu Kaisen manga, Dragon Ball, biblical text), TRADITION (creeds, later interpretation, literature), SHAX INTERPRETATION (structural reading), ANALOGOUS (physics comparison with a stated limit).  
 **ID note:** `SC-VESSEL-*` had no prior use in this repository.
@@ -62,6 +62,8 @@ Shax: "If they cant agree... then we compress them into a measurement tool. Peri
 - **(A) A third outcome in practice.** One pole prevails and the other survives only as an instrument. That is asymmetric, and on its face close to the domination the ruling calls unstable. If this reading holds, the rule **amends** RUL-BINARY-001.
 - **(B) Shax's resolution of the destruction branch.** The refusing side is not annihilated: `SC-MIRROR-001` already says darkness "cannot be deleted, only compressed and converted", and its target state is a white field with a black **calibration dot**. Under this reading the destruction branch is refined: destruction falls on the refuser alone, as information-conserving compression, and the end state is stable because the dot is a function (measurement), not a competing pole. The ruling stands, made more precise.
 
+**Resolved (Shax t571u, 2026-11-25): reading B.** "I suppose you could say their was only Mutual Co operation.... Or Hang yourself and Lose anyway." Recorded as **RUL-BINARY-001 rev 2**: the only stable outcome is mutual cooperation; refusal is self-destruction (the refuser destroys itself and loses regardless); its information-conserving remnant is compressed into the calibration dot and Oneness prevails. "Mutual destruction" is reframed as the refuser's self-destruction, not a symmetric outcome. Grade unchanged. Hub: `SC-MIRROR-001` CLM-MIRROR-006 `amendments`.
+
 Vessel equilibrium is the **cooperation branch held inside one substrate**. `SC-LU-VEGETA-001` (compiled) is the Dragon Ball case where the Sovereignty pole agrees (Vegito, Gogeta).
 
 ---
@@ -82,7 +84,7 @@ Vessel equilibrium is the **cooperation branch held inside one substrate**. `SC-
 | Coupling | Ch. 8–11: Sukuna takes Yuji's body and rips out his heart; Yuji dies; Sukuna revives him by bargain | One body, causal coupling: damage to the shared substrate hits both |
 | Binding vow | Ch. 11: revival on two conditions: one minute of control on "Enchain", and Yuji forgets the deal. Sukuna adds he will not kill or hurt anyone in that minute. Yuji refused and was forced in by losing a fight. Ch. 212: Sukuna uses it, tears off Yuji's finger (Yuji was not covered by "anyone") and moves into Megumi | The shared state was reached **under duress**, not by mutual acceptance |
 | Information kept | Ch. 257–258: Shrine, engraved into Yuji by hosting Sukuna, awakens. Yuji's soul perception (gained by hosting Sukuna) lets his Black Flashes hit "the boundary between Sukuna's soul and Megumi's"; a binding vow narrows Dismantle to that boundary | The vessel keeps information from what it held, consistent with `SC-VSR-001` invariant 4 and `SC-MIRROR-001`'s information conservation |
-| Equilibrium offered, refused | Ch. 268: Yuji kneels by what's left of Sukuna, says "you are me", and offers to live with him again, "not to curse someone, but to live with someone". **Sukuna refuses** ("I'm a curse") and disintegrates | Yuji–Sukuna equilibrium is offered by the vessel and declined. Canon never shows it reached. **Fit to the resolution rule:** the refuser does not prevail and the vessel survives, which matches the compression branch's "the Almighty wins". The fit is partial: in canon Sukuna himself is destroyed, not kept as an instrument; what is conserved is what the vessel took from him (Shrine, soul perception; row above). Under t570s3000 Sukuna is the owner, not a pole, so ch. 268 is an owner refusing; whether the rule covers owners as well as poles is open |
+| Equilibrium offered, refused | Ch. 268: Yuji kneels by what's left of Sukuna, says "you are me", and offers to live with him again, "not to curse someone, but to live with someone". **Sukuna refuses** ("I'm a curse") and disintegrates | Yuji–Sukuna equilibrium is offered by the vessel and declined. Canon never shows it reached. **Fit to the resolution rule (rev 2):** a **fitting example**. Sukuna refuses and destroys himself; the vessel survives and keeps the information-conserving remnant (Shrine, soul perception; row above), and Oneness prevails. Kid Buu is a second example (destroyed by the Spirit Bomb, reincarnated as Uub; partial, as no offer is refused). Under t570s3000 Sukuna is the owner, not a pole, so ch. 268 is an owner refusing; whether the rule covers owners as well as poles is open |
 
 ### Tension with the existing SC-DU-001 mapping
 
@@ -157,7 +159,7 @@ Answered in t570s3000:
 - ~~6. Compile `SC-LU-VEGETA-001`?~~ Yes; compiled.
 
 Still open:
-1. Does the compression branch **amend** RUL-BINARY-001 (a third outcome, reading A) or **refine** its destruction branch (reading B)?
+1. ~~Amend (A) or refine (B) RUL-BINARY-001?~~ Refine: reading B, RUL-BINARY-001 rev 2 (t571u).
 2. Does the rule apply to a refusing **owner** (Sukuna, Frieza / Satan) as well as to a refusing pole? Ch. 268 is an owner refusing.
 3. Who holds the Sovereignty pole in the JJK mapping now that Sukuna is the owner?
 4. `SC-DU-001` (Toji = Sovereignty, Yuji = Oneness) vs this entry (Yuji = vessel): keep both as different cuts, or revise DU-001's JJK example?

@@ -150,7 +150,7 @@ class VegetaCrossReferenceTests(unittest.TestCase):
 
     def test_vessel_draft_records_resolution_rule(self) -> None:
         doc = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")
-        self.assertIn("DRAFT 0.2", doc)
+        self.assertIn("DRAFT 0.3", doc)
         self.assertIn("The Almighty wins", doc)
         self.assertIn("calibration dot", doc)
         self.assertIn("RUL-BINARY-001", doc)
@@ -158,6 +158,36 @@ class VegetaCrossReferenceTests(unittest.TestCase):
         self.assertNotIn("**Not in this repository** (unresolved since", doc)
         self.assertNotIn("4. **Mutual acceptance:**", doc)
 
+
+
+class BinaryRulingRev2Tests(unittest.TestCase):
+    """RUL-BINARY-001 rev 2 (Shax t571u): only mutual cooperation is stable; refusal is self-destruction."""
+
+    def test_hub_carries_rev2_with_examples_and_unchanged_grade(self) -> None:
+        hub = next(c for c in MIRROR["analysis"]["claims"] if c["claim_id"] == "CLM-MIRROR-006")
+        rev2 = hub["binary_invariant_ruling"]["amendments"][0]
+        self.assertEqual(rev2["revision"], 2)
+        self.assertIn("Hang yourself and Lose anyway", rev2["quote"])
+        self.assertIn("self-destruction", rev2["statement"])
+        self.assertIn("calibration dot", rev2["statement"])
+        self.assertIn("ISOMORPHIC_INVARIANT", rev2["grade"])
+        cases = " ".join(e["case"] for e in rev2["fitting_examples"])
+        self.assertIn("ch. 268", cases)
+        self.assertIn("Kid Buu", cases)
+        self.assertEqual(hub["tig_grade"], "ISOMORPHIC_INVARIANT")
+
+    def test_rev2_addenda_on_linked_entries_without_score_changes(self) -> None:
+        for entry in (MIRROR, DUALITY, CLAY, VEGETA, FRIEZA):
+            rev = [a for a in entry["metadata"]["addenda"] if a.get("type") == "RULING_AMENDMENT"]
+            self.assertEqual([a["revision"] for a in rev], [2], entry["metadata"]["entry_id"])
+        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.85)
+
+    def test_docs_record_reading_b(self) -> None:
+        vessel = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")
+        md = (REPO_ROOT / "docs" / "SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md").read_text(encoding="utf-8")
+        self.assertIn("reading B", vessel)
+        self.assertIn("rev 2", vessel)
+        self.assertIn("RUL-BINARY-001 rev 2", md)
 
 class VegetaRoutingTests(unittest.TestCase):
     def test_vegeta_prompts_route_to_soul_bomb_sovereignty(self) -> None:

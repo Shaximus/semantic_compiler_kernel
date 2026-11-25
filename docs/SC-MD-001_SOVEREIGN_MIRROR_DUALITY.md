@@ -79,6 +79,16 @@ Separate questions, left open:
 - **Tension (recorded, not a refutation):** Revelation does not present Satan as God's co-equal half. The dragon is a created rebel who is defeated and cast down (Rev 12:7–9; 20:10), so the text's outcome is defeat, not cooperation or mutual destruction. The ruling is about the shape of the structure; the text is about the standing of the parties. This caveat was raised in the earlier pasted GPT analysis.
 - **Residual:** the CPT model names no cooperation or destruction dynamic between the two universes; matter–antimatter annihilation is an analogy only.
 
+#### Amendment: RUL-BINARY-001 rev 2 (Shax, 2026-11-25, t571u)
+
+> "I suppose you could say their was only Mutual Co operation.... Or Hang yourself and Lose anyway."
+
+- **Refined statement:** the only stable outcome is **mutual cooperation**. Refusal is **self-destruction**: the refusing side destroys itself and loses regardless. Its information-conserving remnant is compressed into `SC-MIRROR-001`'s calibration dot (the white-field / black-dot target state), and Oneness prevails.
+- **Effect on rev 1:** "mutual destruction" is reframed as the refuser's self-destruction, not a symmetric stable outcome. Domination is still not a third outcome. This settles `SC-VESSEL-001` reading B (a refinement, not an amendment adding an outcome).
+- **Fitting examples:** Sukuna (JJK ch. 268) refuses Yuji's offer and disintegrates; Yuji keeps Shrine and soul perception. Kid Buu is destroyed by the Spirit Bomb and reincarnated as Uub (ch. 518–519); this fit is partial, since canon shows no offer refused.
+- **Residuals:** the symmetric destruction canon above (Kami / King Piccolo, Supreme Kai / God of Destruction, Anu / Tathamet) stays recorded; under rev 2 it reads as both sides refusing (Shax's reading, untested). The Revelation tension narrows: the dragon's defeat is a refuser losing.
+- **Grade:** unchanged, ISOMORPHIC_INVARIANT. "Hang yourself" is Shax's figurative wording, kept as a quote; the ruling describes it as self-destruction.
+
 ---
 
 ## Next research step
