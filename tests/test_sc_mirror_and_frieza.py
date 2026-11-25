@@ -280,20 +280,29 @@ class RoutingTests(unittest.TestCase):
             "Ultra Instinct Goku and Ultra Ego Vegeta: substrate activation.")
         self.assertEqual(packet.selected_target, "soul_bomb_sovereignty")
 
-    def test_frieza_outsider_compiles_in_routed_home_despite_weak_frames(self) -> None:
+    def test_frieza_outsider_compiles_in_routed_home_despite_table_frames(self) -> None:
         # Two weak table frames ("lineage", "system") used to keep the table
         # target `computation` ahead of a 0.96-confidence router result.
-        # Scope: weak frames only. "Frieza's black hole origin is owned by another
-        # entity..." has a strong `cosmological` frame and keeps the table path
-        # (target `computation`); changing strong-frame precedence is out of scope.
+        # The second prompt has a strong `cosmological` frame ("black hole"); a
+        # confident router result leads over strong frames too.
         for text in (
             "The outsider's first investment: Frieza's lineage comes from a black-hole domain outside the "
             "universe and invests in the strongest local system before infiltrating it.",
+            "Frieza's black hole origin is owned by another entity, and his lineage entered our universe "
+            "as a stealth outside invasion.",
         ):
             with self.subTest(text=text[:40]):
                 packet = compile_semantic_packet(text)
                 self.assertEqual(packet.selected_target, "soul_bomb_sovereignty")
                 self.assertTrue(any(w.startswith("ROUTED_DOMAIN:") for w in packet.compiler_warnings))
+
+    def test_router_below_threshold_keeps_strong_frame_targets(self) -> None:
+        # backup_snapshot routes to client_server_reality at 0.79 (< 0.8), so the
+        # strong cosmological frame keeps its table target.
+        packet = compile_semantic_packet(
+            "The mirrored universe on the other side of the black hole runs in parallel as a backup "
+            "snapshot so state can be restored.")
+        self.assertEqual(packet.selected_target, "computation")
 
     def test_entry_ids_route_to_home_domains(self) -> None:
         self.assertEqual(route_domains("Explain SC-MIRROR-001.").domain, "client_server_reality")

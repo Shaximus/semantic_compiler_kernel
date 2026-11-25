@@ -2,6 +2,13 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/router-leads-strong-frames
+
+### Changed
+- `core/pipeline.py` `_discover_targets`: a ROUTED result at routing confidence >= 0.8 (`WEAK_FRAMES_ROUTER_CONFIDENCE`) now goes ahead of the table targets when strong frames match too, not only weak ones. Fixes "Frieza's black hole origin is owned by another entity…" compiling against `computation` (strong `cosmological` frame) while routing to `soul_bomb_sovereignty` at 0.95.
+- Corpus eval (963 inputs vs main): 0 decision changes; 131 target changes. Labelled items: 12 changed, all 12 now match their label (0 → 12), 0 regressions; labelled accuracy 197 → 209 of 226. Unlabelled changes move the generic `organizational` target to the subject's domain (a cell -> biology, a computer -> computation, the judicial system -> law, the economy -> economic, zodiac entries -> astrology).
+- Not changed: routing below 0.8 keeps the table targets. backup_snapshot ("The mirrored universe … backup snapshot") routes to `client_server_reality` at 0.79 and still targets `computation`.
+
 ## [Unreleased] — feat/sc-cp-001-canon
 
 ### Added

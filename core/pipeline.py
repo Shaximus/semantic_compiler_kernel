@@ -1176,6 +1176,16 @@ def _discover_targets(packet: SemanticPacket, text: str, explicit_mode: bool = F
     # Fast path: a strong frame, or two distinct frames (a cross-frame analogy
     # such as "a feedback loop in software is like a homeostatic loop").
     if strong_frames:
+        # A confident router result also leads over strong frames: a strong
+        # frame names the vocabulary ("black hole" -> cosmological) but the
+        # router names the domain. Corpus eval 2026-11-25: 0 decision changes,
+        # 131 target changes, 0 regressions on labelled items (+12 correct).
+        if (
+            routing.outcome == ROUTING_ROUTED
+            and routing.domain
+            and routing.confidence >= WEAK_FRAMES_ROUTER_CONFIDENCE
+        ):
+            _put_routed_domain_first(packet, routing)
         return routing
     if len(frames) >= 2:
         # Two weak (single-keyword) frames only. A confident router result names
