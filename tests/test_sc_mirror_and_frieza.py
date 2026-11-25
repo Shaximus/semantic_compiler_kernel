@@ -199,6 +199,21 @@ class RoutingTests(unittest.TestCase):
             "Ultra Instinct Goku and Ultra Ego Vegeta: substrate activation.")
         self.assertEqual(packet.selected_target, "soul_bomb_sovereignty")
 
+    def test_frieza_outsider_compiles_in_routed_home_despite_weak_frames(self) -> None:
+        # Two weak table frames ("lineage", "system") used to keep the table
+        # target `computation` ahead of a 0.96-confidence router result.
+        # Scope: weak frames only. "Frieza's black hole origin is owned by another
+        # entity..." has a strong `cosmological` frame and keeps the table path
+        # (target `computation`); changing strong-frame precedence is out of scope.
+        for text in (
+            "The outsider's first investment: Frieza's lineage comes from a black-hole domain outside the "
+            "universe and invests in the strongest local system before infiltrating it.",
+        ):
+            with self.subTest(text=text[:40]):
+                packet = compile_semantic_packet(text)
+                self.assertEqual(packet.selected_target, "soul_bomb_sovereignty")
+                self.assertTrue(any(w.startswith("ROUTED_DOMAIN:") for w in packet.compiler_warnings))
+
     def test_entry_ids_route_to_home_domains(self) -> None:
         self.assertEqual(route_domains("Explain SC-MIRROR-001.").domain, "client_server_reality")
         self.assertEqual(route_domains("Explain SC-LU-FRIEZA-001.").domain, "soul_bomb_sovereignty")

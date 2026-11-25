@@ -2,6 +2,13 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — fix/weak-frames-routed-first
+
+### Fixed
+- `core/pipeline.py` `_discover_targets`: with only weak (single-keyword) table frames, a router result with routing confidence >= 0.8 (`WEAK_FRAMES_ROUTER_CONFIDENCE`) now goes ahead of the table targets, with the usual `ROUTED_DOMAIN:` warning. The Frieza outsider invariant (routed to `soul_bomb_sovereignty` at 0.96) had compiled against `computation` because "lineage" and "system" matched two weak frames. Strong frames still keep the fast path unchanged.
+- Not changed: prompts with a strong frame keep the table path. "Frieza's black hole origin is owned by another entity…" has a strong `cosmological` frame and still compiles against `computation` while routing to `soul_bomb_sovereignty`.
+- Shadow run on the 963-input corpus: 0 decision changes; 38 target changes, all weak-frame cases moving to the routed domain (for example decomposition items moving to their own labelled domain: bluetooth, android_connectivity, reward_hijacking; "immune system" to biology; "supply chain / economy" to economic; country/government prompts to government).
+
 ## [Unreleased] — 2026-11-25 (branch `feat/sc-mirror-001`)
 
 ### Added
