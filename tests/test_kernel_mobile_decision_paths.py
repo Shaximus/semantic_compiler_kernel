@@ -1,7 +1,8 @@
 """Characterization tests for Kernel Mobile's six bench prompts.
 
 These pin the *decision path*, not latency: Stage 3 no-target early exit
-(PASS_THROUGH since the pass-through change) versus a `structural_fit` hard
+(PASS_THROUGH since the pass-through change; 04 and 05 resolve a target since
+the router feeds compile) versus a `structural_fit` hard
 floor, versus a clean COMPILED result.
 """
 
@@ -23,8 +24,9 @@ CASES = [
     ("01_short_fragment", "PASS_THROUGH", "NO_TARGET_SYSTEM_RESOLVED"),
     ("02_readme_gem", "NEEDS_REVISION", "LOW_STRUCTURAL_FIT"),
     ("03_kv_cache", "NEEDS_REVISION", "LOW_STRUCTURAL_FIT"),
-    ("04_android_security", "PASS_THROUGH", "NO_TARGET_SYSTEM_RESOLVED"),
-    ("05_clinic_redesign", "PASS_THROUGH", "NO_TARGET_SYSTEM_RESOLVED"),
+    # Router feed: the router recognizes these domains (mobile_security, medical).
+    ("04_android_security", "COMPILED", "COMPILED"),
+    ("05_clinic_redesign", "NEEDS_REVISION", "LOW_STRUCTURAL_FIT"),
     ("06_long_multi_domain", "COMPILED", "COMPILED"),
 ]
 

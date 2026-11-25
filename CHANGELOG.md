@@ -2,6 +2,34 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — 2026-11-25 (branch `feat/router-feeds-compile`)
+
+### Changed
+- `compile_semantic_packet` discovers targets router-first:
+  - **Fast path.** A strong 8-frame table frame, or two distinct table frames, keeps the table targets.
+  - **Otherwise the router decides:**
+    - `ROUTED` puts the routed domain first and adds a `ROUTED_DOMAIN:` warning.
+    - `AMBIGUOUS` returns `Decision.AMBIGUOUS` with `status="ambiguous"`, `route_to=["HOST_CLARIFY"]`, `routing_candidates` and a clarifying question.
+    - `ABSTAIN` drops a lone weak ("?") frame, so the input passes through. An explicit `mode` keeps it.
+  - `routing_candidates` is filled for every compiled input.
+  - `STRUCTURAL_FIT_MIN` stays at 0.55.
+- Corpus (963 inputs), before → after:
+
+  | Decision | Before | After |
+  |---|---|---|
+  | COMPILED | 316 | 343 |
+  | NEEDS_REVISION | 232 | 325 |
+  | PASS_THROUGH | 264 | 137 |
+  | AMBIGUOUS | 0 | 7 |
+  | REJECT | 148 | 148 |
+
+  - 105 of the 107 new NEEDS_REVISION results on the labeled calibration set have the correct domain, with low fit.
+  - All 51 out-of-domain prompts still pass through.
+- Kernel Mobile pinned prompts: 04 (Android security) is now COMPILED as `mobile_security`. 05 (clinic redesign) is now NEEDS_REVISION as `medical`, with fit 0.0.
+
+### Added
+- `tests/test_routing_acceptance.py`: the spec acceptance list.
+
 ## [Unreleased] — 2026-11-25 (branch `fix/router-discriminative-abstain`)
 
 ### Added

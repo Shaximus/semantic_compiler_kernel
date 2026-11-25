@@ -264,12 +264,18 @@ print(report['invariant_registry'])
 | `COMPILED`, `COMPILED_WITH_GUARDRAILS`, `COMPILED_SUPERVISED_ONLY`, `COMPILED_PRIVATE_REDACTED_ONLY` | A recognized domain, and the structure compiled | Use the translations and scores |
 | `NEEDS_REVISION` | A recognized domain, but the input is insufficient (for example structural fit below 0.55) | Ask the user for more detail (`pkt.next_questions`) |
 | `PASS_THROUGH` | No credible domain. Not an error: `semantic_error_class` is `None` and `route_to == ["HOST_AI"]` | Forward `pkt.forward_text` (the original prompt, byte-for-byte) to your own AI |
-| `AMBIGUOUS` | Two or more domains match closely | Show `pkt.routing_candidates` or ask which domain was meant |
+| `AMBIGUOUS` | The top two domains match within a close margin, and no high-precision frame decides it. `route_to == ["HOST_CLARIFY"]` | Show `pkt.routing_candidates` or ask `pkt.next_questions[0]` |
 | `REJECT` | Invalid input (empty or whitespace only: `semantic_error_class == "EMPTY_INPUT"`) or a semantic error | Do not forward as a compiled result |
 | `QUARANTINE`, `ESCALATE`, `ROUTE_FOR_APPROVAL` | Security risk or authority required | Block, or route for approval |
 
 - An unknown `mode` raises `ValueError`, listing the valid modes.
 - A non-`str` input raises `TypeError`.
+- Target discovery works router-first (`semantic_compiler.expansion.router`):
+  - A strong 8-frame table match, or two distinct table frames, is the fast path and keeps the table's translation targets.
+  - Otherwise a `ROUTED` verdict makes the routed domain the target, `AMBIGUOUS` returns `AMBIGUOUS`, and `ABSTAIN` returns `PASS_THROUGH`.
+  - When the caller passes an explicit `mode`, a lone weak table frame is still compiled.
+  - `pkt.routing_candidates` lists the top 3 router candidates.
+  - Routing confidence is separate from the 0.55 structural-fit floor.
 - `PASS_THROUGH` and `AMBIGUOUS` were appended to the `Decision` enum, so the integer values of existing members are unchanged.
 
 ---
