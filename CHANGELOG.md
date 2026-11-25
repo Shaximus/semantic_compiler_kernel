@@ -13,6 +13,16 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Unchanged
 - No physics or theology claim upgraded. Scores and tiers: DU-001 GOLD 0.925, CP-001 GOLD 0.926, MIRROR-001 SILVER 0.868, LU-FRIEZA-001 SILVER 0.825.
 
+## [Unreleased] — docs/sc-vessel-2026-11-25f
+
+### Added
+- `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`: DRAFT 0.1, Vessel Equilibrium (The Anomaly), from Shax t569u + t570u. Yuji as vessel, Gojo as Oneness, Sukuna as Sovereignty ("not totally"); equilibrium in one substrate leads to shared-state coupling; entanglement graded ANALOGOUS (no-signalling caveat); Trinity mapping recorded as Shax's interpretation with the creedal tension; t570u refinement: Lucifer = Vegeta (Sovereignty pole), Satan = Frieza / the Frieza race (external owner), and its effect on the RUL-BINARY-001 God/Satan instance. JJK and DB canon checked; ch. 268 refusal recorded as a canon tension. Not compiled.
+
+### Changed
+- `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md`: open question 3 answered by Shax ("not alone": voluntary restriction is shared or consented).
+- `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md`: cross-reference note for t570u (Satan = Frieza / the Frieza race). Compiled `SC-LU-FRIEZA-001` unchanged.
+- Catalog, DOMAIN_LEDGER and README rows; `validate_catalog.py` lists `SC-VESSEL-001` as a markdown-only ID.
+
 ## [Unreleased] — docs/sc-vsr-gov-2026-11-25e
 
 ### Added
