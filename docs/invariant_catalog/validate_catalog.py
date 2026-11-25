@@ -21,8 +21,18 @@ import re
 import sys
 
 CAT_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "calibration_output", "compiled_entries", "DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl")
-MANIFEST_PATH = os.path.join(CAT_DIR, "..", "..", "calibration_output", "compiled_entries", "manifest.json")
+REPO_ROOT = os.path.abspath(os.path.join(CAT_DIR, "..", ".."))
+COMPILED_DIR = os.path.join(REPO_ROOT, "calibration_output", "compiled_entries")
+TEMPLATE_PATH = os.path.join(COMPILED_DIR, "DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl")
+MANIFEST_PATH = os.path.join(COMPILED_DIR, "manifest.json")
+
+# Upstream session entry IDs formally tracked in DOMAIN_LEDGER.md Section 3
+# awaiting standalone JSONL drops (never silently ignored as accidental typos).
+EXTERNAL_UPSTREAM_IDS = {
+    "SC-CP-001",
+    "SC-IT-POE-SOUL-EATER-001",
+    "SC-IT-GOJO-KIT-001",
+}
 
 REQUIRED_DEPTS = {
     "SUBCONSCIOUS", "INNER_MONOLOGUE", "SPEECH_OUTPUT", "STORAGE", "SECURITY",
@@ -88,7 +98,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 17, f"Authoritative compiled entry registry size == 17 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 19, f"Authoritative local compiled entry registry size == 19 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():
@@ -233,23 +243,69 @@ check(len(missing_dee_bal) == 0,
 check(all(d in dee_md for d in REQUIRED_DEPTS), "DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: all 15 departments present")
 check(all(f"`{p}`" in dee_md for p in REQUIRED_PRIMITIVES), "DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: all 17 primitives present")
 
-# 4. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 19 classes
+# 4. Verify SC-IT-OCTO-RNA-EDIT-001 and SC-HS-001 (v1.1.0) & their companion Markdown documents
+octo_jsonl_path = os.path.join(COMPILED_DIR, "INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl")
+octo_md_path = os.path.join(CAT_DIR, "DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md")
+check(os.path.exists(octo_jsonl_path), "INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl exists in compiled_entries")
+check(os.path.exists(octo_md_path), "DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md exists in docs/invariant_catalog")
+with open(octo_jsonl_path, encoding="utf-8") as f:
+    octo_obj = json.loads(f.readline())
+check(octo_obj["metadata"]["entry_id"] == "SC-IT-OCTO-RNA-EDIT-001", "SC-IT-OCTO-RNA-EDIT-001: entry_id matches")
+check(len(octo_obj["analysis"]["entities"]) == 12, "SC-IT-OCTO-RNA-EDIT-001: exact 12 entities")
+check(len(octo_obj["analysis"]["relationships"]) == 20, "SC-IT-OCTO-RNA-EDIT-001: exact 20 non-neutral relationships")
+check(octo_obj["structural_skeleton"]["metrics"] == {"nodes": 12, "ordered_pairs": 132, "non_neutral_edges": 20},
+      "SC-IT-OCTO-RNA-EDIT-001: structural metrics 12/132/20 match")
+octo_depts = [d["department"] for d in octo_obj["functional_departments"]]
+check(len(octo_depts) == 15 and set(octo_depts) == REQUIRED_DEPTS, "SC-IT-OCTO-RNA-EDIT-001: exact 15/15 departments")
+check(len(octo_obj["gates"]) == 9 and all(g["passed"] for g in octo_obj["gates"].values()),
+      "SC-IT-OCTO-RNA-EDIT-001: 9/9 gates passed")
+check(octo_obj["isomorphism_quality"]["score"] == 0.953 and octo_obj["dataset_tier"] == "GOLD",
+      "SC-IT-OCTO-RNA-EDIT-001: GOLD score 0.953")
+check(len(octo_obj["prediction_tests"]) == 4, "SC-IT-OCTO-RNA-EDIT-001: 4 prediction tests (P1..P4)")
+for mp in octo_obj["isomorphism_analysis"]["mappings"]:
+    check(mp["identity_claim_allowed"] is False and len(mp["residual_mismatches"]) > 0,
+          f"SC-IT-OCTO-RNA-EDIT-001 / {mp['mapping_id']}: identity_claim_allowed=False & non-empty residuals")
+with open(octo_md_path, encoding="utf-8") as f:
+    octo_md = f.read()
+check(all(d in octo_md for d in REQUIRED_DEPTS), "DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md: all 15 departments present")
+
+hs_jsonl_path = os.path.join(COMPILED_DIR, "SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl")
+hs_md_path = os.path.join(REPO_ROOT, "docs", "FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md")
+check(os.path.exists(hs_jsonl_path), "SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl exists in compiled_entries")
+check(os.path.exists(hs_md_path), "docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md exists")
+with open(hs_jsonl_path, encoding="utf-8") as f:
+    hs_obj = json.loads(f.readline())
+check(hs_obj["metadata"]["entry_id"] == "SC-HS-001" and hs_obj["metadata"]["entry_revision"] == "1.1.0",
+      "SC-HS-001: entry_id and revision 1.1.0 match")
+hs_claim_ids = [c["claim_id"] for c in hs_obj["analysis"]["claims"]]
+check(hs_claim_ids == ["CLM-HS-001", "CLM-HS-002A", "CLM-HS-002B", "CLM-HS-003", "CLM-HS-004", "CLM-HS-005", "CLM-HS-006"],
+      f"SC-HS-001: exact 7 v1.1.0 claims present ({hs_claim_ids})")
+check(len(hs_obj["gates"]) == 9 and all(g["passed"] for g in hs_obj["gates"].values()),
+      "SC-HS-001: 9/9 gates passed")
+check(hs_obj["isomorphism_quality"]["score"] == 0.954 and hs_obj["dataset_tier"] == "GOLD",
+      "SC-HS-001: GOLD score 0.954")
+hs_map = hs_obj["isomorphism_analysis"]["mappings"][0]
+check(hs_map["identity_claim_allowed"] is False and len(hs_map["residual_mismatches"]) == 3,
+      "SC-HS-001 / MAP:HS-001: identity_claim_allowed=False & 3 residual_mismatches")
+
+# 5. Verify INVARIANT_CATALOG.md and DOMAIN_LEDGER.md cross-references and 24 classes
+allowed_doc_ids = valid_entry_ids | EXTERNAL_UPSTREAM_IDS
 for md_name in ["INVARIANT_CATALOG.md", "DOMAIN_LEDGER.md"]:
     mp = os.path.join(CAT_DIR, md_name)
     with open(mp, encoding="utf-8") as f:
         txt = f.read()
-    found_ids = set(re.findall(r"\bSC-[A-Z0-9-]+\b", txt))
-    dangling_md = sorted(found_ids - valid_entry_ids)
+    found_ids = set(re.findall(r"(?<![A-Za-z0-9_-])SC-[A-Z0-9]+(?:-[A-Z0-9]+)*(?![A-Za-z0-9-])", txt))
+    dangling_md = sorted(found_ids - allowed_doc_ids)
     check(len(dangling_md) == 0,
           f"{md_name}: zero dangling SC-* IDs (found {len(found_ids)} IDs, dangling={dangling_md})")
 
 with open(os.path.join(CAT_DIR, "INVARIANT_CATALOG.md"), encoding="utf-8") as f:
     cat_txt = f.read()
 class_headers = re.findall(r"^### Class (\d+):", cat_txt, re.MULTILINE)
-check([int(x) for x in class_headers] == list(range(1, 20)),
-      f"INVARIANT_CATALOG.md: exact Classes 1..19 present (found {len(class_headers)})")
+check([int(x) for x in class_headers] == list(range(1, 25)),
+      f"INVARIANT_CATALOG.md: exact Classes 1..24 present (found {len(class_headers)})")
 
-# 5. Zero "etc." elisions across ALL emitted .md and .jsonl files
+# 6. Zero "etc." elisions across ALL emitted .md and .jsonl files
 for fp in sorted(glob.glob(os.path.join(CAT_DIR, "*.md")) + glob.glob(os.path.join(CAT_DIR, "*.jsonl"))):
     with open(fp, encoding="utf-8") as f:
         txt = f.read()

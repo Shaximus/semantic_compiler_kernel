@@ -87,6 +87,8 @@ Added 2026-11-06. This is a research-derived architecture map, not a claim that 
 | `SC-LU-SAO-ALICE-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Alice Zuberg / Alice Synthesis Thirty (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-ALICE-001.jsonl |
 | `SC-LU-SAO-EUGEO-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Eugeo (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-EUGEO-001.jsonl |
 | `SC-LU-SAO-CARDINAL-001` | Shax (Curtis Kingsley) — Reflexion Software, SAO Lineup Decode: Cardinal / Underworld (v3.5.0, 2026-11-23) | calibration_output/compiled_entries/SC-LU-SAO-CARDINAL-001.jsonl |
+| `SC-HS-001` | Shax (Curtis Kingsley) — Reflexion Software, Flat FLRW Hubble–Schwarzschild Correspondence (v1.1.0 TIG-graded patch; Pathria 1972; Gibbons & Hawking 1977; 2026-11-24) | calibration_output/compiled_entries/SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl |
+| `SC-IT-OCTO-RNA-EDIT-001` | Shax (Curtis Kingsley) — Reflexion Software, Octopus Temperature-Dependent RNA Editing / Runtime Recoding Over Fixed Base (Birk et al. Cell 2023; Liscovitch-Brauer et al. Cell 2017; 2026-11-24) | calibration_output/compiled_entries/INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl |
 
 ## Android precision corrections
 

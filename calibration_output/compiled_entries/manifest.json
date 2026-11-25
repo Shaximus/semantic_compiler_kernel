@@ -322,6 +322,51 @@
         "SC-IT-GOJO-KIT-001",
         "SC-LU-SAO-LINEUP-001"
       ]
+    },
+    {
+      "entry_id": "SC-HS-001",
+      "file": "SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl",
+      "title": "Flat FLRW Hubble–Schwarzschild Correspondence",
+      "entry_type": "compiler_patch_entry",
+      "version": "1.1.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-24",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.954,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 9146,
+      "sha256": "60933e9d8130a5a3ed8a1dfab6ed10cb4cd06687675712de0fd6b029eba8f180",
+      "notes": "Revision 1.1.0 (TIG-graded): splits CLM-HS-002 into 002A (ANCHORED Misner–Sharp ratio R_S/R = (R/R_H)^2) and 002B (OPEN_HYPOTHESIS); restates CLM-HS-003 as null-expansion classification (super-Hubble spheres anti-trapped in expanding FLRW); anchors Pathria (1972) and Gibbons & Hawking (1977) area-law entropy. Companion doc: docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md.",
+      "cross_references": [
+        "SC-CT-001",
+        "SC-DOMAIN-EXPANSION-001"
+      ]
+    },
+    {
+      "entry_id": "SC-IT-OCTO-RNA-EDIT-001",
+      "file": "INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl",
+      "title": "Octopus Temperature-Dependent RNA Editing (Runtime Recoding Over Fixed Base)",
+      "entry_type": "invariant_domain_decode",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley) — Reflexion Software",
+      "date": "2026-11-24",
+      "status": "COMPILED",
+      "classification": "GOLD",
+      "confidence": 0.953,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 11820,
+      "sha256": "7bc9dada44a64ae5244a83c248bbf64e00f7a7adcc8c5c1eda750350dbe2fe47",
+      "notes": "Whole-domain biological decode of Octopus bimaculoides A-to-I RNA editing (Birk et al., Cell 2023; Liscovitch-Brauer et al., Cell 2017): 12 nodes, 132 ordered pairs, 20 non-neutral edges, 15/15 departments, 4 predictions (P1-P4), defining RUNTIME_RECODING_OVER_FIXED_BASE (Catalog Class #24 / Claude Catalog #19). Companion doc: docs/invariant_catalog/DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md.",
+      "cross_references": [
+        "SC-DOMAIN-EXPANSION-001",
+        "SC-IT-GOJO-KIT-001",
+        "SC-SB-001",
+        "SC-CP-001",
+        "SC-CT-001"
+      ]
     }
   ]
 }
