@@ -2,6 +2,17 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/binary-invariant-ruling
+
+### Added
+- Shax ruling **RUL-BINARY-001** (2026-11-25, t568u): `SC-DU-001` (The Duality) and `SC-MD-001` (Sovereign Mirror Duality) are one invariant, a binary whose only stable outcomes are mutual cooperation or mutual destruction. Instances: Oneness/Sovereignty (`SC-CP-001`), God/Satan (theological mapping), our universe / the CPT-mirrored universe (`SC-LU-FRIEZA-001` layer D). Graded ISOMORPHIC_INVARIANT (structural claim by Shax).
+- Hub: `SC-MIRROR-001` CLM-MIRROR-006 now states the mutual-destruction branch explicitly (Kami/King Piccolo share one life; Supreme Kai and God of Destruction lives are paired; Anu/Tathamet) and carries the full ruling (`binary_invariant_ruling`).
+- Additive notes: `metadata.addenda` on `SC-DU-001`, `SC-CP-001`, `SC-MIRROR-001`, `SC-LU-FRIEZA-001`; layer D `binary_invariant` on FRIEZA; ruling section in `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`; DOMAIN_LEDGER and manifest notes.
+- Recorded tension, not a refutation: Revelation does not present Satan as God's co-equal half (Rev 12:7–9; 20:10).
+
+### Unchanged
+- No physics or theology claim upgraded. Scores and tiers: DU-001 GOLD 0.925, CP-001 GOLD 0.926, MIRROR-001 SILVER 0.868, LU-FRIEZA-001 SILVER 0.825.
+
 ## [Unreleased] — docs/sc-vsr-gov-2026-11-25e
 
 ### Added
