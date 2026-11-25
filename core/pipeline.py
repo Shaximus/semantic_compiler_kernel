@@ -21,6 +21,7 @@ Citation: v1.0 Spec Section 8 — Master Pipeline
 
 from __future__ import annotations
 
+import re
 from typing import Any, Optional
 
 from semantic_compiler.core.packet import SemanticPacket, SourceContext, initialize_packet
@@ -1098,6 +1099,9 @@ def _finalize_packet(packet: SemanticPacket) -> None:
 # ═══════════════════════════════════════════════════════════════════
 
 
+_LONE_SURROGATE_RE = re.compile("[\ud800-\udfff]")
+
+
 def compile_semantic_packet(
     input_text: str,
     registry: Any = None,
@@ -1122,6 +1126,15 @@ def compile_semantic_packet(
 
     Citation: v1.0 Spec Section 8 — Master Pipeline
     """
+    if not isinstance(input_text, str):
+        raise TypeError(
+            "compile_semantic_packet() input_text must be str, "
+            f"got {type(input_text).__name__}"
+        )
+    # Lone UTF-16 surrogates (e.g. a half emoji from a mobile text bridge) cannot
+    # be UTF-8 encoded, so they would crash hashing and dataset export. Replace
+    # each with U+FFFD before anything else sees the input.
+    input_text = _LONE_SURROGATE_RE.sub("\ufffd", input_text)
     packet = initialize_packet(input_text, context, mode)
 
     # ──────────────────────────────────────────────────────────

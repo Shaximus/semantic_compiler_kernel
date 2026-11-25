@@ -172,7 +172,11 @@ class SemanticPacket:
         """Compute SHA-256 hash of the raw input for provenance."""
         if self.raw_input is None:
             return ""
-        return hashlib.sha256(self.raw_input.encode("utf-8")).hexdigest()
+        # surrogatepass: lone UTF-16 surrogates (e.g. a split emoji from a mobile
+        # text bridge) must not crash provenance hashing.
+        return hashlib.sha256(
+            self.raw_input.encode("utf-8", errors="surrogatepass")
+        ).hexdigest()
 
     def mark_compilation_start(self) -> None:
         """Record compilation start timestamp."""
