@@ -2,6 +2,11 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — docs/rul-binary-001-rev2
+
+### Changed
+- **RUL-BINARY-001 rev 2** (Shax t571u, 2026-11-25): the only stable outcome is mutual cooperation; refusal is self-destruction (the refuser destroys itself and loses regardless), and its information-conserving remnant is compressed into `SC-MIRROR-001`'s calibration dot; Oneness prevails. Rev 1's "mutual destruction" is reframed as the refuser's self-destruction. Recorded in `SC-MIRROR-001` CLM-MIRROR-006 (`binary_invariant_ruling.amendments`), as dated `RULING_AMENDMENT` addenda on MIRROR, DU-001, CP-001, LU-VEGETA-001 and LU-FRIEZA-001, in `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, and in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` (DRAFT 0.3; reading B settled). Fitting examples: Sukuna (JJK ch. 268) and Kid Buu / Uub (partial). No grade or score changed; owners question and SC-LU-GOKU-001 stay open.
+
 ## [Unreleased] — feat/sc-lu-vegeta-001
 
 ### Added

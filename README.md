@@ -349,7 +349,7 @@ semantic_compiler_kernel/
 | SC-VSR-001 Voluntary State Recompression (DRAFT 0.1) | `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md` |
 | SC-GOV-001 Measurement, Not Indulgence — governance principle (DRAFT 0.1) | `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md` |
 | SC-PATCH-MIRROR-001 Cyclic feedback patch notes (DRAFT 0.1) | `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md` |
-| SC-VESSEL-001 Vessel Equilibrium — The Anomaly (DRAFT 0.2) | `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` |
+| SC-VESSEL-001 Vessel Equilibrium — The Anomaly (DRAFT 0.3) | `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` |
 | Changelog | `CHANGELOG.md` |
 
 ---
