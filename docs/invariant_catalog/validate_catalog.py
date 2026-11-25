@@ -42,10 +42,10 @@ EXTERNAL_UPSTREAM_IDS = {
     # SC-MIRROR-001 is compiled since 2026-11-25 (calibration_output/compiled_entries/SC-MIRROR-001.jsonl);
     # SC-MD-001 stays the markdown source-draft ID.
     # Named in the SC-MIRROR-001 spec section 5 but not present in this repository
-    # (recorded as unresolved in the entry; never stubbed):
+    # (recorded as unresolved in the entry; never stubbed). SC-LU-VEGETA-001 was
+    # compiled on 2026-11-25 and is now in the manifest:
     "SC-LU-PICCOLO-001",
     "SC-LU-GOKU-001",
-    "SC-LU-VEGETA-001",
     "SC-LU-BUU-001",
     # 2026-11-25e drafts (markdown only, not compiled):
     "SC-VSR-001",           # docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md (DRAFT 0.1)
@@ -133,7 +133,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 24, f"Authoritative local compiled entry registry size == 24 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 25, f"Authoritative local compiled entry registry size == 25 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():

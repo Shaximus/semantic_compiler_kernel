@@ -2,6 +2,18 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/sc-lu-vegeta-001
+
+### Added
+- `SC-LU-VEGETA-001` (compiled, SILVER 0.85, 9/9 gates, SC-DE-001 schema): Vegeta as the Sovereignty pole (Ultra Ego, DBS ch. 74; CANON form, ANALOGOUS pole; Toyotarou's yin-yang framing as SECONDARY_SOURCE). Held in Frieza's service while keeping his own will (CANON); his father's handover is ANIME_ORIGINAL (DBZ ep. 78; Minus and Super: Broly differ). Spirit Bomb survival (ch. 238). Vegito / Gogeta as the consented cooperation branch of RUL-BINARY-001. Majin Vegeta / Final Explosion checked against VSR: adjacent, not an instance. Shax (t570u): Vegeta is Lucifer, Satan is Frieza (SHAX_INTERPRETATION, ANALOGOUS); V7 §15.1 / §22.4 / §22.5 tensions recorded.
+- Routing: `vegeta`, `ultra ego`, `majin vegeta`, `vegito`, `gogeta`, `sc-lu-vegeta` added to `soul_bomb_sovereignty`; elevator hint `SC-LU-VEGETA-001 -> soul_bomb_sovereignty`. Generic words ("prince", "pride", "fusion") deliberately not added. 963-prompt corpus: 0 decision diffs.
+- `tests/test_sc_lu_vegeta.py`.
+
+### Changed
+- `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` DRAFT 0.2 (Shax t570s3000): Yuji = the vessel ("Yuji is me"); Sukuna = outside owner, like Frieza; the mutual-acceptance condition is replaced by a resolution rule (cooperation if both agree, else the refusing side is compressed into `SC-MIRROR-001`'s calibration dot and Oneness prevails). Its relation to RUL-BINARY-001 is recorded with two readings (amends vs refines); ch. 268 fit recorded as partial.
+- Additive `metadata.addenda` on `SC-MIRROR-001` (Vegeta reference RESOLVED; PICCOLO / GOKU / BUU still unresolved), `SC-LU-FRIEZA-001`, `SC-CP-001`, `SC-DU-001` (CROSS_ENTRY_TENSION: Yuji as vessel vs DU-001's Toji/Yuji poles; mapping unchanged). No score or tier changed.
+- Manifest (22 entries), `validate_catalog.py` (registry 25; `SC-LU-VEGETA-001` no longer an external ID), DOMAIN_LEDGER, INVARIANT_CATALOG, README, SC-FR-001 and SC-MIRROR-001 spec notes.
+
 ## [Unreleased] — feat/binary-invariant-ruling
 
 ### Added

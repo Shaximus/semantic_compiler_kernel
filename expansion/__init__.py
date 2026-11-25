@@ -274,6 +274,9 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         # SC-LU-FRIEZA-001 (outsider lineup) and SC-MIRROR-001 anti-deadlock vocabulary, 2026-11-25.
         "frieza", "black frieza", "frieza protocol", "outsider's first investment",
         "substrate activation", "sc-lu-frieza", "mirror match",
+        # SC-LU-VEGETA-001 (Sovereignty pole lineup), 2026-11-25. Character and form names
+        # only; generic words such as "prince", "pride" or "fusion" are deliberately absent.
+        "vegeta", "ultra ego", "majin vegeta", "vegito", "gogeta", "sc-lu-vegeta",
     )),
     ("finance_economics", (
         "central bank", "commercial bank", "investment bank", "retail bank",
@@ -381,6 +384,7 @@ _SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
     "sc-sb-001", "sc-lu-sao",
     "frieza", "substrate activation", "outsider's first investment", "sc-lu-frieza",
     "mirror match",
+    "vegeta", "ultra ego", "vegito", "gogeta", "sc-lu-vegeta",
 ))
 
 

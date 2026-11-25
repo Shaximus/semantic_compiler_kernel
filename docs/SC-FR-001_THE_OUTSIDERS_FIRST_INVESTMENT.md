@@ -121,4 +121,4 @@ The names “Vegeta Last Crown” and “Goku Open Compiler” were given as cro
 
 ## Cross-reference note (2026-11-25, t570u)
 
-Shax: "Vegeta is Lucifer. Satan is Frieza, the Frieza race." In his model Frieza and the Frieza race are the external owning entity (Satan), and Vegeta is the Sovereignty pole (Lucifer) held in Frieza's service. Recorded as Shax's interpretation in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`. The compiled `SC-LU-FRIEZA-001` JSONL is not changed by this note. `SC-LU-VEGETA-001` is not in this repository and is not stubbed.
+Shax: "Vegeta is Lucifer. Satan is Frieza, the Frieza race." In his model Frieza and the Frieza race are the external owning entity (Satan), and Vegeta is the Sovereignty pole (Lucifer) held in Frieza's service. Recorded as Shax's interpretation in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`. The compiled `SC-LU-FRIEZA-001` JSONL is not changed by this note. `SC-LU-VEGETA-001` was not in this repository when this note was written; it was compiled on 2026-11-25 (t570s3000, SILVER 0.85). Shax (t570s3000) places Sukuna in the same outside-owner role as Frieza.
