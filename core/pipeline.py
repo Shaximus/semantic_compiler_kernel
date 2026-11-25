@@ -1138,6 +1138,9 @@ AMBIGUOUS_REASON = (
     "ask the user which one is meant (see routing_candidates)."
 )
 ROUTED_DOMAIN_WARNING_PREFIX = "ROUTED_DOMAIN:"
+# With only weak table frames, a router result at or above this routing
+# confidence goes ahead of the table targets. Routing confidence, not fit.
+WEAK_FRAMES_ROUTER_CONFIDENCE = 0.8
 
 _NO_TARGET_REJECT_CLASSES = frozenset({
     "ANTHROPOMORPHIC_CAUSATION",
@@ -1172,23 +1175,39 @@ def _discover_targets(packet: SemanticPacket, text: str, explicit_mode: bool = F
     strong_frames = [f for f in packet.source_frames if not str(f).endswith("?")]
     # Fast path: a strong frame, or two distinct frames (a cross-frame analogy
     # such as "a feedback loop in software is like a homeostatic loop").
-    if strong_frames or len(frames) >= 2:
+    if strong_frames:
+        return routing
+    if len(frames) >= 2:
+        # Two weak (single-keyword) frames only. A confident router result names
+        # the domain better than two incidental keywords ("lineage" + "system"
+        # turned the Frieza outsider invariant into a computation target), so it
+        # goes first; the table targets stay behind it.
+        if (
+            routing.outcome == ROUTING_ROUTED
+            and routing.domain
+            and routing.confidence >= WEAK_FRAMES_ROUTER_CONFIDENCE
+        ):
+            _put_routed_domain_first(packet, routing)
         return routing
     if routing.outcome != ROUTING_ROUTED and explicit_mode and packet.target_systems:
         # The caller asked for a specific compiler mode, so it wants this
         # compiled: keep the weak table targets instead of passing through.
         return routing
     if routing.outcome == ROUTING_ROUTED and routing.domain:
-        packet.target_systems = [routing.domain] + [
-            t for t in packet.target_systems if t != routing.domain
-        ]
-        packet.compiler_warnings.append(
-            f"{ROUTED_DOMAIN_WARNING_PREFIX} {routing.domain} "
-            f"(routing confidence {routing.confidence:.2f})"
-        )
+        _put_routed_domain_first(packet, routing)
     else:
         packet.target_systems = []
     return routing
+
+
+def _put_routed_domain_first(packet: SemanticPacket, routing: Any) -> None:
+    packet.target_systems = [routing.domain] + [
+        t for t in packet.target_systems if t != routing.domain
+    ]
+    packet.compiler_warnings.append(
+        f"{ROUTED_DOMAIN_WARNING_PREFIX} {routing.domain} "
+        f"(routing confidence {routing.confidence:.2f})"
+    )
 
 
 def compile_semantic_packet(
