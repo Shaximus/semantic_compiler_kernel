@@ -1,0 +1,1 @@
+PagedAttention and RadixAttention share KV cache block tables during prefill.
