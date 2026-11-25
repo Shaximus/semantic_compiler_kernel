@@ -296,6 +296,7 @@ semantic_compiler_kernel/
 | PoE Chaos Inoculation invariants | `docs/POE_CHAOS_INOCULATION_INVARIANTS.md` |
 | Deep system invariants | `docs/DEEP_SYSTEM_INVARIANTS.md` |
 | Reward hijacking invariants | `docs/REWARD_HIJACKING_INVARIANTS.md` |
+| Mobile add-on roadmap (bolt-in for AI mobile apps) | `docs/MOBILE_ADDON_ROADMAP.md` |
 
 ---
 
