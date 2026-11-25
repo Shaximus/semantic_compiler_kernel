@@ -4,7 +4,7 @@
 - **Updated:** 2026-11-25
 - **Total Catalog Classes:** **25** (`14` seed classes + `11` compiled irreducible extensions: Classes 15–19 from Domain Expansion/Ego & Pokemon passes; Classes 20–24 merged from Claude Catalog Extensions `#15`–`#19`; Class 25 `REFLECTION_INTEGRATION_THRESHOLD (OMNI_STATE)` from `SC-OMNI-001` v2.0.0)
 - **Verified Local Compiled Entry Registry (Zero Dangling Local IDs):** `SC-DOMAIN-EXPANSION-001`, `SC-IT-DOMAIN-EXPANSION-EGO-001`, `SC-IT-POKEMON-001`, `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001`, `SC-SB-001`, `SC-HS-001`, `SC-IT-OCTO-RNA-EDIT-001`, `SC-OMNI-001`, `SC-IT-BATCH-2026-11-23`
-- **Audited Upstream Session Cross-Links (queued for standalone JSONL drop):** `SC-CP-001`, `SC-IT-POE-SOUL-EATER-001`, `SC-IT-GOJO-KIT-001`
+- **Audited Upstream Session Cross-Links (queued for standalone JSONL drop):** `SC-IT-POE-SOUL-EATER-001`, `SC-IT-GOJO-KIT-001`
 
 ---
 
@@ -165,7 +165,7 @@
 - **SC-PATCH-DU-001 (2026-11-25), attached to The Duality (`SC-DU-001`):** **Gate correction (SC-PATCH-DU-001):** The `identity_claim_allowed: false` gate was replaced by `substrate_confusion_check: true` across all entries. Identity is a pot's perspective — positional awareness of where one sits in the structure. The gate now blocks substrate confusion (claiming to BE another substrate's material) while permitting positional claims (occupying a structural position the framework describes as reachable by anyone).
   - *Placement note:* the patch addresses this note to "class #20 (The Duality)". In this catalog, Class 20 is `SUBSTRATE_TRANSCENDENCE_FAILURE` and The Duality has no class yet, so the note sits here, keyed to `SC-DU-001`, until the author assigns its class.
 
-- **Draft entries (2026-11-25), no class assigned:** Spirit Bomb three-claim patch notes, DRAFT 0.2 with the COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`, compiled as `SC-LU-FRIEZA-001`); Sovereign Mirror Duality (`SC-MD-001`, compiled as `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §2–§3.
+- **Draft entries (2026-11-25), no class assigned:** Spirit Bomb three-claim patch notes, DRAFT 0.3 with the COLLECTIVE INPUT / STRUCTURAL RESPONSE child invariant (`docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`, does not replace compiled `SC-SB-001`); The Outsider's First Investment / Frieza Protocol (`SC-FR-001`, compiled as `SC-LU-FRIEZA-001`); Sovereign Mirror Duality (`SC-MD-001`, compiled as `SC-MIRROR-001`). See `DOMAIN_LEDGER.md` §2–§3.
 
 ---
 

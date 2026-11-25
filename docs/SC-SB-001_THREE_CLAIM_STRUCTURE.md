@@ -1,6 +1,6 @@
 # SC-SB-001 Patch — Spirit Bomb Three-Claim Structure
 
-**Version:** DRAFT 0.2 (0.1 → 0.2 on 2026-11-25: child invariant written out from the SC-MIRROR-001 spec §4.3 / §6.2)  
+**Version:** DRAFT 0.3 (0.1 → 0.2 on 2026-11-25: child invariant written out from the SC-MIRROR-001 spec §4.3 / §6.2; 0.2 → 0.3 the same day: Shax ruled that GT and the films count as evidence, so the Spirit Bomb kill list covers the whole franchise)  
 **Date:** 2026-11-25  
 **Source:** Shax (Curtis Kingsley) — Reflexion Software  
 **Source notes:** 2026-11-25 14:51 ADT (t560u); SC-MIRROR-001 Engineering Spec (Hannah, 2026-11-25) §4.3, §6.2  
@@ -62,7 +62,22 @@ A child invariant of SC-SB-001. No new entry ID is assigned; these are patch not
 | Frieza (Namek) | Survives | Alien substrate, load-bearing though external — see `SC-LU-FRIEZA-001` |
 | Kid Buu | Destroyed | Zero structure, pure chaos |
 
-**Scope correction.** The spec calls Kid Buu "the ONLY Spirit Bomb fatality in the franchise". That holds for Toriyama's Dragon Ball Z manga. It does not hold for the wider franchise: Turles (film, *The Tree of Might*) and Omega Shenron (*Dragon Ball GT*) are destroyed by Spirit Bombs. The child invariant is scoped to the manga canon until Shax decides whether non-manga material counts.
+**Evidence base (Shax, 2026-11-25): GT and the films count.** With them counted, Kid Buu is not "the ONLY Spirit Bomb fatality in the franchise" (spec §4.3, §6.2). The full record:
+
+| Target | Source | Outcome | Structural reading (hypothesis) |
+|---|---|---|---|
+| Dr. Wheelo | Film, *The World's Strongest* | Destroyed | A brain running a built body: power not grown in its own architecture |
+| Turles | Film, *The Tree of Might* | Destroyed | Power from the Tree of Might's fruit: consumed, not built (the bomb is charged from the Tree's own energy) |
+| Lord Slug | Film, *Lord Slug* | Destroyed | Youth restored by a Dragon Ball wish. Weakest fit: a native Super Namekian with his own architecture |
+| Kid Buu | *Dragon Ball Z* | Destroyed | Zero structure, pure chaos |
+| Omega Shenron | *Dragon Ball GT* (Universal Spirit Bomb) | Destroyed | Accumulated negative energy from Dragon Ball wishes |
+| Vegeta | *Dragon Ball Z*, Saiyan saga | Survives | Own architecture |
+| Frieza | *Dragon Ball Z*, Namek | Survives | Own architecture, external substrate (`SC-LU-FRIEZA-001`) |
+| Jiren | *Dragon Ball Super*, Tournament of Power | Survives (pushes it back) | Own architecture |
+
+Edge cases, not counted either way: Super Android 13 (film; Goku absorbs the gathered Spirit Bomb energy and strikes directly, no bomb is thrown) and Hatchiyack (OVA *Plan to Eradicate the Saiyans*).
+
+Reading (hypothesis): the destroyed targets run on borrowed, consumed or accumulated power; the survivors run on their own load-bearing architecture. Lord Slug fits worst. The magnitude confound (Claim 3) is stronger with the films included, because several film bombs were scaled up for the climax.
 
 **The outside layer is part of the Frieza row.** Frieza's survival is read through the outsider invariant in `SC-LU-FRIEZA-001`: a lineage from a black-hole domain outside this universe, that domain owned by another entity, entering by stealth (an outside invasion). Those three layers are OPEN_HYPOTHESIS there; they are carried, not dropped, and are not reduced to a hard-work metaphor.
 
@@ -72,7 +87,7 @@ A child invariant of SC-SB-001. No new entry ID is assigned; these are patch not
 - `SC-LU-FRIEZA-001` CLM-LU-FRZ-05: Frieza's survival as structural response.
 - Router: the `soul_bomb_sovereignty` template carries this invariant tagged `[SC-SB-001][SC-LU-FRIEZA-001]`.
 
-**Reconciliation with DRAFT 0.1.** The spec's phrasing ("discriminates by architecture, not magnitude or morality") is stronger than Claim 3 here. This patch keeps Claim 3: the three encounters do not separate architecture from energy or circumstance, so "not magnitude" stays a hypothesis. Claim 1's tension with SC-OMNI-001 CLM-OM-002 ("spares the pure-hearted") also stays open.
+**Reconciliation with DRAFT 0.1.** The spec's phrasing ("discriminates by architecture, not magnitude or morality") is stronger than Claim 3 here. This patch keeps Claim 3: the encounters do not separate architecture from energy or circumstance, so "not magnitude" stays a hypothesis. Claim 1's tension with SC-OMNI-001 CLM-OM-002 ("spares the pure-hearted") also stays open.
 
 ---
 
@@ -94,3 +109,4 @@ These cut against treating the three outcomes as a clean architecture-only resul
 | SC-LU-FRIEZA-001 | Yes — compiled lineup entry (2026-11-25); Frieza row of the child invariant |
 | SC-MIRROR-001 | Yes — compiled capstone (2026-11-25); uses the child invariant in its evidence map |
 | SC-LU-BUU-001 | No — named in the SC-MIRROR-001 spec; no such entry exists; not stubbed |
+| SC-CP-001 | Yes — compiled 2026-11-25 as a reconstruction (GOLD 0.926) |

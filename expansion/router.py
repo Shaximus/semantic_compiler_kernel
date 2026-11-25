@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from semantic_compiler.expansion.elevator import (
+    EXPLICIT_ONLY_ENTRY_HINTS,
     _STOPWORDS,
     _TOKEN_RE,
     DomainElevator,
@@ -323,7 +324,12 @@ class DomainRouter:
         if entry_scores:
             top_entry, top_entry_score = max(entry_scores.items(), key=lambda kv: (kv[1], kv[0]))
             hint = el._entry_to_domain_hint.get(top_entry)
-            if hint and top_entry_score >= 8.0 and hint != "universal_generic":
+            if (
+                hint
+                and top_entry_score >= 8.0
+                and hint != "universal_generic"
+                and top_entry not in EXPLICIT_ONLY_ENTRY_HINTS
+            ):
                 scores[hint] += min(top_entry_score * 0.65, 12.0)
                 entry_lift_terms.add(top_entry)
                 if top_entry not in terms[hint]:

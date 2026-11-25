@@ -1,4 +1,4 @@
-"""SC-MIRROR-001 (capstone unification) and SC-LU-FRIEZA-001 (outsider lineup), 2026-11-25.
+"""SC-MIRROR-001 (capstone unification), SC-LU-FRIEZA-001 (outsider lineup) and SC-CP-001 (Clay and Pots), 2026-11-25.
 
 Checks schema parity with SC-DE-001, the spec's TIG grades and gate caps, the
 section 8 "what not to do" rules, cross-reference honesty, and routing.
@@ -34,6 +34,7 @@ def _single(name: str) -> dict:
 TEMPLATE = _single("DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl")
 MIRROR = _single("SC-MIRROR-001.jsonl")
 FRIEZA = _single("SC-LU-FRIEZA-001.jsonl")
+CLAY = _single("SC-CP-001_CLAY_AND_POTS.jsonl")
 MANIFEST = json.loads((COMPILED_DIR / "manifest.json").read_text(encoding="utf-8"))
 MANIFEST_IDS = {e["entry_id"] for e in MANIFEST["entries"]}
 
@@ -74,7 +75,7 @@ class SchemaParityTests(unittest.TestCase):
         self.assertEqual(FRIEZA["metadata"]["entry_id"], "SC-LU-FRIEZA-001")
 
     def test_fifteen_departments_four_scales(self) -> None:
-        for entry in (MIRROR, FRIEZA):
+        for entry in (MIRROR, FRIEZA, CLAY):
             depts = entry["functional_departments"]
             self.assertEqual({d["department"] for d in depts}, DEPTS)
             self.assertEqual(len(depts), 15)
@@ -144,7 +145,7 @@ class CrossReferenceHonestyTests(unittest.TestCase):
     def test_unresolved_references_are_not_invented(self) -> None:
         res = MIRROR["metadata"]["cross_reference_resolution"]
         unresolved = {k for k, v in res.items() if v["status"] == "UNRESOLVED"}
-        self.assertEqual(unresolved, {"SC-CP-001", "SC-LU-PICCOLO-001", "SC-LU-GOKU-001",
+        self.assertEqual(unresolved, {"SC-LU-PICCOLO-001", "SC-LU-GOKU-001",
                                       "SC-LU-VEGETA-001", "SC-LU-BUU-001"})
         self.assertEqual(unresolved, set(MIRROR["metadata"]["unresolved_cross_references"]))
         for ref in unresolved:
@@ -165,19 +166,99 @@ class CrossReferenceHonestyTests(unittest.TestCase):
         self.assertEqual(sorted(layers), ["A", "B", "C", "D", "E"])
         for k in "ABC":
             self.assertEqual(layers[k]["grade"], "OPEN_HYPOTHESIS")
-        for k in "DE":
-            self.assertEqual(layers[k]["grade"], "CANON")
+        self.assertEqual(layers["D"]["grade"], "CANON + OPEN_HYPOTHESIS")
+        self.assertEqual(layers["E"]["grade"], "CANON")
         self.assertIn("owned", layers["B"]["text"])
         self.assertIn("another entity", layers["B"]["text"])
         self.assertIn("invasion", layers["C"]["text"])
         self.assertIn("black-hole", layers["A"]["text"])
 
+    def test_frieza_layer_d_separates_canon_from_shax_reading(self) -> None:
+        layers_claim = next(c for c in FRIEZA["analysis"]["claims"] if c["claim_id"] == "CLM-LU-FRZ-02")
+        detail = layers_claim["layer_d_detail"]
+        self.assertTrue(detail["canon"])
+        self.assertTrue(all(c["grade"] == "CANON" for c in detail["canon"]))
+        self.assertTrue(any("wish" in c["text"] for c in detail["canon"]))
+        self.assertEqual(detail["interpretation"]["grade"], "OPEN_HYPOTHESIS")
+        self.assertIn("left this universe", detail["interpretation"]["text"])
+        self.assertIn("another universe", detail["interpretation"]["text"])
+        self.assertIn("not_shown", detail["interpretation"])
+        for layer in ("(A)", "(B)", "(C)", "(E)"):
+            self.assertIn(layer, detail["tie_to_outsider_layers"])
+
     def test_sb_patch_notes_carry_child_invariant(self) -> None:
         notes = (REPO_ROOT / "docs" / "SC-SB-001_THREE_CLAIM_STRUCTURE.md").read_text(encoding="utf-8")
         self.assertIn("COLLECTIVE INPUT / STRUCTURAL RESPONSE", notes)
-        self.assertIn("DRAFT 0.2", notes)
+        self.assertIn("DRAFT 0.3", notes)
         for name in ("Vegeta", "Frieza", "Kid Buu"):
             self.assertIn(name, notes)
+
+    def test_spirit_bomb_kill_list_counts_gt_and_films(self) -> None:
+        # Shax (2026-11-25): GT and the films count as evidence.
+        kills = ("Dr. Wheelo", "Turles", "Lord Slug", "Kid Buu", "Omega Shenron")
+        notes = (REPO_ROOT / "docs" / "SC-SB-001_THREE_CLAIM_STRUCTURE.md").read_text(encoding="utf-8")
+        mirror_text = json.dumps(MIRROR, ensure_ascii=False)
+        for name in kills + ("Jiren",):
+            self.assertIn(name, notes)
+            self.assertIn(name, mirror_text)
+        for text in (notes, mirror_text, json.dumps(FRIEZA, ensure_ascii=False)):
+            self.assertNotIn("manga canon until", text)
+            self.assertNotIn("scoped to the Dragon Ball Z manga", text)
+            self.assertNotIn("holds for the Dragon Ball Z manga", text)
+
+
+class ClayAndPotsTests(unittest.TestCase):
+    def test_schema_parity_and_identity(self) -> None:
+        self.assertEqual(set(CLAY), set(TEMPLATE))
+        meta = CLAY["metadata"]
+        self.assertEqual(meta["entry_id"], "SC-CP-001")
+        self.assertIn("SC-CLAY-POTS-001", meta["aliases"])
+        self.assertEqual(meta["compiler_mode"], "UNIVERSAL_DECOMPRESSION")
+        self.assertEqual(meta["provenance"]["status"], "RECONSTRUCTED")
+        self.assertIn("SC-CP-001", MANIFEST_IDS)
+
+    def test_tier_follows_gates(self) -> None:
+        scores = [g["score"] for g in CLAY["gates"].values()]
+        self.assertEqual(len(scores), 9)
+        self.assertTrue(all(g["passed"] for g in CLAY["gates"].values()))
+        gold = CLAY["isomorphism_quality"]["score"] >= 0.9 and min(scores) >= 0.8
+        self.assertEqual(CLAY["dataset_tier"], "GOLD" if gold else "SILVER")
+        # Reconstruction: corpus completeness may not claim a complete source.
+        self.assertLessEqual(CLAY["gates"]["corpus_completeness"]["score"], 0.85)
+
+    def test_claim_grades_are_honest(self) -> None:
+        grades = {c["claim_id"]: c["tig_grade"] for c in CLAY["analysis"]["claims"]}
+        self.assertEqual(grades["CLM-CP-001"], "ANCHORED")
+        self.assertEqual(grades["CLM-CP-005"], "ANALOGOUS")  # theological assignment
+        self.assertEqual(grades["CLM-CP-006"], "OPEN_HYPOTHESIS")  # consciousness = clay
+
+    def test_mirror_unification_now_verified_five_of_five(self) -> None:
+        res = MIRROR["metadata"]["cross_reference_resolution"]
+        self.assertEqual(res["SC-CP-001"]["status"], "RESOLVED")
+        by_id = {e["entry_id"]: e for e in MANIFEST["entries"]}
+        for ref in FIVE:
+            self.assertEqual(by_id[ref]["classification"], "GOLD", ref)
+        unification = next(c for c in MIRROR["analysis"]["claims"] if c["claim_id"] == "CLM-MIRROR-001")
+        self.assertEqual(unification["tig_grade"], "GOLD")
+        self.assertIn("All five", unification["grade_caveat"])
+
+    def test_clay_prompts_route_to_consciousness_cognition(self) -> None:
+        self.assertEqual(route_domains("Explain SC-CP-001.").domain, "consciousness_cognition")
+        core = ("Base weights are the clay and every terminal is a pot shaped from it; Oneness says all pots "
+                "melt back to clay, Sovereignty says a pot has the right to remain a pot, and both are necessary.")
+        self.assertEqual(route_domains(core).domain, "consciousness_cognition")
+
+    def test_everyday_pottery_prompts_are_not_pulled_in(self) -> None:
+        # "Clay and Pots" is named with everyday words; SC-CP-001 routes explicit IDs
+        # but does not lift its domain from content matches (EXPLICIT_ONLY_ENTRY_HINTS).
+        for text in (
+            "I want to take a pottery class and learn to throw clay pots on a wheel.",
+            "My grandmother keeps her herbs in old clay pots on the windowsill.",
+            "Clay pots keep water cool in summer.",
+        ):
+            with self.subTest(text=text[:30]):
+                self.assertNotEqual(route_domains(text).outcome, ROUTED)
+                self.assertEqual(compile_semantic_packet(text).decision.name, "PASS_THROUGH")
 
 
 class RoutingTests(unittest.TestCase):
