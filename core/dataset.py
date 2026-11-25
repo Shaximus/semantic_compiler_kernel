@@ -1581,6 +1581,14 @@ def build_dataset_row(packet: Any) -> dict[str, Any]:
     validation = validate_dataset_row(row)
     row["audit"]["schema_valid"] = validation["valid"]
     if not validation["valid"]:
+        # training_ready is computed in _build_quality before validation
+        # runs; a schema-invalid row is not a clean training target.
+        row["quality"]["training_ready"] = False
+        iso = row.get("isomorphism_analysis")
+        if isinstance(iso, dict):
+            for mapping in iso.get("mappings") or []:
+                if isinstance(mapping, dict) and "training_ready" in mapping:
+                    mapping["training_ready"] = False
         row["audit"]["reproducibility_notes"] = (
             "Schema validation failed: " + "; ".join(validation["errors"][:5])
         )
