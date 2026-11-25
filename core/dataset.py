@@ -928,7 +928,13 @@ def _mapping_scores(
     evidence_support = _assess(packet_scores.get("evidence_quality"))
     alt_pressure = _assess(scores.get("alternative_explanation_pressure"))
     overclaim_control = 0.7
-    if mapping.get("identity_claim_allowed") is False:
+    # SC-PATCH-DU-001: ``substrate_confusion_check: true`` replaces the old
+    # ``identity_claim_allowed: false`` on SC entry mappings and scores the same.
+    # Dataset rows that still carry ``identity_claim_allowed`` (MATERIAL_IDENTITY
+    # schema field) keep their existing behavior.
+    if mapping.get("substrate_confusion_check") is True:
+        overclaim_control = 1.0
+    elif mapping.get("identity_claim_allowed") is False:
         overclaim_control = 1.0
     elif mapping.get("identity_claim_allowed") is True:
         overclaim_control = 0.5
