@@ -160,6 +160,28 @@ def _tokenize(text: str) -> list[str]:
     return _WORD_RE.findall(text)
 
 
+# Clause punctuation that a noun phrase can never span. Without this,
+# "a living organism; cash flow is blood" yielded the actor "organism cash flow".
+_CLAUSE_SPLIT_RE = re.compile(r"[;:.!?()\[\]{}\n]+|\s[-\u2013\u2014]+\s|[\u2013\u2014]")
+
+
+def _tokenize_clauses(text: str) -> list[list[str]]:
+    """Tokenize each clause separately so phrases cannot cross clause boundaries."""
+    clauses = [_tokenize(chunk) for chunk in _CLAUSE_SPLIT_RE.split(text)]
+    return [c for c in clauses if c]
+
+
+def _merge_unique(groups: list[list[str]]) -> list[str]:
+    merged: list[str] = []
+    seen: set[str] = set()
+    for group in groups:
+        for phrase in group:
+            if phrase not in seen:
+                seen.add(phrase)
+                merged.append(phrase)
+    return merged
+
+
 def _singular_form(word: str) -> str:
     """Simple rule-based singularization for common English plurals."""
     lower = word.lower()
@@ -388,9 +410,15 @@ def _extract_actors(packet: Any) -> list[str]:
     actors: list[str] = []
     seen: set[str] = set()
 
-    # 1. Subject phrases are the strongest actor signal.
-    subject_phrases = _extract_subject_phrases(tokens)
-    object_phrases = _extract_object_phrases(tokens)
+    # 1. Subject phrases are the strongest actor signal. Phrases are found per
+    # clause so they never span ";", ":", "." and similar boundaries.
+    clauses = _tokenize_clauses(text)
+    subject_phrases = _prune_subsumed_unigrams(
+        _merge_unique([_extract_subject_phrases(c) for c in clauses])
+    )
+    object_phrases = _prune_subsumed_unigrams(
+        _merge_unique([_extract_object_phrases(c) for c in clauses])
+    )
     all_phrases = subject_phrases + object_phrases
     for phrase in subject_phrases:
         seen.add(phrase)
@@ -429,12 +457,14 @@ def _extract_objects(packet: Any) -> list[str]:
     immediately following an action verb or preposition.
     """
     text = packet.raw_input or ""
-    tokens = _tokenize(text)
     objects: list[str] = []
     seen: set[str] = set()
 
-    # Object phrases after verbs/prepositions.
-    for phrase in _extract_object_phrases(tokens):
+    # Object phrases after verbs/prepositions, found per clause.
+    clause_objects = _prune_subsumed_unigrams(
+        _merge_unique([_extract_object_phrases(c) for c in _tokenize_clauses(text)])
+    )
+    for phrase in clause_objects:
         seen.add(phrase)
         objects.append(phrase)
 
