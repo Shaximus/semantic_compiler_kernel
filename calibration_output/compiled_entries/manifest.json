@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0.0",
   "framework": "Systemic Isomorphic Invariants",
-  "compiler_version": "3.8.0",
+  "compiler_version": "4.0.0",
   "updated_at": "2026-11-25",
   "entries": [
     {

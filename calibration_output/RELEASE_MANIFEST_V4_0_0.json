@@ -1,0 +1,21 @@
+{
+  "manifest_version": "4.0.0",
+  "semantic_compiler_version": "4.0.0",
+  "schema_version": "3.5.0",
+  "generated_at": "2026-11-26T01:48:00Z",
+  "git_commit": "v4.0.0",
+  "manifest_chain": [
+    "calibration_output/RELEASE_MANIFEST_V2_1_3.json",
+    "calibration_output/RELEASE_MANIFEST_V2_2_0_RC1.json",
+    "calibration_output/RELEASE_MANIFEST_V2_3_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_0_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_1_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_0.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_1.json",
+    "calibration_output/RELEASE_MANIFEST_V3_5_2.json",
+    "calibration_output/RELEASE_MANIFEST_V3_8_0.json",
+    "calibration_output/RELEASE_MANIFEST_V4_0_0.json"
+  ],
+  "frozen_modules": [],
+  "notes": "V4.0.0 release: package/kernel bump from V3.8.0 covering PRs #46-#73. Compiled runtime manifest is 25 SHA-256-verified entries (11 GOLD + 14 SILVER), including SC-DU-001, SC-OMNI-001 v2.0.0, SC-MIRROR-001, SC-CP-001, SC-LU-FRIEZA-001, SC-LU-VEGETA-001 rev 1.2.0, and SC-LU-GOKU/CELL/TRUNKS-001 (all three SILVER; self-grades not accepted). Router and compile-path work: PASS_THROUGH and AMBIGUOUS decisions, discriminative abstention, router-first target discovery, confident router results leading over weak and strong frames, and a 2% cross-domain entry-lift tie rule (ENTRY_LIFT_TIE_RATIO 1.02). SC-PATCH-DU-001 identity-gate correction (substrate_confusion_check / positional_claims_permitted). Input robustness and test-contract hardening. Source drafts for SC-MIRROR-001 (YYC/ICC/TSC/5EU/ADL/MBS) and SC-MAFUBA-001 Proposed GOLD draft (v1.0.0 frozen + v1.1.0-rc1 candidate; gold_awarded false; not compiled, not runtime-loaded, unvalidated). Schema remains Logos V3.5.0. Framework field remains 'Systemic Isomorphic Invariants' (entry metadata version 3.5.0). Per-entry content hashes were not regenerated."
+}
