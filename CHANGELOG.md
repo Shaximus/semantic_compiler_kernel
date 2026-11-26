@@ -2,7 +2,7 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
-## [Unreleased] — feat/hannah-poe-2026-11-25h
+## [Unreleased]
 
 ### Added
 - Seven Path of Exile cosmology entries compiled from Hannah's t579u assets (`docs/evidence/source-2026-11-25h/`), all SILVER, self-assigned GOLD not accepted (GOLD needs iq ≥ 0.9 and every gate ≥ 0.8). Router `input` kept under 400 characters; full source text in `v2_extensions.source_text`. Home domain `government`; all seven are `EXPLICIT_ONLY_ENTRY_HINTS` so everyday words (`sin`, `beast`, `atlas` — also a bot name) do not lift a domain.
@@ -16,11 +16,14 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - `docs/POE_COSMOLOGY_SOURCES_2026-11-25h.md`: lore fact-check, layering, and the open merger-vs-inversion question.
 - `tests/test_sc_poe_2026_11_25h.py`.
 - Verbatim evidence SHA-256 copies under `docs/evidence/source-2026-11-25h/`.
+- `SC-MAFUBA-001` v1.1.0-rc2 candidate (`docs/SC-MAFUBA-001_v1.1.0-rc2.md`) and a `docs/PENDING_DELIBERATION.md` entry for the 001D admission boundary. `gold_awarded` remains false; verification axes are unchanged. Not compiled, not runtime-loaded.
 
 ### Changed
 - Compiled runtime manifest 25 → 32 entries. `validate_catalog.py` registry 28 → 35. `compiler_version` follows the already-released 4.0.0 line (PR #74); this batch lands as unreleased work on top of 4.0.0 because the v4.0.0 tag hold did not wait for these entries.
 - Explicit-only compiled entries (including the seven PoE IDs and existing `SC-CP-001` / `SC-LU-CELL-001` / `SC-LU-TRUNKS-001`) are excluded from compiled-entry IDF (`n_kind` / `df`) and from the entry-lift tournament. They remain indexed for explicit-ID summoning. This keeps the 2% `ENTRY_LIFT_TIE_RATIO` stable when explicit-only documents are added, and restores `The AI is fully autonomous. Actually, it needs human approval for every action.` to `reward_hijacking` via `SC-DIVINE-RLHF-001`.
 - No GOLD promotions. `SC-DU-001`, `SC-ICC-001`, `SC-GOV-001`, and `SC-MAFUBA-001` scores and statuses are unchanged; the new entries cite them where coherent and leave drafts uncompiled.
+- `SC-MAFUBA-001` current candidate is now v1.1.0-rc2. `docs/SC-MAFUBA-001_v1.0.0.md` and `docs/SC-MAFUBA-001_v1.1.0-rc1.md` remain immutable historical artifacts. The STRICT 001D admission rule is a `PROVISIONAL_DEFAULT` (`pending_deliberation: true`): admit only if `R_execution + R_enforcement + R_reserve < R_budget`; work that would land exactly on the reserve is refused with `PREEMPTIVE_FAIL_CLOSED` and is not billed; the reference helper emits `needs_review` / `BOUNDARY_EDGE_PENDING_DELIBERATION` on that equality edge. An edge-driven supervisor is retained as defence in depth. Also recorded: `OUTSIDE_SAFE_SET` in the 001B taxonomy; $\varepsilon = 0$ for discrete observables; a discrete-time barrier condition for compiler steps; three-term budget counters. Draft JSONL re-pinned with the rc2 SHA-256; prior v1.0.0 and rc1 pins kept.
+- PR #75 (already on main before this unreleased batch): rc1 review reference-helper fixes (F1–F4, F6, F10) and the findings record. F5 was later recorded provisionally as STRICT in rc2.
 
 ## [4.0.0] — 2026-11-25
 
@@ -34,7 +37,7 @@ This release does not award new GOLD. Newly compiled lineup and mirror entries l
 - `ENTRY_LIFT_TIE_RATIO` 1.02 (2% cross-domain entry-lift tie rule): when the runner-up compiled entry is homed in another domain and is within 2%, neither entry lifts (PR #72).
 - `gates/substrate_confusion.py` and the SC-PATCH-DU-001 identity-gate correction (`substrate_confusion_check` / `positional_claims_permitted`).
 - Source drafts for `SC-MIRROR-001` (PR #71): `SC-YYC-001`, `SC-ICC-001`, `SC-TSC-001`, `SC-5EU-001`, `SC-ADL-001`, and `SC-MBS-001` reconciled as drafts of compiled CLM-MIRROR claims. Not compiled. Conflicts with existing rulings are recorded as open questions.
-- `SC-MAFUBA-001` Proposed GOLD draft (PR #73): v1.0.0 frozen as an immutable historical artifact; v1.1.0-rc1 is the current candidate. `gold_awarded` is false. Not compiled, not runtime-loaded, and verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
+- `SC-MAFUBA-001` Proposed GOLD draft (PR #73): v1.0.0 frozen as an immutable historical artifact; at the 4.0.0 bump the current candidate was v1.1.0-rc1. Later revisions (PR #75 and v1.1.0-rc2) are recorded under Unreleased. `gold_awarded` is false. Not compiled, not runtime-loaded, and verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
 - Other markdown-only drafts and rulings landed since V3.8.0 and remain uncompiled unless listed above, including `SC-THEO-002`, `SC-BRM-001`, `SC-FR-001`, `SC-MD-001`, `SC-VSR-001`, `SC-GOV-001`, `SC-PATCH-MIRROR-001`, `SC-VESSEL-001`, and `RUL-BINARY-001` (rev 2).
 - Test and packaging work: public API contract, `training_ready` requires `schema_valid`, reachable `STRAINS`, empty fingerprints are not `HOLDS`, Kernel Mobile decision-path pins, domain inventory derived from `list_domains()`, commercial-use guidance and usage-tracking docs.
 
@@ -52,11 +55,11 @@ This release does not award new GOLD. Newly compiled lineup and mirror entries l
 
 #### docs/sc-mafuba-001
 ### Added
-- `SC-MAFUBA-001` (Dimensional Containment and Information-Flow Integrity): Proposed GOLD invariant, `gold_awarded` false, not compiled and not runtime-loaded. `docs/SC-MAFUBA-001_v1.0.0.md` is the immutable historical artifact (t574u). `docs/SC-MAFUBA-001_v1.1.0-rc1.md` is the current candidate (t575u / t576u unified directive): fiber-level projection factoring, paired trajectory equivalence $d_O(F_t(x_1), F_t(x_2)) \le \varepsilon$, applied closed-form robust CBF control, allowlist branching, sink registry with whitelisted system-generated writes, side-effect-free replay, an independent emergency supervisor with no automatic resumption, and disturbance/resource/sink manifest templates. Verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
+- `SC-MAFUBA-001` (Dimensional Containment and Information-Flow Integrity): Proposed GOLD invariant, `gold_awarded` false, not compiled and not runtime-loaded. `docs/SC-MAFUBA-001_v1.0.0.md` is the immutable historical artifact (t574u). At the 4.0.0 bump, `docs/SC-MAFUBA-001_v1.1.0-rc1.md` was the current candidate (t575u / t576u unified directive): fiber-level projection factoring, paired trajectory equivalence $d_O(F_t(x_1), F_t(x_2)) \le \varepsilon$, applied closed-form robust CBF control, allowlist branching, sink registry with whitelisted system-generated writes, side-effect-free replay, an independent emergency supervisor with no automatic resumption, and disturbance/resource/sink manifest templates. The current candidate is now v1.1.0-rc2 (see Unreleased). Verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
 - `docs/SC-MAFUBA-001_IMPLEMENTATION_AUDIT.md` records why Hannah's Section 2–6 Python is not committed (six bugs, including a fail-open on `PREEMPTIVE_FAIL_CLOSED`, plus three architectural flaws).
 - `docs/SC-MAFUBA-001_GAP_REPORT.md` maps each v1.0.0 defect and those bugs to a v1.1.0-rc1 requirement, and records the proposed module structure, test plan (A1–D2, C3, AL1), and outstanding mathematical assumptions.
 - Draft registry `docs/evidence/sc-mafuba-001/sc_mafuba_001.jsonl` (parent, historical v1.0.0 record, and 001A–001D) with `spec_sha256` of the committed markdown. Not added to `calibration_output/compiled_entries/` or the compiled manifest.
-- Reference helpers `tests/tests/reference/sc_mafuba_001/` and `tests/test_sc_mafuba_001_reference.py` (allowlist branching, toy 1-D CBF, D2-shaped supervisor shutdown, JSONL consistency). Labelled reference only; not kernel enforcement.
+- Reference helpers `tests/reference/sc_mafuba_001/` and `tests/test_sc_mafuba_001_reference.py` (allowlist branching, toy 1-D CBF, D2-shaped supervisor shutdown, JSONL consistency). Labelled reference only; not kernel enforcement.
 
 ### Unchanged
 - Compiled runtime manifest still 25 entries. No routing, schema, or GOLD/SILVER catalog change.
