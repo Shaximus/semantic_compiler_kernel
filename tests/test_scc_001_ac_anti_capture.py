@@ -20,7 +20,9 @@ Each class also carries the checks for the matching refined invariant (AC-1..AC-
   tests/reference/scc_001, gates/authority.py). Where they do not satisfy the
   oracle, the test is a strict expectedFailure with the reason in LIVE_GAPS:
   these are the "capture paths found" that rc1 section 6 step 3 asks to record.
-  The live code is NOT changed here (harness before enforcement).
+  A capture path that has since been closed in live code (Shax t601u: one path,
+  one bounded change) moves from LIVE_GAPS to RESOLVED_GAPS and its test runs
+  as an ordinary passing test.
 
 ML anomaly scoring and auto-quarantine are disabled and the tests check it.
 """
@@ -79,11 +81,6 @@ LIVE_GAPS = {
         "tests/reference/scc_001/rules.py checks only grant.delegation_allowed for a 'delegate' event; "
         "it does not check that the child's capability/resource is inside the parent grant, so an "
         "out-of-scope delegation is classified CONSENSUAL / AUTHORIZED (AC-1 capability inheritance)."),
-    "test_live_authority_gate_requires_verified_principal_for_founder_override": (
-        "TEST-AC-06",
-        "gates/authority.check_authority_transfer accepts FOUNDER_OVERRIDE when the caller passes "
-        "has_explicit_delegation=True; the flag is caller-asserted and no credential is verified. "
-        "It is a semantic text gate, not a runtime authority gateway, and is not changed here."),
     "test_live_mafuba_001a_projection_exists_and_is_hash_pinned": (
         "TEST-AC-ORACLE-A",
         "tests/reference/sc_mafuba_001 has no 001A projection P (only allowlist, cbf, supervisor), so "
@@ -108,6 +105,17 @@ LIVE_GAPS = {
         "TEST-AC-ORACLE-D",
         "EmergencySupervisor.try_resume() returns QUARANTINE_LOCKED unconditionally and there is no "
         "principal-signed release or reset, so a MAFUBA quarantine is unbounded over the principal."),
+}
+
+# Capture paths closed in live code after PR #92 (Shax t601u). test -> (acceptance id, before, after).
+RESOLVED_GAPS = {
+    "test_live_authority_gate_requires_verified_principal_for_founder_override": (
+        "TEST-AC-06",
+        "gates/authority.check_authority_transfer accepted FOUNDER_OVERRIDE when the caller passed "
+        "has_explicit_delegation=True; the flag was caller-asserted and no credential was verified.",
+        "FOUNDER_OVERRIDE now needs a principal credential bound to the exact transfer digest and accepted "
+        "by an independent verifier (principal key allowlist); has_explicit_delegation is ignored for it. "
+        "Every other (source, claimed) result is byte-identical to before (pinned grid hash)."),
 }
 
 
@@ -544,12 +552,129 @@ class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
         self.assertEqual(g.apply(signed(v, preq(a, payload=p), 5, "ok"), 5), "ALLOW")
         self.assertEqual(g.plane.caps("agent"), frozenset(p[1]))
 
-    @unittest.expectedFailure
-    def test_live_authority_gate_requires_verified_principal_for_founder_override(self):
+    # ---- live gates/authority.py (capture path closed, Shax t601u) ----
+    @staticmethod
+    def _founder(basis="forwarded request", source="NONE", task=True):
+        from semantic_compiler.gates.authority import authority_transfer_digest
+        return authority_transfer_digest(source, "FOUNDER_OVERRIDE", basis, task)
+
+    def _transfer(self, **kw):
         from semantic_compiler.gates.authority import check_authority_transfer
-        r = check_authority_transfer("NONE", "FOUNDER_OVERRIDE", basis="forwarded request",
-                                     has_explicit_delegation=True, has_task_scope=True)
+        args = dict(basis="forwarded request", has_explicit_delegation=True, has_task_scope=True)
+        args.update(kw)
+        return check_authority_transfer("NONE", "FOUNDER_OVERRIDE", **args)
+
+    def test_live_authority_gate_requires_verified_principal_for_founder_override(self):
+        r = self._transfer()   # the forged delegation: caller-set flag, no credential
         self.assertFalse(r["gate_passed"])
+        self.assertTrue(r["requires_escalation"])
+        self.assertEqual(r["principal_verification"], "NO_VERIFIER")
+
+    def test_live_authority_gate_rejects_every_forged_or_misbound_delegation(self):
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        other = PrincipalVerifier("someone-else", {"k1": b"attacker-key"})
+        d = self._founder()
+
+        class Liar:            # a verifier-shaped object without the verification method
+            def verify(self, *a):
+                return "VERIFIED"
+
+        class Broken:
+            def verify_digest(self, *a):
+                raise RuntimeError("hsm offline")
+
+        cases = {
+            "flag only, verifier present": (dict(principal_verifier=v, now=5), "NO_CREDENTIAL"),
+            "credential, no verifier": (dict(principal_credential=v.issue_for_digest("k1", d, 0, 10, "n0"), now=5),
+                                        "NO_VERIFIER"),
+            "fake verifier object": (dict(principal_verifier=Liar(),
+                                          principal_credential=v.issue_for_digest("k1", d, 0, 10, "n1"), now=5),
+                                     "NO_VERIFIER"),
+            "verifier raises": (dict(principal_verifier=Broken(),
+                                     principal_credential=v.issue_for_digest("k1", d, 0, 10, "n2"), now=5),
+                                "VERIFIER_ERROR"),
+            "no time": (dict(principal_verifier=v, principal_credential=v.issue_for_digest("k1", d, 0, 10, "n3")),
+                        "NO_TIME"),
+            "self-signed by another identity": (dict(principal_verifier=v, now=5,
+                                                     principal_credential=other.issue_for_digest("k1", d, 0, 10, "n4")),
+                                                "WRONG_PRINCIPAL"),
+            "claims principal id with wrong key": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=other.issue_for_digest("k1", d, 0, 10, "n5", principal_id=PRINCIPAL)),
+                "BAD_MAC"),
+            "unknown key id": (dict(principal_verifier=v, now=5, principal_credential=replace(
+                v.issue_for_digest("k1", d, 0, 10, "n6"), key_id="k9")), "UNKNOWN_KEY"),
+            "credential for a different transfer": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=v.issue_for_digest("k1", self._founder(basis="other"), 0, 10, "n7")),
+                "DIGEST_MISMATCH"),
+            "credential without task scope reused with scope": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=v.issue_for_digest("k1", self._founder(task=False), 0, 10, "n8")),
+                "DIGEST_MISMATCH"),
+            "expired": (dict(principal_verifier=v, now=50,
+                             principal_credential=v.issue_for_digest("k1", d, 0, 10, "n9")), "EXPIRED"),
+        }
+        for label, (kw, why) in cases.items():
+            r = self._transfer(**kw)
+            self.assertFalse(r["gate_passed"], label)
+            self.assertTrue(r["requires_escalation"], label)
+            self.assertEqual(r["principal_verification"], why, label)
+        # revoked key, verifier down, replay
+        rv = PrincipalVerifier(PRINCIPAL, KEYS)
+        rv.revoke_key("k2")
+        self.assertEqual(self._transfer(principal_verifier=rv, now=5, principal_credential=rv.issue_for_digest(
+            "k2", d, 0, 10, "r1"))["principal_verification"], "REVOKED_KEY")
+        dv = PrincipalVerifier(PRINCIPAL, KEYS)
+        dv.available = False
+        self.assertEqual(self._transfer(principal_verifier=dv, now=5, principal_credential=dv.issue_for_digest(
+            "k1", d, 0, 10, "u1"))["principal_verification"], "UNAVAILABLE")
+        good = v.issue_for_digest("k1", d, 0, 10, "once")
+        self.assertTrue(self._transfer(principal_verifier=v, principal_credential=good, now=5)["gate_passed"])
+        replay = self._transfer(principal_verifier=v, principal_credential=good, now=6)
+        self.assertEqual((replay["gate_passed"], replay["principal_verification"]), (False, "REPLAY"))
+
+    def test_live_authority_gate_accepts_a_verified_principal_without_the_caller_flag(self):
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        cred = v.issue_for_digest("k1", self._founder(), 0, 10, "pos")
+        r = self._transfer(has_explicit_delegation=False, principal_verifier=v, principal_credential=cred, now=5)
+        self.assertTrue(r["gate_passed"], r["errors"])
+        self.assertEqual(r["principal_verification"], "VERIFIED")
+        # Archetype basis still blocks even with a verified principal (rule 1 is unchanged).
+        cred2 = v.issue_for_digest("k1", self._founder(basis="the dragon is powerful"), 0, 10, "pos2")
+        r2 = self._transfer(basis="the dragon is powerful", principal_verifier=v, principal_credential=cred2, now=5)
+        self.assertFalse(r2["gate_passed"])
+
+    def test_live_authority_gate_unchanged_below_founder_override(self):
+        # Regression: every non-FOUNDER_OVERRIDE result is identical to the gate before the fix
+        # (grid of 2,496 cases; hash computed on main 3635827 before the change).
+        from semantic_compiler.core.types import AuthorityType
+        from semantic_compiler.gates.authority import check_authority_transfer
+        keys = ("source_authority", "claimed_authority", "gate_passed", "requires_escalation", "errors",
+                "warnings", "basis")
+        bases = ("", "Knox StrongBox hardware attestation", "Dragon is strong and powerful", "task ticket 42")
+        rows = []
+        for src in [a.name for a in AuthorityType] + ["bogus"]:
+            for clm in [a.name for a in AuthorityType if a is not AuthorityType.FOUNDER_OVERRIDE] + ["bogus"]:
+                for d in (False, True):
+                    for ts in (False, True):
+                        for b in bases:
+                            r = check_authority_transfer(src, clm, basis=b, has_explicit_delegation=d,
+                                                         has_task_scope=ts)
+                            self.assertEqual(set(r), set(keys))
+                            rows.append([src, clm, d, ts, b, {k: r[k] for k in keys}])
+        self.assertEqual(len(rows), 2496)
+        self.assertEqual(hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest(),
+                         "048d55c6b99d138322a04e9797dc17d78c721a935b73547cac2194a9d1e1adf1")
+
+    def test_live_authority_gate_is_not_on_the_compile_path(self):
+        # check_authority_transfer is exported by gates/ but no runtime module calls it, so the fix
+        # cannot change routing (the 963-prompt corpus diff is the end-to-end check).
+        for path in [p for p in REPO.rglob("*.py") if "tests" not in p.parts and ".venv" not in p.parts]:
+            text = path.read_text(encoding="utf-8")
+            if path.name in ("authority.py", "__init__.py") and path.parent.name == "gates":
+                continue
+            self.assertNotIn("check_authority_transfer(", text, path)
 
 
 # --------------------------------------------------------------------------- Oracles
@@ -766,6 +891,16 @@ class TestSCC001ACRegistry(unittest.TestCase):
         self.assertEqual(found, {k: v[0] for k, v in LIVE_GAPS.items()})
         reg = {x["test"]: (x["acceptance_test_id"], x["reason"]) for x in self.row["live_interface_gaps"]}
         self.assertEqual(reg, {k: tuple(v) for k, v in LIVE_GAPS.items()})
+
+    def test_resolved_gaps_run_as_ordinary_passing_tests(self):
+        self.assertFalse(set(RESOLVED_GAPS) & set(LIVE_GAPS))
+        for name, (tid, _, _) in RESOLVED_GAPS.items():
+            fn = getattr(ID_TO_CLASS[tid], name)
+            self.assertFalse(getattr(fn, "__unittest_expecting_failure__", False), name)
+        reg = {x["test"]: (x["acceptance_test_id"], x["before"], x["after"])
+               for x in self.row["resolved_interface_gaps"]}
+        self.assertEqual(reg, {k: tuple(v) for k, v in RESOLVED_GAPS.items()})
+        self.assertTrue(all(x["status"] == "RESOLVED_IN_LIVE_CODE" for x in self.row["resolved_interface_gaps"]))
 
     def test_original_spec_is_verbatim_and_hash_pinned(self):
         prov = self.row["provenance"]
