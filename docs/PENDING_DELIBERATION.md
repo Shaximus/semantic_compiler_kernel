@@ -381,3 +381,21 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
 - **Chosen default:** record and do not fix. Four strict xfails: (1) `tests/reference/scc_001/rules.py` does not check delegated scope (AC-1); (2) `gates/authority.check_authority_transfer` accepts `FOUNDER_OVERRIDE` on a caller-asserted boolean (AC-6); (3) the MAFUBA `ResourceBudget` has no isolated override partition (AC-3); (4) the MAFUBA `EmergencySupervisor` has no principal release (AC-5).
 - **Reason:** t599u says to build the harness before changing enforcement. Fixing (2) touches a live gate on the routing path, and fixing (3) and (4) changes the pinned MAFUBA rc2 reference. Each needs its own decision.
+
+### SCC-001-AC follow-up: the original rc1 spec (26 Nov 2026)
+
+The rc1 attachment was added verbatim (`docs/evidence/source-2026-11-26c/SCC-001-AC_original.md`, sha256 `d834c161…0737`), and the reference and tests were realigned to it. Effect on the items above: `SCC-001-AC-VERSION-AND-HOME` no longer says "monitors may not DELEGATE". Under rc1's section-5 contract only the principal holds `GRANT_ISSUE`, so nobody else can delegate. Its `spec_sha256` note is superseded, because the hash is now the real content hash. `SCC-001-AC-LIVE-GAPS` now lists eight gaps, not four. The other items stand.
+
+### SCC-001-AC-KP-ROTATE (rotate K_P has no section-5 action)
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Question:** the rc1 section-2 table lets the principal "rotate K_P", but the section-5 `AuthorityAction` enum has no rotate action.
+- **Chosen default:** map `ROTATE_PRINCIPAL_KEY` onto `POLICY_WRITE` (principal only, verified credential). rc1 section 5 is left as written.
+- **Alternatives not chosen:** add `KEY_ROTATE` to the enum (that would edit Shax's text); map it to `IDENTITY_WRITE`.
+
+### SCC-001-AC-ENFORCEMENT-HOME (rc1 section 6 step 2)
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Question:** rc1 asks for AC-1..AC-5 to be enforced inside SCC-001 Phase 1/2 (deterministic policy plus enforcement gateway). SCC-001 has no enforcement gateway (`docs/SCC-001.md` §8).
+- **Chosen default:** keep AC enforcement in the separate reference gateway, `tests/reference/scc_001_ac/`, which follows the verbatim section-5 edge table. Leave `tests/reference/scc_001/` unchanged, with its delegation-scope gap kept as a strict xfail.
+- **Alternatives not chosen:** build an SCC-001 enforcement gateway now and wire AC-1..AC-5 into it. That is the next enforcement step, and it changes SCC-001's reference behaviour.
