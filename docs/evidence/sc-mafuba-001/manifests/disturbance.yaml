@@ -1,0 +1,17 @@
+# SC-MAFUBA-001 disturbance manifest template (v1.1.0-rc1)
+# Template only. Not a production configuration. Not evidence of validation.
+# Closed-form robust CBF applies only when model_class is control_affine_plus_euclidean_ball.
+
+id: DIST-MAFUBA-TEMPLATE-001
+spec_id: SC-MAFUBA-001
+spec_version: 1.1.0-rc1
+model_class: control_affine_plus_euclidean_ball  # xdot = f(x) + g(x) u + d
+disturbance:
+  set_class: euclidean_ball
+  radius_symbol: r_max
+  radius: null          # required number in a real config
+  radius_units: null    # required string in a real config
+  time_base: continuous # or discrete_step, must be declared
+notes:
+  - Worst-case disturbance is closed-form: -r_max * ||grad h(x)||_2.
+  - Other set classes need a declared reduction; do not silently reuse this formula.

@@ -70,6 +70,12 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-5EU-001",   # duplicate of CLM-MIRROR-001
     "SC-MBS-001",   # source of CLM-MIRROR-005
     "SC-SIT-001",   # SB-001 patch DRAFT 0.4
+    # 2026-11-25 draft (markdown + draft JSONL, not compiled, not runtime-loaded):
+    "SC-MAFUBA-001",    # docs/SC-MAFUBA-001.md (index); v1.0.0 artifact + v1.1.0-rc1 candidate
+    "SC-MAFUBA-001A",
+    "SC-MAFUBA-001B",
+    "SC-MAFUBA-001C",
+    "SC-MAFUBA-001D",
 }
 
 

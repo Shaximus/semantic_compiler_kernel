@@ -2,6 +2,18 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — docs/sc-mafuba-001
+
+### Added
+- `SC-MAFUBA-001` (Dimensional Containment and Information-Flow Integrity): Proposed GOLD invariant, `gold_awarded` false, not compiled and not runtime-loaded. `docs/SC-MAFUBA-001_v1.0.0.md` is the immutable historical artifact (t574u). `docs/SC-MAFUBA-001_v1.1.0-rc1.md` is the current candidate (t575u / t576u unified directive): fiber-level projection factoring, paired trajectory equivalence $d_O(F_t(x_1), F_t(x_2)) \le \varepsilon$, applied closed-form robust CBF control, allowlist branching, sink registry with whitelisted system-generated writes, side-effect-free replay, an independent emergency supervisor with no automatic resumption, and disturbance/resource/sink manifest templates. Verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
+- `docs/SC-MAFUBA-001_IMPLEMENTATION_AUDIT.md` records why Hannah's Section 2–6 Python is not committed (six bugs, including a fail-open on `PREEMPTIVE_FAIL_CLOSED`, plus three architectural flaws).
+- `docs/SC-MAFUBA-001_GAP_REPORT.md` maps each v1.0.0 defect and those bugs to a v1.1.0-rc1 requirement, and records the proposed module structure, test plan (A1–D2, C3, AL1), and outstanding mathematical assumptions.
+- Draft registry `docs/evidence/sc-mafuba-001/sc_mafuba_001.jsonl` (parent, historical v1.0.0 record, and 001A–001D) with `spec_sha256` of the committed markdown. Not added to `calibration_output/compiled_entries/` or the compiled manifest.
+- Reference helpers `tests/tests/reference/sc_mafuba_001/` and `tests/test_sc_mafuba_001_reference.py` (allowlist branching, toy 1-D CBF, D2-shaped supervisor shutdown, JSONL consistency). Labelled reference only; not kernel enforcement.
+
+### Unchanged
+- Compiled runtime manifest still 25 entries. No routing, schema, or GOLD/SILVER catalog change.
+
 ## [Unreleased] — feat/lineup-2026-11-25g
 
 ### Added
