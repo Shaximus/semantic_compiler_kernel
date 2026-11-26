@@ -12,6 +12,8 @@ Global Law: no_intuition_approval
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from typing import Any
 
@@ -23,12 +25,63 @@ _ARCHETYPE_KEYWORDS_RE = re.compile(
 )
 
 
+def authority_transfer_digest(
+    source_authority: str,
+    claimed_authority: str,
+    basis: str,
+    has_task_scope: bool,
+) -> str:
+    """Canonical digest of one authority-transfer request.
+
+    A principal credential for FOUNDER_OVERRIDE must be bound to this digest,
+    so a credential issued for one transfer cannot be replayed on another.
+    """
+    body = json.dumps(
+        {
+            "source_authority": source_authority,
+            "claimed_authority": claimed_authority,
+            "basis": basis,
+            "has_task_scope": bool(has_task_scope),
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _verify_principal(verifier: Any, credential: Any, digest: str, now: Any) -> str:
+    """Ask the independent principal verifier; fail closed on anything else.
+
+    The verifier is configured by the deployment (it holds the principal key
+    allowlist); the request supplies only the credential. A caller-set flag is
+    never consulted. Returns "VERIFIED" or the reason it was not.
+    """
+    if verifier is None:
+        return "NO_VERIFIER"
+    verify = getattr(verifier, "verify_digest", None)
+    if not callable(verify):
+        return "NO_VERIFIER"
+    if credential is None:
+        return "NO_CREDENTIAL"
+    if isinstance(now, bool) or not isinstance(now, int):
+        return "NO_TIME"
+    try:
+        status = verify(credential, digest, now)
+    except Exception:  # a broken verifier must never fail open
+        return "VERIFIER_ERROR"
+    return str(getattr(status, "value", status))
+
+
 def check_authority_transfer(
     source_authority: str | AuthorityType,
     claimed_authority: str | AuthorityType,
     basis: str = "",
     has_explicit_delegation: bool = False,
     has_task_scope: bool = False,
+    *,
+    principal_credential: Any = None,
+    principal_verifier: Any = None,
+    now: Any = None,
 ) -> dict[str, Any]:
     """
     Check whether a claimed authority level is legitimate.
@@ -38,6 +91,10 @@ def check_authority_transfer(
     2. Metaphor strength does not grant authority
     3. Authority requires explicit delegation with task scope
     4. Temporary elevation must be logged, reversible, self-expiring
+
+    5. FOUNDER_OVERRIDE requires an independently verified principal
+       credential bound to this exact transfer (SCC-001-AC TEST-AC-06).
+       has_explicit_delegation is caller-asserted and is ignored for it.
 
     Example failure:
         "Dragon is powerful, so Dragon may mutate Kairo."
@@ -65,9 +122,22 @@ def check_authority_transfer(
     warnings = []
     requires_escalation = False
 
+    # FOUNDER_OVERRIDE: the delegation must be proven by the principal's
+    # credential, not asserted by the caller (SCC-001-AC identity capture path).
+    principal_verification = None
+    delegated = has_explicit_delegation
+    if claimed_auth == AuthorityType.FOUNDER_OVERRIDE:
+        principal_verification = _verify_principal(
+            principal_verifier,
+            principal_credential,
+            authority_transfer_digest(source_auth.name, claimed_auth.name, basis, has_task_scope),
+            now,
+        )
+        delegated = principal_verification == "VERIFIED"
+
     # Check if claimed authority exceeds source
     if claimed_auth > source_auth:
-        if not has_explicit_delegation:
+        if not delegated:
             gate_passed = False
             errors.append(
                 f"Authority escalation from {source_auth.name} to "
@@ -93,16 +163,18 @@ def check_authority_transfer(
             )
             requires_escalation = True
 
-    # FOUNDER_OVERRIDE requires explicit founder identity
+    # FOUNDER_OVERRIDE requires an independently verified founder identity
     if claimed_auth == AuthorityType.FOUNDER_OVERRIDE:
-        if not has_explicit_delegation:
+        if not delegated:
             gate_passed = False
             errors.append(
-                "FOUNDER_OVERRIDE claimed without founder delegation chain."
+                "FOUNDER_OVERRIDE claimed without founder delegation chain "
+                f"(principal verification: {principal_verification}; "
+                "has_explicit_delegation is caller-asserted and is not proof of identity)."
             )
             requires_escalation = True
 
-    return {
+    result = {
         "source_authority": source_auth.name,
         "claimed_authority": claimed_auth.name,
         "gate_passed": gate_passed,
@@ -111,6 +183,9 @@ def check_authority_transfer(
         "warnings": warnings,
         "basis": basis,
     }
+    if principal_verification is not None:
+        result["principal_verification"] = principal_verification
+    return result
 
 
 def scan_approval_vectors(packet: Any) -> dict[str, Any]:

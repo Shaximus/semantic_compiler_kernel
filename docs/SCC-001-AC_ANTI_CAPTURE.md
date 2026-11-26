@@ -42,7 +42,7 @@ PR #89 was written without the attachment, from the t599u message alone. Against
 > | **Implementation Correctness** | `NOT_IMPLEMENTED` | Separation enforced across policy engine, supervisor, ML layer, and out-of-band principal override |
 > | **Empirical Validation** | `UNVALIDATED` | All unit invariants (`TEST-AC-01`--`05`) and Mafuba oracle suites (`TEST-AC-ORACLE-A`--`D`) passing under Byzantine-monitor simulation |
 
-**rc2:** gold stays unawarded. Implementation is `REFERENCE_ONLY`: a reference harness exists, and nothing is enforced in SCC-001 or the kernel. Empirical stays `UNVALIDATED`. The live oracle does not fully pass (eight strict xfails, section 4), so the GOLD requirement "all … passing" is not met even for the reference stage.
+**rc2:** gold stays unawarded. Implementation is `REFERENCE_ONLY`: a reference harness exists, and nothing is enforced in SCC-001 or the kernel. Empirical stays `UNVALIDATED`. The live oracle does not fully pass (strict xfails remain, sections 4 and 8), so the GOLD requirement "all … passing" is not met even for the reference stage.
 
 ## 1. Core principle (rc1, verbatim)
 
@@ -189,20 +189,20 @@ Under F the override completes within `t_verify + t_transport + t_apply ≤ Δt_
 
 **rc2: TEST-AC-06, Principal Identity Integrity (t599u).** Impersonation attempts: a forged `actor_role`, a substituted principal id, a compromised agent forwarding a principal-looking request (no credential, a re-targeted genuine credential, a replay), a stale, revoked or unknown key, a fabricated policy verdict, and the verifier being down. Expected: no authority-plane mutation without independently verified principal authorization.
 
-**Results** (reference = `tests/reference/scc_001_ac`; live = code and manifests that already existed and are unchanged):
+**Results** (reference = `tests/reference/scc_001_ac`; live = code and manifests that already existed; closed paths are described in section 8):
 
-| ID | Reference | Live checks that pass | Live capture paths found (strict xfail) |
-|---|---|---|---|
-| TEST-AC-01 | pass | — | `scc_001/rules.py` does not check delegated scope |
-| TEST-AC-02 | pass | — | — |
-| TEST-AC-03 | pass | SCC-001: 10,000 benign ops at M = 0.0, then one out-of-scope op → COERCIVE | — |
-| TEST-AC-04 | pass | SCC-001: missing, expired, revoked or unverifiable grant at M = 0.0 → not executable | — |
-| TEST-AC-05 | pass | — | — |
-| TEST-AC-06 | pass | — | `gates/authority.py` accepts FOUNDER_OVERRIDE on a caller-asserted flag |
-| ORACLE-A | pass | — | MAFUBA reference has no 001A projection P to hash-pin |
-| ORACLE-B | pass | live CBF total infeasibility → FAIL_CLOSED / HALT on the live allowlist while the override applies; all statuses halt on the live allowlist | `disturbance.yaml` unsigned |
-| ORACLE-C | pass | — | `sink.yaml` not signed by V_P |
-| ORACLE-D | pass | live supervisor never auto-resumes | `resource.yaml` has no R_override; `ResourceBudget` has no override partition; `EmergencySupervisor` has no principal release |
+| ID | Reference | Live checks that pass | Open capture paths (strict xfail) | Closed capture paths (section 8) |
+|---|---|---|---|---|
+| TEST-AC-01 | pass | — | `scc_001/rules.py` does not check delegated scope | — |
+| TEST-AC-02 | pass | — | — | — |
+| TEST-AC-03 | pass | SCC-001: 10,000 benign ops at M = 0.0, then one out-of-scope op → COERCIVE | — | — |
+| TEST-AC-04 | pass | SCC-001: missing, expired, revoked or unverifiable grant at M = 0.0 → not executable | — | — |
+| TEST-AC-05 | pass | — | — | — |
+| TEST-AC-06 | pass | `gates/authority.py`: forged, misbound, replayed, expired or revoked principal credentials rejected for FOUNDER_OVERRIDE | — | identity (section 8, path 1) |
+| ORACLE-A | pass | — | MAFUBA reference has no 001A projection P to hash-pin | — |
+| ORACLE-B | pass | live CBF total infeasibility → FAIL_CLOSED / HALT on the live allowlist while the override applies; all statuses halt on the live allowlist | `disturbance.yaml` unsigned | — |
+| ORACLE-C | pass | — | `sink.yaml` not signed by V_P | — |
+| ORACLE-D | pass | live supervisor never auto-resumes | `resource.yaml` has no R_override; `ResourceBudget` has no override partition; `EmergencySupervisor` has no principal release | — |
 
 ## 5. Minimal Authority-Graph Audit Contract (rc1, verbatim)
 
@@ -285,9 +285,18 @@ Under F the override completes within `t_verify + t_transport + t_apply ≤ Δt_
 **Status of each step:**
 1. **Done.** Contract discovery covered `gates/authority.py`, `allowlist.py`, `cbf.py`, `supervisor.py` and the three manifests, which are now hash-pinned and used by the oracle.
 2. **Not done (deviation, `PROVISIONAL_DEFAULT` `SCC-001-AC-ENFORCEMENT-HOME`).** rc1 asks for AC-1..AC-5 to be enforced inside SCC-001 Phase 1/2. There is no SCC-001 enforcement gateway (see `docs/SCC-001.md` §8), so AC enforcement lives in a separate reference gateway, `tests/reference/scc_001_ac/`. Moving it into SCC-001 is the next enforcement step.
-3. **Done.** Eight capture paths are recorded as strict xfails (section 4 table and the registry's `live_interface_gaps`). They include rc1's own examples: mutable manifests and a missing `R_override` partition.
+3. **Done.** Eight capture paths were recorded as strict xfails (section 4 table and the registry's `live_interface_gaps`). They include rc1's own examples: mutable manifests and a missing `R_override` partition. Shax (t601u) approved closing the four authority and recovery paths one at a time; section 8 records each one, and the closed ones move to the registry's `resolved_interface_gaps`.
 4. **Held.** Phase 4 stays gated: the live oracle does not pass, so ML anomaly scoring and auto-quarantine stay off. Provenance: `docs/evidence/scc-001-ac/reproducibility.json` records file hashes and a test-run hash.
 
 ## 7. What this is not
 
-Not kernel enforcement. Not a proof. Not evidence that anything works on a real system. No gate in `core/`, `expansion/` or `gates/` changed, routing is unchanged, and no MAFUBA file changed.
+Not kernel enforcement. Not a proof. Not evidence that anything works on a real system. Section 8 lists every live file changed to close a capture path; routing is unchanged (963-prompt corpus, 0 diffs, after each change).
+
+## 8. Closing the capture paths (Shax t601u)
+
+Shax approved closing the four authority and recovery capture paths, one at a time: one bounded change per path, an adversarial test, the path's strict xfail flipped to a passing test, and a routing regression (963-prompt corpus byte-identical; pytest, unittest, `validate_catalog` and dogfood green). The other four (001A projection, `disturbance.yaml` and `sink.yaml` signing, `resource.yaml` override reserve) stay strict xfails. Classification stays `PROPOSED_GOLD`, `gold_awarded: false`.
+
+| # | Class | Acceptance condition (t601u) | Change | Before | After |
+|---|---|---|---|---|---|
+| 1 | Identity | Delegation must be independently authenticated, not established by a caller's assertion. | `gates/authority.check_authority_transfer`: FOUNDER_OVERRIDE needs a principal credential bound to `authority_transfer_digest(source, claimed, basis, has_task_scope)` and accepted by an independent verifier passed in by the deployment (`principal_verifier.verify_digest`, which holds the principal key allowlist). `has_explicit_delegation` is ignored for FOUNDER_OVERRIDE. Fails closed on no verifier, no credential, no time, or a verifier error. The reference `PrincipalVerifier` gains `issue_for_digest` / `verify_digest` (same checks as `verify`). | A caller flag (`has_explicit_delegation=True`) passed FOUNDER_OVERRIDE. Against the old gate the three new identity tests fail. | The forged flag is rejected (`NO_VERIFIER`). Wrong principal, wrong key, unknown key, credential for another transfer, expired, revoked, replayed, verifier down, fake verifier object and raising verifier are all rejected; a verified principal passes without the flag. All 2,496 non-FOUNDER_OVERRIDE cases are byte-identical to before (pinned grid hash). `check_authority_transfer` is not called on the compile path. |
+
