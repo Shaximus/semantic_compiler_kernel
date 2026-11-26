@@ -147,13 +147,105 @@ class SupervisorReserveTests(unittest.TestCase):
         self.assertTrue(record.isolated)
         self.assertTrue(record.quarantined)
         self.assertFalse(record.automatic_resumption)
-        self.assertEqual(record.reserve_used, 2.0)
+        # reserve_used is now a measured debit (0.5 fixed + 16 bytes * 0.01), not the
+        # literal r_reserve the v1.1.0-rc1 helper returned, which made this unfalsifiable.
+        self.assertTrue(record.completed)
+        self.assertAlmostEqual(record.reserve_used, 0.66)
+        self.assertLessEqual(record.reserve_used, budget.r_reserve)
         self.assertEqual(record.evidence, b"X" * 16)
         self.assertIs(supervisor.last_shutdown, record)
         self.assertEqual(supervisor.try_resume(), "QUARANTINE_LOCKED")
         # The v1.0.0 bug asserted FAIL_CLOSED here; the preemptive status must
         # still halt, and the shutdown path must have actually run.
         self.assertIsNotNone(supervisor.last_shutdown)
+
+
+class ReviewRegressionTests(unittest.TestCase):
+    """Defects found reviewing the rc1 reference helpers (reference-only fixes)."""
+
+    def test_cbf_outside_safe_set_fails_closed(self) -> None:
+        d = toy_1d_robust_cbf(x=1.5, u_nom=0.0, x_max=1.0, r_max=0.2, u_max=1.0)
+        self.assertEqual(d.status, "FAIL_CLOSED")
+        self.assertEqual(d.reason, "OUTSIDE_SAFE_SET")
+        self.assertIsNone(d.u)
+        # h == 0 is still inside Omega_safe (h >= 0); only the inequality decides.
+        edge = toy_1d_robust_cbf(x=1.0, u_nom=0.0, x_max=1.0, r_max=0.2, u_max=1.0)
+        self.assertEqual(edge.reason, "")
+        self.assertEqual(edge.status, "CONTINUE")
+
+    def test_cbf_non_finite_or_illformed_never_continues(self) -> None:
+        nan, inf = float("nan"), float("inf")
+        cases = [
+            dict(x=nan, u_nom=0.0), dict(x=inf, u_nom=0.0), dict(x=-inf, u_nom=0.0),
+            dict(x=0.0, u_nom=nan), dict(x=0.0, u_nom=0.0, r_max=nan),
+            dict(x=0.0, u_nom=0.0, r_max=-0.1), dict(x=0.0, u_nom=0.0, u_max=-1.0),
+            dict(x=True, u_nom=0.0),
+        ]
+        for kw in cases:
+            with self.subTest(**kw):
+                d = toy_1d_robust_cbf(**kw)
+                self.assertEqual(d.status, "NUMERICAL_TOLERANCE_FAILURE")
+                self.assertIsNone(d.u)
+                self.assertTrue(must_halt(d.status))
+
+    def test_allowlist_rejects_impersonation_and_malformed_types(self) -> None:
+        class Impostor(str):
+            def __eq__(self, other):  # noqa: D401
+                return True
+            __hash__ = lambda self: hash("ALLOW")  # noqa: E731
+
+        for bad in (Impostor("X"), True, 1, ["ALLOW"], {"ALLOW"}, b"ALLOW", object()):
+            with self.subTest(bad=type(bad).__name__):
+                self.assertTrue(must_halt(bad))
+                branch, reason = resolve_branch(bad, value="secret")
+                self.assertEqual(branch, "HALT")
+                self.assertNotEqual(reason, "secret")
+
+    def test_admit_rejects_non_finite_and_cannot_be_poisoned(self) -> None:
+        budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
+        for amount in (float("nan"), float("inf"), -1.0, True, "1"):
+            with self.subTest(amount=amount):
+                self.assertEqual(budget.admit(amount), "FAIL_CLOSED")
+                self.assertEqual(budget.r_used, 0.0)
+        # The reserve is still enforced afterwards (v1.1.0-rc1: NaN admit made it permanently open).
+        self.assertEqual(budget.admit(8.0), "CONTINUE")
+        self.assertEqual(budget.admit(0.1), "PREEMPTIVE_FAIL_CLOSED")
+
+    def test_d2_shutdown_can_fail_when_reserve_is_too_small(self) -> None:
+        budget = ResourceBudget(r_budget=10.0, r_reserve=0.1)
+        supervisor = EmergencySupervisor(budget, max_evidence_bytes=16)
+        worker = Worker("w")
+        record = supervisor.reserve_trigger_shutdown(worker, b"X" * 64)
+        self.assertFalse(record.completed)
+        self.assertEqual(record.status, "RESERVE_INSUFFICIENT")
+        # Termination and admission stop are never skipped, even when the reserve is short.
+        self.assertFalse(worker.running)
+        self.assertFalse(budget.accepting_work)
+        self.assertTrue(record.quarantined)
+        self.assertFalse(record.automatic_resumption)
+        self.assertEqual(record.evidence, b"")
+
+    def test_d2_evidence_shrinks_to_what_the_reserve_affords(self) -> None:
+        budget = ResourceBudget(r_budget=10.0, r_reserve=0.7)
+        supervisor = EmergencySupervisor(budget, max_evidence_bytes=1000)
+        record = supervisor.reserve_trigger_shutdown(Worker("w"), b"X" * 500)
+        self.assertTrue(record.completed)
+        self.assertLessEqual(record.reserve_used, budget.r_reserve + 1e-9)
+        self.assertLess(len(record.evidence), 500)
+
+    def test_pinned_boundary_behaviour_free_equals_reserve(self) -> None:
+        """Pins CURRENT behaviour of an open spec question (see review findings F5).
+
+        001D permits R_exec+R_enf+R_reserve <= R_budget (equality allowed) yet also says
+        halt when R_free <= R_reserve. The helper admits work that lands exactly on the
+        reserve and halts only the NEXT admission. If the spec decides that landing on the
+        reserve must itself trigger shutdown, change this test with the spec.
+        """
+        budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
+        self.assertEqual(budget.admit(8.0), "CONTINUE")
+        self.assertEqual(budget.r_free, budget.r_reserve)
+        self.assertTrue(budget.accepting_work)
+        self.assertEqual(budget.admit(0.0), "PREEMPTIVE_FAIL_CLOSED")
 
 
 class DraftRegistryConsistencyTests(unittest.TestCase):
