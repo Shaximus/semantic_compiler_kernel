@@ -1,6 +1,6 @@
 # SC-SB-001 Patch — Spirit Bomb Three-Claim Structure
 
-**Version:** DRAFT 0.3 (0.1 → 0.2 on 2026-11-25: child invariant written out from the SC-MIRROR-001 spec §4.3 / §6.2; 0.2 → 0.3 the same day: Shax ruled that GT and the films count as evidence, so the Spirit Bomb kill list covers the whole franchise)  
+**Version:** DRAFT 0.4 (0.1 → 0.2 on 2026-11-25: child invariant written out from the SC-MIRROR-001 spec §4.3 / §6.2; 0.2 → 0.3 the same day: Shax ruled that GT and the films count as evidence, so the Spirit Bomb kill list covers the whole franchise; 0.3 → 0.4 the same day: Shax's standalone source `SC-SIT-001` Structural Integrity Test (t573u upload) folded in, see the section below)  
 **Date:** 2026-11-25  
 **Source:** Shax (Curtis Kingsley) — Reflexion Software  
 **Source notes:** 2026-11-25 14:51 ADT (t560u); SC-MIRROR-001 Engineering Spec (Hannah, 2026-11-25) §4.3, §6.2  
@@ -100,6 +100,39 @@ These cut against treating the three outcomes as a clean architecture-only resul
 
 ---
 
+## SC-SIT-001 Structural Integrity Test (Shax source, t573u): folded into this patch
+
+**Source:** `docs/evidence/source-2026-11-25g/10_SC-SIT-001_structural_integrity_test.jsonl` (verbatim). **Status:** source material for this patch. `SC-SIT-001` is not a compiled entry and is not loaded by the runtime. Most of it restates the child invariant above, so no separate entry is created.
+
+**What SIT adds.**
+- The "structural integrity test" framing: uniform stress reveals architecture, and "the crisis didn't break anything, it revealed what was already broken" (CLM-SIT-005).
+- A three-outcome classification:
+  1. binding-vow architecture **absorbs** (Vegeta);
+  2. alien substrate **deflects** (Frieza);
+  3. zero structure is **destroyed** (Kid Buu).
+- Substrate activation (Black Frieza) as a third power mechanism (CLM-SIT-003). It is already recorded as SC-LU-FRIEZA-001 layer E.
+- A cosmological reading: the CMB as a uniform test that separates bound structure, dark matter and plasma (CLM-SIT-004).
+
+**Canon corrections (recorded; the source wording stays in the evidence file).**
+- **Frieza did not deflect the Namek Spirit Bomb.** He took it directly, was driven down into the planet, and survived badly injured. The only deflection in canon is Gohan bouncing the Saiyan-saga bomb back onto Vegeta, and Vegeta then took it directly (DB ch. 238; SC-LU-VEGETA-001 CLM-LU-VEG-04). The "deflects" outcome has no canon instance. Both survivors were **hit and survived**. Outcome classes 1 and 2 are therefore one class, survival under a direct hit. They differ only in the architecture reading.
+- **"Kid Buu is the ONLY fatality"** was already corrected in DRAFT 0.3. With films and GT counted, Dr. Wheelo, Turles, Lord Slug and Omega Shenron are also destroyed.
+- **"Frieza has never trained"** is true only until *Resurrection 'F'* (2015 film; *Dragon Ball Super*). There he trains for about four months and reaches Golden Frieza. So Black Frieza (DBS manga ch. 87, ten years of training) is **not** his "first compatible input". Golden Frieza came first.
+- **"Survival is determined by architecture, not raw power"** is stronger than Claim 3 (magnitude confound), which this patch keeps. It is recorded as Shax's reading (SHAX_INTERPRETATION), not as a result.
+
+**Grades (SIT's self-grade vs this patch).**
+
+| Claim | Self-grade | Here |
+|---|---|---|
+| CLM-SIT-001 uniform input, architecture decides | ISOMORPHIC_INVARIANT 0.9 | Hypothesis, as Claim 2; magnitude confound open (Claim 3) |
+| CLM-SIT-002 three outcomes (absorb / deflect / destroyed) | ISOMORPHIC_INVARIANT 0.85 | ANALOGOUS 0.6; "deflect" has no canon instance |
+| CLM-SIT-003 substrate activation (Black Frieza) | ANALOGOUS 0.8 | ANALOGOUS 0.7, with Golden Frieza as the earlier activation (SC-LU-FRIEZA-001 layer E) |
+| CLM-SIT-004 CMB as a cosmological integrity test | ANALOGOUS 0.75 | ANALOGOUS 0.5. CMB anisotropies trace primordial density perturbations; dark matter is not "deflected" by the CMB, it simply does not couple to photons. |
+| CLM-SIT-005 "the crisis revealed what was broken" | ISOMORPHIC_INVARIANT 0.85 | ANALOGOUS 0.75 (stress testing in engineering is an anchor for the method, not for the cross-scale claim) |
+
+**Unchanged.** The tension between Claim 1 (moral neutrality) and SC-OMNI-001 CLM-OM-002 ("spares the pure-hearted") stays open for Shax. SIT sides with moral neutrality.
+
+---
+
 ## Cross-references
 
 | ID | In this repository |
@@ -110,3 +143,4 @@ These cut against treating the three outcomes as a clean architecture-only resul
 | SC-MIRROR-001 | Yes — compiled capstone (2026-11-25); uses the child invariant in its evidence map |
 | SC-LU-BUU-001 | No — named in the SC-MIRROR-001 spec; no such entry exists; not stubbed |
 | SC-CP-001 | Yes — compiled 2026-11-25 as a reconstruction (GOLD 0.926) |
+| SC-SIT-001 | Source draft only (verbatim in `docs/evidence/source-2026-11-25g/`); folded into this patch in DRAFT 0.4, not compiled |

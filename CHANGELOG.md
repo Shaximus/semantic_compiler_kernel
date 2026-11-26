@@ -2,6 +2,16 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — docs/sources-2026-11-25g
+
+### Added
+- `docs/evidence/source-2026-11-25g/`: verbatim copies of Shax's 11 source entries (upload t573u) with SHA-256 hashes and a README. Evidence only, not loaded by the runtime. A 12th upload (`.gz`) could not be retrieved.
+- `docs/SC-MIRROR-001_SOURCE_DRAFTS_2026-11-25g.md` (DRAFT 0.1): `SC-YYC-001`, `SC-ICC-001`, `SC-TSC-001`, `SC-5EU-001`, `SC-ADL-001` and `SC-MBS-001` reconciled as the source drafts of `SC-MIRROR-001` CLM-MIRROR-002, -003, -004, -001, -006 and -005. Not compiled: they duplicate compiled claims and are schema-incomplete. Self-grades re-graded. Physics corrections recorded (Landauer, no-deleting theorem, entropy under expansion, singularity vs horizon, CMB information content). Tradition notes recorded (Rapture, Chalcedon, annihilationism vs eternal torment, Isaiah 14). Conflicts recorded: ICC vs TSC on the Cross; ADL's stable deadlock and peer condition vs RUL-BINARY-001 rev 2; MBS's Lucifer-as-relational-complement vs the Vegeta = Lucifer = Sovereignty ruling. The rulings stand and the conflicts are listed as open questions. MBS is reconciled with the Frieza-chamber ruling (in-universe antimatter vs the CPT-mirror universe).
+
+### Changed
+- `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` DRAFT 0.4: `SC-SIT-001` (Structural Integrity Test) folded in. Canon corrections: Frieza was hit by the Namek Spirit Bomb and survived, he did not deflect it; Golden Frieza (*Resurrection 'F'*) precedes Black Frieza; "Kid Buu only fatality" was already corrected in 0.3.
+- DOMAIN_LEDGER §3, INVARIANT_CATALOG and `validate_catalog.py`: `SC-ADL-001`, `SC-TSC-001`, `SC-ICC-001` move from named-but-missing to source drafts; `SC-YYC-001`, `SC-5EU-001`, `SC-MBS-001`, `SC-SIT-001` are tracked as markdown-only IDs. No compiled entry, manifest hash, score or tier changed.
+
 ## [Unreleased] — feat/vegeta-complicit-enslavement
 
 ### Changed

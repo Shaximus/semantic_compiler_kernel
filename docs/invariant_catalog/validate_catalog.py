@@ -54,10 +54,17 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-VESSEL-001",        # docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md (DRAFT 0.1)
     # Named in the t567u source conversation but not present in this repository
     # (recorded as unresolved; never stubbed):
-    "SC-ADL-001",
-    "SC-TSC-001",
-    "SC-ICC-001",
     "SC-NEPH-001",
+    # 2026-11-25g Shax source entries (t573u upload): markdown source drafts of
+    # SC-MIRROR-001's claims, docs/SC-MIRROR-001_SOURCE_DRAFTS_2026-11-25g.md, and
+    # SC-SIT-001 folded into docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md. Not compiled.
+    "SC-ADL-001",   # source of CLM-MIRROR-006
+    "SC-TSC-001",   # source of CLM-MIRROR-004
+    "SC-ICC-001",   # source of CLM-MIRROR-003
+    "SC-YYC-001",   # source of CLM-MIRROR-002
+    "SC-5EU-001",   # duplicate of CLM-MIRROR-001
+    "SC-MBS-001",   # source of CLM-MIRROR-005
+    "SC-SIT-001",   # SB-001 patch DRAFT 0.4
 }
 
 

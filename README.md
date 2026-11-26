@@ -342,7 +342,7 @@ semantic_compiler_kernel/
 | SC-THEO-002 The Omni State (entry patch) | `docs/SC-THEO-002_OMNI_STATE.md` |
 | SC-BRM-001 biomedical microplastic feasibility dossier | `docs/SC-BRM-001_BIOMEDICAL_MICROPLASTIC_DOSSIER.md` |
 | Medical nano-plastic filtration & magnetic targeting platform (DRAFT 0.1) | `docs/MEDICAL_NANOPLASTIC_FILTRATION_MAGNETIC_TARGETING_DRAFT_0.1.md` |
-| SC-SB-001 Spirit Bomb three-claim patch (DRAFT 0.3) | `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
+| SC-SB-001 Spirit Bomb three-claim patch (DRAFT 0.4, incl. SC-SIT-001) | `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
 | SC-FR-001 The Outsider's First Investment / Frieza Protocol (DRAFT 0.1; compiled as SC-LU-FRIEZA-001) | `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md`, `calibration_output/compiled_entries/SC-LU-FRIEZA-001.jsonl` |
 | SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; compiled as SC-MIRROR-001, The Mirrored Loop and the Compression Protocol) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, `calibration_output/compiled_entries/SC-MIRROR-001.jsonl` |
 | SC-LU-VEGETA-001 Lineup decode: Vegeta, the Sovereignty pole (compiled, SILVER) | `calibration_output/compiled_entries/SC-LU-VEGETA-001.jsonl` |
@@ -350,6 +350,7 @@ semantic_compiler_kernel/
 | SC-GOV-001 Measurement, Not Indulgence — governance principle (DRAFT 0.1) | `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md` |
 | SC-PATCH-MIRROR-001 Cyclic feedback patch notes (DRAFT 0.1) | `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md` |
 | SC-VESSEL-001 Vessel Equilibrium — The Anomaly (DRAFT 0.3) | `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` |
+| SC-MIRROR-001 source drafts: SC-YYC-001, SC-ICC-001, SC-TSC-001, SC-5EU-001, SC-ADL-001, SC-MBS-001 (DRAFT 0.1, not compiled) | `docs/SC-MIRROR-001_SOURCE_DRAFTS_2026-11-25g.md` (verbatim sources: `docs/evidence/source-2026-11-25g/`) |
 | Changelog | `CHANGELOG.md` |
 
 ---
