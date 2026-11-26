@@ -381,3 +381,41 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
 - **Chosen default:** record and do not fix. Four strict xfails: (1) `tests/reference/scc_001/rules.py` does not check delegated scope (AC-1); (2) `gates/authority.check_authority_transfer` accepts `FOUNDER_OVERRIDE` on a caller-asserted boolean (AC-6); (3) the MAFUBA `ResourceBudget` has no isolated override partition (AC-3); (4) the MAFUBA `EmergencySupervisor` has no principal release (AC-5).
 - **Reason:** t599u says to build the harness before changing enforcement. Fixing (2) touches a live gate on the routing path, and fixing (3) and (4) changes the pinned MAFUBA rc2 reference. Each needs its own decision.
+
+## SC-FEM-001 (Catherine / the near-creation slot)
+
+- **ID:** `SC-FEM-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above). Substance from t598u.
+- **Question:** t598u asks which Catherine belongs in the feminine lineage. Shax answers that it was not his pick: the implied figure would be near the beginning of the creation of humans, and the main point was that Lilith came before Eve. Does any tradition place a Catherine-like figure there, and what should occupy the fifth slot?
+- **Chosen default:** **keep Catherine of Alexandria in the witness slot**, because that is the figure the source analysis named and her attributes fit a witness function, and **do not invent a creation-era Catherine.** The near-creation-of-humans implication points back to Lilith / the unnamed woman of Genesis 1:27, already in the lineage under Lilith. Naamah and Sophia are recorded as related but non-equivalent and are not substituted silently.
+- **Research finding:** no tradition was found that places Catherine of Alexandria, Catherine of Siena, or any Catherine near the creation of humans. Catherine of Alexandria is a historically doubtful hagiographic martyr, not a Genesis figure.
+- **Alternatives not chosen:**
+  - (a) Remove Catherine from the lineage until Shax names the figure.
+  - (b) Move the fifth slot to the unnamed woman of Genesis 1:27 as a distinct row from Lilith.
+  - (c) Substitute Naamah.
+  - (d) Treat Sophia's presence at cosmic creation as the near-creation slot.
+- **Reason:** Shax's stated main point is already carried by the Lilith / first-wife midrash. Inventing a creation-era Catherine would be a lore error. Leaving the witness attributes attached to the only Catherine the source named, and flagging the slot, preserves the table without pretending the research found a match.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-fem-001`, `feminine archetypal lineage`, `catherine witness`, `same primordial soul`, `new eve`, `lilith sovereignty`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** `SC-LILITH-001` (not pending). The ontological hypothesis remains interpretation, not canon.
+- **Still open, when reviewed:** whether the witness slot should remain, be left vacant, or be retired as already filled by Lilith / Genesis 1:27.
+
+## SC-SHARD-001 (did the throne claim create the fracture?)
+
+- **ID:** `SC-SHARD-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above). The question is posed in t598u and is not answered there.
+- **Question:** Did the throne claim create the fracture, or did the fracture make the throne claim possible?
+- **Chosen default:** **fragmentation plus a feedback break enables the throne claim**; the claim is not required in order to create the fracture. External injection (Amon engineering the Overmind) is a **third origin path** that can produce a captured collective without a prior internal throne claim.
+- **Alternatives not chosen:**
+  - (a) The throne claim creates the fracture.
+  - (b) Leave both directions open with no default.
+  - (c) Treat external injection as the primary origin rather than a third path.
+- **Reason:** Brood War fits this direction (the Overmind's death fragments the Swarm, then Kerrigan consolidates). The Amon case would be misread if it were forced into an internal throne-claim origin. The converse remains open, including for Shax's Satan/vessel interpretation.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-shard-001`, `usurped-shard`, `captured-collective`, `throne claim`, `ownership confusion`, `control plane capture`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** `SC-GUARD-001`, `SC-CONSENT-001`, `SC-TRIAD-SG-001`, or `SC-LILITH-001`. The Satan/vessel model remains interpretation.
+- **Still open, when reviewed:** the converse origin, especially in the Satan/vessel reading; what the truncated audit contained after section 2.3; whether later Kerrigan endings should be scored as restoration, a new capture, or mixed.

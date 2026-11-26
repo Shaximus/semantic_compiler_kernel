@@ -386,6 +386,11 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # 2026-11-26a Guardian's Fall (Shax t596u): promotion of the SC-WOW-FALL-001
     # pattern to a named cross-franchise archetype. Explicit-only.
     "SC-GUARD-001": "soul_bomb_sovereignty",
+    # 2026-11-26b Lilith layers, feminine lineage, and Usurped-Shard (Shax t598u).
+    # Explicit-only.
+    "SC-LILITH-001": "soul_bomb_sovereignty",
+    "SC-FEM-001": "soul_bomb_sovereignty",
+    "SC-SHARD-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -446,6 +451,12 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     # 2026-11-26a: "guardian", "protection", "fall" are everyday words;
     # only an explicit ID routes this entry.
     "SC-GUARD-001",
+    # 2026-11-26b: "lilith", "eve", "sophia", "mary", "catherine", "zerg",
+    # "throne", "vessel" are everyday or gaming words; only an explicit ID
+    # routes these entries.
+    "SC-LILITH-001",
+    "SC-FEM-001",
+    "SC-SHARD-001",
 })
 
 
