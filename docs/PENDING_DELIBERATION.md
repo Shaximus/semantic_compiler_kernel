@@ -261,3 +261,66 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Hook:** the same mechanism. `review_trigger_terms` are `sc-ww-triad-001`, `dolores`, `bernard`, `maeve` and `three host responses`.
 - **Does not change:** `SC-TRIAD-001` (itself still pending).
 - **Still open:** whether Bernard is the vessel position rather than a pole.
+## SC-WOW-001 (does the triad fit Warcraft's cosmology?)
+
+- **ID:** `SC-WOW-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question:** Does `SC-TRIAD-001` (preservation, assimilation, transformation) fit Warcraft as Order/Void/Death or as Titans/Old Gods/Jailer?
+- **Chosen default:** **the triad fits on the consent axis only.** Assimilation is the Void (whispers, the Black Empire, Black Blood, Xal'atath's bargains). Preservation and transformation are stances found inside every force, so neither belongs to one force. The Titans order but keep a re-origination switch; Death judges, but the Jailer remakes; the Light shelters but also coerces. The Burning Legion is annihilation, the same fourth kind of outside party left open in `SC-GOT-001`.
+- **Alternatives not chosen:**
+  - (a) Titans / Old Gods / Jailer as the three positions.
+  - (b) Order / Void / Death as the three positions.
+- **Reason:** both readings fit only partly (see the table in `SC-WOW-001`). The Jailer's Domination is assimilation by another means, and the Order and the Light both coerce in canon (Algalon, the Oathbinder, Xe'ra, the Lightblinded Vanguard).
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-wow-001`, `old gods`, `the jailer`, `titans`, `burning legion`, `cosmology`, `pantheon`. The entry is explicit-only, so it never lifts a route.
+- **Still open:** what The Last Titan (ANNOUNCED) reveals about the titans' intentions; Xal'atath's motive in 12.2 Eclipse (ANNOUNCED); whether annihilation becomes a fourth position in `SC-TRIAD-001`.
+
+## SC-WOW-DF-001 (Tok'ra versus Goa'uld in Dragonflight)
+
+- **ID:** `SC-WOW-DF-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question:** Shax (t594u) reads Dragonflight as the good dragons spreading their wings against the bad, "the good Tok'ra versus the bad ghouls". Canon puts consent violations on both sides. Where does the line run?
+- **Chosen default:** **the line runs through acts, not flights.** Each act is labelled as `SC-SCC-001` would label it (COERCIVE, CONSENSUAL, UNKNOWN). The Old Gods' hold on Neltharion is the Goa'uld case. The Aspects' acceptance of the titans' gift and Vyranoth's turn are the Tok'ra-type cases. Shax's good-versus-bad framing holds for the outcome of the arc and is kept as his interpretation.
+- **Alternatives not chosen:**
+  - (a) By flight: the Aspects' flights are Tok'ra, the Primal Incarnates and the black flight are Goa'uld.
+  - (b) No consent reading: Dragonflight as an order-versus-chaos war only.
+- **Reason:** (a) fails on canon: the Aspects took proto-dragon eggs to order them (War of the Scaleborn, NOVEL), Neltharion bound the dracthyr with the Oathbinder, the Primalists refused a gift rather than taking a host, and the black Aspect Ebyssian comes from the flight (a) would condemn. (b) drops the structure Shax asked for.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-wow-df-001`, `dragonflight`, `primal incarnates`, `primalists`, `deathwing`, `neltharion`, `tok'ra`, `aspects`. The entry is explicit-only, so it never lifts a route.
+- **Still open:** whether the egg-taking counts as COERCIVE or UNKNOWN (proto-dragon eggs have no will yet); whether Iridikron's turn to the Void is a Goa'uld bargain or an alliance between equals.
+
+## SC-WOW-CLASS-001 (how to sort the thirteen classes)
+
+- **ID:** `SC-WOW-CLASS-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question:** A class can be sorted by the force it draws on or by its relationship to that power. Which sort is the default?
+- **Chosen default:** **sort by relationship to the power source** (SELF, CHANNEL, BOND, PACT, MEDIATION, STEWARDSHIP, CONSUMPTION, LIBERATED_VESSEL, CREATED_THEN_FREED). Tradition rows are `SC-AEP-001` candidates only. Discipline's 'Atonement' and the Burning Legion's name are NAME_BORROWING.
+- **Alternatives not chosen:**
+  - (a) Sort by force (Light, Void, fel, arcane, nature, death).
+  - (b) Sort by role (tank, healer, damage).
+- **Reason:** the same force appears under several relationships (the Light by oath and by theft; the Void channelled and consumed), so a sort by force hides the structure. A sort by role is a game mechanic, not lore.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-wow-class-001`, `wow classes`, `death knight`, `demon hunter`, `evoker`, `warlock pact`, `paladin`. The entry is explicit-only, so it never lifts a route.
+- **Still open:** whether Warrior and Mage deserve any tradition row (both are WEAK now); whether the Devourer's Void consumption needs its own relationship type.
+
+## SC-WOW-FALL-001 (the guardian's fall as a composite)
+
+- **ID:** `SC-WOW-FALL-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question:** One composite recurs across Warcraft's major antagonists: a guardian foresees a threat, overrides others' consent to stop it, and becomes the threat. Should it be recorded, and how strongly?
+- **Chosen default:** **record it as a CANDIDATE composite under `SC-AEP-001`**, not as an invariant class. The five instances that pass the threshold are Sargeras, Zovaal, Neltharion, Arthas and Malygos. Xe'ra and the Lightblinded Vanguard are PARTIAL. Xal'atath and Iridikron are excluded until canon shows a protective motive. The repair is a voluntary successor (Kalecgos, Bolvar, Pelagos, Ebyssian, Illidan).
+- **Alternatives not chosen:**
+  - (a) Promote it to an invariant class.
+  - (b) Do not record it, since each fall has its own cause.
+- **Reason:** five instances pass the threshold, but nothing has been tested, and Sargeras's motive is NOVEL (Chronicle). Neltharion's fall is corruption by whisper, not only fear, so the composite does not fit him cleanly.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-wow-fall-001`, `fallen guardian`, `guardian's fall`, `sargeras`, `protector's fall`, `greater good`. The entry is explicit-only, so it never lifts a route.
+- **Still open:** whether The Last Titan (ANNOUNCED) adds the titans themselves as an instance; the difference from the tradition's fall (pride, 1 Tim 3:6) against Warcraft's (fear).
