@@ -451,3 +451,38 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Question:** `check_authority_transfer` takes a caller-set `has_explicit_delegation` flag for every escalation. The identity fix makes FOUNDER_OVERRIDE require an independently verified principal credential. Should lower escalations (for example RECOMMEND to EXECUTE) also require a verified credential from their delegator?
 - **Chosen default:** only FOUNDER_OVERRIDE (the principal-level authority that TEST-AC-06 covers) needs the verified credential. Lower escalations keep the caller flag, so all 2,496 non-FOUNDER_OVERRIDE results stay byte-identical.
 - **Alternatives not chosen:** require a delegator credential for every escalation. That needs a delegator identity registry, which the kernel does not have, and it changes existing gate results.
+
+## SC-AVG-001 (Groot in Path of Exile; the invariants as readings, not classes)
+
+- **ID:** `SC-AVG-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Toronto (EST, UTC-5)
+- **Ruling used:** Shax t582u (standing rule: pick a default and flag it). Substance from t603u, material Shax supplied by pasting a ChatGPT conversation.
+- **Question:** the paste's PoE table gives Groot as "Witch → Necromancer (adapted)", while its own section 6 says PoE 1 has no Druid starting class and "I wouldn't force a perfect match where the game doesn't provide one." Which stands? Separately: are the specialization-gate and party-composition invariants invariant classes?
+- **Chosen default:** **Groot is NO_FORCED_MATCH in the PoE layer.** The adapted row is kept as the paste's approximation of the summoned-entity side, not as a mapping. His Diablo II Druid match stands as interpretive. **The specialization-gate and party-composition invariants are readings under `SC-AEP-001`, not invariant classes.**
+- **Alternatives not chosen:**
+  - (a) Accept "Witch → Necromancer (adapted)" as Groot's PoE mapping.
+  - (b) Map Groot through a PoE skill or Bloodline instead of a class.
+  - (c) Promote party composition to an invariant class now.
+- **Reason:** the paste contradicts itself on Groot, and its own stated rule is not to force a match; nothing has been prediction-tested, so no class is promoted.
+- **Hook:** `review_trigger_terms` are `sc-avg-001`, `groot no forced match`, `specialization gate`, `party composition invariant`, `distributed build`, `avengers diablo`. The entry is explicit-only, so it never lifts a route.
+- **Still open, when reviewed:** the villain roster against Diablo's Prime Evils and bosses; the Nephilim collective structure (`SC-NEPH-001` stays unresolved, not stubbed).
+
+## SC-WORTHY-001 (worthiness kept separate from Usurped-Shard and Guardian's Fall)
+
+- **ID:** `SC-WORTHY-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Toronto (EST, UTC-5)
+- **Ruling used:** Shax t582u (standing rule). Substance from t603u.
+- **Question:** t603u says the Usurped-Shard pattern, Guardian's Fall, Thor's worthiness and the Paladin's hammer "are related, but each tests a different property of authority." Is worthiness a separate reading, or the gate inside one of the existing patterns?
+- **Chosen default:** **worthiness (capability is not legitimate authority; authority to wield is verified independently of the holder's claim) is a separate reading under `SC-AEP-001`, related to but not merged into `SC-SHARD-001` (captured authority) or `SC-GUARD-001` (protective authority turning coercive), and not an invariant class.** The Paladin's hammer is its worked case, not a fourth pattern. Engineering form: SCC-001-AC path 1 (PR #95).
+- **Alternatives not chosen:**
+  - (a) Fold worthiness into `SC-SHARD-001` as the gate a usurper bypasses.
+  - (b) Promote worthiness to an invariant class now.
+  - (c) Record the Paladin's entrusted sacred power as a fourth separate pattern.
+- **Reason:** the source distinguishes the properties; only one worked case is verified (Ghrab Thaar), and Mjölnir is unverified from paste; nothing has been tested.
+- **Hook:** `review_trigger_terms` are `sc-worthy-001`, `worthiness invariant`, `worthiness enchantment`, `capability is not authority`, `hammer of ghrab thaar`, `mjolnir`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** `SC-SHARD-001`, `SC-GUARD-001` and SCC-001-AC are unchanged.
+- **Still open, when reviewed:** scoring dimensions for worthiness; the Marvel source and wording for the enchantment.
