@@ -360,6 +360,11 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # Both explicit-only: "consent", "authorization", "grant", "classifier" are everyday words.
     "SC-CONSENT-001": "soul_bomb_sovereignty",
     "SC-SCC-001": "capability_isolation",
+    # 2026-11-25k Vessel equilibrium extensions (Shax t589u/t590u/t592u): Supernatural,
+    # Cain/Abel inheritance and Star Wars. Homed with the lineups; explicit-only.
+    "SC-VESSEL-SPN-001": "soul_bomb_sovereignty",
+    "SC-VESSEL-CAIN-001": "soul_bomb_sovereignty",
+    "SC-VESSEL-SW-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -393,6 +398,11 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     # 2026-11-25j consent: only an explicit ID routes these entries.
     "SC-CONSENT-001",
     "SC-SCC-001",
+    # 2026-11-25k vessel extensions: "vessel", "brother", "mark", "choice", "force" are
+    # everyday words; only an explicit ID routes these entries.
+    "SC-VESSEL-SPN-001",
+    "SC-VESSEL-CAIN-001",
+    "SC-VESSEL-SW-001",
 })
 
 

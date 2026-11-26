@@ -111,3 +111,38 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **New tension it raises:** RUL-BINARY-001 rev 2 says refusal is self-destruction; condition 4 says withdrawal must be free of retaliation. The compiler reads rev 2 as outcome structure, not a licensed penalty. Shax to rule.
 - **Where it over-extends:** predators and consumers (Wraith, Replicators) take hosts or resources without any integration relationship; consent does not describe them.
 - **Entries:** `SC-CONSENT-001` (claim CLM-CON-005), `docs/CONSENT_INVARIANT_2026-11-25j.md` section 3.
+## SC-VESSEL-SPN-001 (role by relationship to the host)
+
+- **ID:** `SC-VESSEL-SPN-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question:** in Supernatural both Michael and Lucifer seek human vessels. Shax's t589u table pairs Sukuna (the outside owner, t570s3000) with Michael. Shax's theology layer, however, makes Lucifer the Sovereignty pole (t570u, `SC-LU-VEGETA-001`), not an owner.
+- **Chosen default:** **role by relationship, not by name.** In the vessel layer, any being that seeks to occupy a host is in the outside-owner position of `SC-TRIAD-001`, so Michael and Lucifer are both would-be owners here. The theology-layer reading (Lucifer = Sovereignty pole) is **unchanged**.
+- **Alternatives not chosen:**
+  - (a) Lucifer stays the Sovereignty pole even in Supernatural, with Sam as that pole's vessel.
+  - (b) Michael is the Oneness pole (Heaven's plan), with Dean as its vessel.
+- **Reason:** this matches the Goa'uld/Tok'ra finding (`SC-TRIAD-SG-001`) that the relationship to the host, not the nature of the being, decides the role. It also avoids rewriting t570u without Shax. It is consistent with the proposed (not closed) answer above that the triad's outside owner is any party exercising authority over a host without the four conditions of `SC-CONSENT-001`.
+- **Hook:** `expansion/deliberation.py`, driven by the entry's metadata. `needs_review` is set on the explicit ID. It is also set when the entry is the top compiled-entry match and at least two of `review_trigger_terms` are present (`sc-vessel-spn-001`, `michael's vessel`, `lucifer's vessel`, `true vessel`, `say yes`, `winchester`). The entry is explicit-only, so it never lifts a route.
+- **Still open, when reviewed:** whether Michael is an outside owner or a corrupted Oneness pole; and whether a tactical yes given to trap the occupant (Sam, 5x22) counts as consent.
+
+## SC-VESSEL-CAIN-001 (what an heir inherits)
+
+- **ID:** `SC-VESSEL-CAIN-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question (Shax t589u):** "Can a person inherit the consequences of an ancient conflict without inheriting the guilt or obligation to continue it?"
+- **Chosen default:** **yes.**
+  - Consequences transfer: Dean carries the Mark's effects, and removing it releases the Darkness.
+  - Guilt does not transfer: "The son shall not bear the iniquity of the father" (Ezek 18:20; Deut 24:16).
+  - An obligation does not bind an heir without the heir's own consent (`SC-CONSENT-001`: voluntary and revocable).
+  - **Tension recorded:** Exod 20:5 and 34:7 speak of iniquity visited on later generations, so the text points both ways. This is not doctrine.
+- **Alternatives not chosen:**
+  - (a) Consequences and obligation both inherit until they are actively refused.
+  - (b) Nothing inherits except what is chosen, with consequences treated as circumstance.
+- **Reason:** this is the reading that fits both the canon arc (the brothers refuse the inherited fight; Dean refuses Cain's trade) and the Consent Invariant, while keeping the scripture tension visible.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-vessel-cain-001`, `mark of cain`, `first blade` and `cain and abel`. A bare "Cain and Abel were brothers." does not fire.
+- **Does not change:** RUL-BINARY-001 rev 2, `SC-POE-MRG-001` (itself still pending), and `SC-SCC-001` / `docs/SCC-001.md` (its threat-model follow-ups are only noted, in `docs/VESSEL_SUPERNATURAL_2026-11-25k.md`).

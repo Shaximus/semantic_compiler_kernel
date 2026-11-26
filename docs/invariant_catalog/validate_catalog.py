@@ -56,7 +56,7 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-VSR-001",           # docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md (DRAFT 0.1)
     "SC-GOV-001",           # docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md (DRAFT 0.1)
     "SC-PATCH-MIRROR-001",  # docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md (patch notes)
-    "SC-VESSEL-001",        # docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md (DRAFT 0.1)
+    "SC-VESSEL-001",        # docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md (DRAFT 0.5; extensions compiled as SC-VESSEL-SPN/CAIN/SW-001)
     # Named in the t567u source conversation but not present in this repository
     # (recorded as unresolved; never stubbed):
     "SC-NEPH-001",
@@ -151,7 +151,7 @@ for jp in jsonl_files:
     loaded_entries[eid] = (fname, obj)
     valid_entry_ids.add(eid)
 
-check(len(valid_entry_ids) == 44, f"Authoritative local compiled entry registry size == 44 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
+check(len(valid_entry_ids) == 47, f"Authoritative local compiled entry registry size == 47 (found {len(valid_entry_ids)}: {sorted(valid_entry_ids)})")
 
 # 1. Exact SC-DE-001 Schema Parity & Section 10 Gate Discipline
 for eid, (fname, obj) in loaded_entries.items():

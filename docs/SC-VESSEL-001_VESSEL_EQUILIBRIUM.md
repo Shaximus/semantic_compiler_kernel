@@ -1,9 +1,9 @@
 # SC-VESSEL-001 — Vessel Equilibrium (The Anomaly)
 
-**Version:** DRAFT 0.4  
+**Version:** DRAFT 0.5  
 **Date:** 2026-11-25  
-**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000; RUL-BINARY-001 rev 2, t571u; complicit enslavement, t572u (2026-11-25).  
-**Status:** DRAFT / Shax's interpretation. Markdown only. **Not compiled, not runtime-loaded, no tier assigned.**  
+**Source:** Shax (Curtis Kingsley) — Reflexion Software, t569u, refined by t570u; Shax's answers to the open questions, t570s3000; RUL-BINARY-001 rev 2, t571u; complicit enslavement, t572u; Supernatural and Cain/Abel, t589u; Sam/Dean duality, t590u; Star Wars, t592u (2026-11-25).  
+**Status:** DRAFT / Shax's interpretation. Markdown only. **This parent entry is not compiled, not runtime-loaded, and has no tier.** DRAFT 0.5 extensions are compiled separately as `SC-VESSEL-SPN-001`, `SC-VESSEL-CAIN-001` and `SC-VESSEL-SW-001` (all SILVER; see below).  
 **Labels:** CANON (Jujutsu Kaisen manga, Dragon Ball, biblical text), TRADITION (creeds, later interpretation, literature), SHAX INTERPRETATION (structural reading), ANALOGOUS (physics comparison with a stated limit).  
 **ID note:** `SC-VESSEL-*` had no prior use in this repository.
 
@@ -141,6 +141,66 @@ Shax: Lucifer "fought for the side of Sovreignty not about good vs evil, but the
 
 ---
 
+---
+
+## DRAFT 0.5 extensions (t589u, t590u, t592u; compiled separately)
+
+Full notes, lore corrections, holds and breaks: `docs/VESSEL_SUPERNATURAL_2026-11-25k.md`. Sources: `docs/evidence/source-2026-11-25k/`. The compiled entries are explicit-only and homed in `soul_bomb_sovereignty`.
+
+### Supernatural section → `SC-VESSEL-SPN-001` (SILVER 0.826; PROVISIONAL_DEFAULT)
+
+| Role | JJK | Supernatural | CANON check |
+|---|---|---|---|
+| Human vessel | Yuji | Dean (Michael's true vessel) | Angels need the vessel's yes; demons do not. Dean refuses in season 5, then says yes in 13x23 to the **Apocalypse World** Michael, on a condition Michael breaks once Lucifer is dead. Yuji swallowed the finger by choice without knowing what it meant (ch. 1), by Kenjaku's design (ch. 257) |
+| Would-be occupant | Sukuna | Michael | Positional match: Sukuna never asks, and the angels must |
+| Second vessel | Megumi (ch. 212, through the ch. 11 *Enchain* vow; no consent) | Sam (Lucifer's true vessel; tactical yes in *Swan Song*, 5x22, then retakes control) | **Breaks on consent:** Sam said yes, Megumi never did |
+
+- **Holds:** the vessel is not the occupant, and refusing an assigned role is refusing to be an instrument. The assigner is `SC-TRIAD-001`'s outside owner.
+- **Consent Invariant** (`SC-CONSENT-001`: voluntary, informed, agency, revocable): no human-vessel case passes all four. The Tok'ra (`SC-TRIAD-SG-001`) remain the clean pass, and the Goa'uld/Tok'ra split recurs (Megumi ≈ Goa'uld host).
+- **PROVISIONAL_DEFAULT:** role by relationship to the host. Michael and Lucifer are both would-be owners in this layer. Shax's theology layer (Lucifer = Sovereignty pole, t570u) is unchanged.
+
+### Cain/Abel inheritance sub-entry → `SC-VESSEL-CAIN-001` (SILVER 0.813; PROVISIONAL_DEFAULT)
+
+- **CANON-SCRIPTURE:** in Gen 4:15 the mark is God's **protection** for Cain. Lucifer is not in Genesis 4.
+- **CANON (show's invention):** Cain killed Abel on Lucifer's condition, to keep Abel from him (9x11). The Mark is God's lock on the Darkness and passed God → Lucifer → Cain → Dean (10x23). Dean asked for it. Its removal released Amara, and Dean killed Death rather than Sam.
+- **Distinction (t589u):** Sukuna is an occupant; the Mark is an inherited corruption.
+- **Key question (t589u), PROVISIONAL_DEFAULT:** consequences inherit, guilt does not (Ezek 18:20; Deut 24:16), and an obligation needs the heir's consent. The tension with Exod 20:5 / 34:7 is recorded.
+- **t590u (relayed):** Cain/Abel is resolved by breaking the premise that brothers must destroy each other. Canon matches: Dean will not kill Sam (10x23); in *Swan Song* Dean takes Lucifer's beating without fighting back; the brothers refuse Chuck's script (15x19). God and Amara reconcile (11x23), which is RUL-BINARY-001 rev 2 and the shape of `SC-POE-MRG-001`.
+
+### Star Wars sub-entry → `SC-VESSEL-SW-001` (SILVER 0.820)
+
+Inheriting the capacity and the temptation does not decide the outcome; the choice does.
+- Anakin falls through fear and possessive attachment to Palpatine, who renames him: the outside owner.
+- Luke strikes, then refuses. Anakin's redemption completes through his own choice (ROTJ).
+- Luke is not a vessel, so this extends the model by analogy only.
+
+### Shax's self-identification (t590u, relayed; symbolic, ungraded)
+
+"I'm the duality of Sam and Dean merged." This sits beside "Yuji is me" (t570s3000), with the same handling: it is recorded, not graded, and no claim depends on it.
+
+| | Sam | Dean |
+|---|---|---|
+| Would-be occupant | Lucifer | Michael |
+| Carries | temptation, potential, inherited corruption | duty, endurance, inherited violence |
+| Refuses | Lucifer's domination | Michael's imposed destiny |
+
+The synthesis is the freedom to choose, without Lucifer's domination, Michael's imposed destiny or Cain's violence. That is the cooperation branch of rev 2 held in one vessel.
+
+**Open question (t590u):** what happens when both sides of an inherited conflict refuse to fight? Canon's answer: the script's author loses his hold, the cost still falls on those who refuse, and nobody wins the old fight.
+
+### SCC-001 follow-up (`SC-SCC-001`; noted only)
+
+SCC-001's threat model should also cover:
+- inherited permissions
+- compromised authority
+- coercive systems never personally agreed to
+- engineered or conditional consent
+- costly revocation
+
+This PR does not change SCC-001. See the notes doc.
+
+---
+
 ## Links
 
 | Entry | Link |
@@ -151,6 +211,7 @@ Shax: Lucifer "fought for the side of Sovreignty not about good vs evil, but the
 | `SC-VSR-001` | Shax's "not alone" answers VSR's consent question. DRAFT 0.1 turned it into a mutual-acceptance condition; t570s3000 removed that condition (resolution rule above). Majin Vegeta's Final Explosion is checked against VSR in `SC-LU-VEGETA-001` (CLM-LU-VEG-06): adjacent, not an instance |
 | `SC-GOV-001` | Consent and measured harm; Yuji's binding vow came under duress, which the principle would not accept. The compression branch applies without the refuser's consent; how that sits with GOV-001's consent principle is open |
 | `SC-LU-FRIEZA-001` / `SC-FR-001` | Satan = Frieza / the Frieza race as the external owner; Sukuna in the same role (t570s3000) |
+| `SC-VESSEL-SPN-001` / `SC-VESSEL-CAIN-001` / `SC-VESSEL-SW-001` | **Compiled 2026-11-25k (SILVER 0.826 / 0.813 / 0.820).** Supernatural, Cain/Abel inheritance and Star Wars extensions of this draft (section above) |
 | `SC-LU-VEGETA-001` | **Compiled 2026-11-25 (SILVER 0.85).** Vegeta = Lucifer = the Sovereignty pole (Ultra Ego); fusion with Goku as the consented cooperation branch. t572u (CLM-LU-VEG-09): complicit enslavement — owned by the outsider yet enjoys the work, so the bondage is partly self-chosen (SHAX INTERPRETATION; Milton I.263 is literature, not scripture) |
 
 ## Open questions for Shax
