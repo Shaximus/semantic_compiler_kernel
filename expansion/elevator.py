@@ -376,6 +376,13 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-WW-RETAIN-001": "soul_bomb_sovereignty",
     "SC-WW-AWARE-001": "soul_bomb_sovereignty",
     "SC-WW-TRIAD-001": "soul_bomb_sovereignty",
+    # 2026-11-25m World of Warcraft through theology (Shax t594u): cosmology hub,
+    # Dragonflight consent split, classes, resurrection range, guardian's fall.
+    "SC-WOW-001": "soul_bomb_sovereignty",
+    "SC-WOW-DF-001": "soul_bomb_sovereignty",
+    "SC-WOW-CLASS-001": "soul_bomb_sovereignty",
+    "SC-WOW-RES-001": "soul_bomb_sovereignty",
+    "SC-WOW-FALL-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -426,6 +433,13 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-WW-RETAIN-001",
     "SC-WW-AWARE-001",
     "SC-WW-TRIAD-001",
+    # 2026-11-25m: "dragon", "class", "paladin", "titan", "legion" are everyday or
+    # gaming words; only an explicit ID routes these entries.
+    "SC-WOW-001",
+    "SC-WOW-DF-001",
+    "SC-WOW-CLASS-001",
+    "SC-WOW-RES-001",
+    "SC-WOW-FALL-001",
 })
 
 

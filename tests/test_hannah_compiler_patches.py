@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 52 JSONL compiled entries and their SHA-256 manifest."""
+    """Verify all 57 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 52)  # +SC-TRIAD-*-001 (2026-11-25i), +SC-SCA-*-001 (t587u), +SC-CONSENT-001, SC-SCC-001 (t588u), +SC-VESSEL-*-001 (2026-11-25k), +SC-AEP-001, SC-GOT-*-001 (2026-11-25l), +SC-WW-*-001 (2026-11-25n)
+        self.assertEqual(len(entries), 57)  # +SC-TRIAD-*-001 (2026-11-25i), +SC-SCA-*-001 (t587u), +SC-CONSENT-001, SC-SCC-001 (t588u), +SC-VESSEL-*-001 (2026-11-25k), +SC-AEP-001, SC-GOT-*-001 (2026-11-25l), +SC-WW-*-001 (2026-11-25n), +SC-WOW-*-001 (2026-11-25m)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -101,6 +101,11 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-WW-RETAIN-001",
                 "SC-WW-AWARE-001",
                 "SC-WW-TRIAD-001",
+                "SC-WOW-001",
+                "SC-WOW-DF-001",
+                "SC-WOW-CLASS-001",
+                "SC-WOW-RES-001",
+                "SC-WOW-FALL-001",
             },
         )
 
