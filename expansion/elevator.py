@@ -348,6 +348,13 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-TRIAD-001": "soul_bomb_sovereignty",
     "SC-TRIAD-SC-001": "soul_bomb_sovereignty",
     "SC-TRIAD-SG-001": "soul_bomb_sovereignty",
+    # 2026-11-25 StarCraft ability theology map (Shax t587u). Homed in capability_isolation
+    # (the clusters illustrate SC-MAFUBA-001 isolation clauses); explicit-only so game words
+    # ("plague", "recall", "consume", "detection") never lift the domain.
+    "SC-SCA-POSS-001": "capability_isolation",
+    "SC-SCA-DISC-001": "capability_isolation",
+    "SC-SCA-CONT-001": "capability_isolation",
+    "SC-SCA-CONS-001": "capability_isolation",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -373,6 +380,11 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-TRIAD-001",
     "SC-TRIAD-SC-001",
     "SC-TRIAD-SG-001",
+    # StarCraft ability theology map (Shax t587u): ability names are everyday or game words.
+    "SC-SCA-POSS-001",
+    "SC-SCA-DISC-001",
+    "SC-SCA-CONT-001",
+    "SC-SCA-CONS-001",
 })
 
 

@@ -13,6 +13,9 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - `docs/PENDING_DELIBERATION.md`: new section for `SC-TRIAD-001`.
 - Verbatim source and SHA-256 under `docs/evidence/source-2026-11-25i/`.
 - `tests/test_sc_triad_2026_11_25i.py`.
+- StarCraft ability theology map (Shax t587u): `docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md` grades 151 abilities (SC2 LotV and Brood War multiplayer, key passives, campaign-only flagged separately) against scripture and tradition: 13 STRONG, 51 PARTIAL, 41 WEAK, 46 NONE. Sources are pinned Liquipedia and StarCraft Wiki revisions in `docs/evidence/starcraft-abilities/` (hashes only; no wiki text copied).
+- Four compiled entries from the STRONG clusters, all SILVER by rule and explicit-only with home domain `capability_isolation`: `SC-SCA-POSS-001` (0.82), `SC-SCA-DISC-001` (0.825), `SC-SCA-CONT-001` (0.82), `SC-SCA-CONS-001` (0.797). Router `input` under 400 characters; full text in `v2_extensions.source_text`. Manifest is now 39 entries.
+- Two `PROVISIONAL_DEFAULT` entries in `docs/PENDING_DELIBERATION.md`: the Recall / rapture tradition layer and the NAME_BORROWING grading rule.
 
 ## [4.0.0] — 2026-11-25
 
