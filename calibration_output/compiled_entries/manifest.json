@@ -757,6 +757,90 @@
         "SC-POE-DU-001",
         "SC-POE-KIT-001"
       ]
+    },
+    {
+      "entry_id": "SC-TRIAD-001",
+      "file": "SC-TRIAD-001.jsonl",
+      "title": "The three-faction triad: Origin, Preservation, Assimilation, Transformation (cross-franchise test)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t586u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.65,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 42871,
+      "sha256": "eb35c50094f80f1a141ef0977b8e288ee61660db82ffaafd9efcb49c748cd24e",
+      "notes": "Three-faction triad hub (Shax t586u). PROVISIONAL_DEFAULT / pending_deliberation: triad = RUL-BINARY-001 + outside owner. Holds/breaks recorded. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.803.",
+      "cross_references": [
+        "SC-DU-001",
+        "SC-MIRROR-001",
+        "SC-CP-001",
+        "SC-LU-VEGETA-001",
+        "SC-LU-FRIEZA-001",
+        "SC-LU-CELL-001",
+        "SC-POE-DU-001",
+        "SC-POE-MRG-001",
+        "SC-POE-KIT-001",
+        "SC-POE-MAL-001",
+        "SC-POE-VAL-001",
+        "SC-TRIAD-SC-001",
+        "SC-TRIAD-SG-001"
+      ]
+    },
+    {
+      "entry_id": "SC-TRIAD-SC-001",
+      "file": "SC-TRIAD-SC-001.jsonl",
+      "title": "StarCraft: Origin, Preservation, Assimilation, Transformation (xel'naga, protoss, zerg, terrans)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t586u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.75,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 38479,
+      "sha256": "f450ea51960d1379038485b336e54b0efa54a5817a2314e939f703582dd76546",
+      "notes": "StarCraft triad decode (Shax t586u). Lore-corrected: Amon is the Void-linked Fallen One; zerg are his bound instrument. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.844.",
+      "cross_references": [
+        "SC-DU-001",
+        "SC-MIRROR-001",
+        "SC-LU-VEGETA-001",
+        "SC-POE-MAL-001",
+        "SC-TRIAD-001",
+        "SC-TRIAD-SG-001"
+      ]
+    },
+    {
+      "entry_id": "SC-TRIAD-SG-001",
+      "file": "SC-TRIAD-SG-001.jsonl",
+      "title": "Stargate: consent separates possession from symbiosis (Goa'uld, Tok'ra, Jaffa, Ori, Asgard, Wraith, Replicators, Tau'ri)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t586u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.78,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 37754,
+      "sha256": "0f4493ef456f9f0c7722ce592a4ec438f29e7198ed5def8c56969ec01a952998",
+      "notes": "Stargate decode (Shax t586u): consent + shared control separates Tok'ra symbiosis from Goa'uld possession. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.849.",
+      "cross_references": [
+        "SC-LU-VEGETA-001",
+        "SC-LU-FRIEZA-001",
+        "SC-LU-CELL-001",
+        "SC-POE-KIT-001",
+        "SC-POE-DU-001",
+        "SC-DU-001",
+        "SC-TRIAD-001",
+        "SC-TRIAD-SC-001"
+      ]
     }
   ]
 }

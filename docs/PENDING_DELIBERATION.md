@@ -25,3 +25,24 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Reason:** a default was required to close the merger-versus-inversion title question without inventing a canon fusion, and without claiming the name has been fully deliberated.
 - **Hook:** `expansion/deliberation.py`. `compile_semantic_packet`, `route_domains`, and `summon` set `needs_review` (and `needs_review_entries`) when this entry is named by ID, or is the top compiled-entry match and at least two of `review_trigger_terms` (`sin`, `innocence`, `reconciliation`, `sc-poe-mrg-001`) are present. Weak overlap such as `path` / `beside` does not count. The audit record carries the same flag.
 - **Still open, when reviewed:** whether "reconciliation" is the right name, and whether this layer should later be demoted to a source draft.
+
+## SC-TRIAD-001 (what the three-faction triad is)
+
+- **ID:** `SC-TRIAD-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Halifax (ADT, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule for choices that have not had real deliberation: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question:** Shax's t586u triad (Preservation, Assimilation, Transformation, plus Origin) has to sit somewhere relative to RUL-BINARY-001. The existing rulings point two ways. t568u lists "god/Satan" as an instance of the binary. t570u (Lucifer = Vegeta, Satan = Frieza) and `SC-VESSEL-001` draft 0.2 treat Satan as an *outside owner*, separate from the Oneness/Sovereignty binary.
+- **Chosen default:** the triad is **not a new invariant**. It is RUL-BINARY-001 plus an outside owner:
+  - Preservation ≈ Oneness, and Transformation ≈ Sovereignty.
+  - Assimilation is the outside owner (Satan per t570u; Amon, the Goa'uld, Frieza) that captures hosts.
+  - Origin is the shared source.
+  - Rev 2 still governs: only cooperation between the poles is stable, and the outside owner is defeated, not integrated.
+- **Alternatives not chosen:**
+  - (a) The triad as a new invariant class.
+  - (b) Binary plus vessel, where the third faction is the place the binary resolves (Nephalem, Kerrigan, Yuji).
+- **Reason:** this default follows the most recent rulings (t570u, VESSEL 0.2) and fits the canon checks: Amon, the Goa'uld and Frieza all capture hosts from outside. It also avoids adding a class without Shax.
+- **Hook:** `expansion/deliberation.py`, data-driven from the entry's metadata. `compile_semantic_packet`, `route_domains` and `summon` set `needs_review` when `SC-TRIAD-001` is named by ID. They also set it when the entry is the top compiled-entry match and at least two of `review_trigger_terms` (`sc-triad-001`, `triad`, `outside owner`, `assimilation`, `satan`) are present. The entry is explicit-only, so it never lifts a route. In dogfood, the flag fired on the ID and on a prompt that was about the triad itself ("Preservation versus assimilation versus transformation: the triad."). It did not fire on "The jazz triad played a short set." or on "Explain SC-TRIAD-SG-001."
+- **Does not change:** `SC-TRIAD-SC-001` and `SC-TRIAD-SG-001` are not pending. RUL-BINARY-001 rev 2, the Vegeta/Frieza readings and Shax's "Zerg = Satan" reading are unchanged. The last is recorded as his interpretation beside the canon fit on Amon.
+- **Still open, when reviewed:** (1) is Satan a pole of the binary or the outside owner; (2) should the triad be its own invariant, or binary plus vessel.

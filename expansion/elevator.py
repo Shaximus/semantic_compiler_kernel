@@ -342,6 +342,12 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-POE-ATL-001": "government",
     "SC-POE-VAL-001": "government",
     "SC-POE-MAL-001": "government",
+    # 2026-11-25i three-faction triad (Shax t586u): StarCraft / Stargate decodes and the
+    # cross-franchise hub. Homed with the lineups (host sovereignty); explicit-only so
+    # everyday words ("triad", "assimilation", "consent", "host") never lift the domain.
+    "SC-TRIAD-001": "soul_bomb_sovereignty",
+    "SC-TRIAD-SC-001": "soul_bomb_sovereignty",
+    "SC-TRIAD-SG-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -362,6 +368,11 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-POE-ATL-001",
     "SC-POE-VAL-001",
     "SC-POE-MAL-001",
+    # 2026-11-25i triad: "triad", "swarm", "host", "consent", "zerg" are everyday or gaming
+    # words; only an explicit ID routes these entries.
+    "SC-TRIAD-001",
+    "SC-TRIAD-SC-001",
+    "SC-TRIAD-SG-001",
 })
 
 
