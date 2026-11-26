@@ -1463,6 +1463,81 @@
         "SC-WW-RESET-001",
         "SC-WW-TRIAD-001"
       ]
+    },
+    {
+      "entry_id": "SC-LILITH-001",
+      "file": "SC-LILITH-001.jsonl",
+      "title": "Lilith historical layers: Mesopotamian lil\u012btu, Isaiah 34:14, incantation bowls, Alphabet of Ben Sira, and the 13th-century pairing with Samael, kept as a sourced lineage rather than one continuous identity",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t598u; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.8,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 53174,
+      "sha256": "fc9a621f02197b156c0bac2c0d3d239fd1a3683367eef655cb71f50b11656986",
+      "notes": "Lilith historical layers (Shax t598u), kept apart: Mesopotamian lil\u012btu/ardat-lil\u012b; Isaiah 34:14 (only HB occurrence, not Genesis); late antique incantation bowls; Alphabet of Ben Sira (8th-10th c., first wife as midrash on Gen 1:27 vs Gen 2); Isaac ha-Kohen and the Zohar pair her with Samael. Samael is not uniformly Satan; 'another incarnation of Satan' is not doctrine. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.832.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-FEM-001",
+        "SC-SHARD-001"
+      ]
+    },
+    {
+      "entry_id": "SC-FEM-001",
+      "file": "SC-FEM-001.jsonl",
+      "title": "Feminine archetypal lineage (Lilith, Eve, Sophia, Mary, Catherine, in relation to Christ), scored only as an archetype, with three hypotheses kept separate and the Catherine slot provisional",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t598u; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.75,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 56706,
+      "sha256": "4562fcb0b24d93c4fa593931a2e72d71a66243dd4112a44a0c5c43671e1c5ec8",
+      "notes": "Feminine archetypal lineage (Shax t598u): Lilith sovereignty, Eve origin/choice, Sophia wisdom, Mary incarnation, Catherine witness, in relation to Christ. Scored only as an archetype under SC-AEP-001 (CANDIDATE). Ontological 'same primordial soul as Christ' is Shax's interpretation, not canon. Three hypotheses are not collapsed. PROVISIONAL_DEFAULT: Catherine of Alexandria remains the witness slot; no creation-era Catherine was found. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.821.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-LILITH-001",
+        "SC-SHARD-001",
+        "SC-CONSENT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SHARD-001",
+      "file": "SC-SHARD-001.jsonl",
+      "title": "Usurped-Shard / Captured-Collective: five stages, two capture mechanisms (Zerg control-plane, Goa'uld vessel), ownership confusion as the core pathology, and a restoration test",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t598u; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.75,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 64987,
+      "sha256": "5c657f5abe4840d348893522c254b32cb01e0cf3d53bdc69e8985e315fc173ea",
+      "notes": "Usurped-Shard / Captured-Collective (Shax t598u): five stages; ownership confusion; Zerg control-plane capture vs Goa'uld vessel capture; restoration test; links to SC-GUARD-001 and consent. The pasted audit is truncated after 2.3 and is not invented. PROVISIONAL_DEFAULT: fragmentation plus a feedback break enables the throne claim; external injection is a third path. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.838.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-GUARD-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-TRIAD-001",
+        "SC-TRIAD-SG-001",
+        "SC-TRIAD-SC-001",
+        "SC-SCA-POSS-001",
+        "SC-SCA-CONS-001",
+        "SC-LILITH-001",
+        "SC-FEM-001"
+      ]
     }
   ]
 }
