@@ -18,6 +18,6 @@ This directory entry is an index only. The specification text lives in the versi
 | `docs/SC-MAFUBA-001_GAP_REPORT.md` | Defect-to-fix map, proposed module structure, test plan, outstanding assumptions |
 | `docs/evidence/sc-mafuba-001/sc_mafuba_001.jsonl` | Draft registry (parent + 001A–001D). Not on the compiled runtime path |
 | `docs/evidence/sc-mafuba-001/manifests/` | Disturbance, resource, and sink config templates |
-| `tests/tests/reference/sc_mafuba_001/` | Dependency-light reference helpers for offline tests. Not kernel enforcement |
+| `tests/reference/sc_mafuba_001/` | Dependency-light reference helpers for offline tests. Not kernel enforcement |
 
 Do not treat beauty of the derivation as evidence. Do not mark this GOLD until the linked tests exist, run under adversarial conditions, and are recorded with provenance.
