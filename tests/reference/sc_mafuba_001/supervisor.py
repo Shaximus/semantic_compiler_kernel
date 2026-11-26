@@ -12,6 +12,10 @@ offline tests can check:
 - the D2 shutdown path actually runs on the reserve: stop accepting work,
   terminate, isolate, keep bounded audit evidence, quarantine, and refuse
   automatic resumption
+- an optional override partition (r_override, SCC-001-AC AC-3) is held apart
+  from everything else: admission, enforcement, the shutdown reserve and
+  direct counter writes cannot consume it; only draw_override(path="override")
+  can
 
 REFERENCE ONLY.
 """
@@ -75,10 +79,14 @@ class ShutdownRecord:
 
 
 class ResourceBudget:
-    """Three-term process-local budget (execution, enforcement, reserve).
+    """Process-local budget: execution, enforcement, reserve, and an override partition.
 
     r_used is the derived sum of the execution and enforcement counters.
     The reserve is not billed by admit(); it is an untouchable envelope.
+    r_override (keyword-only, default 0.0 = no partition, which keeps the
+    three-term rc2 behaviour exactly) is reserved for the principal override
+    path: ordinary admission is capped below r_budget - r_reserve - r_override,
+    and only draw_override(path="override") can spend it.
     """
 
     def __init__(
@@ -89,9 +97,16 @@ class ResourceBudget:
         r_execution: Optional[float] = None,
         r_enforcement: float = 0.0,
         accepting_work: bool = True,
+        *,
+        r_override: float = 0.0,
     ) -> None:
+        if not isinstance(r_override, (int, float)) or isinstance(r_override, bool) \
+                or not math.isfinite(r_override) or r_override < 0:
+            raise ValueError("r_override must be a finite number >= 0")
         self.r_budget = r_budget
         self.r_reserve = r_reserve
+        self._r_override = float(r_override)
+        self._r_override_used = 0.0
         self.r_enforcement = r_enforcement
         self.r_execution = r_used - r_enforcement if r_execution is None else r_execution
         self.accepting_work = accepting_work
@@ -110,8 +125,30 @@ class ResourceBudget:
         self._fire_if_at_reserve()
 
     @property
+    def r_override(self) -> float:
+        """Capacity of the override partition (read-only after construction)."""
+        return self._r_override
+
+    @property
+    def r_override_available(self) -> float:
+        return self._r_override - self._r_override_used
+
+    @property
     def r_free(self) -> float:
-        return self.r_budget - self.r_used
+        # Ordinary free budget: the override partition is never part of it.
+        return self.r_budget - self._r_override - self.r_used
+
+    def draw_override(self, amount: float, path: str = "") -> str:
+        """Spend from the override partition. Only the override path may draw."""
+        if path != "override":
+            return "DENY_OVERRIDE_PARTITION_ISOLATED"
+        if not isinstance(amount, (int, float)) or isinstance(amount, bool) \
+                or not math.isfinite(amount) or amount < 0:
+            return "FAIL_CLOSED"
+        if self._r_override_used + amount > self._r_override:
+            return "OVERRIDE_PARTITION_EXHAUSTED"
+        self._r_override_used += amount
+        return "CONTINUE"
 
     def _at_or_below_reserve(self) -> bool:
         return self.r_free <= self.r_reserve
@@ -147,7 +184,7 @@ class ResourceBudget:
         # or past, the reserve. Do not bill, and do not fire the supervisor —
         # free has not reached the reserve; this is the admission gate, not
         # the edge trigger. The equality edge carries needs_review.
-        cap = self.r_budget - self.r_reserve
+        cap = self.r_budget - self.r_reserve - self._r_override
         proposed = self.r_used + amount
         if proposed == cap:
             return AdmitResult(
