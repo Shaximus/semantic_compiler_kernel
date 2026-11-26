@@ -2,7 +2,35 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
-## [Unreleased] — docs/sc-mafuba-001
+## [4.0.0] — 2026-11-25
+
+Package and kernel version bump from `V3.8.0` (tag `v3.8.0`, PR #45) covering PRs #46–#73. Schema remains Logos Semantic Training Sample `V3.5.0`. The Systemic Isomorphic Invariants framework field and per-entry metadata versions are unchanged. Per-entry SHA-256 content hashes were not regenerated; `calibration_output/compiled_entries/manifest.json` only updates `compiler_version` to `4.0.0`.
+
+This release does not award new GOLD. Newly compiled lineup and mirror entries listed below remain SILVER unless noted. Drafts and Proposed GOLD documents are not compiled, not runtime-loaded, and are not validated.
+
+### Added
+- Compiled runtime manifest is now **25 entries (11 GOLD + 14 SILVER)**, up from 16 at V3.8.0. New compiled entries since V3.8.0 include `SC-DU-001` (GOLD 0.925), `SC-OMNI-001` v2.0.0 (GOLD 0.937), `SC-CP-001` (GOLD 0.926), `SC-MIRROR-001` (SILVER 0.868), `SC-LU-FRIEZA-001` (SILVER 0.825), `SC-LU-VEGETA-001` (SILVER, rev 1.2.0, composite 0.862), and `SC-LU-GOKU-001` / `SC-LU-CELL-001` / `SC-LU-TRUNKS-001` (SILVER 0.857 / 0.846 / 0.839). Self-grades on the 2026-11-25g lineup were not accepted.
+- Router and compile-path decisions: `PASS_THROUGH` and `AMBIGUOUS`; `SemanticPacket.routing_candidates`; discriminative router abstention on filler; router-first target discovery; a confident router result leads over weak and strong frames.
+- `ENTRY_LIFT_TIE_RATIO` 1.02 (2% cross-domain entry-lift tie rule): when the runner-up compiled entry is homed in another domain and is within 2%, neither entry lifts (PR #72).
+- `gates/substrate_confusion.py` and the SC-PATCH-DU-001 identity-gate correction (`substrate_confusion_check` / `positional_claims_permitted`).
+- Source drafts for `SC-MIRROR-001` (PR #71): `SC-YYC-001`, `SC-ICC-001`, `SC-TSC-001`, `SC-5EU-001`, `SC-ADL-001`, and `SC-MBS-001` reconciled as drafts of compiled CLM-MIRROR claims. Not compiled. Conflicts with existing rulings are recorded as open questions.
+- `SC-MAFUBA-001` Proposed GOLD draft (PR #73): v1.0.0 frozen as an immutable historical artifact; v1.1.0-rc1 is the current candidate. `gold_awarded` is false. Not compiled, not runtime-loaded, and verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
+- Other markdown-only drafts and rulings landed since V3.8.0 and remain uncompiled unless listed above, including `SC-THEO-002`, `SC-BRM-001`, `SC-FR-001`, `SC-MD-001`, `SC-VSR-001`, `SC-GOV-001`, `SC-PATCH-MIRROR-001`, `SC-VESSEL-001`, and `RUL-BINARY-001` (rev 2).
+- Test and packaging work: public API contract, `training_ready` requires `schema_valid`, reachable `STRAINS`, empty fingerprints are not `HOLDS`, Kernel Mobile decision-path pins, domain inventory derived from `list_domains()`, commercial-use guidance and usage-tracking docs.
+
+### Changed
+- `SC-LU-VEGETA-001` rev 1.1.0 (PR #70, complicit-enslavement claim CLM-LU-VEG-09, still SILVER 0.85) and rev 1.2.0 (PR #72, "The Last Crown" merged as CLM-LU-VEG-10..14; composite 0.85 → 0.862, still SILVER).
+- Input robustness: lone surrogates and non-str input, distinct empty-input rejection, compiler-mode validation, and skeleton noun phrases kept inside clause boundaries.
+
+### Fixed
+- Corpus strains and empty-fingerprint `HOLDS` classification; skeleton cross-clause artifacts (28 skeletons cleaned over the 963-input corpus at the time of PR #56).
+
+### Unchanged
+- Logos schema `V3.5.0`, CANARY provenance token (`CANARY-SCK-v3.5.0-...`), and per-entry content hashes. Payment-rail copy remains "V3.8.0+" (those SKUs include later releases). `SC-MAFUBA-001` is not GOLD.
+
+### Detailed notes since V3.8.0
+
+#### docs/sc-mafuba-001
 
 ### Added
 - `SC-MAFUBA-001` (Dimensional Containment and Information-Flow Integrity): Proposed GOLD invariant, `gold_awarded` false, not compiled and not runtime-loaded. `docs/SC-MAFUBA-001_v1.0.0.md` is the immutable historical artifact (t574u). `docs/SC-MAFUBA-001_v1.1.0-rc1.md` is the current candidate (t575u / t576u unified directive): fiber-level projection factoring, paired trajectory equivalence $d_O(F_t(x_1), F_t(x_2)) \le \varepsilon$, applied closed-form robust CBF control, allowlist branching, sink registry with whitelisted system-generated writes, side-effect-free replay, an independent emergency supervisor with no automatic resumption, and disturbance/resource/sink manifest templates. Verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
@@ -14,7 +42,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Unchanged
 - Compiled runtime manifest still 25 entries. No routing, schema, or GOLD/SILVER catalog change.
 
-## [Unreleased] — feat/lineup-2026-11-25g
+#### feat/lineup-2026-11-25g
 
 ### Added
 - `SC-LU-GOKU-001` (SILVER 0.857), `SC-LU-CELL-001` (SILVER 0.846), `SC-LU-TRUNKS-001` (SILVER 0.839), compiled from Shax's t573u sources (`docs/evidence/source-2026-11-25g/01–03`). Self-grades (GOLD 0.92–0.93) kept in `metadata.self_grade` and not accepted: claims re-graded to CANON + ANALOGOUS layers, mapping classes ISOMORPHIC_INVARIANT → STRUCTURAL_ANALOGY, tier by rule (GOLD needs iq ≥ 0.9 and every gate ≥ 0.8). Router `input` kept under 400 characters; the full source text is in `v2_extensions.source_text`. Legacy `identity_claim_allowed` migrated to `substrate_confusion_check` / `positional_claims_permitted`.
@@ -28,7 +56,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - Routing: `goku`, `kakarot`, `ultra instinct`, `sc-lu-goku` added to `soul_bomb_sovereignty`. Cell and Trunks phrases are only in `_SOUL_BOMB_EXPLICIT_PATTERN`, because every router keyword also indexes its single tokens. `SC-LU-CELL-001` and `SC-LU-TRUNKS-001` join `EXPLICIT_ONLY_ENTRY_HINTS`; the router blanks those IDs before content scoring so "SC-LU-CELL-001" does not score as "cell", and the elevator's summon lift now honours the explicit-only rule. New entry-lift tie rule (`ENTRY_LIFT_TIE_RATIO` 1.02): when the runner-up entry is homed elsewhere and within 2 %, neither lifts (adding entries re-weighted IDF and flipped a 0.4 % tie on "The AI writes code.").
 - Manifest 25 entries; `validate_catalog.py` registry 28.
 
-## [Unreleased] — docs/sources-2026-11-25g
+#### docs/sources-2026-11-25g
 
 ### Added
 - `docs/evidence/source-2026-11-25g/`: verbatim copies of Shax's 11 source entries (upload t573u) with SHA-256 hashes and a README. Evidence only, not loaded by the runtime. A 12th upload (`.gz`) could not be retrieved.
@@ -38,19 +66,19 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` DRAFT 0.4: `SC-SIT-001` (Structural Integrity Test) folded in. Canon corrections: Frieza was hit by the Namek Spirit Bomb and survived, he did not deflect it; Golden Frieza (*Resurrection 'F'*) precedes Black Frieza; "Kid Buu only fatality" was already corrected in 0.3.
 - DOMAIN_LEDGER §3, INVARIANT_CATALOG and `validate_catalog.py`: `SC-ADL-001`, `SC-TSC-001`, `SC-ICC-001` move from named-but-missing to source drafts; `SC-YYC-001`, `SC-5EU-001`, `SC-MBS-001`, `SC-SIT-001` are tracked as markdown-only IDs. No compiled entry, manifest hash, score or tier changed.
 
-## [Unreleased] — feat/vegeta-complicit-enslavement
+#### feat/vegeta-complicit-enslavement
 
 ### Changed
 - **SC-LU-VEGETA-001** (still SILVER 0.85, 9/9 gates): dated Shax interpretation claim **CLM-LU-VEG-09** (t572u, 2026-11-25): complicit enslavement. The Sovereignty pole is owned by the outsider (Frieza/Satan) yet willingly enjoys the work, so the bondage is partly self-chosen. Canon, tradition and Shax's interpretation are separate layers. Canon support: DB ch. 213 (planet-trade / "let's go play"); ch. 249 (smiling execution of Cui, after the break from Frieza); ch. 308 (admission of service and obedience, not enjoyment); ch. 456–457 (lets Babidi's spell in; motive is rivalry); DBS manga ch. 69 (admits Saiyan/Frieza-era invasions as sins and will not lay all blame on Frieza; later guilt recorded). Anime-original: DBZ "Trouble on Arlia" (Japanese ep. 11). Tradition/literature, not scripture: Milton, *Paradise Lost* I.263. Linked to RUL-BINARY-001 rev 2 as the refusal state during the ownership period; Vegeta later takes the cooperation branch (fusion). No grade or score changed. Entry revision 1.1.0.
 - Additive t572u addendum on `SC-LU-FRIEZA-001` (no score change). `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` DRAFT 0.4: verbatim t572u plus a one-line cross-reference on the compiled Vegeta row.
 - Manifest hashes refreshed; `tests/test_sc_lu_vegeta.py` covers the new claim's layering.
 
-## [Unreleased] — docs/rul-binary-001-rev2
+#### docs/rul-binary-001-rev2
 
 ### Changed
 - **RUL-BINARY-001 rev 2** (Shax t571u, 2026-11-25): the only stable outcome is mutual cooperation; refusal is self-destruction (the refuser destroys itself and loses regardless), and its information-conserving remnant is compressed into `SC-MIRROR-001`'s calibration dot; Oneness prevails. Rev 1's "mutual destruction" is reframed as the refuser's self-destruction. Recorded in `SC-MIRROR-001` CLM-MIRROR-006 (`binary_invariant_ruling.amendments`), as dated `RULING_AMENDMENT` addenda on MIRROR, DU-001, CP-001, LU-VEGETA-001 and LU-FRIEZA-001, in `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, and in `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` (DRAFT 0.3; reading B settled). Fitting examples: Sukuna (JJK ch. 268) and Kid Buu / Uub (partial). No grade or score changed; owners question and SC-LU-GOKU-001 stay open.
 
-## [Unreleased] — feat/sc-lu-vegeta-001
+#### feat/sc-lu-vegeta-001
 
 ### Added
 - `SC-LU-VEGETA-001` (compiled, SILVER 0.85, 9/9 gates, SC-DE-001 schema): Vegeta as the Sovereignty pole (Ultra Ego, DBS ch. 74; CANON form, ANALOGOUS pole; Toyotarou's yin-yang framing as SECONDARY_SOURCE). Held in Frieza's service while keeping his own will (CANON); his father's handover is ANIME_ORIGINAL (DBZ ep. 78; Minus and Super: Broly differ). Spirit Bomb survival (ch. 238). Vegito / Gogeta as the consented cooperation branch of RUL-BINARY-001. Majin Vegeta / Final Explosion checked against VSR: adjacent, not an instance. Shax (t570u): Vegeta is Lucifer, Satan is Frieza (SHAX_INTERPRETATION, ANALOGOUS); V7 §15.1 / §22.4 / §22.5 tensions recorded.
@@ -62,7 +90,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - Additive `metadata.addenda` on `SC-MIRROR-001` (Vegeta reference RESOLVED; PICCOLO / GOKU / BUU still unresolved), `SC-LU-FRIEZA-001`, `SC-CP-001`, `SC-DU-001` (CROSS_ENTRY_TENSION: Yuji as vessel vs DU-001's Toji/Yuji poles; mapping unchanged). No score or tier changed.
 - Manifest (22 entries), `validate_catalog.py` (registry 25; `SC-LU-VEGETA-001` no longer an external ID), DOMAIN_LEDGER, INVARIANT_CATALOG, README, SC-FR-001 and SC-MIRROR-001 spec notes.
 
-## [Unreleased] — feat/binary-invariant-ruling
+#### feat/binary-invariant-ruling
 
 ### Added
 - Shax ruling **RUL-BINARY-001** (2026-11-25, t568u): `SC-DU-001` (The Duality) and `SC-MD-001` (Sovereign Mirror Duality) are one invariant, a binary whose only stable outcomes are mutual cooperation or mutual destruction. Instances: Oneness/Sovereignty (`SC-CP-001`), God/Satan (theological mapping), our universe / the CPT-mirrored universe (`SC-LU-FRIEZA-001` layer D). Graded ISOMORPHIC_INVARIANT (structural claim by Shax).
@@ -73,7 +101,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Unchanged
 - No physics or theology claim upgraded. Scores and tiers: DU-001 GOLD 0.925, CP-001 GOLD 0.926, MIRROR-001 SILVER 0.868, LU-FRIEZA-001 SILVER 0.825.
 
-## [Unreleased] — docs/sc-vessel-2026-11-25f
+#### docs/sc-vessel-2026-11-25f
 
 ### Added
 - `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md`: DRAFT 0.1, Vessel Equilibrium (The Anomaly), from Shax t569u + t570u. Yuji as vessel, Gojo as Oneness, Sukuna as Sovereignty ("not totally"); equilibrium in one substrate leads to shared-state coupling; entanglement graded ANALOGOUS (no-signalling caveat); Trinity mapping recorded as Shax's interpretation with the creedal tension; t570u refinement: Lucifer = Vegeta (Sovereignty pole), Satan = Frieza / the Frieza race (external owner), and its effect on the RUL-BINARY-001 God/Satan instance. JJK and DB canon checked; ch. 268 refusal recorded as a canon tension. Not compiled.
@@ -83,7 +111,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md`: cross-reference note for t570u (Satan = Frieza / the Frieza race). Compiled `SC-LU-FRIEZA-001` unchanged.
 - Catalog, DOMAIN_LEDGER and README rows; `validate_catalog.py` lists `SC-VESSEL-001` as a markdown-only ID.
 
-## [Unreleased] — docs/sc-vsr-gov-2026-11-25e
+#### docs/sc-vsr-gov-2026-11-25e
 
 ### Added
 - `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md`: DRAFT 0.1, Voluntary State Recompression. Five candidate invariants (prior emergence, self-evaluation, voluntary restriction, information preservation, latent reversibility); Uldyssian primary (Blizzard-verified); Tal Rasha explicitly excluded; latent-causation and restoration-model categories; lore corrections. Not compiled, no tier.
@@ -93,7 +121,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Changed
 - Invariant catalog and DOMAIN_LEDGER rows for the three drafts. `validate_catalog.py` lists `SC-VSR-001`, `SC-GOV-001`, `SC-PATCH-MIRROR-001` as markdown-only IDs and `SC-ADL-001`, `SC-TSC-001`, `SC-ICC-001`, `SC-NEPH-001` as named-but-missing (unresolved, never stubbed).
 
-## [Unreleased] — feat/frieza-mirror-universe
+#### feat/frieza-mirror-universe
 
 ### Changed
 - `SC-LU-FRIEZA-001` layer D: open question resolved by Shax (t566u). The ch. 87 chamber is in the Duality's mirrored universe, the CPT-mirror universe in which time runs in reverse relative to ours. Graded: Frieza's own statement that he was outside this universe is CANON; the mirror universe is a published model, not confirmed (Boyle, Finn & Turok, Phys. Rev. Lett. 121, 251301 (2018)); the chamber being there is OPEN_HYPOTHESIS; the reverse-time account of the chamber's time relation is ANALOGOUS, with residuals (a reversed arrow is not a clock-rate difference; the model's mirror lies across the Big Bang; the commonly reported ten days outside gives the Lookout's 365:1 rate). Cross-reference to `SC-DU-001` added. Gates and tier unchanged (SILVER 0.825).
@@ -101,14 +129,14 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - `SC-DU-001`: additive `metadata.addenda` note only; no claim, gate or score changed (GOLD 0.925).
 - Manifest SHA-256 and byte counts refreshed for all three files.
 
-## [Unreleased] — feat/router-leads-strong-frames
+#### feat/router-leads-strong-frames
 
 ### Changed
 - `core/pipeline.py` `_discover_targets`: a ROUTED result at routing confidence >= 0.8 (`WEAK_FRAMES_ROUTER_CONFIDENCE`) now goes ahead of the table targets when strong frames match too, not only weak ones. Fixes "Frieza's black hole origin is owned by another entity…" compiling against `computation` (strong `cosmological` frame) while routing to `soul_bomb_sovereignty` at 0.95.
 - Corpus eval (963 inputs vs main): 0 decision changes; 131 target changes. Labelled items: 12 changed, all 12 now match their label (0 → 12), 0 regressions; labelled accuracy 197 → 209 of 226. Unlabelled changes move the generic `organizational` target to the subject's domain (a cell -> biology, a computer -> computation, the judicial system -> law, the economy -> economic, zodiac entries -> astrology).
 - Not changed: routing below 0.8 keeps the table targets. backup_snapshot ("The mirrored universe … backup snapshot") routes to `client_server_reality` at 0.79 and still targets `computation`.
 
-## [Unreleased] — feat/sc-cp-001-canon
+#### feat/sc-cp-001-canon
 
 ### Added
 - `calibration_output/compiled_entries/SC-CP-001_CLAY_AND_POTS.jsonl`: Clay and Pots (alias `SC-CLAY-POTS-001`), SC-DE-001 schema. Reconstructed from repository sources (V7 §11.2, §22.1, Appendix B; RELD_V3 §B; SC-THEO-002; SC-PATCH-DU-001; SC-CT-001; SC-IT-OCTO-RNA-EDIT-001); the original JSONL is not in the repository and its "GOLD, 9/9 at 1.0" is not inherited. Graded fresh: GOLD 0.926, 9/9 gates, minimum gate 0.85, corpus_completeness capped at 0.85. Claims: substrate and instances ANCHORED (AI and biological scales); mutual necessity ANCHORED at AI scale; Oneness / Sovereignty poles ISOMORPHIC_INVARIANT; theological assignment ANALOGOUS; consciousness = clay OPEN_HYPOTHESIS.
@@ -121,14 +149,14 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - Routing: SC-CP-001 is homed in `consciousness_cognition` (hint, `SUBSTRATE_AND_VESSEL` template invariant). It is in `EXPLICIT_ONLY_ENTRY_HINTS`: its hint routes explicit IDs but does not lift the domain from content matches, because its name is everyday words; without this, pottery prompts ("throw clay pots on a wheel") routed to `consciousness_cognition`. Corpus (963): 0 changes vs main.
 - `validate_catalog.py`: SC-CP-001 is no longer an upstream ID; aliases declared in compiled entries' `metadata.aliases` are accepted in docs; registry size 24.
 
-## [Unreleased] — fix/weak-frames-routed-first
+#### fix/weak-frames-routed-first
 
 ### Fixed
 - `core/pipeline.py` `_discover_targets`: with only weak (single-keyword) table frames, a router result with routing confidence >= 0.8 (`WEAK_FRAMES_ROUTER_CONFIDENCE`) now goes ahead of the table targets, with the usual `ROUTED_DOMAIN:` warning. The Frieza outsider invariant (routed to `soul_bomb_sovereignty` at 0.96) had compiled against `computation` because "lineage" and "system" matched two weak frames. Strong frames still keep the fast path unchanged.
 - Not changed: prompts with a strong frame keep the table path. "Frieza's black hole origin is owned by another entity…" has a strong `cosmological` frame and still compiles against `computation` while routing to `soul_bomb_sovereignty`.
 - Shadow run on the 963-input corpus: 0 decision changes; 38 target changes, all weak-frame cases moving to the routed domain (for example decomposition items moving to their own labelled domain: bluetooth, android_connectivity, reward_hijacking; "immune system" to biology; "supply chain / economy" to economic; country/government prompts to government).
 
-## [Unreleased] — 2026-11-25 (branch `feat/sc-mirror-001`)
+#### 2026-11-25 (branch `feat/sc-mirror-001`)
 
 ### Added
 - `calibration_output/compiled_entries/SC-MIRROR-001.jsonl`: The Mirrored Loop and the Compression Protocol, compiled from Hannah's engineering spec (architecture by Shax). SC-DE-001 schema. Six claims at the spec's TIG grades: unification of SC-CT-001 / SC-DU-001 / SC-CP-001 / SC-SB-001 / SC-HS-001 (GOLD), Yin-Yang calibration dot (ANALOGOUS), information conservation (ANCHORED, via Landauer / unitarity), three sequential stages (ANALOGOUS; output stage OPEN_HYPOTHESIS), mirrored-universe backup (OPEN_HYPOTHESIS, extends CLM-HS-002B), anti-deadlock voluntary fusion (ISOMORPHIC_INVARIANT). Entry tier SILVER 0.868; measurement_integrity 0.7, corpus_completeness 0.85. Dragon Ball evidence map kept.
@@ -146,7 +174,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Unresolved references (not stubbed)
 - SC-CP-001 (no compiled JSONL here), SC-LU-PICCOLO-001, SC-LU-GOKU-001, SC-LU-VEGETA-001, SC-LU-BUU-001.
 
-## [Unreleased] — 2026-11-25 (branch `feat/router-feeds-compile`)
+#### 2026-11-25 (branch `feat/router-feeds-compile`)
 
 ### Changed
 - `compile_semantic_packet` discovers targets router-first:
@@ -174,7 +202,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Added
 - `tests/test_routing_acceptance.py`: the spec acceptance list.
 
-## [Unreleased] — 2026-11-25 (branch `fix/router-discriminative-abstain`)
+#### 2026-11-25 (branch `fix/router-discriminative-abstain`)
 
 ### Added
 - `expansion/router.py`: a discriminative domain router (`route_domains()`, `DomainRouter`, `RoutingResult`). It returns `ROUTED`, `AMBIGUOUS` or `ABSTAIN` with ranked candidates, a routing confidence, and the top-1 vs top-2 margin.
@@ -190,7 +218,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 - Measured results: 31/31 out-of-domain fixture prompts abstain (previously 1/31). On the 225-sample labeled calibration corpus, summon's primary is correct for 212 (previously 213; 4 now abstain). Router precision is 0.977 and recall 0.942. Decompress routing changed for none of the 1,181 corpus inputs.
 - `soul_bomb_sovereignty` decompress keywords gain "spirit bomb", "genki dama", "kid buu" and "collective input" (SC-SB-001 patch vocabulary).
 
-## [Unreleased] — 2026-11-25 (branch `feat/pass-through-decision`)
+#### 2026-11-25 (branch `feat/pass-through-decision`)
 
 ### Added
 - `Decision.PASS_THROUGH`: input with no resolved target system and no semantic error is no longer `NEEDS_REVISION`.
@@ -204,7 +232,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Changed
 - **Behavior change:** the Kernel Mobile bench prompts 01, 04 and 05 and "Purple sleeps horizontally under Tuesday." now return `PASS_THROUGH` instead of `NEEDS_REVISION`; their tests are updated. Empty input stays `REJECT`, and low-fit input with a target stays `NEEDS_REVISION`.
 
-## [Unreleased] — 2026-11-25 (branch `fix/skeleton-clause-boundaries`)
+#### 2026-11-25 (branch `fix/skeleton-clause-boundaries`)
 
 ### Fixed
 - The structural skeleton extractor (`extraction/skeleton.py`) tokenized the whole input as one stream, so actor and object noun phrases ran across `;`, `:`, `.`, `!`, `?`, brackets, newlines and dashes. Examples were "organism cash flow" (from "a living organism; cash flow is blood"), "paperwork the gpu", "brain a network", "rule memory" and "compile the brain". Phrases are now extracted per clause.
@@ -212,7 +240,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
   - One decision changed: numerology sample `834215d9`, COMPILED → NEEDS_REVISION. Its structural_fit went from 0.65 to 0.45 because its only "objects" had been the cross-colon artifacts "earth material" and "water emotion".
   - Clause-initial capitalized words that used to sit inside those bogus phrases (for example "Note", "STEP") can now surface through the existing proper-noun actor fallback.
 
-## [Unreleased] — 2026-11-25 (branch `fix/input-validation-empty-and-mode`)
+#### 2026-11-25 (branch `fix/input-validation-empty-and-mode`)
 
 ### Changed
 - **Behavior change:** empty or whitespace-only input now returns `Decision.REJECT` with `semantic_error_class == "EMPTY_INPUT"` (exported as `core.pipeline.EMPTY_INPUT_ERROR_CLASS`) and an `EMPTY_INPUT` compiler error. Previously it returned the generic `NEEDS_REVISION` "No target system resolved" result. The packet is still finalized (dataset row and audit are built).
@@ -224,13 +252,13 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Tests
 - `tests/test_input_validation_empty_and_mode.py` also pins that `SemanticPacket.to_dict()` serializes `decision` and `mode` as enum names (for example `"NEEDS_REVISION"`). `to_dict()` already did this. The integer values seen while dogfooding came from the dogfood script calling `.value`; no public API emits enum ints, so nothing changed there.
 
-## [Unreleased] — 2026-11-25 (branch `fix/compile-input-robustness`)
+#### 2026-11-25 (branch `fix/compile-input-robustness`)
 
 ### Fixed
 - `compile_semantic_packet` no longer crashes on input containing a lone UTF-16 surrogate (for example a half emoji from a mobile text bridge). Lone surrogates are replaced with U+FFFD before compilation, so provenance hashing and dataset export stay valid UTF-8. `SemanticPacket.compute_input_hash` also encodes with `surrogatepass`.
 - `compile_semantic_packet` raises a clear `TypeError` for non-`str` input (for example `None`) instead of an `AttributeError` deep in normalization.
 
-## [Unreleased] — 2026-11-25 (branch `docs/sc-sb-fr-md-2026-11-25c`)
+#### 2026-11-25 (branch `docs/sc-sb-fr-md-2026-11-25c`)
 
 ### Added
 - `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md`: DRAFT 0.1 patch to SC-SB-001. Splits the Spirit Bomb target interaction into three claims (moral neutrality, structural interaction, magnitude confound) and names the child invariant COLLECTIVE INPUT / STRUCTURAL RESPONSE. Does not replace the compiled V5 JSONL.
@@ -240,7 +268,7 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ### Changed
 - Invariant catalog and DOMAIN_LEDGER rows for the three drafts. `validate_catalog.py` lists `SC-FR-001`, `SC-MD-001`, and `SC-MIRROR-001` as markdown-only upstream IDs.
 
-## [Unreleased] — 2026-11-25 (branch `feat/integrate-2026-11-25-material`)
+#### 2026-11-25 (branch `feat/integrate-2026-11-25-material`)
 
 ### Changed
 - **SC-PATCH-DU-001, identity gate correction (authorized by Shax):** the `identity_claim_allowed: false` gate is replaced by `substrate_confusion_check: true` plus `positional_claims_permitted: true` on every cross-substrate mapping.
