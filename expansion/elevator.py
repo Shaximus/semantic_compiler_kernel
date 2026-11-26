@@ -325,6 +325,10 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-LU-FRIEZA-001": "soul_bomb_sovereignty",
     # SC-LU-VEGETA-001 (2026-11-25): Sovereignty-pole lineup entry, homed with the other lineups.
     "SC-LU-VEGETA-001": "soul_bomb_sovereignty",
+    # 2026-11-25g DB-poster lineups (Shax t573u), homed with the other lineups.
+    "SC-LU-GOKU-001": "soul_bomb_sovereignty",
+    "SC-LU-CELL-001": "soul_bomb_sovereignty",
+    "SC-LU-TRUNKS-001": "soul_bomb_sovereignty",
     # SC-CP-001 (Clay and Pots, reconstructed 2026-11-25): base weights vs terminals is the
     # consciousness/cognition split, already carried by that domain's vocabulary.
     "SC-CP-001": "consciousness_cognition",
@@ -333,7 +337,9 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
 # ("Explain SC-CP-001") but does not lift the domain from content matches, so a pottery
 # prompt does not compile as consciousness/cognition.
-EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({"SC-CP-001"})
+# SC-LU-CELL-001 and SC-LU-TRUNKS-001 (2026-11-25g) join for the same reason: "cell"
+# (phone, spreadsheet, stem, fuel) and "trunks" (swim, car, tree, elephant) are everyday words.
+EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({"SC-CP-001", "SC-LU-CELL-001", "SC-LU-TRUNKS-001"})
 
 
 def _require_str_tuple(value: Any, field_name: str) -> tuple[str, ...]:
@@ -1659,7 +1665,7 @@ class DomainElevator:
 
         t0 = time.perf_counter()
         # Discriminative routing verdict over the same index (outside the lock).
-        from semantic_compiler.expansion.router import ABSTAIN, DomainRouter, _is_filler
+        from semantic_compiler.expansion.router import ABSTAIN, ENTRY_LIFT_TIE_RATIO, DomainRouter, _is_filler
 
         pre_ready = self._ensure_ready()
         router = self.__dict__.get("_router")
@@ -1750,6 +1756,18 @@ class DomainElevator:
                 top_entry_score, top_entry_sid = entry_hits[0]
                 top_entry_id = self._slots[top_entry_sid].key
                 hint_domain = self._entry_to_domain_hint.get(top_entry_id)
+                # EXPLICIT_ONLY entries lift their home domain only when the query names the ID
+                # (same rule as DomainRouter's entry lift): "swim trunks" must not lift it.
+                if hint_domain and top_entry_id in EXPLICIT_ONLY_ENTRY_HINTS and top_entry_id.lower() not in query_text.lower():
+                    hint_domain = None
+                # Near-tie with an entry homed elsewhere: no lift (same rule as DomainRouter).
+                if hint_domain and len(entry_hits) > 1:
+                    for score_2, sid_2 in entry_hits[1:]:
+                        if score_2 * ENTRY_LIFT_TIE_RATIO < top_entry_score:
+                            break
+                        if self._entry_to_domain_hint.get(self._slots[sid_2].key) != hint_domain:
+                            hint_domain = None
+                            break
                 if hint_domain and top_entry_score >= 8.0:
                     hint_sid = f"domain:{hint_domain}"
                     boosted = scores.get(hint_sid, 0.0) + min(top_entry_score * 0.65, 12.0)

@@ -192,8 +192,12 @@ class VegetaCrossReferenceTests(unittest.TestCase):
         self.assertIn("owner", residuals.lower())
 
     def test_complicit_enslavement_does_not_change_tier_or_score(self) -> None:
-        self.assertEqual(VEGETA["metadata"]["entry_revision"], "1.1.0")
-        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.85)
+        # t572u changed no score (0.85 at rev 1.1.0). The later Last Crown merge (rev 1.2.0,
+        # t573u) raised two gates; see tests/test_sc_lu_lineup_25g.py.
+        self.assertEqual(VEGETA["metadata"]["entry_revision"], "1.2.0")
+        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.862)
+        t572 = next(a for a in VEGETA["metadata"]["addenda"] if a.get("by") == "Shax (t572u)")
+        self.assertIn("SILVER 0.85 unchanged", t572["note"])
         self.assertEqual(VEGETA["dataset_tier"], "SILVER")
         self.assertTrue(any(a.get("by") == "Shax (t572u)" for a in VEGETA["metadata"]["addenda"]))
 
@@ -226,7 +230,8 @@ class BinaryRulingRev2Tests(unittest.TestCase):
         for entry in (MIRROR, DUALITY, CLAY, VEGETA, FRIEZA):
             rev = [a for a in entry["metadata"]["addenda"] if a.get("type") == "RULING_AMENDMENT"]
             self.assertEqual([a["revision"] for a in rev], [2], entry["metadata"]["entry_id"])
-        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.85)
+        # 0.85 -> 0.862 comes from the Last Crown merge (t573u), not from rev 2.
+        self.assertEqual(VEGETA["isomorphism_quality"]["score"], 0.862)
 
     def test_docs_record_reading_b(self) -> None:
         vessel = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")

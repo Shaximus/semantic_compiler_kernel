@@ -117,6 +117,29 @@ _BUILDCRAFT_ANCHOR_WORDS = frozenset({
 EXPLICIT_ENTRY_SCORE = 25.0
 _SC_ID_RE = re.compile(r"\bSC-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{3}\b", re.IGNORECASE)
 
+
+# A compiled entry lifts its home domain only when it clearly leads: if the runner-up entry is
+# homed elsewhere and scores within this ratio, the relationship evidence is a tie and neither
+# lifts. (2026-11-25g: adding three lineups re-weighted token IDF and flipped a 0.3% tie
+# between SC-DOMAIN-EXPANSION-001 and SC-LU-SAO-ALICE-001 on "The AI writes code.")
+ENTRY_LIFT_TIE_RATIO = 1.02
+
+
+def _entry_lift_is_tied(entry_scores, top_entry, top_score, hints) -> bool:
+    top_hint = hints.get(top_entry)
+    for eid, sc in entry_scores.items():
+        if eid != top_entry and sc * ENTRY_LIFT_TIE_RATIO >= top_score and hints.get(eid) != top_hint:
+            return True
+    return False
+
+
+def _strip_explicit_only_ids(text: str) -> str:
+    """Blank out explicit IDs of EXPLICIT_ONLY entries so their words do not score as content."""
+    def _sub(m: "re.Match[str]") -> str:
+        return " " if m.group(0).upper() in EXPLICIT_ONLY_ENTRY_HINTS else m.group(0)
+    return _SC_ID_RE.sub(_sub, text)
+
+
 _ANALOGY_MARKER = re.compile(
     r"(?:(?<!\bwould )(?<!\bshould )(?<!\bmight )(?<!'d )\b(?:is|are|works|behaves|acts)?\s*like\b"
     r"|\b(?:acts as|act as|as if|similar to|analogous to)\b)",
@@ -312,12 +335,15 @@ class DomainRouter:
         phrases_hit: dict[str, list[str]] = defaultdict(list)
         entry_scores: dict[str, float] = defaultdict(float)
 
-        marker = _ANALOGY_MARKER.search(text)
+        # Explicit IDs of EXPLICIT_ONLY entries ("SC-LU-CELL-001") route through the explicit-ID
+        # score below, not through their everyday-word tokens ("cell" -> biology).
+        clause_text = _strip_explicit_only_ids(text)
+        marker = _ANALOGY_MARKER.search(clause_text)
         if marker and marker.start() > 0:
-            self._score_clause(text[: marker.start()], SUBJECT_CLAUSE_WEIGHT, scores, terms, phrases_hit, entry_scores)
-            self._score_clause(text[marker.end():], SOURCE_CLAUSE_WEIGHT, scores, terms, phrases_hit, entry_scores)
+            self._score_clause(clause_text[: marker.start()], SUBJECT_CLAUSE_WEIGHT, scores, terms, phrases_hit, entry_scores)
+            self._score_clause(clause_text[marker.end():], SOURCE_CLAUSE_WEIGHT, scores, terms, phrases_hit, entry_scores)
         else:
-            self._score_clause(text, 1.0, scores, terms, phrases_hit, entry_scores)
+            self._score_clause(clause_text, 1.0, scores, terms, phrases_hit, entry_scores)
 
         # Relationship recognition: a strongly matched compiled entry lifts its home domain.
         entry_lift_terms: set[str] = set()
@@ -329,6 +355,7 @@ class DomainRouter:
                 and top_entry_score >= 8.0
                 and hint != "universal_generic"
                 and top_entry not in EXPLICIT_ONLY_ENTRY_HINTS
+                and not _entry_lift_is_tied(entry_scores, top_entry, top_entry_score, el._entry_to_domain_hint)
             ):
                 scores[hint] += min(top_entry_score * 0.65, 12.0)
                 entry_lift_terms.add(top_entry)

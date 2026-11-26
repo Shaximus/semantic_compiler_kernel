@@ -169,7 +169,8 @@
 - **Draft entries (2026-11-25e), not compiled, no class assigned:** Voluntary State Recompression (`SC-VSR-001`); governance principle Measurement, Not Indulgence (`SC-GOV-001`); cyclic feedback patch notes for `SC-MIRROR-001` (`SC-PATCH-MIRROR-001`). See `DOMAIN_LEDGER.md` §3.
 - **Source drafts (2026-11-25g), not compiled, no class assigned:** Shax's standalone sources for `SC-MIRROR-001`'s claims — `SC-YYC-001` (calibration dot), `SC-ICC-001` (information-conserving compression), `SC-TSC-001` (three-stage compression), `SC-5EU-001` (five-entry unification, duplicate of CLM-MIRROR-001), `SC-ADL-001` (anti-deadlock), `SC-MBS-001` (backup snapshot) in `docs/SC-MIRROR-001_SOURCE_DRAFTS_2026-11-25g.md`; `SC-SIT-001` (structural integrity test) folded into the SB-001 patch DRAFT 0.4. See `DOMAIN_LEDGER.md` §3.
 - **Draft entry (2026-11-25f), not compiled, no class assigned:** Vessel Equilibrium (`SC-VESSEL-001`, DRAFT 0.2 with Shax's resolution rule). See `DOMAIN_LEDGER.md` §3.
-- **Lineup entry (2026-11-25), compiled, no class assigned:** Vegeta, the Sovereignty pole (`SC-LU-VEGETA-001`, SILVER 0.85). t572u / CLM-LU-VEG-09 (entry revision 1.1.0): complicit enslavement, SHAX_INTERPRETATION; score unchanged.
+- **Lineup entry (2026-11-25), compiled, no class assigned:** Vegeta, the Sovereignty pole (`SC-LU-VEGETA-001`, SILVER). t572u / CLM-LU-VEG-09 (entry revision 1.1.0): complicit enslavement, SHAX_INTERPRETATION; score unchanged (0.85). Rev 1.2.0 (2026-11-25g): "The Last Crown" merged (CLM-LU-VEG-10..14); composite 0.862.
+- **Lineup entries (2026-11-25g, Shax t573u), compiled, no class assigned:** Goku, the Oneness pole (`SC-LU-GOKU-001`, SILVER 0.857); Perfect Cell (`SC-LU-CELL-001`, SILVER 0.846); Future Trunks (`SC-LU-TRUNKS-001`, SILVER 0.839). Self-assigned GOLD grades not accepted; canon corrections recorded in each entry.
 
 ---
 
