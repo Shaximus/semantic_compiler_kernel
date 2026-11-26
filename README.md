@@ -353,7 +353,7 @@ semantic_compiler_kernel/
 | SC-GOV-001 Measurement, Not Indulgence — governance principle (DRAFT 0.1) | `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md` |
 | SC-PATCH-MIRROR-001 Cyclic feedback patch notes (DRAFT 0.1) | `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md` |
 | SC-VESSEL-001 Vessel Equilibrium — The Anomaly (DRAFT 0.3) | `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` |
-| SC-MAFUBA-001 Dimensional Containment and Information-Flow Integrity (v1.0.0 historical artifact + v1.1.0-rc1 candidate; Proposed GOLD, not compiled) | `docs/SC-MAFUBA-001.md`, `docs/evidence/sc-mafuba-001/` |
+| SC-MAFUBA-001 Dimensional Containment and Information-Flow Integrity (v1.0.0 and v1.1.0-rc1 historical artifacts + v1.1.0-rc2 candidate; Proposed GOLD, not compiled; 001D STRICT boundary is a provisional default) | `docs/SC-MAFUBA-001.md`, `docs/evidence/sc-mafuba-001/` |
 | SC-MIRROR-001 source drafts: SC-YYC-001, SC-ICC-001, SC-TSC-001, SC-5EU-001, SC-ADL-001, SC-MBS-001 (DRAFT 0.1, not compiled) | `docs/SC-MIRROR-001_SOURCE_DRAFTS_2026-11-25g.md` (verbatim sources: `docs/evidence/source-2026-11-25g/`) |
 | Changelog | `CHANGELOG.md` |
 

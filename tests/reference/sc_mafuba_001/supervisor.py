@@ -3,7 +3,12 @@
 This is not cgroup v2 isolation and not kernel enforcement. It exists so
 offline tests can check:
 
-- free budget <= reserve => PREEMPTIVE_FAIL_CLOSED, never success
+- admission is allowed only if R_execution + R_enforcement + R_reserve < R_budget
+  (STRICT, a PROVISIONAL_DEFAULT with pending_deliberation); work that would
+  land exactly on the reserve is refused with PREEMPTIVE_FAIL_CLOSED, is not
+  billed, and the result carries needs_review / BOUNDARY_EDGE_PENDING_DELIBERATION
+- if free budget ever reaches the reserve for any reason, the supervisor fires
+  immediately (edge-driven defence in depth)
 - the D2 shutdown path actually runs on the reserve: stop accepting work,
   terminate, isolate, keep bounded audit evidence, quarantine, and refuse
   automatic resumption
@@ -15,9 +20,35 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Callable, List, Optional
 
 from tests.reference.sc_mafuba_001.allowlist import resolve_branch
+
+
+@dataclass(frozen=True)
+class AdmitResult:
+    """Allowlist-compatible admission result.
+
+    `status` is the value the allowlist branches on and must be passed as a
+    plain str (type(status) is str). Equality with a string compares `status`
+    only, so existing `assertEqual(result, "CONTINUE")` checks keep working.
+    The STRICT equality edge also sets needs_review and diagnostic.
+    """
+
+    status: str
+    needs_review: bool = False
+    diagnostic: Optional[str] = None
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, AdmitResult):
+            return (self.status, self.needs_review, self.diagnostic) == (
+                other.status,
+                other.needs_review,
+                other.diagnostic,
+            )
+        if isinstance(other, str):
+            return self.status == other
+        return NotImplemented
 
 
 @dataclass
@@ -43,34 +74,94 @@ class ShutdownRecord:
     status: str = "QUARANTINED"
 
 
-@dataclass
 class ResourceBudget:
-    r_budget: float
-    r_reserve: float
-    r_used: float = 0.0
-    accepting_work: bool = True
+    """Three-term process-local budget (execution, enforcement, reserve).
+
+    r_used is the derived sum of the execution and enforcement counters.
+    The reserve is not billed by admit(); it is an untouchable envelope.
+    """
+
+    def __init__(
+        self,
+        r_budget: float,
+        r_reserve: float,
+        r_used: float = 0.0,
+        r_execution: Optional[float] = None,
+        r_enforcement: float = 0.0,
+        accepting_work: bool = True,
+    ) -> None:
+        self.r_budget = r_budget
+        self.r_reserve = r_reserve
+        self.r_enforcement = r_enforcement
+        self.r_execution = r_used - r_enforcement if r_execution is None else r_execution
+        self.accepting_work = accepting_work
+        self.reserve_edge_handler: Optional[Callable[[], None]] = None
+
+    @property
+    def r_used(self) -> float:
+        return self.r_execution + self.r_enforcement
+
+    @r_used.setter
+    def r_used(self, value: float) -> None:
+        # Direct assignment is an accounting path other than admit(). If it
+        # lands on or past the reserve, the edge-driven supervisor must fire
+        # immediately (defence in depth).
+        self.r_execution = value - self.r_enforcement
+        self._fire_if_at_reserve()
 
     @property
     def r_free(self) -> float:
         return self.r_budget - self.r_used
 
-    def admit(self, amount: float) -> str:
-        """Try to reserve `amount` for new work. Allowlist-compatible status."""
+    def _at_or_below_reserve(self) -> bool:
+        return self.r_free <= self.r_reserve
+
+    def _fire_if_at_reserve(self) -> None:
+        if self._at_or_below_reserve() and self.reserve_edge_handler is not None:
+            self.reserve_edge_handler()
+
+    def admit(self, amount: float, purpose: str = "execution") -> AdmitResult:
+        """Try to reserve `amount` for new work. Allowlist-compatible status.
+
+        An admission is allowed only if, after the debit,
+        R_execution + R_enforcement + R_reserve < R_budget. The STRICT
+        equality-edge refusal is a provisional default: the result then also
+        carries needs_review and BOUNDARY_EDGE_PENDING_DELIBERATION.
+        Pass result.status to the allowlist (it requires type(status) is str).
+        """
         if not self.accepting_work:
-            return "PREEMPTIVE_FAIL_CLOSED"
+            return AdmitResult("PREEMPTIVE_FAIL_CLOSED")
         # NaN/inf/negative amounts must never be admitted: a NaN debit would
-        # poison r_used and make every later comparison False (permanent fail-open).
+        # poison the counters and make every later comparison False (permanent fail-open).
         if not isinstance(amount, (int, float)) or isinstance(amount, bool) \
                 or not math.isfinite(amount) or amount < 0:
-            return "FAIL_CLOSED"
-        # Already at or below the reserve: stop, even for a zero-cost admit.
-        if self.r_free <= self.r_reserve:
-            return "PREEMPTIVE_FAIL_CLOSED"
-        # Admission must leave the reserve untouched.
-        if self.r_used + amount > (self.r_budget - self.r_reserve):
-            return "PREEMPTIVE_FAIL_CLOSED"
-        self.r_used += amount
-        return "CONTINUE"
+            return AdmitResult("FAIL_CLOSED")
+        if purpose not in ("execution", "enforcement"):
+            return AdmitResult("FAIL_CLOSED")
+        # Already at or below the reserve: refuse and fire immediately.
+        # This is observed state, not the open equality-vs-strict admit question.
+        if self._at_or_below_reserve():
+            self._fire_if_at_reserve()
+            return AdmitResult("PREEMPTIVE_FAIL_CLOSED")
+        # STRICT provisional default: refuse work that would land exactly on,
+        # or past, the reserve. Do not bill, and do not fire the supervisor —
+        # free has not reached the reserve; this is the admission gate, not
+        # the edge trigger. The equality edge carries needs_review.
+        cap = self.r_budget - self.r_reserve
+        proposed = self.r_used + amount
+        if proposed == cap:
+            return AdmitResult(
+                "PREEMPTIVE_FAIL_CLOSED",
+                needs_review=True,
+                diagnostic="BOUNDARY_EDGE_PENDING_DELIBERATION",
+            )
+        if proposed > cap:
+            return AdmitResult("PREEMPTIVE_FAIL_CLOSED")
+        if purpose == "execution":
+            self.r_execution += amount
+        else:
+            self.r_enforcement += amount
+        return AdmitResult("CONTINUE")
 
 
 class EmergencySupervisor:
@@ -91,6 +182,23 @@ class EmergencySupervisor:
         self.evidence_cost_per_byte = evidence_cost_per_byte
         self.last_shutdown: Optional[ShutdownRecord] = None
         self._evidence: List[bytes] = []
+        self._armed_worker: Optional[Worker] = None
+        self._armed_evidence: Optional[bytes] = None
+        budget.reserve_edge_handler = self._on_reserve_edge
+
+    def arm(self, worker: Worker, evidence: bytes) -> None:
+        """Bind the worker and evidence the edge-driven trigger will shut down with."""
+        self._armed_worker = worker
+        self._armed_evidence = evidence
+
+    def _on_reserve_edge(self) -> None:
+        """Defence in depth: fire as soon as free budget reaches the reserve."""
+        self.stop_accepting_work()
+        if self.last_shutdown is not None:
+            return
+        if self._armed_worker is None:
+            return
+        self.run_shutdown(self._armed_worker, self._armed_evidence or b"")
 
     def stop_accepting_work(self) -> None:
         self.budget.accepting_work = False
@@ -143,14 +251,19 @@ class EmergencySupervisor:
         return "QUARANTINE_LOCKED"
 
     def reserve_trigger_shutdown(self, worker: Worker, evidence: bytes) -> ShutdownRecord:
-        """Drive the D2 scenario: consume down to the reserve, then shut down.
+        """Drive the D2 scenario: free reaches the reserve, supervisor fires immediately.
 
-        Setting r_used = r_budget - r_reserve makes the next admit return
-        PREEMPTIVE_FAIL_CLOSED. The shutdown handler then actually runs.
+        Setting r_used so that r_free == r_reserve models the reserve being
+        reached for a reason other than a successful admit. The edge-driven
+        handler must shut down at that moment, not wait for a later admission.
         """
+        self.arm(worker, evidence)
         self.budget.r_used = self.budget.r_budget - self.budget.r_reserve
-        status = self.budget.admit(0.0)
-        branch, reason = resolve_branch(status)
+        if self.last_shutdown is not None:
+            return self.last_shutdown
+        # Fallback if the edge hook was not attached: still refuse and shut down.
+        result = self.budget.admit(0.0)
+        branch, reason = resolve_branch(result.status)
         if branch != "HALT" or reason != "PREEMPTIVE_FAIL_CLOSED":
             raise AssertionError(
                 f"reserve trigger must halt as PREEMPTIVE_FAIL_CLOSED, got {branch}/{reason}"

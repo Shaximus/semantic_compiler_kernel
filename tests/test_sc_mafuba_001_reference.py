@@ -19,6 +19,7 @@ from tests.reference.sc_mafuba_001.allowlist import (
 )
 from tests.reference.sc_mafuba_001.cbf import toy_1d_robust_cbf
 from tests.reference.sc_mafuba_001.supervisor import (
+    AdmitResult,
     EmergencySupervisor,
     ResourceBudget,
     Worker,
@@ -30,6 +31,7 @@ EVIDENCE = DOCS / "evidence" / "sc-mafuba-001"
 JSONL = EVIDENCE / "sc_mafuba_001.jsonl"
 SPEC_V100 = DOCS / "SC-MAFUBA-001_v1.0.0.md"
 SPEC_RC1 = DOCS / "SC-MAFUBA-001_v1.1.0-rc1.md"
+SPEC_RC2 = DOCS / "SC-MAFUBA-001_v1.1.0-rc2.md"
 
 OFFICIAL_TEST_IDS = [
     "TEST-MAFUBA-A1",
@@ -124,10 +126,13 @@ class ToyRobustCBFTests(unittest.TestCase):
 class SupervisorReserveTests(unittest.TestCase):
     def test_admit_never_returns_success_when_reserve_hit(self) -> None:
         budget = ResourceBudget(r_budget=10.0, r_reserve=2.0, r_used=0.0)
-        self.assertEqual(budget.admit(8.0), "CONTINUE")
+        self.assertEqual(budget.admit(7.9), "CONTINUE")
+        self.assertAlmostEqual(budget.r_used, 7.9)
+        self.assertGreater(budget.r_free, budget.r_reserve)
         status = budget.admit(0.1)
         self.assertEqual(status, "PREEMPTIVE_FAIL_CLOSED")
-        branch, reason = resolve_branch(status, value="should-not-leak")
+        self.assertAlmostEqual(budget.r_used, 7.9)
+        branch, reason = resolve_branch(status.status, value="should-not-leak")
         self.assertEqual(branch, "HALT")
         self.assertEqual(reason, "PREEMPTIVE_FAIL_CLOSED")
 
@@ -208,8 +213,9 @@ class ReviewRegressionTests(unittest.TestCase):
                 self.assertEqual(budget.admit(amount), "FAIL_CLOSED")
                 self.assertEqual(budget.r_used, 0.0)
         # The reserve is still enforced afterwards (v1.1.0-rc1: NaN admit made it permanently open).
-        self.assertEqual(budget.admit(8.0), "CONTINUE")
+        self.assertEqual(budget.admit(7.9), "CONTINUE")
         self.assertEqual(budget.admit(0.1), "PREEMPTIVE_FAIL_CLOSED")
+        self.assertAlmostEqual(budget.r_used, 7.9)
 
     def test_d2_shutdown_can_fail_when_reserve_is_too_small(self) -> None:
         budget = ResourceBudget(r_budget=10.0, r_reserve=0.1)
@@ -233,18 +239,73 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertLessEqual(record.reserve_used, budget.r_reserve + 1e-9)
         self.assertLess(len(record.evidence), 500)
 
-    def test_pinned_boundary_behaviour_free_equals_reserve(self) -> None:
-        """Pins CURRENT behaviour of an open spec question (see review findings F5).
-
-        001D permits R_exec+R_enf+R_reserve <= R_budget (equality allowed) yet also says
-        halt when R_free <= R_reserve. The helper admits work that lands exactly on the
-        reserve and halts only the NEXT admission. If the spec decides that landing on the
-        reserve must itself trigger shutdown, change this test with the spec.
-        """
+    def test_strict_boundary_refuses_admission_at_equality(self) -> None:
+        """STRICT 001D: work that would land exactly on the reserve is refused and not billed."""
         budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
-        self.assertEqual(budget.admit(8.0), "CONTINUE")
-        self.assertEqual(budget.r_free, budget.r_reserve)
+        result = budget.admit(8.0)
+        self.assertIsInstance(result, AdmitResult)
+        self.assertEqual(result, "PREEMPTIVE_FAIL_CLOSED")
+        self.assertTrue(result.needs_review)
+        self.assertEqual(result.diagnostic, "BOUNDARY_EDGE_PENDING_DELIBERATION")
+        self.assertEqual(budget.r_used, 0.0)
+        self.assertEqual(budget.r_execution, 0.0)
+        self.assertEqual(budget.r_enforcement, 0.0)
+        self.assertGreater(budget.r_free, budget.r_reserve)
+        # A refused admit does not itself mean the reserve was reached.
         self.assertTrue(budget.accepting_work)
+        # A later debit that stays strictly below the reserve still proceeds.
+        ok = budget.admit(7.9)
+        self.assertEqual(ok, "CONTINUE")
+        self.assertFalse(ok.needs_review)
+        self.assertIsNone(ok.diagnostic)
+        self.assertAlmostEqual(budget.r_used, 7.9)
+        self.assertAlmostEqual(budget.r_execution, 7.9)
+
+    def test_equality_edge_emits_pending_deliberation_diagnostic(self) -> None:
+        """The equality edge stays visible until the provisional STRICT default is deliberated."""
+        budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
+        edge = budget.admit(8.0)
+        self.assertEqual(edge.status, "PREEMPTIVE_FAIL_CLOSED")
+        self.assertTrue(edge.needs_review)
+        self.assertEqual(edge.diagnostic, "BOUNDARY_EDGE_PENDING_DELIBERATION")
+        branch, reason = resolve_branch(edge.status, value="should-not-leak")
+        self.assertEqual(branch, "HALT")
+        self.assertEqual(reason, "PREEMPTIVE_FAIL_CLOSED")
+        self.assertEqual(budget.r_used, 0.0)
+        # Past the reserve is also refused, but is not the open equality question.
+        overshoot = budget.admit(8.1)
+        self.assertEqual(overshoot.status, "PREEMPTIVE_FAIL_CLOSED")
+        self.assertFalse(overshoot.needs_review)
+        self.assertIsNone(overshoot.diagnostic)
+        self.assertEqual(budget.r_used, 0.0)
+
+    def test_three_term_counters_bill_execution_and_enforcement_separately(self) -> None:
+        budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
+        self.assertEqual(budget.admit(3.0, purpose="execution"), "CONTINUE")
+        self.assertEqual(budget.admit(1.0, purpose="enforcement"), "CONTINUE")
+        self.assertAlmostEqual(budget.r_execution, 3.0)
+        self.assertAlmostEqual(budget.r_enforcement, 1.0)
+        self.assertAlmostEqual(budget.r_used, 4.0)
+        # Remaining headroom under the strict cap is 4.0; a 4.0 debit lands on the reserve.
+        self.assertEqual(budget.admit(4.0, purpose="enforcement"), "PREEMPTIVE_FAIL_CLOSED")
+        self.assertAlmostEqual(budget.r_enforcement, 1.0)
+        self.assertEqual(budget.admit(1.0, purpose="other"), "FAIL_CLOSED")
+        self.assertAlmostEqual(budget.r_used, 4.0)
+
+    def test_edge_driven_supervisor_fires_when_free_reaches_reserve(self) -> None:
+        """Defence in depth: if free reaches the reserve for any reason, fire immediately."""
+        budget = ResourceBudget(r_budget=10.0, r_reserve=2.0)
+        supervisor = EmergencySupervisor(budget, max_evidence_bytes=16)
+        worker = Worker("w")
+        supervisor.arm(worker, b"E" * 32)
+        budget.r_used = budget.r_budget - budget.r_reserve
+        self.assertEqual(budget.r_free, budget.r_reserve)
+        self.assertIsNotNone(supervisor.last_shutdown)
+        self.assertFalse(budget.accepting_work)
+        self.assertFalse(worker.running)
+        self.assertTrue(worker.isolated)
+        self.assertFalse(supervisor.last_shutdown.automatic_resumption)
+        # Already shut down; a later admit is still preemptive.
         self.assertEqual(budget.admit(0.0), "PREEMPTIVE_FAIL_CLOSED")
 
 
@@ -253,6 +314,7 @@ class DraftRegistryConsistencyTests(unittest.TestCase):
         self.assertTrue(JSONL.is_file())
         self.assertTrue(SPEC_V100.is_file())
         self.assertTrue(SPEC_RC1.is_file())
+        self.assertTrue(SPEC_RC2.is_file())
         rows = _load_jsonl(JSONL)
         by_id = {row["id"]: row for row in rows}
         self.assertIn("SC-MAFUBA-001", by_id)
@@ -261,14 +323,28 @@ class DraftRegistryConsistencyTests(unittest.TestCase):
         self.assertIn("SC-MAFUBA-001C", by_id)
         self.assertIn("SC-MAFUBA-001D", by_id)
         self.assertIn("SC-MAFUBA-001@1.0.0", by_id)
+        self.assertIn("SC-MAFUBA-001@1.1.0-rc1", by_id)
 
         parent = by_id["SC-MAFUBA-001"]
         historical = by_id["SC-MAFUBA-001@1.0.0"]
+        historical_rc1 = by_id["SC-MAFUBA-001@1.1.0-rc1"]
         self.assertEqual(parent["classification"], "PROPOSED_GOLD")
         self.assertIs(parent["gold_awarded"], False)
         self.assertIs(historical["gold_awarded"], False)
-        self.assertEqual(parent["version"], "1.1.0-rc1")
+        self.assertIs(historical_rc1["gold_awarded"], False)
+        self.assertEqual(parent["version"], "1.1.0-rc2")
         self.assertEqual(historical["version"], "1.0.0")
+        self.assertEqual(historical_rc1["version"], "1.1.0-rc1")
+        for sub_id in ("SC-MAFUBA-001A", "SC-MAFUBA-001B", "SC-MAFUBA-001C", "SC-MAFUBA-001D"):
+            self.assertEqual(by_id[sub_id]["version"], "1.1.0-rc2")
+        boundary = by_id["SC-MAFUBA-001D"]["admission_boundary"]
+        self.assertEqual(boundary["rule"], "STRICT")
+        self.assertEqual(boundary["status"], "PROVISIONAL_DEFAULT")
+        self.assertIs(boundary["pending_deliberation"], True)
+        self.assertTrue(boundary["reason"])
+        parent_boundary = parent["admission_boundary"]
+        self.assertEqual(parent_boundary["status"], "PROVISIONAL_DEFAULT")
+        self.assertIs(parent_boundary["pending_deliberation"], True)
 
         for row in rows:
             self.assertIs(row.get("gold_awarded"), False)
@@ -284,11 +360,31 @@ class DraftRegistryConsistencyTests(unittest.TestCase):
         self.assertIn("TEST-MAFUBA-C3", parent_tests)
         self.assertIn("TEST-MAFUBA-C3", by_id["SC-MAFUBA-001C"]["acceptance_test_ids"])
 
+        rc2_hash = _sha256(SPEC_RC2)
         rc1_hash = _sha256(SPEC_RC1)
         v100_hash = _sha256(SPEC_V100)
-        self.assertEqual(parent["provenance"]["spec_sha256"], rc1_hash)
+        # Prior pins must not move; the candidate hash is the new rc2 file.
+        self.assertEqual(
+            v100_hash,
+            "3e2ff55ce51f3b54985b0163340b327b60775a512828e48d48e95dacfe705863",
+        )
+        self.assertEqual(
+            rc1_hash,
+            "8d6f8c291ff9a125eef026ad2f9df1ec7e6577aa9cb97b68b8fdc91351845c23",
+        )
+        self.assertEqual(parent["provenance"]["spec_sha256"], rc2_hash)
         self.assertEqual(parent["provenance"]["v1_0_0_spec_sha256"], v100_hash)
+        self.assertEqual(parent["provenance"]["v1_1_0_rc1_spec_sha256"], rc1_hash)
+        self.assertEqual(parent["candidate"]["version"], "1.1.0-rc2")
+        self.assertEqual(parent["candidate"]["spec_sha256"], rc2_hash)
         self.assertEqual(historical["provenance"]["spec_sha256"], v100_hash)
+        self.assertEqual(historical_rc1["provenance"]["spec_sha256"], rc1_hash)
+        artifact_versions = {item["version"]: item for item in parent["historical_artifacts"]}
+        self.assertEqual(artifact_versions["1.0.0"]["spec_sha256"], v100_hash)
+        self.assertEqual(artifact_versions["1.1.0-rc1"]["spec_sha256"], rc1_hash)
+        self.assertEqual(len(rc2_hash), 64)
         self.assertEqual(len(rc1_hash), 64)
         self.assertEqual(len(v100_hash), 64)
         self.assertNotEqual(rc1_hash, v100_hash)
+        self.assertNotEqual(rc2_hash, rc1_hash)
+        self.assertNotEqual(rc2_hash, v100_hash)
