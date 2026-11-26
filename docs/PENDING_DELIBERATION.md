@@ -426,10 +426,11 @@ The rc1 attachment was added verbatim (`docs/evidence/source-2026-11-26c/SCC-001
 
 ### SCC-001-AC-KP-ROTATE (rotate K_P has no section-5 action)
 
-- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Status:** `RESOLVED_BY_SHAX` (t601u, 26 Nov 2026) · **pending_deliberation:** `false`
 - **Question:** the rc1 section-2 table lets the principal "rotate K_P", but the section-5 `AuthorityAction` enum has no rotate action.
-- **Chosen default:** map `ROTATE_PRINCIPAL_KEY` onto `POLICY_WRITE` (principal only, verified credential). rc1 section 5 is left as written.
-- **Alternatives not chosen:** add `KEY_ROTATE` to the enum (that would edit Shax's text); map it to `IDENTITY_WRITE`.
+- **Former provisional default:** map `ROTATE_PRINCIPAL_KEY` onto `POLICY_WRITE` (principal only, verified credential).
+- **Shax's decision (t601u):** "Mapping key rotation to policy-write is a temporary compatibility decision, not a clean semantic equivalence. I'd give it a distinct `PRINCIPAL_KEY_ROTATE` action before awarding GOLD."
+- **Implemented:** `tests/reference/scc_001_ac/spec_contract.py` keeps rc1 section 5 verbatim and defines the rc2 amendment beside it: `AuthorityActionRC2` (rc1 actions plus `PRINCIPAL_KEY_ROTATE`), `ALLOWED_ROLE_ACTIONS_RC2` (only the principal gains it) and `is_authority_edge_permitted_rc2`. `ROTATE_PRINCIPAL_KEY` now maps to `PRINCIPAL_KEY_ROTATE`. The gateway still requires a verified principal credential for it.
 
 ### SCC-001-AC-ENFORCEMENT-HOME (rc1 section 6 step 2)
 
