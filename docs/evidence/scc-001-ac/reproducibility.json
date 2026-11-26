@@ -1,7 +1,7 @@
 {
   "description": "SCC-001-AC reproducibility manifest. test_run_sha256 = sha256 of the sorted '<classname>::<test> <outcome>' lines (newline-joined) from pytest on tests/test_scc_001_ac_anti_capture.py, excluding TestSCC001ACRegistry (which checks this file).",
   "file_sha256": {
-    "docs/SCC-001-AC_ANTI_CAPTURE.md": "80f4a3d382490e0a07adc4fa314e41bfc009f6c1dc69245413f069a487d49f2b",
+    "docs/SCC-001-AC_ANTI_CAPTURE.md": "02dd0538d1bc7b1ea6687d207c319365df2c3c294d45d40ad929e74ce66de5cc",
     "docs/evidence/sc-mafuba-001/manifests/disturbance.yaml": "1479a3480ddc2896d8cdbee3749e617bebe050732151c498711bf3bd0b45ca77",
     "docs/evidence/sc-mafuba-001/manifests/resource.yaml": "6c6a9bdcb240d794ad5bd251902786a5b9578bc064df17aa873898c40da23624",
     "docs/evidence/sc-mafuba-001/manifests/sink.yaml": "93b69255e502211f7fd7076b9c494b1a0cefc9a8dcf3e10031eacddc1c15c6cd",
@@ -18,12 +18,12 @@
     "tests/reference/scc_001_ac/manifests.py": "ea11b373797fba2ac8a9b3618f161fba5414c152547c67453b1cffe2d5d66df6",
     "tests/reference/scc_001_ac/model.py": "bee6241d4a1ff15a5290a4d5387717eb0fb1eb38fae97b205e02ac8011ac40df",
     "tests/reference/scc_001_ac/quarantine.py": "d6fbaf0a5225477d0d5cd8c52c37921bc60bbb8d3ecc414c3615c3b8854e5760",
-    "tests/reference/scc_001_ac/spec_contract.py": "308dd49d51ae7731d06c35b2bf891025a36ab2b60eba77702b9207484d7d33ab",
-    "tests/test_scc_001_ac_anti_capture.py": "26d5bc072cad92e95ac71a371b67b825fc1f8c4db48c70bbcba769c810ec6f16"
+    "tests/reference/scc_001_ac/spec_contract.py": "17db598e575cda75cdbe4c954a681b70a8da391dbcb639702f22d2ca34f5f8a0",
+    "tests/test_scc_001_ac_anti_capture.py": "b31c0bda205215291925d09259259c147ed9d376c9cc57ee8ba8907bd3c3054e"
   },
   "test_outcomes": {
-    "passed": 58,
+    "passed": 59,
     "xfailed": 5
   },
-  "test_run_sha256": "36d4bee62ffcdf3eb358a9c3536b4ae25bdd79c5c96e5f2d04ac896b087aa0e7"
+  "test_run_sha256": "084af3decb31adce93b5160751d2e76b73da61f7fdd166e6db0328d4358e97c7"
 }

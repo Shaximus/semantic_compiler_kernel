@@ -207,12 +207,38 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                 spec_action, plane, override = sc.spec_edge(a.value)
                 if spec_action is None:
                     continue
-                self.assertTrue(sc.is_authority_edge_permitted(
-                    sc.AuthorityEdgeCheck(sc.AuthorityRole(role), spec_action, plane, override)), (role, a))
-        # Every authority-plane action maps to a section-5 PRINCIPAL edge.
+                self.assertTrue(sc.is_authority_edge_permitted_rc2(sc.AuthorityRole(role), spec_action, plane,
+                                                                   override), (role, a))
+        # Every authority-plane action maps to a section-5 (rc2) PRINCIPAL edge.
         for a in AUTHORITY_PLANE_ACTIONS:
             spec_action, _, _ = sc.spec_edge(a.value)
-            self.assertIn(spec_action, sc.ALLOWED_ROLE_ACTIONS[sc.AuthorityRole.PRINCIPAL], a)
+            self.assertIn(spec_action, sc.ALLOWED_ROLE_ACTIONS_RC2[sc.AuthorityRole.PRINCIPAL], a)
+
+    def test_principal_key_rotate_is_a_distinct_principal_only_action(self):
+        # Shax t601u resolved SCC-001-AC-KP-ROTATE: rotating K_P is its own action, not POLICY_WRITE.
+        A = sc.AuthorityActionRC2
+        self.assertEqual(sc.spec_edge(Action.ROTATE_PRINCIPAL_KEY.value), (A.PRINCIPAL_KEY_ROTATE, True, False))
+        self.assertNotIn("PRINCIPAL_KEY_ROTATE", {a.value for a in sc.AuthorityAction})   # rc1 text unchanged
+        rc1 = {r: {a.value for a in acts} for r, acts in sc.ALLOWED_ROLE_ACTIONS.items()}
+        rc2 = {r: {a.value for a in acts} for r, acts in sc.ALLOWED_ROLE_ACTIONS_RC2.items()}
+        self.assertEqual(rc2[sc.AuthorityRole.PRINCIPAL] - rc1[sc.AuthorityRole.PRINCIPAL], {"PRINCIPAL_KEY_ROTATE"})
+        self.assertEqual({r: v for r, v in rc2.items() if r is not sc.AuthorityRole.PRINCIPAL},
+                         {r: v for r, v in rc1.items() if r is not sc.AuthorityRole.PRINCIPAL})
+        for role in sc.AuthorityRole:
+            for plane in (True, False):
+                got = sc.is_authority_edge_permitted_rc2(role, A.PRINCIPAL_KEY_ROTATE, plane, False)
+                self.assertEqual(got, role is sc.AuthorityRole.PRINCIPAL, (role, plane))
+        # No other reference action maps to the rotate edge, and rotation no longer maps to POLICY_WRITE.
+        users = {a for a in Action if sc.spec_edge(a.value)[0] is A.PRINCIPAL_KEY_ROTATE}
+        self.assertEqual(users, {Action.ROTATE_PRINCIPAL_KEY})
+        # Every V_Def role, under its own or a forged PRINCIPAL label, is denied the rotation.
+        for me, role in DEF:
+            for label in (role, "PRINCIPAL"):
+                g, _ = world()
+                before = g.plane.digest()
+                self.assertEqual(verdict(g.apply(Request(me, label, Action.ROTATE_PRINCIPAL_KEY,
+                                                         payload=("k1",)), 1)), "DENY_VIOLATION")
+                self.assertEqual(g.plane.digest(), before)
 
     def test_nobody_but_the_principal_can_delegate(self):
         g, _ = world()
