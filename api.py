@@ -25,18 +25,20 @@ _MAX_CANDIDATES = 5
 _MAX_LIST_ITEMS = 5
 _MAX_TEXT = 200
 
-# Allowlisted scalar fields copied from contradiction / category-error records.
-# No fallback: keys such as claim, self_reported, externally_observed, and
-# external_source (measurement-gate payloads) are never copied.
+# Allowlist is exactly the keys that producers put on packet.contradictions
+# and packet.category_errors (no fallback).
+# contradictions: type, resolved (gates/contradiction_repair.py). Nested
+# claim_a/claim_b/repair are omitted. ruling/law do not flow into these lists
+# (measurement-gate records live on packet.measurement_integrity).
+# category_errors: error, detail (core/pipeline.py detect_category_errors).
+# mapping is omitted: on category-error records it is the whole mapping dict;
+# on negative-isomorphism tests it is a source→target string built from input.
 _RECORD_KEYS = (
     "type",
     "resolved",
-    "ruling",
-    "law",
-    "class",
-    "error_class",
+    "error",
 )
-_RECORD_TEXT_KEYS = ("message", "reason", "description", "summary", "evidence")
+_RECORD_TEXT_KEYS = ("detail",)
 
 
 def _enum_name(value: Any) -> Optional[str]:

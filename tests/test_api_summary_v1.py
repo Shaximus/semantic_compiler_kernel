@@ -124,11 +124,12 @@ def test_cache_dir_env_override_writes_sidecar_outside_default_temp(tmp_path, mo
         _MEM_CACHE.clear()
 
 
-_MEASUREMENT_GATE_PAYLOAD_KEYS = (
+_NEVER_IN_SUMMARY_RECORD_KEYS = (
     "claim",
     "self_reported",
     "externally_observed",
     "external_source",
+    "mapping",
 )
 
 
@@ -143,9 +144,10 @@ def _assert_keys_absent(obj, forbidden: tuple[str, ...]) -> None:
 
 
 def test_summary_v1_omits_measurement_gate_record_payloads() -> None:
-    # gates/measurement.py records carry claim values and observed telemetry.
-    # Compact records must keep only allowlisted fields (ruling, law, type,
-    # resolved, class/error_class, and short text keys) — no fallback copy.
+    # Measurement-gate records (gates/measurement.py) carry claim values and
+    # observed telemetry, but they are stored on packet.measurement_integrity,
+    # not packet.contradictions / packet.category_errors. If one is present on
+    # those lists anyway, compact records must not copy the payload keys.
     packet = compile_semantic_packet("remind me to call mom at 6")
     record = {
         "claim": "gpu_utilization_percent",
@@ -154,22 +156,58 @@ def test_summary_v1_omits_measurement_gate_record_payloads() -> None:
         "external_source": "nvidia-smi",
         "ruling": "EXTERNAL_OBSERVATION_PREVAILS",
         "law": "output_over_self_report",
+        "mapping": {"source": "gpu_utilization_percent", "target": "nvidia-smi"},
     }
     packet.contradictions.append(record)
     packet.category_errors.append(dict(record))
     summary = summary_v1(packet)
-    expected = {
-        "ruling": "EXTERNAL_OBSERVATION_PREVAILS",
-        "law": "output_over_self_report",
-    }
-    assert summary["contradictions"] == [expected]
-    assert summary["category_errors"] == [expected]
-    _assert_keys_absent(summary, _MEASUREMENT_GATE_PAYLOAD_KEYS)
+    # No allowlisted keys on this record (ruling/law do not flow into these lists).
+    assert summary["contradictions"] == [{}]
+    assert summary["category_errors"] == [{}]
+    _assert_keys_absent(summary, _NEVER_IN_SUMMARY_RECORD_KEYS)
     blob = json.dumps(summary, default=str)
-    for key in _MEASUREMENT_GATE_PAYLOAD_KEYS:
+    for key in _NEVER_IN_SUMMARY_RECORD_KEYS:
         assert key not in blob
     for leaked in ("gpu_utilization_percent", "nvidia-smi"):
         assert leaked not in blob
+
+
+def test_summary_v1_keeps_category_error_and_omits_mapping() -> None:
+    # detect_category_errors (core/pipeline.py) emits error, detail, and mapping.
+    # Compile does not currently populate category_errors: map_fractal_similarity
+    # never sets source_type/target_type, so the detector's predicates never fire.
+    # Inject a record in that exact shape, including a mapping dict.
+    packet = compile_semantic_packet(
+        "Magnetism explains the Moon's orbit because opposites attract."
+    )
+    assert packet.category_errors == []
+    record = {
+        "mapping": {
+            "source": "opposites attract",
+            "target": "Moon's orbit",
+            "source_type": "symbolic",
+            "target_type": "physical",
+        },
+        "error": "SYMBOLIC_TO_PHYSICAL_CATEGORY_ERROR",
+        "detail": "Symbolic/metaphorical property applied as physical law.",
+    }
+    packet.category_errors.append(record)
+    summary = summary_v1(packet)
+    assert summary["category_errors"] == [
+        {
+            "error": "SYMBOLIC_TO_PHYSICAL_CATEGORY_ERROR",
+            "detail": "Symbolic/metaphorical property applied as physical law.",
+        }
+    ]
+    row = summary["category_errors"][0]
+    assert row != {}
+    assert row["error"] == "SYMBOLIC_TO_PHYSICAL_CATEGORY_ERROR"
+    assert "mapping" not in row
+    _assert_keys_absent(summary, _NEVER_IN_SUMMARY_RECORD_KEYS)
+    row_blob = json.dumps(row, default=str)
+    assert "opposites attract" not in row_blob
+    assert "Moon's orbit" not in row_blob
+    assert "source_type" not in row_blob
 
 # Everyday mobile prompts from the 2026-11-25 Chief of Staff merge report
 # (dogfood at 9ec2f81). Those runs returned NEEDS_REVISION with no target
