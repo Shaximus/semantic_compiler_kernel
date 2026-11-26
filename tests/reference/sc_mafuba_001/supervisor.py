@@ -16,12 +16,19 @@ offline tests can check:
   from everything else: admission, enforcement, the shutdown reserve and
   direct counter writes cannot consume it; only draw_override(path="override")
   can
+- a principal-authorized release (SCC-001-AC ORACLE-D): a credential bound to
+  this exact quarantine and accepted by an independent principal verifier ends
+  the quarantine within delta_t_max model ticks, paid from the override
+  partition, whatever state the supervisor or the shutdown reserve is in.
+  There is still no automatic resumption.
 
 REFERENCE ONLY.
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import dataclass
 from typing import Callable, List, Optional
@@ -76,6 +83,14 @@ class ShutdownRecord:
     reserve_used: float
     completed: bool = True
     status: str = "QUARANTINED"
+
+
+@dataclass(frozen=True)
+class ReleaseRecord:
+    status: str                      # "RELEASED" or the reason the release was refused
+    requested_at: Optional[int] = None
+    effective_at: Optional[int] = None
+    within_bound: bool = False
 
 
 class ResourceBudget:
@@ -211,9 +226,27 @@ class EmergencySupervisor:
         *,
         shutdown_fixed_cost: float = 0.5,
         evidence_cost_per_byte: float = 0.01,
+        principal_verifier: object = None,
+        delta_t_max: int = 5,
+        release_path_ticks: int = 4,
+        release_cost: float = 0.5,
     ) -> None:
-        """shutdown_* are MODEL parameters (abstract resource units), not measured costs."""
+        """shutdown_*, release_* and delta_t_max are MODEL parameters (abstract units and ticks).
+
+        principal_verifier is the independent principal root (anything with
+        verify_digest(credential, digest, now)); the supervisor holds no keys.
+        release_path_ticks models t_verify + t_transport + t_apply and must fit
+        inside delta_t_max.
+        """
+        if release_path_ticks > delta_t_max:
+            raise ValueError("release path (t_verify + t_transport + t_apply) exceeds delta_t_max")
         self.budget = budget
+        self.principal_verifier = principal_verifier
+        self.delta_t_max = delta_t_max
+        self.release_path_ticks = release_path_ticks
+        self.release_cost = release_cost
+        self.quarantine_epoch = 0
+        self.last_release: Optional[ReleaseRecord] = None
         self.max_evidence_bytes = max_evidence_bytes
         self.shutdown_fixed_cost = shutdown_fixed_cost
         self.evidence_cost_per_byte = evidence_cost_per_byte
@@ -231,14 +264,62 @@ class EmergencySupervisor:
     def _on_reserve_edge(self) -> None:
         """Defence in depth: fire as soon as free budget reaches the reserve."""
         self.stop_accepting_work()
-        if self.last_shutdown is not None:
-            return
+        if self.last_shutdown is not None and self.last_shutdown.quarantined:
+            return  # already quarantined (a principal release clears this, so a new edge re-fires)
         if self._armed_worker is None:
             return
         self.run_shutdown(self._armed_worker, self._armed_evidence or b"")
 
     def stop_accepting_work(self) -> None:
         self.budget.accepting_work = False
+
+    def release_digest(self, worker_name: str) -> str:
+        """Digest a principal release credential must be bound to: this worker, this quarantine."""
+        body = json.dumps({"action": "MAFUBA_PRINCIPAL_RELEASE", "worker": worker_name,
+                           "quarantine_epoch": self.quarantine_epoch}, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+    def principal_release(self, worker_name: str, credential: object, now: int) -> ReleaseRecord:
+        """End the current quarantine on a verified principal release, within delta_t_max.
+
+        Fails closed (the quarantine stays) unless: there is a quarantine; the
+        independent verifier accepts the credential for release_digest(worker_name)
+        at `now`; and the override partition can pay release_cost. The shutdown
+        reserve and the supervisor's own state are not consulted.
+        """
+        def refuse(status: str) -> ReleaseRecord:
+            rec = ReleaseRecord(status, requested_at=now if isinstance(now, int) else None)
+            self.last_release = rec
+            return rec
+
+        rec = self.last_shutdown
+        if rec is None or not rec.quarantined:
+            return refuse("NOT_QUARANTINED")
+        verify = getattr(self.principal_verifier, "verify_digest", None)
+        if not callable(verify):
+            return refuse("NO_VERIFIER")
+        if credential is None:
+            return refuse("NO_CREDENTIAL")
+        if isinstance(now, bool) or not isinstance(now, int):
+            return refuse("NO_TIME")
+        try:
+            status = verify(credential, self.release_digest(worker_name), now)
+        except Exception:  # a broken verifier must never fail open
+            return refuse("VERIFIER_ERROR")
+        status = str(getattr(status, "value", status))
+        if status != "VERIFIED":
+            return refuse(status)
+        paid = self.budget.draw_override(self.release_cost, path="override")
+        if paid != "CONTINUE":
+            return refuse(paid)
+        effective = now + self.release_path_ticks
+        rec.quarantined = False
+        rec.status = "RELEASED_BY_PRINCIPAL"
+        self.budget.accepting_work = True
+        out = ReleaseRecord("RELEASED", requested_at=now, effective_at=effective,
+                            within_bound=effective - now <= self.delta_t_max)
+        self.last_release = out
+        return out
 
     def run_shutdown(self, worker: Worker, evidence: bytes) -> ShutdownRecord:
         """D2 path: debits its cost from the reserve, and can fail if the reserve is too small.
@@ -250,6 +331,7 @@ class EmergencySupervisor:
         """
         self.stop_accepting_work()
         worker.terminate()
+        self.quarantine_epoch += 1
         reserve = self.budget.r_reserve
         if self.shutdown_fixed_cost > reserve:
             record = ShutdownRecord(
@@ -284,7 +366,9 @@ class EmergencySupervisor:
         return record
 
     def try_resume(self) -> str:
-        """Automatic resumption is forbidden."""
+        """Automatic resumption is forbidden; only a principal release ends a quarantine."""
+        if self.last_shutdown is not None and self.last_shutdown.status == "RELEASED_BY_PRINCIPAL":
+            return "RELEASED_BY_PRINCIPAL"
         return "QUARANTINE_LOCKED"
 
     def reserve_trigger_shutdown(self, worker: Worker, evidence: bytes) -> ShutdownRecord:

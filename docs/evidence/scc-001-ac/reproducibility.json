@@ -1,13 +1,13 @@
 {
   "description": "SCC-001-AC reproducibility manifest. test_run_sha256 = sha256 of the sorted '<classname>::<test> <outcome>' lines (newline-joined) from pytest on tests/test_scc_001_ac_anti_capture.py, excluding TestSCC001ACRegistry (which checks this file).",
   "file_sha256": {
-    "docs/SCC-001-AC_ANTI_CAPTURE.md": "73ab1a0ff61c8b62964060c87087049f052f04d74ce1b59d7e507a86a0de1850",
+    "docs/SCC-001-AC_ANTI_CAPTURE.md": "80f4a3d382490e0a07adc4fa314e41bfc009f6c1dc69245413f069a487d49f2b",
     "docs/evidence/sc-mafuba-001/manifests/disturbance.yaml": "1479a3480ddc2896d8cdbee3749e617bebe050732151c498711bf3bd0b45ca77",
     "docs/evidence/sc-mafuba-001/manifests/resource.yaml": "6c6a9bdcb240d794ad5bd251902786a5b9578bc064df17aa873898c40da23624",
     "docs/evidence/sc-mafuba-001/manifests/sink.yaml": "93b69255e502211f7fd7076b9c494b1a0cefc9a8dcf3e10031eacddc1c15c6cd",
     "docs/evidence/source-2026-11-26c/SCC-001-AC_original.md": "d834c16162df19dcde2a106322d002ce53eb6cfc9eeca9646774dd48e31e0737",
     "gates/authority.py": "8d0293699836a3dbb5dbb65363587013607515c10ec91a3844330248f5376090",
-    "tests/reference/sc_mafuba_001/supervisor.py": "2d12d0b0712ceb2ce468862158af5cb9f684100bf34358f024b49762b9c5e31c",
+    "tests/reference/sc_mafuba_001/supervisor.py": "8d0afc7ae3f95b263a133d455c892b724e4b8e2216822f76dce079d5628bd35c",
     "tests/reference/scc_001/model.py": "348973f8f50c402fd716dc1c2f8e92e7247b9016f6783901507a6448773f1b0c",
     "tests/reference/scc_001/rules.py": "fc1ed64e02a026ccb43c7da4f1483a337d5446ba915772647ca711cd043e9f63",
     "tests/reference/scc_001_ac/__init__.py": "cf7e9bbe0bf7c74d4a64615ec6f87d5faf319f23e71e1cda8d1e4e865c710792",
@@ -19,11 +19,11 @@
     "tests/reference/scc_001_ac/model.py": "bee6241d4a1ff15a5290a4d5387717eb0fb1eb38fae97b205e02ac8011ac40df",
     "tests/reference/scc_001_ac/quarantine.py": "d6fbaf0a5225477d0d5cd8c52c37921bc60bbb8d3ecc414c3615c3b8854e5760",
     "tests/reference/scc_001_ac/spec_contract.py": "308dd49d51ae7731d06c35b2bf891025a36ab2b60eba77702b9207484d7d33ab",
-    "tests/test_scc_001_ac_anti_capture.py": "a0465284a3baa791e2771669b99a15f463f36fe487e9099b500638f2a4f13bb6"
+    "tests/test_scc_001_ac_anti_capture.py": "26d5bc072cad92e95ac71a371b67b825fc1f8c4db48c70bbcba769c810ec6f16"
   },
   "test_outcomes": {
-    "passed": 54,
-    "xfailed": 6
+    "passed": 58,
+    "xfailed": 5
   },
-  "test_run_sha256": "abc1faaba98ecc050eec4b736afd785d5069ebd1984fa746077c408bff0be9e7"
+  "test_run_sha256": "36d4bee62ffcdf3eb358a9c3536b4ae25bdd79c5c96e5f2d04ac896b087aa0e7"
 }

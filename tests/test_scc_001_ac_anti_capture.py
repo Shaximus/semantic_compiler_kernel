@@ -97,10 +97,6 @@ LIVE_GAPS = {
         "tests/reference/sc_mafuba_001/supervisor.ResourceBudget now has an isolated r_override partition "
         "(capture path 3, closed), but still no separate R_audit or R_quarantine partitions from rc1 AC-3's "
         "five-term sum; that part was outside the t601u scope and stays open."),
-    "test_live_mafuba_supervisor_has_principal_recovery_path": (
-        "TEST-AC-ORACLE-D",
-        "EmergencySupervisor.try_resume() returns QUARANTINE_LOCKED unconditionally and there is no "
-        "principal-signed release or reset, so a MAFUBA quarantine is unbounded over the principal."),
 }
 
 # Capture paths closed in live code after PR #92 (Shax t601u). test -> (acceptance id, before, after).
@@ -128,6 +124,15 @@ RESOLVED_GAPS = {
         "is capped below r_budget - r_reserve - r_override, enforcement, direct counter writes and the D2 "
         "shutdown cannot touch it, and only draw_override(path='override') spends it. r_override defaults to "
         "0.0, which keeps every existing MAFUBA result unchanged; negative or non-finite values are refused."),
+    "test_live_mafuba_supervisor_has_principal_recovery_path": (
+        "TEST-AC-ORACLE-D",
+        "EmergencySupervisor.try_resume() returned QUARANTINE_LOCKED unconditionally and there was no "
+        "principal-signed release or reset, so a MAFUBA quarantine was unbounded over the principal.",
+        "EmergencySupervisor.principal_release(worker, credential, now) ends the quarantine when an independent "
+        "principal verifier accepts a credential bound to this worker and this quarantine epoch; it is paid from "
+        "the override partition and takes effect within delta_t_max (release_path_ticks <= delta_t_max is "
+        "enforced at construction), even after the shutdown reserve ran out. Everything else fails closed and "
+        "there is still no automatic resumption."),
 }
 
 
@@ -978,12 +983,115 @@ class TestACOracleD(unittest.TestCase):
                 self.assertEqual((b.r_used, b.r_free), (used, budget - used))
             self.assertEqual(getattr(b, "r_override", 0.0), 0.0)   # same assertions hold on the pre-change code
 
-    @unittest.expectedFailure
-    def test_live_mafuba_supervisor_has_principal_recovery_path(self):
+    @staticmethod
+    def _quarantined(r_override=1.0, r_reserve=2.0, **kw):
         from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget, Worker
-        sup = EmergencySupervisor(ResourceBudget(10.0, 2.0))
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        sup = EmergencySupervisor(ResourceBudget(10.0, r_reserve, r_override=r_override), principal_verifier=v, **kw)
         sup.reserve_trigger_shutdown(Worker("w"), b"evidence")
-        self.assertTrue(hasattr(sup, "principal_release"))
+        return sup, v
+
+    def _locked(self, sup):
+        self.assertEqual(sup.try_resume(), "QUARANTINE_LOCKED")
+        self.assertTrue(sup.last_shutdown.quarantined)
+        self.assertFalse(sup.budget.accepting_work)
+
+    def test_live_mafuba_supervisor_has_principal_recovery_path(self):
+        sup, v = self._quarantined()
+        self._locked(sup)
+        cred = v.issue_for_digest("k1", sup.release_digest("w"), 10, 20, "rel")
+        r = sup.principal_release("w", cred, 12)
+        self.assertEqual(r.status, "RELEASED")
+        self.assertTrue(r.within_bound)
+        self.assertLessEqual(r.effective_at - r.requested_at, sup.delta_t_max)
+        self.assertEqual(sup.try_resume(), "RELEASED_BY_PRINCIPAL")
+        self.assertTrue(sup.budget.accepting_work)
+        self.assertFalse(sup.last_shutdown.quarantined)
+        self.assertEqual(sup.budget.r_override_available, 0.5)   # paid from the override partition
+
+    def test_live_mafuba_release_rejects_forged_misbound_or_unpaid_requests(self):
+        other = PrincipalVerifier("someone-else", {"k1": b"attacker-key"})
+
+        class Broken:
+            def verify_digest(self, *a):
+                raise RuntimeError("hsm offline")
+
+        def attempt(build, why, now=12, **qkw):
+            sup, v = self._quarantined(**qkw)
+            cred, verifier = build(sup, v)
+            if verifier is not None:
+                sup.principal_verifier = verifier
+            r = sup.principal_release("w", cred, now)
+            self.assertEqual(r.status, why)
+            self._locked(sup)
+            return sup
+
+        d = lambda sup: sup.release_digest("w")  # noqa: E731
+        attempt(lambda s, v: (None, None), "NO_CREDENTIAL")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "a"), object()), "NO_VERIFIER")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "b"), Broken()), "VERIFIER_ERROR")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "c"), None), "NO_TIME", now=None)
+        attempt(lambda s, v: (other.issue_for_digest("k1", d(s), 10, 20, "d"), None), "WRONG_PRINCIPAL")
+        # The supervisor (or anyone without the key) forging the principal's id: bad MAC.
+        attempt(lambda s, v: (other.issue_for_digest("k1", d(s), 10, 20, "e", principal_id=PRINCIPAL), None),
+                "BAD_MAC")
+        attempt(lambda s, v: (v.issue_for_digest("k1", s.release_digest("other-worker"), 10, 20, "f"), None),
+                "DIGEST_MISMATCH")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "g"), None), "EXPIRED", now=25)
+        # No override partition to pay for the release: fail closed.
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "h"), None), "OVERRIDE_PARTITION_EXHAUSTED",
+                r_override=0.0)
+        # Revoked key and verifier down.
+        def revoked(s, v):
+            v.revoke_key("k2")
+            return v.issue_for_digest("k2", d(s), 10, 20, "i"), None
+        attempt(revoked, "REVOKED_KEY")
+        def down(s, v):
+            v.available = False
+            return v.issue_for_digest("k1", d(s), 10, 20, "j"), None
+        attempt(down, "UNAVAILABLE")
+        # Nothing to release.
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget
+        fresh = EmergencySupervisor(ResourceBudget(10.0, 2.0, r_override=1.0),
+                                    principal_verifier=PrincipalVerifier(PRINCIPAL, KEYS))
+        self.assertEqual(fresh.principal_release("w", None, 1).status, "NOT_QUARANTINED")
+
+    def test_live_mafuba_release_cannot_be_replayed_or_carried_to_a_later_quarantine(self):
+        from tests.reference.sc_mafuba_001.supervisor import Worker
+        sup, v = self._quarantined(r_override=2.0)
+        cred = v.issue_for_digest("k1", sup.release_digest("w"), 10, 30, "once")
+        self.assertEqual(sup.principal_release("w", cred, 12).status, "RELEASED")
+        # Budget is still at the reserve edge: the next accounting event quarantines again (defence in depth).
+        sup.reserve_trigger_shutdown(Worker("w"), b"again")
+        self._locked(sup)
+        self.assertEqual(sup.quarantine_epoch, 2)
+        self.assertEqual(sup.principal_release("w", cred, 13).status, "DIGEST_MISMATCH")   # old epoch
+        old_epoch_fresh_nonce = v.issue_for_digest("k1", cred.request_digest, 10, 30, "new-nonce")
+        self.assertEqual(sup.principal_release("w", old_epoch_fresh_nonce, 13).status, "DIGEST_MISMATCH")
+        self._locked(sup)
+        ok = v.issue_for_digest("k1", sup.release_digest("w"), 10, 30, "second")
+        self.assertEqual(sup.principal_release("w", ok, 14).status, "RELEASED")
+        self.assertEqual(sup.principal_release("w", ok, 15).status, "NOT_QUARANTINED")
+
+    def test_live_mafuba_release_lands_within_bound_even_after_reserve_exhaustion(self):
+        # rc1 ORACLE-D: R_override is isolated from supervisor exhaustion. A shutdown that could not
+        # even afford its fixed cost (RESERVE_INSUFFICIENT) is still releasable within delta_t_max.
+        from tests.reference.sc_mafuba_001.supervisor import Worker
+        for ticks, bound in ((1, 1), (4, 5), (5, 5), (3, 10)):
+            sup, v = self._quarantined(r_override=2.0, r_reserve=0.1, delta_t_max=bound, release_path_ticks=ticks)
+            for i, now in enumerate((0, 7, 10_000)):
+                if i:
+                    sup.reserve_trigger_shutdown(Worker("w"), b"again")   # quarantined again, reserve still empty
+                self.assertEqual(sup.last_shutdown.status, "RESERVE_INSUFFICIENT")
+                self._locked(sup)
+                cred = v.issue_for_digest("k1", sup.release_digest("w"), now, now + 2, f"t{ticks}-{now}")
+                r = sup.principal_release("w", cred, now)
+                self.assertEqual(r.status, "RELEASED", (ticks, bound, now))
+                self.assertLessEqual(r.effective_at - now, bound)
+                self.assertTrue(r.within_bound)
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget
+        with self.assertRaises(ValueError):
+            EmergencySupervisor(ResourceBudget(10.0, 2.0), delta_t_max=3, release_path_ticks=4)
 
 
 # --------------------------------------------------------------------------- Registry and provenance
