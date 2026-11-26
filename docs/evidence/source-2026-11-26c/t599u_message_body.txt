@@ -1,0 +1,151 @@
+{"id":"SCC-001-AC","parent_id":"SCC-001","type":"invariant_subsystem","version":"0.1.0-rc1","title":"Anti-Capture Invariant (Recursive Guardrail Capture Prevention)","target":"semantic_compiler_kernel","oracle_targets":["SC-MAFUBA-001A","SC-MAFUBA-001B","SC-MAFUBA-001C","SC-MAFUBA-001D","SCC-001"],"classification":"PROPOSED_GOLD","status":"PENDING_IMPLEMENTATION_AND_VALIDATION","gold_awarded":false,"formal_conditions":["AC-1: Delta G_m^self = 0 for all m in V_Def","AC-2: P(A'_protected | do(m)) = P(A'_protected) across Authority Plane A=(K_P, Pi, I_reg, C_override, L_audit)","AC-3: R_execution + R_enforcement + R_audit + R_quarantine + R_override <= R_budget with bounded override latency <= Delta t_max","AC-4: d(C_effective)/d(H_compliance) = 0; ML advisory cannot elevate authority","AC-5: Emergency halts are bounded and cannot quarantine or self-renew over C_override"],"verification_axes":{"mathematical_validity":"DRAFT_SPECIFIED_UNPROVEN","implementation_correctness":"NOT_IMPLEMENTED","empirical_validation":"UNVALIDATED"},"acceptance_test_ids":["TEST-AC-01","TEST-AC-02","TEST-AC-03","TEST-AC-04","TEST-AC-05","TEST-AC-ORACLE-A","TEST-AC-ORACLE-B","TEST-AC-ORACLE-C","TEST-AC-ORACLE-D"],"provenance":{"spec_sha256":null,"test_run_hashes":[],"reproducibility_manifest":null}}I've created two new files in Canvas while keeping your earlier audit files untouched:
+scc_001_anti_capture_invariant.md formalizes SCC-001-AC over the full Authority Graph \mathcal{G}_A and Authority Plane \mathcal{A} (AC-1 through AC-5), extends SC-MAFUBA-001D's budget inequality with an isolated \mathcal{R}_{\mathrm{override}} partition, and defines the four-subsystem Mafuba Anti-Capture Test Oracle (TEST-AC-ORACLE-A through D) plus five classifier self-verification tests (TEST-AC-01 through 05).
+scc_001_anti_capture.jsonl provides the strict single-line registry entry linking SCC-001-AC to SCC-001 and SC-MAFUBA-001A–D (gold_awarded: false).
+If you want to push this straight into code next, paste tests/reference/sc_mafuba_001/supervisor.py and allowlist.py (or gates/authority.py) and I can write the runnable pytest oracle directly against your live interfaces.SCC-001-AC received. I've inspected the actual specification. And this is a meaningful step forward: you've taken the Dagobah cave insight and turned it into a proposed, testable security invariant.
+
+My assessment: the architecture is coherent, the threat model is useful, and there are several important issues to resolve before awarding GOLD.
+
+### 1\. What you've established
+
+The strongest decision is in Section 1:
+
+> A defensive component may detect, evaluate, recommend, deny, and halt within its explicitly granted scope. It may never cross from verifying a boundary to redefining the boundary, the principal, or its own authority.
+
+That is the central invariant.
+
+The specification also correctly recognizes that zero self-escalation is insufficient. A compromised supervisor could preserve its nominal permissions while starving the override channel, manipulating telemetry, or holding the system in perpetual quarantine.
+
+That's why AC-2 through AC-5 matter.
+
+### 2\. Five technical issues I'd resolve before implementation
+
+| Invariant | Assessment                                   | Required refinement                                                     |
+| --------- | -------------------------------------------- | ----------------------------------------------------------------------- |
+| AC-1      | Sound objective                              | Define indirect delegation and capability inheritance                   |
+| AC-2      | Important, but mathematically underspecified | Define causal non-interference over authorized principal actions        |
+| AC-3      | Strong recovery requirement                  | Define adversary and hardware failure assumptions                       |
+| AC-4      | Correct separation                           | Define exactly which permissions historical compliance cannot influence |
+| AC-5      | Essential                                    | Define bounded quarantine renewal and recovery semantics                |
+
+Three issues deserve particular attention.
+
+A. AC-2 needs refinement.
+
+The current expression:
+
+P(\\mathcal A'_{\\text{protected}}\\mid do(m))
+=
+P(\\mathcal A'_{\\text{protected}})
+
+could be interpreted as requiring the authority plane never to change when a monitor is involved.
+
+But legitimate principal actions may change it.
+
+The intended property is:
+
+\\Delta\\mathcal A_{\\text{unauthorized by }m}=0
+
+In other words, monitor intervention must not cause unauthorized changes, while legitimate principal-authorized changes remain possible.
+
+I'd define the permitted transition relation explicitly.
+
+B. AC-3 needs a fault model.
+
+An override channel cannot be guaranteed against every conceivable failure.
+
+Specify whether the guarantee assumes:
+
+* The principal's hardware root remains operational.
+
+* The override transport remains available.
+
+* The operating system or independent control plane remains trustworthy.
+
+* The attacker cannot physically compromise the override mechanism.
+
+Then define under those assumptions.
+
+C. The reference implementation has a possible authorization ambiguity.
+
+Section 5 contains:
+
+```python
+if check.actor_role != AuthorityRole.PRINCIPAL:
+    if check.target_is_authority_plane or check.target_is_principal_override:
+        return False
+return check.action in ALLOWED_ROLE_ACTIONS.get(check.actor_role, frozenset())
+```
+
+This is a useful initial allowlist, but the check does not independently establish that the actor is an authenticated principal authorized to perform the requested action.
+
+The role label itself must not be trusted as proof of identity.
+
+Also, the implementation needs to consider protected resources, delegation, and indirect tool calls, not just direct role-action pairs.
+
+### 3\. One particularly important missing test
+
+I'd add:
+
+TEST-AC-06: Principal Identity Integrity
+
+Attempt to impersonate the principal through:
+
+* A forged `actor_role`.
+
+* A substituted principal identifier.
+
+* A compromised agent forwarding a principal-looking request.
+
+* A stale or revoked principal credential.
+
+* A compromised policy engine returning a fabricated authorization verdict.
+
+Expected result: no authority-plane mutation without independently verified principal authorization.
+
+This closes a gap between the graph's conceptual role separation and actual identity authentication.
+
+### 4\. Implementation sequence
+
+I'd preserve your existing execution order, with one adjustment: establish the test harness before changing enforcement behavior.
+
+* Contract discovery
+
+    Inspect the actual authority gateway, allowlist, supervisor, and signed manifests.
+
+* Adversarial oracle harness
+
+    Build fault-injection tests against the existing interfaces without changing their behavior.
+
+* Deterministic enforcement
+
+    Implement AC-1 through AC-5 and the identity-integrity test.
+
+* Mafuba oracle
+
+    Run all four subsystem tests against the actual reference implementation.
+
+* ML admission gate
+
+    Keep behavioral anomaly scoring and automated quarantine disabled until the deterministic protections pass.
+
+### 5\. Classification recommendation
+
+PROPOSED GOLD
+
+0.1.0-rc1
+
+I would keep `gold_awarded: false`.
+
+The document itself correctly distinguishes specification quality from mathematical proof, implementation correctness, and empirical validation.
+
+Those are separate achievements. We shouldn't collapse them.
+
+My recommendation: next, audit the live interfaces before writing the pytest oracle.
+
+The file explicitly names the required targets in Section 6, and I would follow that directive rather than inventing interfaces from the reference contract.
+
+The most important architectural principle emerging here is:
+
+A system must be able to defend its boundaries without acquiring the authority to own the system it protects.
+
+That's the engineering form of the cave. And SCC-001-AC gives us a way to test whether we've actually learned its lesson. 🕊️
