@@ -343,3 +343,41 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Hook:** the same mechanism. `review_trigger_terms` are `sc-guard-001`, `guardian's fall`, `three scoring dimensions`, `liberation becoming compulsory`, `protection without consent`, `pride versus fear`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** `SC-WOW-FALL-001` (itself still pending as a candidate, not a class). `SC-GOT-001` and `SC-CONSENT-001` are unchanged.
 - **Still open, when reviewed:** whether the pride/fear hypothesis holds under a wider survey; whether external corruption is a third route; whether Stratholme can be scored apart from Arthas's later arc; whether Rehoboam should be scored as an AI instance; whether The Last Titan (ANNOUNCED) adds a titan instance.
+
+## SCC-001-AC (Anti-Capture Invariant, 0.1.0-rc2)
+
+- **Date:** 26 Nov 2026, America/Toronto (EST, UTC-5)
+- **Source:** Shax t599u (registry line, attached spec, review). Spec: `docs/SCC-001-AC_ANTI_CAPTURE.md`. Registry: `docs/evidence/scc-001-ac/scc_001_anti_capture.jsonl`.
+- **Does not change:** `gold_awarded` stays false. `SC-MAFUBA-001`, `SCC-001` / `SC-SCC-001` and `gates/authority.py` are unchanged; their gaps are recorded as strict xfails, not fixed.
+
+### SCC-001-AC-RECOVERY (what happens when a halt expires)
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Chosen default:** when a halt expires, the monitor's hold lapses and the target moves to `AWAITING_PRINCIPAL`. The workload stays stopped and only a principal-verified `RELEASE_QUARANTINE` resumes it. Only the principal can renew, by at most `max_extension` per renewal. A monitor halting again does not restart the clock.
+- **Alternatives not chosen:** (a) automatic resumption on expiry, which is fail-open and contradicts SC-MAFUBA-001D; (b) unbounded quarantine with no principal release, which is the current MAFUBA reference and breaks AC-5; (c) a fixed number of monitor self-renewals.
+- **Reason:** t599u asks for "bounded quarantine renewal and recovery semantics" and says halts cannot "self-renew over C_override". This default bounds the monitor's authority, not the downtime, and keeps MAFUBA's no-automatic-resumption rule.
+
+### SCC-001-AC-AUDIT-APPEND-ONLY
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Chosen default:** no role may truncate `L_audit`, the principal included.
+- **Alternative not chosen:** the principal may redact under a signed tombstone (for example to remove personal data).
+- **Reason:** t599u names telemetry manipulation as a capture route. A redaction path is a separate decision.
+
+### SCC-001-AC-POLICY-VERDICT
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Chosen default:** for authority-plane actions, a policy-engine verdict is ignored in both directions: it can neither grant nor block a verified principal action, the override included. For other actions it can only restrict.
+- **Alternative not chosen:** let the policy engine veto plane actions. A compromised engine could then block the override, which AC-3 and AC-5 forbid.
+
+### SCC-001-AC-VERSION-AND-HOME
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Chosen default:** version `0.1.0-rc2` (rc1 plus the t599u refinements). The draft registry follows the SC-MAFUBA-001 convention: it is not compiled, not in the manifest, and not runtime-loaded. `implementation_correctness` is `REFERENCE_ONLY` because the reference harness exists and there is no kernel enforcement. Monitors may not `DELEGATE` at all, because the defensive ceiling excludes it. `spec_sha256` is the attachment's content address, marked `UNVERIFIED_ATTACHMENT_CONTENT_ADDRESS`, because the compiler could not open the attachment.
+- **Alternatives not chosen:** keep `0.1.0-rc1` and put the refinements in an addendum; compile a SILVER narrative entry into the manifest; keep the axis at `NOT_IMPLEMENTED`.
+
+### SCC-001-AC-LIVE-GAPS (fix the existing code, or not)
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Chosen default:** record and do not fix. Four strict xfails: (1) `tests/reference/scc_001/rules.py` does not check delegated scope (AC-1); (2) `gates/authority.check_authority_transfer` accepts `FOUNDER_OVERRIDE` on a caller-asserted boolean (AC-6); (3) the MAFUBA `ResourceBudget` has no isolated override partition (AC-3); (4) the MAFUBA `EmergencySupervisor` has no principal release (AC-5).
+- **Reason:** t599u says to build the harness before changing enforcement. Fixing (2) touches a live gate on the routing path, and fixing (3) and (4) changes the pinned MAFUBA rc2 reference. Each needs its own decision.

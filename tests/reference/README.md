@@ -17,3 +17,14 @@ counterfactual replay and an aggregator, standard library only, plus 50
 It is not packaged, not imported by `core/` or `expansion/`, not an enforcement
 gateway, and not evidence that SCC-001 works on real systems. See
 `docs/SCC-001.md`.
+
+`tests/reference/scc_001_ac/` contains the SCC-001-AC (Anti-Capture Invariant)
+reference used by `tests/test_scc_001_ac_anti_capture.py`: an Authority Plane
+model, an independent HMAC principal verifier, an authority gateway (a role
+label is never proof of identity), a five-partition budget with an isolated
+override partition, and a bounded quarantine controller. Standard library
+only. The repository had no `AuthorityRole`, `ALLOWED_ROLE_ACTIONS`, Authority
+Plane or credential verifier, so these are modelled here for the harness only.
+ML anomaly scoring and auto-quarantine are disabled (`flags.py`). It is not
+kernel enforcement and does not change `implementation_correctness` for the
+kernel. See `docs/SCC-001-AC_ANTI_CAPTURE.md`.

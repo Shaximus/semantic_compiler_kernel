@@ -76,6 +76,8 @@ EXTERNAL_UPSTREAM_IDS = {
     "SC-MAFUBA-001B",
     "SC-MAFUBA-001C",
     "SC-MAFUBA-001D",
+    # 2026-11-26 draft (markdown + draft JSONL, not compiled, not runtime-loaded):
+    "SCC-001-AC",       # docs/SCC-001-AC_ANTI_CAPTURE.md (0.1.0-rc2, PROPOSED_GOLD, gold not awarded)
 }
 
 
