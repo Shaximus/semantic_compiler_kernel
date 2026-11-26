@@ -69,3 +69,45 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Reason:** names are evidence of the designers' borrowing, not of a shared structure. A hard zero keeps theme from inflating grades.
 - **Hook:** none (grading rubric only; `docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md`).
 - **Still open, when reviewed:** whether a borrowed name should count as weak supporting evidence when the mechanic already matches.
+## SCC-001 first operating domain
+
+- **ID:** `SCC-001-FIRST-DOMAIN`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026
+- **Ruling used:** Shax t582u — pick something and flag it for review when the edge case is triggered.
+- **Question:** which domain does SCC-001 (Symbiotic Consent Classifier) serve first? The t588u analysis offered three options; Shax did not choose.
+- **Chosen default:** AI agents, tools and software integrations. Ground truth (grants, scopes, revocations, trusted execution logs) is measurable there.
+- **Alternatives not chosen:** (a) human consent and digital interaction; (b) a general architecture covering both.
+- **Hook:** `SC-SCC-001` carries `pending_deliberation: true`; naming it (or a strong top match with two of `sc-scc-001`, `symbiotic consent classifier`, `human consent`, `first domain`, `decision mode`; the terms do not overlap, so one phrase cannot count twice) raises `needs_review` through `expansion/deliberation.py`.
+- **Edge case that should trigger review:** any proposal to apply SCC-001 to people (human consent).
+- **Dogfood:** the flag fired on "Explain SC-SCC-001." and did not fire on "Please give your consent before the appointment.", "The app asks for authorization to access your camera.", "Train a classifier on the spam dataset." or "Explain SC-CONSENT-001."
+- **Spec:** `docs/SCC-001.md` section 7.
+
+## SCC-001 decision mode
+
+- **ID:** `SCC-001-DECISION-MODE`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026
+- **Ruling used:** Shax t582u.
+- **Question:** how does SCC-001 decide? Options from t588u: deterministic rules first with ML advisory; hybrid rules + ML, independently auditable; research model first.
+- **Chosen default:** hybrid rules + ML, independently auditable — the deterministic rule engine is authoritative, ML is advisory and can only restrict, and every decision carries reason codes, the consent vector and the advisory contributions.
+- **Alternatives not chosen:** (a) rules only now, ML later; (b) research model first, implementation later.
+- **Hook:** same entry and triggers as `SCC-001-FIRST-DOMAIN`.
+- **Edge case that should trigger review:** any proposal to let an ML score gate execution, or to treat either default as settled.
+- **Spec:** `docs/SCC-001.md` sections 4 and 7. Reference: `tests/reference/scc_001/` (not runtime-loaded).
+
+## SC-TRIAD-001 — proposed resolution via SC-CONSENT-001 (not closed)
+
+- **Relates to:** `SC-TRIAD-001` (section above, unchanged). That entry stays `PROVISIONAL_DEFAULT` with `pending_deliberation: true`.
+- **Status of this note:** `PROPOSED_RESOLUTION`. Closing requires an explicit edit after Shax deliberates.
+- **Date:** 25 Nov 2026
+- **Source:** Shax t588u — "The whole fight wasn't even just sovereignty. It was consent. Freedom to choose integration rather than being trafficked as hosts."
+- **Question evaluated:** is the triad's outside owner defined by the absence of consent?
+- **Proposed answer:** yes, with the four conditions of the Consent Invariant (voluntary entry, informed agreement, preserved agency, freedom to withdraw or renegotiate). The outside owner is any party that exercises authority over a host without them. It fits the Goa'uld, Amon, the Ori (conversion under threat), the Aschen (concealed terms) and Jaffa dependence. It repairs `SC-TRIAD-SG-001`'s recorded break "consent is necessary but not sufficient", because Majin Vegeta's assent failed the preserved-agency condition.
+- **What it would settle:** open question (1), by splitting it across two axes. On the authority axis (RUL-BINARY-001), t568u's "God/Satan" can stand as a binary instance. On the consent axis, t570u's "Satan = outside owner" holds. The two readings stop conflicting.
+- **What it does not settle:** open question (2). Consent looks like a second invariant (a legitimacy axis), which leans toward "binary + consent axis" rather than "binary + outside owner"; that is Shax's call.
+- **New tension it raises:** RUL-BINARY-001 rev 2 says refusal is self-destruction; condition 4 says withdrawal must be free of retaliation. The compiler reads rev 2 as outcome structure, not a licensed penalty. Shax to rule.
+- **Where it over-extends:** predators and consumers (Wraith, Replicators) take hosts or resources without any integration relationship; consent does not describe them.
+- **Entries:** `SC-CONSENT-001` (claim CLM-CON-005), `docs/CONSENT_INVARIANT_2026-11-25j.md` section 3.

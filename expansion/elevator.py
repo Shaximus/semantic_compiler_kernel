@@ -355,6 +355,11 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-SCA-DISC-001": "capability_isolation",
     "SC-SCA-CONT-001": "capability_isolation",
     "SC-SCA-CONS-001": "capability_isolation",
+    # 2026-11-25j Consent Invariant and SCC-001 (Shax t588u). SC-CONSENT-001 sits with the
+    # triad; SC-SCC-001 (authorization scope for agent integrations) with capability_isolation.
+    # Both explicit-only: "consent", "authorization", "grant", "classifier" are everyday words.
+    "SC-CONSENT-001": "soul_bomb_sovereignty",
+    "SC-SCC-001": "capability_isolation",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -385,6 +390,9 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-SCA-DISC-001",
     "SC-SCA-CONT-001",
     "SC-SCA-CONS-001",
+    # 2026-11-25j consent: only an explicit ID routes these entries.
+    "SC-CONSENT-001",
+    "SC-SCC-001",
 })
 
 

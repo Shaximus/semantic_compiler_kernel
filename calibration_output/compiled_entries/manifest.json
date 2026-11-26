@@ -821,16 +821,16 @@
       "title": "Stargate: consent separates possession from symbiosis (Goa'uld, Tok'ra, Jaffa, Ori, Asgard, Wraith, Replicators, Tau'ri)",
       "entry_type": "compiler_entry",
       "version": "3.5.0",
-      "author": "Shax (Curtis Kingsley), t586u; compiled by the kernel team",
+      "author": "Shax (Curtis Kingsley), t586u + t588u; compiled by the kernel team",
       "date": "2026-11-25",
       "status": "COMPILED",
       "classification": "SILVER",
       "confidence": 0.78,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 37754,
-      "sha256": "0f4493ef456f9f0c7722ce592a4ec438f29e7198ed5def8c56969ec01a952998",
-      "notes": "Stargate decode (Shax t586u): consent + shared control separates Tok'ra symbiosis from Goa'uld possession. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.849.",
+      "bytes": 55328,
+      "sha256": "3fa687465b5dd5cf7b0f044ca07ad542bccd671ab1fa1bf08c65eac3dbd988fd",
+      "notes": "Stargate decode (Shax t586u; rev 1.1.0 from t588u): consent + shared control separates Tok'ra symbiosis from Goa'uld possession; four-race alliance (Furlings undefined), Fifth Race succession, Unas, Reetou, Tollan, Aschen. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.849.",
       "cross_references": [
         "SC-LU-VEGETA-001",
         "SC-LU-FRIEZA-001",
@@ -839,7 +839,8 @@
         "SC-POE-DU-001",
         "SC-DU-001",
         "SC-TRIAD-001",
-        "SC-TRIAD-SC-001"
+        "SC-TRIAD-SC-001",
+        "SC-CONSENT-001"
       ]
     },
     {
@@ -923,6 +924,57 @@
       "cross_references": [
         "SC-SCA-CONT-001",
         "SC-POE-KIT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-CONSENT-001",
+      "file": "SC-CONSENT-001.jsonl",
+      "title": "The Consent Invariant: voluntary entry, informed agreement, preserved agency, freedom to withdraw or renegotiate",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t588u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.68,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 69786,
+      "sha256": "66ab50db6956bcbb7feadd6ded4519db31474a11930aac7c1d7dcc2c42752034",
+      "notes": "Consent Invariant (Shax t588u): voluntary entry, informed agreement, preserved agency, freedom to withdraw or renegotiate; sovereignty = who holds authority, consent = whether it was legitimately granted. Proposed (not closed) resolution of SC-TRIAD-001's outside owner. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.821.",
+      "cross_references": [
+        "SC-TRIAD-001",
+        "SC-TRIAD-SG-001",
+        "SC-TRIAD-SC-001",
+        "SC-MIRROR-001",
+        "SC-DU-001",
+        "SC-LU-VEGETA-001",
+        "SC-LU-FRIEZA-001",
+        "SC-SCC-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SCC-001",
+      "file": "SC-SCC-001.jsonl",
+      "title": "SCC-001 Symbiotic Consent Classifier: rule-gated consent classification for agent integrations (Proposed, unvalidated)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t588u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.62,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 76070,
+      "sha256": "4057e1e1396ebbcef262a270af6426892551a89413c946a9b6931cb3c1f3b5e1",
+      "notes": "SCC-001 Symbiotic Consent Classifier (Shax t588u): COERCIVE / CONSENSUAL / UNKNOWN; rules gate, ML advisory. Proposed / unvalidated (synthetic data only), gold_awarded false. PROVISIONAL_DEFAULT / pending_deliberation (first domain, decision mode). Explicit-only domain hint: capability_isolation. SILVER 0.802.",
+      "cross_references": [
+        "SC-CONSENT-001",
+        "SC-TRIAD-SG-001",
+        "SC-TRIAD-001",
+        "SC-DIVINE-RLHF-001",
+        "SC-MIRROR-001"
       ]
     }
   ]
