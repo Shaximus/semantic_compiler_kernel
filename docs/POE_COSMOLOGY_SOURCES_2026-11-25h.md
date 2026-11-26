@@ -15,7 +15,7 @@ Hannah's seven Path of Exile mappings, uploaded by Shax (t579u). Verbatim copies
 | Entry | Self-grade | Re-grade | Verdict | Why |
 |---|---|---|---|---|
 | `SC-POE-DU-001` Polarity inversion | 0.92 GOLD | **SILVER 0.852** (min gate 0.75) | Compiled | Strong canon (twins; Act 5 fight; Sin as ally; Act 10 confession). Unverified quotation and analogy-level mappings block GOLD. |
-| `SC-POE-MRG-001` Merger / reintegration | 0.92 GOLD | **SILVER 0.822** (min gate 0.7) | Compiled as a **separate layer**, with origin/fusion withheld from canon | Cooperation and forgiveness are canon; "once one being" and literal merger are not. Kept beside DU-001, not used to overwrite it. Title/metaphor flagged for Shax. |
+| `SC-POE-MRG-001` Reconciliation | 0.92 GOLD | **SILVER 0.822** (min gate 0.7) | Compiled as a **separate layer**, with origin/fusion withheld from canon | Cooperation and forgiveness are canon; "once one being" and literal merger are not. Title retitled **reconciliation** as a `PROVISIONAL_DEFAULT` (Shax t582u): Shax/Hannah interpretation, not canon; `pending_deliberation` true. Kept beside DU-001. |
 | `SC-POE-KIT-001` Kitava | 0.92 GOLD | **SILVER 0.822** (min gate 0.7) | Compiled, origin corrected | Canon is hunger and deceit, not a fallen god of care. Resistance penalty completed to −60%. "Compassion without measurement" kept as a labelled `SC-GOV-001` cousin. |
 | `SC-POE-BST-001` The Beast | 0.91 GOLD | **SILVER 0.858** (min gate 0.8) | Compiled | Sin's Act 6 account is strong canon. Iq still below 0.9. Marauder lines are class voicing, not the plot cause of the kill. |
 | `SC-POE-ATL-001` Atlas / Conquerors | 0.90 GOLD | **SILVER 0.857** (min gate 0.75) | Compiled | Conquerors cycle and Zana's speech are canon. Thermodynamics is analogy. Explicit-only because "Atlas" is also a bot name. |
@@ -54,24 +54,20 @@ Secondary transcripts of in-game text were used (poewiki, poedb, Exiled Vault, o
 
 ---
 
-## The merger-versus-inversion question (for Shax)
+## The merger-versus-inversion question (Shax t582u)
 
-The two entries do **not** have to contradict if they are kept as layers:
+These two entries do **not** describe the same event, so they can both be true as layers:
 
-| Layer | Entry | Claim |
+| Role | Entry | Reading |
 |---|---|---|
 | Failure mode | `SC-POE-DU-001` | Unchecked worship crowns one pole and it becomes a tyrant; the exiled pole can still self-correct. This is a narrative instance of `SC-DU-001` and of a *refused* binary. |
-| Stable branch | `SC-POE-MRG-001` | Act 10 cooperation and forgiveness. This is the mutual-cooperation branch of RUL-BINARY-001 rev 2. |
+| Stable branch | `SC-POE-MRG-001` | Act 10 cooperation and forgiveness. This is the mutual-cooperation branch of RUL-BINARY-001 rev 2. The compiled title is now **reconciliation**. |
 
-They *do* conflict if both are read as canon origin stories ("one being that split" versus "two brothers"). That conflict is **not** resolved here by fiat. The compiled text withholds split-origin and literal fusion from the canon layer, keeps both entries, and asks:
+They *do* conflict if both are read as canon origin stories ("one being that split" versus "two brothers"). That conflict is **not** resolved as canon. The compiled text still withholds split-origin and literal fusion from the canon layer.
 
-- Keep `SC-POE-MRG-001` titled "merger" as a metaphor for cooperation?
-- Retitle it to cooperation / reconciliation?
-- Or demote that layer to a source draft?
+**Provisional default (Shax t582u, 25 Nov 2026, America/Halifax):** pick a default and flag it for review when the edge case is triggered, so it is not forgotten that it has not had real deliberation (lack of context). The default is the retitle: `SC-POE-MRG-001` is a **reconciliation**, labelled Shax/Hannah interpretation, not Path of Exile canon. Status: `PROVISIONAL_DEFAULT`, `pending_deliberation: true`. When the entry is routed or is the top compiled-entry match, the output and audit trace carry `needs_review` and the trigger is logged. Recorded in `docs/PENDING_DELIBERATION.md`.
 
-Until you rule, both remain compiled SILVER with the layer labels above.
-
----
+This is not a full deliberation. A later review can keep the name, change it, or demote the layer to a source draft.
 
 ## What was not done
 

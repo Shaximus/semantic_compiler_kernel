@@ -173,6 +173,10 @@ class SemanticPacket:
     compilation_end: Optional[str] = None
     compiler_errors: list[str] = field(default_factory=list)
     compiler_warnings: list[str] = field(default_factory=list)
+    # Visible when a compiled entry marked pending_deliberation is routed or
+    # is the top compiled-entry match (PROVISIONAL_DEFAULT review hook).
+    needs_review: bool = False
+    needs_review_entries: list[dict[str, Any]] = field(default_factory=list)
 
     def compute_input_hash(self) -> str:
         """Compute SHA-256 hash of the raw input for provenance."""

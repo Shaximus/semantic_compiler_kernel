@@ -1309,6 +1309,14 @@ def compile_semantic_packet(
         packet, input_text,
         explicit_mode=normalize_requested_mode(mode) != CompilerMode.AUTO,
     )
+    try:
+        from semantic_compiler.expansion.deliberation import apply_to_packet
+
+        apply_to_packet(packet, input_text)
+    except Exception as exc:  # noqa: BLE001 — review hook must never break compile
+        packet.compiler_warnings.append(
+            f"PENDING_DELIBERATION_HOOK_UNAVAILABLE: {type(exc).__name__}"
+        )
     packet.semantic_ir = build_semantic_ir(packet)
 
     # Security risk scan runs before Stage 3 early-exit so raw credential/secret

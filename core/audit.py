@@ -46,6 +46,8 @@ def build_audit_record(packet: Any) -> dict[str, Any]:
         "routes": packet.route_to,
         "compiler_errors": list(packet.compiler_errors),
         "compiler_warnings": list(packet.compiler_warnings),
+        "needs_review": bool(getattr(packet, "needs_review", False)),
+        "needs_review_entries": list(getattr(packet, "needs_review_entries", []) or []),
         "privacy_sensitivity": packet.privacy_sensitivity.name,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "immutable": True,
