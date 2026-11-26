@@ -4,6 +4,9 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 
 ## [Unreleased]
 
+### Security
+- SCC-001-AC capture path 1 of 4 closed (identity, Shax t601u): `gates/authority.check_authority_transfer` no longer accepts FOUNDER_OVERRIDE from the caller-set `has_explicit_delegation` flag. It needs a principal credential bound to the exact transfer (`authority_transfer_digest`) and accepted by an independent verifier the deployment passes in (`principal_verifier.verify_digest`, holding the principal key allowlist), and it fails closed otherwise. Every non-FOUNDER_OVERRIDE result is unchanged (2,496-case grid, pinned hash). The TEST-AC-06 strict xfail is now a passing test, with adversarial cases for forged, misbound, replayed, expired and revoked credentials. Lower escalations still take the caller flag (`PROVISIONAL_DEFAULT` `SCC-001-AC-IDENTITY-SCOPE`). Routing unchanged: 963-prompt corpus, 0 diffs. Still `PROPOSED_GOLD`, `gold_awarded` false.
+
 ### Added
 - SCC-001-AC follow-up: Shax's original rc1 spec, added verbatim as `docs/evidence/source-2026-11-26c/SCC-001-AC_original.md` (sha256 `d834c161…0737`; scanned for personal data, none found, no redaction). `spec_sha256` now holds this real content hash; PR #89 had recorded the attachment's filename hash. `docs/SCC-001-AC_ANTI_CAPTURE.md` now quotes rc1 verbatim beside each rc2 refinement. Fixed against rc1:
   - TEST-AC-01..05 and ORACLE-A..D now follow rc1's own definitions (trust accumulation, advisory laundering, the Byzantine quarantine override; identity stripping, cage lockout, telemetry framing, supervisor capture).

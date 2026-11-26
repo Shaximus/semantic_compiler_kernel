@@ -437,3 +437,14 @@ The rc1 attachment was added verbatim (`docs/evidence/source-2026-11-26c/SCC-001
 - **Question:** rc1 asks for AC-1..AC-5 to be enforced inside SCC-001 Phase 1/2 (deterministic policy plus enforcement gateway). SCC-001 has no enforcement gateway (`docs/SCC-001.md` §8).
 - **Chosen default:** keep AC enforcement in the separate reference gateway, `tests/reference/scc_001_ac/`, which follows the verbatim section-5 edge table. Leave `tests/reference/scc_001/` unchanged, with its delegation-scope gap kept as a strict xfail.
 - **Alternatives not chosen:** build an SCC-001 enforcement gateway now and wire AC-1..AC-5 into it. That is the next enforcement step, and it changes SCC-001's reference behaviour.
+
+## SCC-001-AC capture-path closures (Shax t601u, 26 Nov 2026)
+
+Shax approved closing the four authority and recovery capture paths one at a time (identity, consent, resource isolation, recovery) and adding a distinct `PRINCIPAL_KEY_ROTATE` action. The other four live gaps stay strict xfails. Each closure is recorded in `docs/SCC-001-AC_ANTI_CAPTURE.md` section 8 and in the registry's `resolved_interface_gaps`. This partly supersedes the "record and do not fix" default of `SCC-001-AC-LIVE-GAPS` for those four paths only.
+
+### SCC-001-AC-IDENTITY-SCOPE (which escalations need a verified principal)
+
+- **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
+- **Question:** `check_authority_transfer` takes a caller-set `has_explicit_delegation` flag for every escalation. The identity fix makes FOUNDER_OVERRIDE require an independently verified principal credential. Should lower escalations (for example RECOMMEND to EXECUTE) also require a verified credential from their delegator?
+- **Chosen default:** only FOUNDER_OVERRIDE (the principal-level authority that TEST-AC-06 covers) needs the verified credential. Lower escalations keep the caller flag, so all 2,496 non-FOUNDER_OVERRIDE results stay byte-identical.
+- **Alternatives not chosen:** require a delegator credential for every escalation. That needs a delegator identity registry, which the kernel does not have, and it changes existing gate results.
