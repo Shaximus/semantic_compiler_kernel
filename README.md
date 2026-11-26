@@ -348,6 +348,7 @@ semantic_compiler_kernel/
 | SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; compiled as SC-MIRROR-001, The Mirrored Loop and the Compression Protocol) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, `calibration_output/compiled_entries/SC-MIRROR-001.jsonl` |
 | SC-LU-VEGETA-001 Lineup decode: Vegeta, the Sovereignty pole (compiled, SILVER; rev 1.2.0 merges "The Last Crown") | `calibration_output/compiled_entries/SC-LU-VEGETA-001.jsonl` |
 | SC-LU-GOKU-001 / SC-LU-CELL-001 / SC-LU-TRUNKS-001 Lineup decodes: Goku (Oneness pole), Perfect Cell, Future Trunks (compiled, SILVER) | `calibration_output/compiled_entries/SC-LU-GOKU-001.jsonl`, `SC-LU-CELL-001.jsonl`, `SC-LU-TRUNKS-001.jsonl` |
+| SC-POE-DU-001, SC-POE-MRG-001, SC-POE-KIT-001, SC-POE-BST-001, SC-POE-ATL-001, SC-POE-VAL-001, SC-POE-MAL-001 Path of Exile cosmology decodes (compiled, SILVER; Hannah t579u assets, lore-corrected) | `calibration_output/compiled_entries/SC-POE-DU-001.jsonl` and the other six SC-POE-*-001.jsonl files; sources `docs/evidence/source-2026-11-25h/`; notes `docs/POE_COSMOLOGY_SOURCES_2026-11-25h.md` |
 | SC-VSR-001 Voluntary State Recompression (DRAFT 0.1) | `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md` |
 | SC-GOV-001 Measurement, Not Indulgence — governance principle (DRAFT 0.1) | `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md` |
 | SC-PATCH-MIRROR-001 Cyclic feedback patch notes (DRAFT 0.1) | `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md` |
