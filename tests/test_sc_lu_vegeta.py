@@ -150,7 +150,7 @@ class VegetaCrossReferenceTests(unittest.TestCase):
 
     def test_vessel_draft_records_resolution_rule(self) -> None:
         doc = (REPO_ROOT / "docs" / "SC-VESSEL-001_VESSEL_EQUILIBRIUM.md").read_text(encoding="utf-8")
-        self.assertIn("DRAFT 0.4", doc)
+        self.assertIn("DRAFT 0.5", doc)  # 2026-11-25k revision bump
         self.assertIn("The Almighty wins", doc)
         self.assertIn("calibration dot", doc)
         self.assertIn("RUL-BINARY-001", doc)

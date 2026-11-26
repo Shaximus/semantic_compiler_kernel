@@ -5,6 +5,18 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ## [Unreleased]
 
 ### Added
+- Vessel equilibrium extensions (Shax t589u, t590u, t592u): three compiled entries, all SILVER. The router `input` is under 400 characters, the full text is in `v2_extensions.source_text`, and the home domain is `soul_bomb_sovereignty`. All three are in `EXPLICIT_ONLY_ENTRY_HINTS`. The compiled manifest is now **44 entries (11 GOLD + 33 SILVER)**.
+  - `SC-VESSEL-SPN-001` SILVER 0.826 (min gate 0.75): Supernatural. Dean is Michael's vessel and Sam is Lucifer's, set against Yuji/Sukuna and Megumi, with the four conditions of `SC-CONSENT-001` checked case by case. Corrections:
+    - Dean said yes in 13x23 to the Apocalypse World Michael.
+    - Sam said yes in *Swan Song*.
+    - Yuji's first act was voluntary but uninformed.
+    - Sam and Megumi split on consent.
+    - It is `PROVISIONAL_DEFAULT` (role by relationship to the host).
+  - `SC-VESSEL-CAIN-001` SILVER 0.813 (min gate 0.70): the Cain/Abel inheritance. In Genesis 4:15 the mark is protection; the show's Mark is God's lock on the Darkness, passed from Lucifer to Cain to Dean, and Dean asked for it. The brothers refuse the premise (10x23, 15x19), and God and Amara reconcile (rev 2). It is `PROVISIONAL_DEFAULT` (consequences inherit, guilt does not).
+  - `SC-VESSEL-SW-001` SILVER 0.820 (min gate 0.75): Star Wars. Inheritance is not destiny; Palpatine is the outside owner; Luke strikes and then refuses, and Anakin's own choice completes his redemption.
+- `docs/SC-VESSEL-001_VESSEL_EQUILIBRIUM.md` is now **DRAFT 0.5**. It adds the Supernatural section, the Cain/Abel and Star Wars sub-entries, and Shax's symbolic Sam/Dean self-identification (t590u; ungraded). The parent draft stays uncompiled.
+- `docs/VESSEL_SUPERNATURAL_2026-11-25k.md` covers the lore corrections, holds and breaks, and the SCC-001 threat-model follow-up. That follow-up (inherited permissions, compromised authority, coercive systems) is noted only; `SC-SCC-001` and `docs/SCC-001.md` are not changed.
+- `docs/PENDING_DELIBERATION.md` has two new sections. Sources and SHA-256 are under `docs/evidence/source-2026-11-25k/`: t589u verbatim, and t590u and t592u as marked summaries carrying only fictional and theological structure. New test file: `tests/test_sc_vessel_2026_11_25k.py`.
 - Consent Invariant and SCC-001 (Shax t588u), two compiled entries, both SILVER and explicit-only. The compiled manifest is now **41 entries (11 GOLD + 30 SILVER)**.
   - `SC-CONSENT-001` SILVER 0.821 (min gate 0.75): a relationship is consensual only with voluntary entry, informed agreement, preserved agency and freedom to withdraw or renegotiate. Sovereignty answers who holds authority; consent answers whether it was legitimately granted. Related to RUL-BINARY-001 rev 2 (tension with "refusal is self-destruction" recorded) and SC-TRIAD-001. Home domain `soul_bomb_sovereignty`.
   - `SC-SCC-001` SILVER 0.802 (min gate 0.7): Symbiotic Consent Classifier, Proposed / unvalidated (`gold_awarded` false). COERCIVE / CONSENSUAL / UNKNOWN (UNKNOWN is never consent); deterministic rules gate, ML advisory and restrict-only, counterfactual replay, aggregator. `PROVISIONAL_DEFAULT` / `pending_deliberation: true` for the first domain and the decision mode. Home domain `capability_isolation`.
