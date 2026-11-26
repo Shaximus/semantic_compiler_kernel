@@ -123,3 +123,5 @@ This is a normative design rule, not an operational instruction and not a claim 
 ## 9. Provisional default
 
 See `docs/PENDING_DELIBERATION.md`, section `SC-GUARD-001`. Still open: whether the pride/fear hypothesis holds under a wider survey; whether external corruption is a third route; whether Stratholme can be scored apart from Arthas's later arc; whether Rehoboam should be scored; whether The Last Titan (ANNOUNCED) adds a titan instance.
+
+See also `SC-WORTHY-001` (`docs/AVENGERS_D2_POE_AEP_MAP_2026-11-26d.md`): worthiness, the legitimacy of wielding power at all, is related to Guardian's Fall but kept separate (provisional default).

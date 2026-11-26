@@ -391,6 +391,10 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-LILITH-001": "soul_bomb_sovereignty",
     "SC-FEM-001": "soul_bomb_sovereignty",
     "SC-SHARD-001": "soul_bomb_sovereignty",
+    # 2026-11-26d Avengers x Diablo II x Path of Exile AEP map and the worthiness
+    # invariant (t603u, pasted assistant analysis Shax supplied). Explicit-only.
+    "SC-AVG-001": "soul_bomb_sovereignty",
+    "SC-WORTHY-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -457,6 +461,10 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-LILITH-001",
     "SC-FEM-001",
     "SC-SHARD-001",
+    # 2026-11-26d: "avengers", "hammer", "paladin", "class", "party", "worthy",
+    # "build" are everyday or gaming words; only an explicit ID routes these entries.
+    "SC-AVG-001",
+    "SC-WORTHY-001",
 })
 
 
