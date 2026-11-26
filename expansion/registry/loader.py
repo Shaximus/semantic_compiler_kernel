@@ -52,9 +52,27 @@ def _compute_dir_signature(template_dir: Path) -> tuple[list[Path], list[list[An
     return yaml_paths, sig
 
 
+_CACHE_DIR_ENV = "SEMANTIC_COMPILER_CACHE_DIR"
+
+
+def _sidecar_cache_root() -> Path:
+    """Directory for the template sidecar cache.
+
+    Override with SEMANTIC_COMPILER_CACHE_DIR. When the variable is unset or
+    blank, the location is tempfile.gettempdir() (unchanged default).
+    """
+    override = os.environ.get(_CACHE_DIR_ENV)
+    if override is not None and override.strip():
+        return Path(override).expanduser()
+    return Path(tempfile.gettempdir())
+
+
 def _sidecar_cache_path(resolved_dir: Path) -> Path:
     digest = hashlib.sha256(str(resolved_dir).encode("utf-8")).hexdigest()[:16]
-    return Path(tempfile.gettempdir()) / f"semantic_compiler_templates_v{_CACHE_FORMAT_VERSION}_{digest}.json"
+    root = _sidecar_cache_root()
+    if os.environ.get(_CACHE_DIR_ENV, "").strip():
+        root.mkdir(parents=True, exist_ok=True)
+    return root / f"semantic_compiler_templates_v{_CACHE_FORMAT_VERSION}_{digest}.json"
 
 
 def _read_sidecar_cache(
@@ -144,7 +162,7 @@ def load_templates(template_dir: Path | None = None) -> dict[str, DomainTemplate
         if cached is not None and cached[0] == sig_key:
             return dict(cached[1])
 
-    # 2. Persistent mtime+size-validated JSON sidecar cache in tempfile.gettempdir()
+    # 2. Persistent mtime+size-validated JSON sidecar cache (tempdir, or SEMANTIC_COMPILER_CACHE_DIR)
     try:
         cache_path: Path | None = _sidecar_cache_path(resolved_dir)
     except OSError:
