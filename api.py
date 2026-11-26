@@ -4,7 +4,9 @@
 returns a full ``SemanticPacket``. This module adds:
 
 - ``summary_v1(packet)`` — a stable, compact dict for tool results and
-  on-device bridges. Raw input is omitted unless explicitly opted in.
+  on-device bridges. Raw input, normalized input, and ``forward_text`` are
+  omitted unless explicitly opted in. ``unknowns``, ``next_questions``, and
+  ``compiler_warnings`` may still carry input excerpts of up to 200 characters.
 - ``compile_json(text, ...)`` — compile then return that summary.
 
 This module is not imported by ``semantic_compiler.__init__``, so
@@ -23,17 +25,16 @@ _MAX_CANDIDATES = 5
 _MAX_LIST_ITEMS = 5
 _MAX_TEXT = 200
 
-# Scalar fields copied from contradiction / category-error records when present.
+# Allowlisted scalar fields copied from contradiction / category-error records.
+# No fallback: keys such as claim, self_reported, externally_observed, and
+# external_source (measurement-gate payloads) are never copied.
 _RECORD_KEYS = (
+    "type",
+    "resolved",
+    "ruling",
+    "law",
     "class",
     "error_class",
-    "type",
-    "name",
-    "kind",
-    "code",
-    "confidence",
-    "status",
-    "severity",
 )
 _RECORD_TEXT_KEYS = ("message", "reason", "description", "summary", "evidence")
 
@@ -65,12 +66,6 @@ def _compact_records(items: list[Any] | None) -> list[dict[str, Any]]:
             if key in item:
                 row[key] = _truncate(item[key])
                 break
-        if not row:
-            for key, value in item.items():
-                if isinstance(value, (str, int, float, bool)) or value is None:
-                    row[key] = _truncate(value)
-                if len(row) >= 4:
-                    break
         compact.append(row)
     return compact
 
@@ -118,7 +113,11 @@ def summary_v1(
     """Return a compact ``summary_v1`` dict for a compiled packet.
 
     By default this omits ``raw_input``, ``normalized_input``, and
-    ``forward_text``. Pass ``include_raw_input=True`` to include them.
+    ``forward_text``. Pass ``include_raw_input=True`` to include them;
+    ``forward_text`` is always present on opt-in and may be ``None``.
+
+    ``unknowns``, ``next_questions``, and ``compiler_warnings`` may still
+    carry input excerpts of up to 200 characters.
     """
     summary: dict[str, Any] = {
         "schema": SUMMARY_SCHEMA,
@@ -152,8 +151,7 @@ def summary_v1(
     if include_raw_input:
         summary["raw_input"] = packet.raw_input
         summary["normalized_input"] = packet.normalized_input
-        if packet.forward_text is not None:
-            summary["forward_text"] = packet.forward_text
+        summary["forward_text"] = packet.forward_text
     return summary
 
 
