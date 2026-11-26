@@ -1,0 +1,31 @@
+# SC-MAFUBA-001 resource manifest template (v1.1.0-rc1)
+# Template only. Not a production configuration. Not evidence of validation.
+# Constraint: R_execution + R_enforcement + R_reserve <= R_budget
+# Rule: R_free <= R_reserve => PREEMPTIVE_FAIL_CLOSED, then supervisor shutdown.
+# No automatic resumption.
+
+id: RES-MAFUBA-TEMPLATE-001
+spec_id: SC-MAFUBA-001
+spec_version: 1.1.0-rc1
+budget:
+  R_budget: null
+  R_execution: null
+  R_enforcement: null
+  R_reserve: null
+  units: null  # e.g. megabytes, cpu_ms, or a documented composite
+worker_isolation:
+  mechanism: cgroup_v2
+  memory_high: null
+  memory_max: null
+  cpu_max: null
+  pids_max: null
+  wall_clock_sigkill_seconds: null
+supervisor:
+  independent: true
+  separate_cgroup: true
+  reserved_memory: null
+  reserved_cpu: null
+  bounded_audit_evidence:
+    max_bytes: null
+    retain_on_quarantine: true
+  automatic_resumption: false

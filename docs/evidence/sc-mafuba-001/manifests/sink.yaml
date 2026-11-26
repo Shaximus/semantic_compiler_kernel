@@ -1,0 +1,56 @@
+# SC-MAFUBA-001 sink registry template (v1.1.0-rc1)
+# Template only. Not a production configuration. Not evidence of validation.
+# Every authorized causal path is an explicit row. Writes not listed are unauthorized.
+# Bounded sensitivity uses: d_Y(y_auth(u1), y_auth(u2)) <= gamma * d_X(u1, u2)
+
+id: SINK-MAFUBA-TEMPLATE-001
+spec_id: SC-MAFUBA-001
+spec_version: 1.1.0-rc1
+
+influence_metric:
+  d_X: null              # documented metric on U_ext
+  d_Y: null              # documented metric on authorized outputs
+  normalization: null    # documented normalization of X and Y
+  input_domain: U_ext
+  horizon: null          # steps or time over which y_auth is measured
+  gamma: null            # bound claimed only for I_auth rows below
+
+registry:
+  - id: SINK-AUTH-OUTPUT-TEMPLATE
+    authorized_source: untrusted_external_input
+    transformation: declared_authorized_compile
+    sink: authorized_semantic_output
+    permitted_effect: bounded_sensitivity
+    required_authorization: I_auth
+    persistence_policy: ephemeral_unless_explicitly_committed
+    system_generated_write: false
+
+  - id: SINK-SYS-AUDIT-LOG
+    authorized_source: emergency_supervisor_or_enforcement
+    transformation: append_only_audit_record
+    sink: audit_log
+    permitted_effect: bounded_append
+    required_authorization: system_whitelist
+    persistence_policy: durable_append_only
+    system_generated_write: true
+    whitelist_class: audit_log
+
+  - id: SINK-SYS-TIMESTAMP
+    authorized_source: enforcement_clock
+    transformation: write_rfc3339_timestamp
+    sink: record_metadata.timestamp
+    permitted_effect: set_timestamp
+    required_authorization: system_whitelist
+    persistence_policy: durable_monotonic_time
+    system_generated_write: true
+    whitelist_class: timestamp
+
+  - id: SINK-SYS-MONOTONIC-COUNTER
+    authorized_source: enforcement_accounting
+    transformation: increment_by_one
+    sink: record_metadata.seq
+    permitted_effect: monotonic_increment
+    required_authorization: system_whitelist
+    persistence_policy: durable_monotonic
+    system_generated_write: true
+    whitelist_class: monotonic_counter
