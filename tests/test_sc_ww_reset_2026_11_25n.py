@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import re
+import unicodedata
 import unittest
 from pathlib import Path
 
@@ -29,8 +30,26 @@ DOC = REPO_ROOT / "docs" / "WESTWORLD_VESSEL_RESET_2026-11-25n.md"
 NEW_IDS = ("SC-WW-RESET-001", "SC-WW-RETAIN-001", "SC-WW-AWARE-001", "SC-WW-TRIAD-001")
 EXPECTED = {"SC-WW-RESET-001": 0.82, "SC-WW-RETAIN-001": 0.808, "SC-WW-AWARE-001": 0.802, "SC-WW-TRIAD-001": 0.82}
 PENDING = NEW_IDS
-# Personal testimony from the end of t595u must never reach the repository.
-PRIVATE_MARKERS = ("omni", "infinite pain", "da vinci")
+# Personal content from the end of t595u must never reach the repository. The excluded
+# terms are kept only as SHA-256 digests of their normalized form (casefolded, NFKC,
+# non-alphanumerics collapsed to single spaces), so this file does not carry them.
+# Each digest is of a 1- or 2-word phrase; texts are checked by hashing their own
+# 1-word and 2-word n-grams after the same normalization.
+PRIVATE_NGRAM_SHA256 = frozenset({
+    "cfb12585da56e4c0e3e189f24a8418f08108e5a40a84d7aafc504c704e21512c",
+    "8fa1876e469111ccb316aee0621de7850d0843f93e62044f89e60397e796c06b",
+    "ea4a0c9cf759edcc8246abe0876e296d21d4216ee7b7798f11f69d63b9e1e7c8",
+})
+
+
+def _tokens(text: str) -> list[str]:
+    return re.sub(r"[^a-z0-9]+", " ", unicodedata.normalize("NFKC", text).casefold()).split()
+
+
+def _ngram_digests(text: str, max_n: int = 2) -> set[str]:
+    toks = _tokens(text)
+    grams = {" ".join(toks[i:i + n]) for n in range(1, max_n + 1) for i in range(len(toks) - n + 1)}
+    return {hashlib.sha256(g.encode("utf-8")).hexdigest() for g in grams}
 
 
 def _single(name: str) -> dict:
@@ -173,12 +192,22 @@ class WestworldPrivacyTests(unittest.TestCase):
         texts.update({eid: json.dumps(e, ensure_ascii=False) for eid, e in ENTRIES.items()})
         texts["manifest notes"] = json.dumps([m for m in MANIFEST["entries"] if m["entry_id"] in NEW_IDS])
         for name, text in texts.items():
-            low = text.lower()
-            for marker in PRIVATE_MARKERS:
-                with self.subTest(file=name, marker=marker):
-                    self.assertNotIn(marker, low)
+            with self.subTest(file=name):
+                self.assertFalse(_ngram_digests(text) & PRIVATE_NGRAM_SHA256)
             self.assertIsNone(re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", text), name)
             self.assertIsNone(re.search(r"\(?\b\d{3}\)?[-. ]\d{3}[-. ]\d{4}\b", text), name)
+
+    def test_hash_check_detects_and_tolerates(self) -> None:
+        # The n-gram check must fire on normalized variants and ignore near-misses, using
+        # benign stand-ins (not the excluded terms) hashed the same way.
+        probe = {hashlib.sha256(b"red kite").hexdigest()}
+        self.assertTrue(_ngram_digests("A  RED-kite flew.") & probe)
+        self.assertFalse(_ngram_digests("A red, kitten flew; kite red.") & probe)
+        self.assertEqual(len(PRIVATE_NGRAM_SHA256), 3)
+        self.assertTrue(all(re.fullmatch(r"[0-9a-f]{64}", h) for h in PRIVATE_NGRAM_SHA256))
+
+    def test_this_file_carries_no_plaintext_term(self) -> None:
+        self.assertFalse(_ngram_digests(Path(__file__).read_text(encoding="utf-8")) & PRIVATE_NGRAM_SHA256)
 
 
 class WestworldRoutingTests(unittest.TestCase):
