@@ -82,3 +82,5 @@ Graded by rule: GOLD needs iq ≥ 0.9 and every gate ≥ 0.8. No prediction was 
 ## Routing
 
 All four IDs are in `EXPLICIT_ONLY_ENTRY_HINTS`. "Throne", "dragon", "snow", "mountain", "archetype" and "Night King" do not lift `soul_bomb_sovereignty`. Explicit IDs route home. Naming `SC-AEP-001`, `SC-GOT-001` or `SC-GOT-JON-001` sets `needs_review`.
+
+See also `SC-GUARD-001` and `docs/GUARDIANS_FALL_2026-11-26.md` for the Guardian's Fall test of Daenerys (CANDIDATE), Jon (CONTRAST) and the Night King (EXCLUDED).

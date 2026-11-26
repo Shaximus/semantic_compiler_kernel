@@ -324,3 +324,22 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Reason:** five instances pass the threshold, but nothing has been tested, and Sargeras's motive is NOVEL (Chronicle). Neltharion's fall is corruption by whisper, not only fear, so the composite does not fit him cleanly.
 - **Hook:** the same mechanism. `review_trigger_terms` are `sc-wow-fall-001`, `fallen guardian`, `guardian's fall`, `sargeras`, `protector's fall`, `greater good`. The entry is explicit-only, so it never lifts a route.
 - **Still open:** whether The Last Titan (ANNOUNCED) adds the titans themselves as an instance; the difference from the tradition's fall (pride, 1 Tim 3:6) against Warcraft's (fear).
+
+## SC-GUARD-001 (Guardian's Fall as a named archetype, still not a class)
+
+- **ID:** `SC-GUARD-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u (standing rule, as above). Substance from t596u.
+- **Question:** t596u asks that the guardian's fall be recorded with five stages, two motivational routes (as a hypothesis), and three independent scoring dimensions, and that Daenerys, Jon and the Night King be tested. `SC-WOW-FALL-001` had already chosen "candidate composite, not a class." Should the pattern be promoted, and how strongly?
+- **Chosen default:** **promote the pattern to a named cross-franchise archetype under `SC-AEP-001`, not to an invariant class.** `SC-WOW-FALL-001` remains the Warcraft instance companion and is not rewritten. Treat the pattern as behaviorally invariant while motivation (pride versus fear) varies by tradition (**HYPOTHESIS**). Keep Neltharion as a behavioral instance with external corruption by the Old Gods recorded as a difference, not as a third motivational route. The Night King is excluded as a fallen guardian: the show gives the protective origin to the Children of the Forest, not to him.
+- **Alternatives not chosen:**
+  - (a) Promote Guardian's Fall to an invariant class now.
+  - (b) Leave the pattern only inside `SC-WOW-FALL-001`.
+  - (c) Add external corruption as a third motivational pathway.
+  - (d) Admit the Night King as an instance via the Children's motive.
+- **Reason:** t596u asked for the archetype, the dimensions and the tests; five Warcraft instances plus a Game of Thrones candidate already exist; nothing has been prediction-tested; the Night King lacks a protective charge of his own in the show; promoting to a class would close a question `SC-WOW-FALL-001` left open without a tested prediction or a Shax ruling that it is a class.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-guard-001`, `guardian's fall`, `three scoring dimensions`, `liberation becoming compulsory`, `protection without consent`, `pride versus fear`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** `SC-WOW-FALL-001` (itself still pending as a candidate, not a class). `SC-GOT-001` and `SC-CONSENT-001` are unchanged.
+- **Still open, when reviewed:** whether the pride/fear hypothesis holds under a wider survey; whether external corruption is a third route; whether Stratholme can be scored apart from Arthas's later arc; whether Rehoboam should be scored as an AI instance; whether The Last Titan (ANNOUNCED) adds a titan instance.

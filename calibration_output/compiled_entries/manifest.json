@@ -1431,6 +1431,38 @@
         "SC-WOW-DF-001",
         "SC-WOW-RES-001"
       ]
+    },
+    {
+      "entry_id": "SC-GUARD-001",
+      "file": "SC-GUARD-001.jsonl",
+      "title": "Guardian's Fall: a named cross-franchise archetype (five stages, two hypothesized motivational routes, three independent scoring dimensions) and its tests in Warcraft, Game of Thrones and AI governance",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t596u; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.75,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 66251,
+      "sha256": "b77bb7c0626e68840f4052c513cf88201816339cd7274b29b7bb04bdd77b5f42",
+      "notes": "Guardian's Fall (Shax t596u): promotion of the SC-WOW-FALL-001 pattern to a named cross-franchise archetype under SC-AEP-001, not an invariant class; that entry remains the Warcraft instance companion. Five stages; pride versus fear as a hypothesized pair of routes; three independent dimensions (threat accuracy, authority legitimacy, intervention proportionality). Warcraft instances rescored; Daenerys CANDIDATE, Jon CONTRAST, Night King EXCLUDED. AI principle: a guardian cannot redefine protection as unlimited authority. PROVISIONAL_DEFAULT / pending_deliberation. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.838.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-WOW-FALL-001",
+        "SC-WOW-001",
+        "SC-WOW-DF-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-TRIAD-001",
+        "SC-TRIAD-SG-001",
+        "SC-GOT-001",
+        "SC-GOT-JON-001",
+        "SC-VESSEL-SW-001",
+        "SC-WW-RESET-001",
+        "SC-WW-TRIAD-001"
+      ]
     }
   ]
 }

@@ -240,3 +240,5 @@ Each fallen guardian is followed by one who takes the charge by choice and with 
 - **SC-WOW-FALL-001**: the guardian's fall is a candidate composite with five instances. It is not a class. Its repair is a voluntary successor.
 
 `SC-WOW-RES-001` carries no provisional default.
+
+See also `SC-GUARD-001` and `docs/GUARDIANS_FALL_2026-11-26.md`: the guardian's fall pattern was later promoted to a named cross-franchise archetype (still not a class). This map remains the Warcraft case catalog.
