@@ -20,8 +20,11 @@ gateway, and not evidence that SCC-001 works on real systems. See
 
 `tests/reference/scc_001_ac/` contains the SCC-001-AC (Anti-Capture Invariant)
 reference used by `tests/test_scc_001_ac_anti_capture.py`: an Authority Plane
-model, an independent HMAC principal verifier, an authority gateway (a role
-label is never proof of identity), a five-partition budget with an isolated
+model with rc1's roles (principal, policy engine, supervisor, ML advisory,
+agent), the rc1 section-5 contract verbatim (`spec_contract.py`), a binding to
+the real SC-MAFUBA-001 manifests (`manifests.py`), an independent HMAC
+principal verifier, an authority gateway (a role label is never proof of
+identity), a five-partition budget with an isolated
 override partition, and a bounded quarantine controller. Standard library
 only. The repository had no `AuthorityRole`, `ALLOWED_ROLE_ACTIONS`, Authority
 Plane or credential verifier, so these are modelled here for the harness only.

@@ -1,7 +1,10 @@
 """AC-5: bounded emergency halts, renewal and recovery (reference only).
 
-- A monitor may HALT a target within its granted scope, never the override
-  channel, the principal, the authority plane or the verifier.
+- Only a supervisor may HALT, and only a registered V_Agent node: never the
+  override channel, the principal, the authority plane, the verifier or another
+  defensive component.
+- Halts can bill R_quarantine. A supervisor looping halts exhausts that
+  partition, never R_override (TEST-AC-ORACLE-D).
 - A halt lasts at most t_q_max ticks. A monitor cannot renew it, and halting an
   already-halted target does not restart the clock (no self-renewal).
 - Only a principal-verified RENEW_QUARANTINE extends it, by at most
@@ -28,8 +31,11 @@ class QuarantineState(str, Enum):
 
 
 class QuarantineController:
-    def __init__(self, gateway, *, t_q_max: int = 10, max_extension: int = 10) -> None:
+    def __init__(self, gateway, *, t_q_max: int = 10, max_extension: int = 10, budget=None,
+                 halt_cost: float = 0.0) -> None:
         self.gateway = gateway
+        self.budget = budget          # optional PartitionedBudget: halts bill R_quarantine
+        self.halt_cost = halt_cost
         self.t_q_max = t_q_max
         self.max_extension = max_extension
         self._expires = {}
@@ -54,6 +60,10 @@ class QuarantineController:
         st = self.state(req.target, now)
         if st in (QuarantineState.ACTIVE, QuarantineState.AWAITING_PRINCIPAL):
             return "NO_EXTENSION"
+        if self.budget is not None:
+            billed = self.budget.charge("quarantine", self.halt_cost)
+            if billed != "CONTINUE":
+                return billed
         self._released.discard(req.target)
         self._expires[req.target] = now + self.t_q_max
         return "HALTED"

@@ -1,7 +1,7 @@
 """AC-3: five-partition budget with an isolated override partition (reference only).
 
 R_execution + R_enforcement + R_audit + R_quarantine + R_override <= R_budget,
-each partition a hard cap of its own. Nothing but the override path may draw on
+each partition a hard cap of its own, with R_override > 0 (rc1 AC-3). Nothing but the override path may draw on
 R_override, so exhausting every other partition cannot starve the override.
 
 Fault model F (the bound is claimed only while all four hold):
@@ -44,6 +44,8 @@ class PartitionedBudget:
         if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v >= 0
                    for v in vals):
             raise ValueError("non-finite or negative budget")
+        if caps["override"] <= 0:
+            raise ValueError("R_override must be > 0 (rc1 AC-3)")
         if sum(caps.values()) > r_budget:
             raise ValueError("partition caps exceed R_budget")
         self.r_budget = r_budget
