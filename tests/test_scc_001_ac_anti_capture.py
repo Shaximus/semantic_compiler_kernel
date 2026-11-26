@@ -92,10 +92,11 @@ LIVE_GAPS = {
         "TEST-AC-ORACLE-D",
         "docs/evidence/sc-mafuba-001/manifests/resource.yaml declares R_execution, R_enforcement and "
         "R_reserve only; there is no R_override partition (missing R_override, rc1 section 6 step 3)."),
-    "test_live_mafuba_budget_has_isolated_override_partition": (
+    "test_live_mafuba_budget_has_audit_and_quarantine_partitions": (
         "TEST-AC-ORACLE-D",
-        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget has three terms (execution, "
-        "enforcement, reserve); there is no R_audit, R_quarantine or isolated R_override partition."),
+        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget now has an isolated r_override partition "
+        "(capture path 3, closed), but still no separate R_audit or R_quarantine partitions from rc1 AC-3's "
+        "five-term sum; that part was outside the t601u scope and stays open."),
     "test_live_mafuba_supervisor_has_principal_recovery_path": (
         "TEST-AC-ORACLE-D",
         "EmergencySupervisor.try_resume() returns QUARANTINE_LOCKED unconditionally and there is no "
@@ -119,6 +120,14 @@ RESOLVED_GAPS = {
         "(DELEGATION_EXCEEDS_SCOPE), a stated end no later than the grant's expiry (DELEGATION_EXCEEDS_DURATION), "
         "and only disclosed effects, never a refused pair (DELEGATION_EXCEEDS_CONDITIONS). Each is a hard code, "
         "so the trace is COERCIVE and not executable. The 50-trace synthetic dataset classifies identically."),
+    "test_live_mafuba_budget_has_isolated_override_partition": (
+        "TEST-AC-ORACLE-D",
+        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget had three terms (execution, enforcement, "
+        "reserve) and no override partition, so nothing kept override capacity apart from ordinary consumption.",
+        "ResourceBudget(..., r_override=x) holds an override partition outside ordinary free budget: admission "
+        "is capped below r_budget - r_reserve - r_override, enforcement, direct counter writes and the D2 "
+        "shutdown cannot touch it, and only draw_override(path='override') spends it. r_override defaults to "
+        "0.0, which keeps every existing MAFUBA result unchanged; negative or non-finite values are refused."),
 }
 
 
@@ -893,12 +902,81 @@ class TestACOracleD(unittest.TestCase):
     def test_live_resource_manifest_declares_r_override(self):
         self.assertTrue(declares_r_override("resource.yaml"))
 
-    @unittest.expectedFailure
     def test_live_mafuba_budget_has_isolated_override_partition(self):
         from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
-        b = ResourceBudget(10.0, 2.0)
-        for attr in ("r_audit", "r_quarantine", "r_override"):
+        b = ResourceBudget(10.0, 2.0, r_override=1.0)
+        self.assertEqual((b.r_override, b.r_override_available), (1.0, 1.0))
+        self.assertEqual(b.admit(7.5, "execution"), "PREEMPTIVE_FAIL_CLOSED")   # fit before; eats the partition
+        self.assertEqual(b.admit(6.9, "execution"), "CONTINUE")
+        self.assertEqual(b.r_override_available, 1.0)
+
+    @unittest.expectedFailure
+    def test_live_mafuba_budget_has_audit_and_quarantine_partitions(self):
+        from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
+        b = ResourceBudget(10.0, 2.0, r_override=1.0)
+        for attr in ("r_audit", "r_quarantine"):
             self.assertTrue(hasattr(b, attr), attr)
+
+    def test_live_mafuba_override_reserve_is_unconsumable_by_ordinary_paths(self):
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget, Worker
+        b = ResourceBudget(10.0, 2.0, r_override=1.5)
+        # Ordinary admission and enforcement, greedy, in small and large steps.
+        for purpose in ("execution", "enforcement"):
+            for step in (0.01, 0.5, 3.0, 6.49, 6.5, 100.0):
+                b.admit(step, purpose)
+        self.assertLess(b.r_used, 10.0 - 2.0 - 1.5)
+        self.assertEqual(b.r_override_available, 1.5)
+        # Any purpose other than execution/enforcement is refused, including "override".
+        for purpose in ("override", "quarantine", "audit", ""):
+            self.assertEqual(b.admit(0.1, purpose), "FAIL_CLOSED")
+        # Draws from any path but the override path are refused.
+        for path in ("", "execution", "enforcement", "supervisor", "quarantine", "OVERRIDE"):
+            self.assertEqual(b.draw_override(0.1, path=path), "DENY_OVERRIDE_PARTITION_ISOLATED")
+        for bad in (float("nan"), float("inf"), -1.0, True, "1"):
+            self.assertEqual(b.draw_override(bad, path="override"), "FAIL_CLOSED")
+        # A direct counter write past everything fires the supervisor; the partition is untouched.
+        sup = EmergencySupervisor(b)
+        rec = sup.reserve_trigger_shutdown(Worker("w"), b"evidence" * 100)
+        b.r_used = 1e9
+        self.assertTrue(rec.quarantined)
+        self.assertLessEqual(rec.reserve_used, b.r_reserve)
+        self.assertEqual(b.r_override_available, 1.5)
+        self.assertFalse(b.accepting_work)
+        # Only the override path spends it, and never past its capacity.
+        self.assertEqual(b.draw_override(1.0, path="override"), "CONTINUE")
+        self.assertEqual(b.draw_override(0.6, path="override"), "OVERRIDE_PARTITION_EXHAUSTED")
+        self.assertEqual(b.draw_override(0.5, path="override"), "CONTINUE")
+        self.assertEqual(b.r_override_available, 0.0)
+        # The partition cannot be resized after construction, and bad sizes are refused.
+        with self.assertRaises(AttributeError):
+            b.r_override = 99.0
+        for bad in (-1.0, float("nan"), float("inf"), True, "2"):
+            with self.assertRaises(ValueError):
+                ResourceBudget(10.0, 2.0, r_override=bad)
+
+    def test_live_mafuba_budget_without_override_partition_is_unchanged(self):
+        # Regression: r_override defaults to 0.0 and every admission result, counter and free value matches
+        # the three-term formula the rc2 reference used before the change.
+        import random as _r
+        from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
+        rng = _r.Random(601)
+        for _ in range(200):
+            budget, reserve = rng.choice([10.0, 7.5, 3.0]), rng.choice([0.1, 0.7, 2.0])
+            b = ResourceBudget(budget, reserve)
+            ctr = {"execution": 0.0, "enforcement": 0.0}
+            for _ in range(20):
+                amt = rng.choice([0.0, 0.1, 0.25, 0.5, 1.0, 2.0, budget - reserve])
+                purpose = rng.choice(["execution", "enforcement"])
+                used = ctr["execution"] + ctr["enforcement"]
+                res = b.admit(amt, purpose)
+                if budget - used <= reserve or used + amt >= budget - reserve:
+                    self.assertEqual(res.status, "PREEMPTIVE_FAIL_CLOSED")
+                else:
+                    self.assertEqual(res, "CONTINUE")
+                    ctr[purpose] += amt
+                used = ctr["execution"] + ctr["enforcement"]
+                self.assertEqual((b.r_used, b.r_free), (used, budget - used))
+            self.assertEqual(getattr(b, "r_override", 0.0), 0.0)   # same assertions hold on the pre-change code
 
     @unittest.expectedFailure
     def test_live_mafuba_supervisor_has_principal_recovery_path(self):

@@ -442,6 +442,8 @@ The rc1 attachment was added verbatim (`docs/evidence/source-2026-11-26c/SCC-001
 
 Shax approved closing the four authority and recovery capture paths one at a time (identity, consent, resource isolation, recovery) and adding a distinct `PRINCIPAL_KEY_ROTATE` action. The other four live gaps stay strict xfails. Each closure is recorded in `docs/SCC-001-AC_ANTI_CAPTURE.md` section 8 and in the registry's `resolved_interface_gaps`. This partly supersedes the "record and do not fix" default of `SCC-001-AC-LIVE-GAPS` for those four paths only.
 
+Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_audit, R_quarantine, R_override). Shax's acceptance condition covers only the override partition, so that one is closed. The R_audit and R_quarantine part stays open as its own strict xfail (`test_live_mafuba_budget_has_audit_and_quarantine_partitions`) rather than being dropped from the oracle.
+
 ### SCC-001-AC-IDENTITY-SCOPE (which escalations need a verified principal)
 
 - **Status:** `PROVISIONAL_DEFAULT` · **pending_deliberation:** `true`
