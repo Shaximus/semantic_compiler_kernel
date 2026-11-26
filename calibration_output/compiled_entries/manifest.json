@@ -622,7 +622,7 @@
     {
       "entry_id": "SC-POE-MRG-001",
       "file": "SC-POE-MRG-001.jsonl",
-      "title": "Path of Exile: Sin and Innocence cooperation (reintegration layer)",
+      "title": "Path of Exile: Sin and Innocence reconciliation",
       "entry_type": "compiler_entry",
       "version": "3.5.0",
       "author": "Hannah (assets, Shax t579u) / Shax (Curtis Kingsley)",
@@ -632,9 +632,9 @@
       "confidence": 0.65,
       "gates_passed": "9/9",
       "record_count": 1,
-      "bytes": 46973,
-      "sha256": "8fb5771327f444517f99d35376848c4be87d6310449d136d816acbbce1966c3f",
-      "notes": "Path of Exile cosmology decode from Hannah assets (t579u). Self-grade 0.92 not accepted; re-graded SILVER 0.822 (min gate 0.7). Lore corrections in outputs.correction. Explicit-only domain hint: government.",
+      "bytes": 49496,
+      "sha256": "069ad4f3e957c9c19690658180476b769da273c3d9aec6fd8aa74204ba25817e",
+      "notes": "Path of Exile cosmology decode from Hannah assets (t579u). Self-grade 0.92 not accepted; re-graded SILVER 0.822 (min gate 0.7). Rev 1.1.0: retitled reconciliation as a PROVISIONAL_DEFAULT (Shax t582u); Shax/Hannah interpretation, not canon; pending_deliberation true. Explicit-only domain hint: government.",
       "cross_references": [
         "SC-POE-DU-001",
         "SC-DU-001",

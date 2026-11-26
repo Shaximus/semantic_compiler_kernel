@@ -173,6 +173,8 @@ class RoutingResult:
     margin: float
     candidates: tuple[DomainCandidate, ...] = field(default_factory=tuple)
     reason: str = ""
+    needs_review: bool = False
+    needs_review_entries: tuple[dict[str, Any], ...] = field(default_factory=tuple)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -182,6 +184,8 @@ class RoutingResult:
             "margin": self.margin,
             "candidates": [c.to_dict() for c in self.candidates],
             "reason": self.reason,
+            "needs_review": self.needs_review,
+            "needs_review_entries": [dict(e) for e in self.needs_review_entries],
         }
 
 
@@ -387,7 +391,12 @@ class DomainRouter:
 
         ranked = sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))
         if not ranked:
-            return RoutingResult(ABSTAIN, None, 0.0, 0.0, (), "no discriminative domain evidence")
+            from semantic_compiler.expansion.deliberation import annotate_routing_result
+            return annotate_routing_result(
+                text,
+                RoutingResult(ABSTAIN, None, 0.0, 0.0, (), "no discriminative domain evidence"),
+                self._elevator,
+            )
 
         proper_nouns = {
             m.group(0).lower()
@@ -434,18 +443,21 @@ class DomainRouter:
         m = round(margin, 4)
 
         if top < MIN_ROUTE_SCORE:
-            return RoutingResult(ABSTAIN, None, confidence, m, candidates,
+            result = RoutingResult(ABSTAIN, None, confidence, m, candidates,
                                  f"top score {top:.1f} below routing floor {MIN_ROUTE_SCORE}")
-        if not qualifies(top_domain, top):
-            return RoutingResult(ABSTAIN, None, confidence, m, candidates,
+        elif not qualifies(top_domain, top):
+            result = RoutingResult(ABSTAIN, None, confidence, m, candidates,
                                  "not enough discriminative evidence")
-        if len(ranked) > 1 and margin < AMBIGUITY_MARGIN and qualifies(*ranked[1]):
-            return RoutingResult(AMBIGUOUS, None, confidence, m, candidates,
+        elif len(ranked) > 1 and margin < AMBIGUITY_MARGIN and qualifies(*ranked[1]):
+            result = RoutingResult(AMBIGUOUS, None, confidence, m, candidates,
                                  f"top-2 domains within margin {AMBIGUITY_MARGIN}")
-        if confidence < MIN_CONFIDENCE:
-            return RoutingResult(ABSTAIN, None, confidence, m, candidates,
+        elif confidence < MIN_CONFIDENCE:
+            result = RoutingResult(ABSTAIN, None, confidence, m, candidates,
                                  f"routing confidence {confidence:.2f} below {MIN_CONFIDENCE}")
-        return RoutingResult(ROUTED, top_domain, confidence, m, candidates, "routed")
+        else:
+            result = RoutingResult(ROUTED, top_domain, confidence, m, candidates, "routed")
+        from semantic_compiler.expansion.deliberation import annotate_routing_result
+        return annotate_routing_result(text, result, self._elevator)
 
 
 def get_default_router() -> DomainRouter:

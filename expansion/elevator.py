@@ -740,9 +740,10 @@ class CompiledEntryMatch:
     summary: str
     cross_references: tuple[str, ...]
     record: dict[str, Any]
+    needs_review: bool = False
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "entry_id": self.entry_id,
             "title": self.title,
             "classification": self.classification,
@@ -751,7 +752,9 @@ class CompiledEntryMatch:
             "file": self.file,
             "summary": self.summary,
             "cross_references": list(self.cross_references),
+            "needs_review": self.needs_review,
         }
+        return payload
 
 
 @dataclass(frozen=True)
@@ -791,6 +794,8 @@ class BayDelivery:
     # AMBIGUOUS or ABSTAIN. On ABSTAIN, primary_domain is universal_generic and
     # matched_domains is empty.
     routing: Any = None
+    needs_review: bool = False
+    needs_review_entries: tuple[dict[str, Any], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -803,6 +808,8 @@ class BayDelivery:
             "system_model": self.system_model,
             "latency_ms": self.latency_ms,
             "cache_hit": self.cache_hit,
+            "needs_review": self.needs_review,
+            "needs_review_entries": [dict(e) for e in self.needs_review_entries],
         }
 
 
@@ -1877,7 +1884,9 @@ class DomainElevator:
 
         latency_ms = round((time.perf_counter() - t0) * 1000.0, 4)
 
-        return BayDelivery(
+        from semantic_compiler.expansion.deliberation import annotate_bay_delivery
+
+        delivery = BayDelivery(
             query=query_text,
             primary_domain=primary_domain,
             matched_template=matched_template,
@@ -1889,6 +1898,7 @@ class DomainElevator:
             cache_hit=cache_hit,
             routing=routing,
         )
+        return annotate_bay_delivery(delivery, self)
 
     def _make_entry_match(
         self,
@@ -1897,6 +1907,10 @@ class DomainElevator:
         terms: Sequence[str],
     ) -> CompiledEntryMatch:
         entry = self._compiled_entries[entry_id]
+        from semantic_compiler.expansion.deliberation import pending_info
+
+        record = entry["record"]
+        info = pending_info(record, entry_id=entry["entry_id"])
         return CompiledEntryMatch(
             entry_id=entry["entry_id"],
             title=entry["title"],
@@ -1906,7 +1920,8 @@ class DomainElevator:
             file=entry["file"],
             summary=entry["summary"],
             cross_references=entry["cross_references"],
-            record=entry["record"],
+            record=record,
+            needs_review=bool(info),
         )
 
     # -- 2. Parking Ticket Compression & On-Demand Rehydration --------------
