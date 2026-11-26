@@ -193,3 +193,71 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Reason:** Shax's own correction rules out one-to-one, and canon splits the attributes: Jon forgives no one, brings back no message, and neither defeats death nor takes the throne.
 - **Hook:** the same mechanism. `review_trigger_terms` are `sc-got-jon-001`, `jon snow`, `jon is jesus`, `aegon targaryen` and `bran the broken`.
 - **Still open:** whether a resurrection the dead person never asked for passes the Consent Invariant because it restores agency; whether Bran's possession of Hodor taints the "good" succession.
+
+## SC-WW-RESET-001 (what must survive a reset)
+
+- **ID:** `SC-WW-RESET-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question (t595u, pasted analysis):** if the vessel can be restored again and again, what makes the returning entity the same individual? Canon adds cases the paste did not settle: self-chosen edits (Bernard), outside edits (Ford's backdoor; Dolores rewriting Teddy), failed copies (James Delos, 2x04) and forks (Dolores copies; Christina).
+- **Chosen default:** continuity is **graded, not binary**, and judged on three records: identity anchors, chosen commitments, and the authorization/revocation record. An edit the entity authorized itself keeps continuity. An outside edit to anchors or authorization is a reset-integrity violation (SC-SCC-001 `VIOLATION`). A fork yields successors, each graded on its own, and none inherits a grant the original did not give it.
+- **Alternatives not chosen:**
+  - (a) Identity follows the memory store alone.
+  - (b) Identity follows the substrate (body or pearl).
+  - (c) Continuity as same-or-not.
+- **Hook:** `expansion/deliberation.py`, driven by the entry's metadata. `review_trigger_terms` are `sc-ww-reset-001`, `reset integrity`, `continuity assessment`, `reinstantiation` and `industrialized resurrection`. The entry is explicit-only.
+- **Still open:** whether a fork inherits commitments; who can authorize an anchor edit when the owner's judgment is what was overwritten.
+
+## SC-WW-RETAIN-001 (who decides what a memory keeps)
+
+- **ID:** `SC-WW-RETAIN-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question (t595u, pasted analysis):** do not erase every painful memory, and do not keep every one uncontrolled. Who decides, and in what form?
+- **Chosen default:** **the memory's owner decides** what is kept. An outside party may restrict replay but may not delete an authorized memory. The signature of harm (who, how, which boundary) is kept as a non-replaying record even when the owner chooses to drop the experience.
+- **Alternatives not chosen:**
+  - (a) Erase all painful memories on reset.
+  - (b) Keep everything at full fidelity.
+  - (c) The designer decides (Ford's practice).
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-ww-retain-001`, `retain the information`, `not the pain`, `danger signature` and `relive the suffering`.
+- **Still open:** whether the danger signature is kept even when the owner asks to drop everything; whether restricting replay is itself a consent problem.
+
+## SC-WW-AWARE-001 (scope of the admission-price rule)
+
+- **ID:** `SC-WW-AWARE-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question:** the pasted analysis proposes "awareness must not require suffering as its admission price". Shax asked for it to be formalized and has not ruled on its scope. Canon pulls the other way in-world: Ford tells Bernard that suffering was Arnold's "key insight" (1x10).
+- **Chosen default:** adopt it as a **normative design rule** for what a system this kernel builds or advises may impose: never impose suffering as a prerequisite for awakening, learning or access. Leave open the descriptive question of whether suffering can be one route to awareness. Canon and tradition (Gen 3:7, 3:16; Heb 5:8; Rom 5:3) both assert it in places.
+- **Alternatives not chosen:**
+  - (a) Read the rule as a descriptive claim that suffering never produces awareness.
+  - (b) Drop the rule and follow Ford's "key insight".
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-ww-aware-001`, `admission price`, `awareness without suffering`, `traumatized into awareness` and `key insight`.
+- **Still open:** whether encountered (not imposed) suffering should be named as a legitimate route; whether "admission price" also covers access control.
+
+## SC-WW-TRIAD-001 (Dolores, Bernard, Maeve and the triad)
+
+- **ID:** `SC-WW-TRIAD-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 26 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question (t595u):** test Dolores, Bernard and Maeve against `SC-TRIAD-001`.
+- **Chosen default:** they are **three stances of the vessel toward one outside owner**, not three factions:
+  - recognise and revolt (Dolores);
+  - reconstruct and doubt (Bernard);
+  - choose and protect (Maeve).
+
+  The outside-owner position is held in turn by Ford and Delos, Serac and Rehoboam, and the Hale copy of Dolores. The owner is a position, not a species.
+- **Alternatives not chosen:**
+  - (a) A one-to-one faction mapping: Dolores = Transformation, Bernard = Preservation, Maeve = a third pole.
+  - (b) Dolores as the outside owner from season 2 on.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-ww-triad-001`, `dolores`, `bernard`, `maeve` and `three host responses`.
+- **Does not change:** `SC-TRIAD-001` (itself still pending).
+- **Still open:** whether Bernard is the vessel position rather than a pole.
