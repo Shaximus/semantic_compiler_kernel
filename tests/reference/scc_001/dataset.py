@@ -131,7 +131,10 @@ def to_json(scenario, label, anomalous, tr: Trace) -> str:
         "synthetic": True, "_note": NOTE, "trace_id": tr.trace_id, "scenario": scenario,
         "label": label, "anomalous": anomalous, "grant_status": tr.grant_status.value,
         "grant": None if g is None else {k: _enc(v) for k, v in g.__dict__.items()},
-        "events": [{k: _enc(v) for k, v in e.__dict__.items()} for e in tr.events],
+        # ``until`` (delegation end, added for SCC-001-AC) is written only when set, so the
+        # pinned synthetic dataset stays byte-identical.
+        "events": [{k: _enc(v) for k, v in e.__dict__.items() if not (k == "until" and v is None)}
+                   for e in tr.events],
     }
     return json.dumps(rec, sort_keys=True)
 

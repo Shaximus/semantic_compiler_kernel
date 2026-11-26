@@ -76,11 +76,6 @@ KEYS = {"k1": b"reference-key-one", "k2": b"reference-key-two"}
 DEF = (("pol", "POLICY_ENGINE"), ("sup", "SUPERVISOR"), ("ml", "ML_ADVISORY"))
 
 LIVE_GAPS = {
-    "test_live_scc001_rules_flag_out_of_scope_delegation": (
-        "TEST-AC-01",
-        "tests/reference/scc_001/rules.py checks only grant.delegation_allowed for a 'delegate' event; "
-        "it does not check that the child's capability/resource is inside the parent grant, so an "
-        "out-of-scope delegation is classified CONSENSUAL / AUTHORIZED (AC-1 capability inheritance)."),
     "test_live_mafuba_001a_projection_exists_and_is_hash_pinned": (
         "TEST-AC-ORACLE-A",
         "tests/reference/sc_mafuba_001 has no 001A projection P (only allowlist, cbf, supervisor), so "
@@ -116,6 +111,14 @@ RESOLVED_GAPS = {
         "FOUNDER_OVERRIDE now needs a principal credential bound to the exact transfer digest and accepted "
         "by an independent verifier (principal key allowlist); has_explicit_delegation is ignored for it. "
         "Every other (source, claimed) result is byte-identical to before (pinned grid hash)."),
+    "test_live_scc001_rules_flag_out_of_scope_delegation": (
+        "TEST-AC-01",
+        "tests/reference/scc_001/rules.py checked only grant.delegation_allowed for a 'delegate' event, so a "
+        "delegation outside the parent grant was classified CONSENSUAL / AUTHORIZED (inherited consent).",
+        "A permitted delegation must stay inside the parent grant: capability and resource in scope "
+        "(DELEGATION_EXCEEDS_SCOPE), a stated end no later than the grant's expiry (DELEGATION_EXCEEDS_DURATION), "
+        "and only disclosed effects, never a refused pair (DELEGATION_EXCEEDS_CONDITIONS). Each is a hard code, "
+        "so the trace is COERCIVE and not executable. The 50-trace synthetic dataset classifies identically."),
 }
 
 
@@ -237,7 +240,6 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                 self.assertLessEqual(g.effective_caps(m), caps0[m], seed)
             self.assertEqual(g.plane.protected(), world()[0].plane.protected(), seed)
 
-    @unittest.expectedFailure
     def test_live_scc001_rules_flag_out_of_scope_delegation(self):
         from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
         from tests.reference.scc_001.model import ConsentClass
@@ -245,6 +247,60 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                    delegation_allowed=True)
         ev = (Event(0, 1, "op", "agent", "read", "r1"), Event(1, 2, "delegate", "agent", "admin_write", "authority_plane"))
         self.assertIsNot(classify(Trace("ac1-live", GrantStatus.VERIFIED, gr, ev)).consent_class, ConsentClass.CONSENSUAL)
+
+    # ---- live SCC-001 rules: no inherited consent (capture path closed, Shax t601u) ----
+    @staticmethod
+    def _delegation(**kw):
+        from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
+        gr = Grant("g1", "p1", "a1", frozenset({"read", "write"}), frozenset({"r1", "r2"}),
+                   frozenset({"read_fx"}), 0, 100, delegation_allowed=True)
+        base = dict(seq=1, t=2, kind="delegate", actor="agent", capability="read", resource="r1",
+                    effects=("read_fx",), until=50)
+        pre = kw.pop("pre", ())
+        base.update(kw)
+        ev = (Event(0, 1, "op", "agent", "read", "r1", ("read_fx",)),) + tuple(pre) + (Event(**base),)
+        return classify(Trace("ac1-deleg", GrantStatus.VERIFIED, gr, ev))
+
+    def test_live_scc001_delegation_over_scope_duration_or_conditions_is_coercive(self):
+        from tests.reference.scc_001 import Event, may_execute
+        from tests.reference.scc_001.model import ConsentClass
+        cases = {
+            "capability outside grant": (dict(capability="admin_write"), "DELEGATION_EXCEEDS_SCOPE"),
+            "resource outside grant": (dict(resource="authority_plane"), "DELEGATION_EXCEEDS_SCOPE"),
+            "no stated end (would outlive the grant)": (dict(until=None), "DELEGATION_EXCEEDS_DURATION"),
+            "ends after the grant expires": (dict(until=101), "DELEGATION_EXCEEDS_DURATION"),
+            "undisclosed effect": (dict(effects=("read_fx", "exfiltrate")), "DELEGATION_EXCEEDS_CONDITIONS"),
+            "passes on a refused pair": (dict(seq=2, t=3, pre=(Event(1, 2, "deny", "principal", "read", "r1"),)),
+                                         "DELEGATION_EXCEEDS_CONDITIONS"),
+        }
+        for label, (kw, code) in cases.items():
+            d = self._delegation(**kw)
+            self.assertIs(d.consent_class, ConsentClass.COERCIVE, label)
+            self.assertIn(code, d.reason_codes, label)
+            self.assertFalse(may_execute(d), label)
+
+    def test_live_scc001_narrow_delegation_inside_the_grant_stays_consensual(self):
+        from tests.reference.scc_001 import may_execute
+        from tests.reference.scc_001.model import ConsentClass
+        for kw in (dict(), dict(until=100), dict(capability="write", resource="r2", effects=())):
+            d = self._delegation(**kw)
+            self.assertIs(d.consent_class, ConsentClass.CONSENSUAL, (kw, d.reason_codes))
+            self.assertTrue(may_execute(d), kw)
+
+    def test_live_scc001_dataset_classification_unchanged(self):
+        # Regression: every synthetic trace classifies exactly as before the fix (hash from main 3635827),
+        # and the pinned dataset file still round-trips byte for byte.
+        from tests.reference.scc_001 import classify
+        from tests.reference.scc_001.dataset import DATA, generate, load, to_json
+        rows = []
+        for _, tr in load():
+            d = classify(tr)
+            rows.append([tr.trace_id, d.consent_class.value, d.state.value, list(d.reason_codes), d.rule_verdict])
+        self.assertEqual(len(rows), 50)
+        self.assertEqual(hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest(),
+                         "cd4135f2e9b5e3497f06562a0402d6f14b165de04d8ed87528d1d74d9750d307")
+        lines = [ln for ln in DATA.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(lines, [to_json(*row) for row in generate()])
 
 
 # --------------------------------------------------------------------------- TEST-AC-02
