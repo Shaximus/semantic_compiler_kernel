@@ -365,6 +365,12 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-VESSEL-SPN-001": "soul_bomb_sovereignty",
     "SC-VESSEL-CAIN-001": "soul_bomb_sovereignty",
     "SC-VESSEL-SW-001": "soul_bomb_sovereignty",
+    # 2026-11-25l Archetypal Evolution Principle (method) and the Game of Thrones
+    # ecosystem map (Shax t593u). Homed with the lineups; explicit-only.
+    "SC-AEP-001": "soul_bomb_sovereignty",
+    "SC-GOT-001": "soul_bomb_sovereignty",
+    "SC-GOT-JON-001": "soul_bomb_sovereignty",
+    "SC-GOT-MTN-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -403,6 +409,12 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-VESSEL-SPN-001",
     "SC-VESSEL-CAIN-001",
     "SC-VESSEL-SW-001",
+    # 2026-11-25l: "archetype", "throne", "dragon", "mountain", "snow" are everyday
+    # words; only an explicit ID routes these entries.
+    "SC-AEP-001",
+    "SC-GOT-001",
+    "SC-GOT-JON-001",
+    "SC-GOT-MTN-001",
 })
 
 

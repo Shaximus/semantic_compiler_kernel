@@ -146,3 +146,50 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Reason:** this is the reading that fits both the canon arc (the brothers refuse the inherited fight; Dean refuses Cain's trade) and the Consent Invariant, while keeping the scripture tension visible.
 - **Hook:** the same mechanism. `review_trigger_terms` are `sc-vessel-cain-001`, `mark of cain`, `first blade` and `cain and abel`. A bare "Cain and Abel were brothers." does not fire.
 - **Does not change:** RUL-BINARY-001 rev 2, `SC-POE-MRG-001` (itself still pending), and `SC-SCC-001` / `docs/SCC-001.md` (its threat-model follow-ups are only noted, in `docs/VESSEL_SUPERNATURAL_2026-11-25k.md`).
+## SC-AEP-001 (when a resemblance counts as a candidate)
+
+- **ID:** `SC-AEP-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Toronto (EST, UTC-5)
+- **Ruling used:** Shax t582u, the standing rule: "just pick something and flag it for review when the edge case is ever triggered."
+- **Question:** Shax t593u sets the method (structure, not one-to-one; archetypes recombine across eras like a Nephilim composite) but gives no threshold for when a resemblance is recorded as a correspondence.
+- **Chosen default:** a composite correspondence is a **CANDIDATE** only with **at least three shared structural attributes**, **at least one relational** (what the figure does to or with others, not a name, look or title), and **at least one recorded difference**. Below that, the row is WEAK or NAME_BORROWING. A candidate is never proof of transmission or literal identity.
+- **Alternatives not chosen:**
+  - (a) No threshold: record any shared attribute and let the gates grade it.
+  - (b) A majority of the bundle (for example 5 of 8) before a composite is named.
+- **Reason:** (a) lets name-borrowing back in, which the StarCraft map already rejected; (b) contradicts t593u, which says a later story may carry only part of a bundle.
+- **Hook:** `expansion/deliberation.py`, driven by the entry's metadata. `needs_review` is set on the explicit ID, and when the entry is the top compiled-entry match with at least two `review_trigger_terms` (`sc-aep-001`, `archetypal evolution`, `composite archetype`, `nephilim archetype`, `one-to-one`). The entry is explicit-only, so it never lifts a route.
+- **Does not change:** the earlier entries. The forced one-to-one matches found in them are listed for re-reading in `docs/SC-AEP-001_ARCHETYPAL_EVOLUTION_PRINCIPLE.md` section 5.
+
+## SC-GOT-001 (where the dragons sit)
+
+- **ID:** `SC-GOT-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Toronto (EST, UTC-5)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question (t593u, pasted analysis):** are the dragons the missing third force between the living and the dead?
+- **Chosen default:** **the dragons are an amplifier, not a faction.** Their role follows whoever holds them: Daenerys's liberation and conquest, and the Night King's wight Viserion (7x06). In `SC-TRIAD-001` terms the living hold the binary (Preservation: Cersei and the old order; Transformation: Daenerys), and the dead hold the outside-owner position **on the consent axis only** (wights are hosts taken without consent; the Night King claims no rule, only erasure).
+- **Alternatives not chosen:**
+  - (a) The dragons as the third faction (the pasted reading).
+  - (b) The dead as a fourth force outside the triad entirely.
+- **Reason:** the show gives the dragons no goal of their own, and the same power serves life, death and the destruction of the throne. This is the same rule as `SC-VESSEL-SPN-001` (role by relationship).
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-got-001`, `night king`, `white walkers`, `army of the dead`, `three great forces` and `mother of dragons`.
+- **Still open:** whether annihilation is a third kind of outside party that would extend `SC-TRIAD-001`; whether Drogon's melting of the throne is a choice.
+
+## SC-GOT-JON-001 (is Jon "our Jesus"?)
+
+- **ID:** `SC-GOT-JON-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Toronto (EST, UTC-5)
+- **Ruling used:** Shax t582u (standing rule, as above).
+- **Question (t593u):** "Is Jon actually our Jesus, or is Jon the vessel carrying the Jesus archetype while the larger story distributes Christ's functions across several characters?"
+- **Chosen default:** **distributed** (under `SC-AEP-001`). Of the eight attributes in the t593u bundle, Jon carries five, two partly and one partly inverted. The defeat of death goes to Arya (she kills the Night King, 8x03); the crown goes to Bran (elected, 8x06).
+- **Alternatives not chosen:**
+  - (a) Jon as the primary Christ composite, with others as minor echoes.
+  - (b) No Christ bundle in Game of Thrones beyond genre resurrection.
+- **Reason:** Shax's own correction rules out one-to-one, and canon splits the attributes: Jon forgives no one, brings back no message, and neither defeats death nor takes the throne.
+- **Hook:** the same mechanism. `review_trigger_terms` are `sc-got-jon-001`, `jon snow`, `jon is jesus`, `aegon targaryen` and `bran the broken`.
+- **Still open:** whether a resurrection the dead person never asked for passes the Consent Invariant because it restores agency; whether Bran's possession of Hodor taints the "good" succession.
