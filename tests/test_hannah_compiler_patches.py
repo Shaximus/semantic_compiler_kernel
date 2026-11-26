@@ -38,12 +38,12 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 
 class CompiledEntriesIntegrityTests(unittest.TestCase):
-    """Verify all 35 JSONL compiled entries and their SHA-256 manifest."""
+    """Verify all 39 JSONL compiled entries and their SHA-256 manifest."""
 
     def test_manifest_hashes_and_record_counts(self) -> None:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         entries = manifest["entries"]
-        self.assertEqual(len(entries), 35)  # +SC-TRIAD-*-001 (2026-11-25i)
+        self.assertEqual(len(entries), 39)  # +SC-TRIAD-*-001 (2026-11-25i), +SC-SCA-*-001 (t587u)
 
         entry_ids = {e["entry_id"] for e in entries}
         self.assertEqual(
@@ -84,6 +84,10 @@ class CompiledEntriesIntegrityTests(unittest.TestCase):
                 "SC-TRIAD-001",
                 "SC-TRIAD-SC-001",
                 "SC-TRIAD-SG-001",
+                "SC-SCA-POSS-001",
+                "SC-SCA-DISC-001",
+                "SC-SCA-CONT-001",
+                "SC-SCA-CONS-001",
             },
         )
 

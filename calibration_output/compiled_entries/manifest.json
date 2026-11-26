@@ -841,6 +841,89 @@
         "SC-TRIAD-001",
         "SC-TRIAD-SC-001"
       ]
+    },
+    {
+      "entry_id": "SC-SCA-POSS-001",
+      "file": "SC-SCA-POSS-001.jsonl",
+      "title": "StarCraft abilities: possession and deliverance",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t587u request / Reflexion Semantic Compiler",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 36638,
+      "sha256": "b6039e78f4b76a287617660a7757b5e72c35468f4ad4a577f1b7302923aa8a34",
+      "notes": "StarCraft ability theology decode (Shax t587u), rows SC2-Z13, BW-T03 of docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md. Graded SILVER 0.82 by rule; no self-grade. Explicit-only domain hint: capability_isolation.",
+      "cross_references": [
+        "SC-SCA-DISC-001",
+        "SC-SCA-CONT-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SCA-DISC-001",
+      "file": "SC-SCA-DISC-001.jsonl",
+      "title": "StarCraft abilities: counterfeit, concealment and discernment",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t587u request / Reflexion Semantic Compiler",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 45361,
+      "sha256": "a26cac447f9b12ff86b56fc5b82fe5bdcaf1365a218352004938684f88936405",
+      "notes": "StarCraft ability theology decode (Shax t587u), rows SC2-P06, BW-P02, SC2-Z06, PASS-03 of docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md. Graded SILVER 0.825 by rule; no self-grade. Explicit-only domain hint: capability_isolation.",
+      "cross_references": [
+        "SC-SCA-POSS-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SCA-CONT-001",
+      "file": "SC-SCA-CONT-001.jsonl",
+      "title": "StarCraft abilities: bounded affliction and quarantine",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t587u request / Reflexion Semantic Compiler",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 32046,
+      "sha256": "3133f2b5ac72c9bbfd7f3fcbedef136141b361b3e267d8fdc59831180863a350",
+      "notes": "StarCraft ability theology decode (Shax t587u), rows BW-Z05, BW-T12, SC2-Z25 of docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md. Graded SILVER 0.82 by rule; no self-grade. Explicit-only domain hint: capability_isolation.",
+      "cross_references": [
+        "SC-SCA-POSS-001",
+        "SC-SCA-CONS-001"
+      ]
+    },
+    {
+      "entry_id": "SC-SCA-CONS-001",
+      "file": "SC-SCA-CONS-001.jsonl",
+      "title": "StarCraft abilities: power by consuming one's own",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t587u request / Reflexion Semantic Compiler",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 27331,
+      "sha256": "3275049511ad55ac350f926485757b6bd52433a04ed7ffb44eea1aecd862c73d",
+      "notes": "StarCraft ability theology decode (Shax t587u), rows BW-Z07, CMP-06 of docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md. Graded SILVER 0.797 by rule; no self-grade. Explicit-only domain hint: capability_isolation.",
+      "cross_references": [
+        "SC-SCA-CONT-001",
+        "SC-POE-KIT-001"
+      ]
     }
   ]
 }

@@ -46,3 +46,26 @@ Open decisions that landed as provisional defaults. New entries are appended bel
 - **Hook:** `expansion/deliberation.py`, data-driven from the entry's metadata. `compile_semantic_packet`, `route_domains` and `summon` set `needs_review` when `SC-TRIAD-001` is named by ID. They also set it when the entry is the top compiled-entry match and at least two of `review_trigger_terms` (`sc-triad-001`, `triad`, `outside owner`, `assimilation`, `satan`) are present. The entry is explicit-only, so it never lifts a route. In dogfood, the flag fired on the ID and on a prompt that was about the triad itself ("Preservation versus assimilation versus transformation: the triad."). It did not fire on "The jazz triad played a short set." or on "Explain SC-TRIAD-SG-001."
 - **Does not change:** `SC-TRIAD-SC-001` and `SC-TRIAD-SG-001` are not pending. RUL-BINARY-001 rev 2, the Vegeta/Frieza readings and Shax's "Zerg = Satan" reading are unchanged. The last is recorded as his interpretation beside the canon fit on Amon.
 - **Still open, when reviewed:** (1) is Satan a pole of the binary or the outside owner; (2) should the triad be its own invariant, or binary plus vessel.
+
+## StarCraft Recall rows (rapture tradition layer)
+
+- **ID:** `SCA-RECALL-RAPTURE`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Toronto (EST, UTC-5)
+- **Request:** Shax t587u (map every StarCraft unit ability to its theological counterpart).
+- **Chosen default:** rows `SC2-P29` (Mothership / Nexus Recall) and `BW-P07` (Arbiter Recall) in `docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md` are graded STRONG on the text layer only (1 Thess 4:16-17; Matt 24:31: one's own are gathered out of an area and the others stay). They are **not compiled**. The "rapture" reading (a pre-tribulation removal) is a tradition, not the text, and is kept as a separate, contested tradition layer.
+- **Reason:** the structural fit with the text is strong, but its common name comes from one contested tradition. Compiling it would risk presenting that tradition as canon.
+- **Hook:** none. No compiled entry carries this row, so nothing in the runtime sets `needs_review` for it.
+- **Still open, when reviewed:** whether to compile Recall as its own entry, and which tradition layer (if any) to name.
+
+## NAME_BORROWING grading rule (StarCraft ability map)
+
+- **ID:** `SCA-NAME-BORROWING`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 25 Nov 2026, America/Toronto (EST, UTC-5)
+- **Chosen default:** an ability or unit name taken from religious vocabulary (Zealot, Templar, Archon, Arbiter, Oracle, Revelation, Overseer, Ascendant, Locust, Sacrifice) earns no credit. Such rows carry a `NAME_BORROWING` flag and are graded on the mechanic alone.
+- **Reason:** names are evidence of the designers' borrowing, not of a shared structure. A hard zero keeps theme from inflating grades.
+- **Hook:** none (grading rubric only; `docs/STARCRAFT_ABILITY_THEOLOGY_MAP.md`).
+- **Still open, when reviewed:** whether a borrowed name should count as weak supporting evidence when the mechanic already matches.
