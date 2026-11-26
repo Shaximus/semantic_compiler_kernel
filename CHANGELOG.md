@@ -5,6 +5,19 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ## [Unreleased]
 
 ### Added
+- Consent Invariant and SCC-001 (Shax t588u), two compiled entries, both SILVER and explicit-only. The compiled manifest is now **41 entries (11 GOLD + 30 SILVER)**.
+  - `SC-CONSENT-001` SILVER 0.821 (min gate 0.75): a relationship is consensual only with voluntary entry, informed agreement, preserved agency and freedom to withdraw or renegotiate. Sovereignty answers who holds authority; consent answers whether it was legitimately granted. Related to RUL-BINARY-001 rev 2 (tension with "refusal is self-destruction" recorded) and SC-TRIAD-001. Home domain `soul_bomb_sovereignty`.
+  - `SC-SCC-001` SILVER 0.802 (min gate 0.7): Symbiotic Consent Classifier, Proposed / unvalidated (`gold_awarded` false). COERCIVE / CONSENSUAL / UNKNOWN (UNKNOWN is never consent); deterministic rules gate, ML advisory and restrict-only, counterfactual replay, aggregator. `PROVISIONAL_DEFAULT` / `pending_deliberation: true` for the first domain and the decision mode. Home domain `capability_isolation`.
+- `docs/SCC-001.md` (spec 0.1.0-draft) and `docs/CONSENT_INVARIANT_2026-11-25j.md`.
+- `tests/reference/scc_001/`: reference rule engine, transparent logistic advisory scorer, counterfactual and aggregator (standard library only; not packaged, not wired into runtime routing), plus 50 **synthetic** labelled agent-integration traces.
+- `tests/test_scc_001_reference.py` and `tests/test_sc_consent_2026_11_25j.py`.
+- `docs/PENDING_DELIBERATION.md`: `SCC-001-FIRST-DOMAIN`, `SCC-001-DECISION-MODE`, and a proposed (not closed) resolution of SC-TRIAD-001's outside owner via SC-CONSENT-001.
+- Verbatim source and SHA-256 under `docs/evidence/source-2026-11-25j/`.
+
+### Changed
+- `SC-TRIAD-SG-001` rev 1.1.0: adds the Alliance of Four Great Races (Furlings left undefined), the Fifth Race succession (*Unending*), Unas, Jaffa larval pouch, Reetou, Tollan and Aschen; corrects the t588u paste (Fifth Race title is conferred in *Unending*; the Reetou threat is the rebel faction; Egypt/Ra is from the film and *Children of the Gods*). Gates and tier unchanged (SILVER 0.849).
+
+### Added (earlier in this cycle: triad PR #80, StarCraft ability map PR #81)
 - Three-faction triad (Shax t586u), three compiled entries, all SILVER. Router `input` is under 400 characters, the full text is in `v2_extensions.source_text`, and the home domain is `soul_bomb_sovereignty`. All three are in `EXPLICIT_ONLY_ENTRY_HINTS`, so they are excluded from compiled-entry IDF and the lift tournament. The compiled manifest is now **35 entries (11 GOLD + 24 SILVER)**.
   - `SC-TRIAD-001` SILVER 0.803 (min gate 0.7): cross-franchise hub covering StarCraft, Stargate, Diablo, Path of Exile, Dragon Ball and biblical tradition. Holds: consent separates symbiosis from possession; the possessor sits behind the host; the third faction slides into assimilation when it uses the enemy as an instrument. Breaks: the same species on both sides; individuals crossing roles; the third faction's origin varies; Rev 12 treats humanity as contested ground. `PROVISIONAL_DEFAULT` / `pending_deliberation: true` (triad = RUL-BINARY-001 + outside owner), with `needs_review` on trigger.
   - `SC-TRIAD-SC-001` SILVER 0.844: StarCraft. Corrected: the Void-linked Fallen One is Amon, who binds the zerg through the Overmind. Shax's "Zerg = Satan" is kept as his interpretation.
