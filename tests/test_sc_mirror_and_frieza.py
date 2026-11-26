@@ -145,8 +145,9 @@ class CrossReferenceHonestyTests(unittest.TestCase):
     def test_unresolved_references_are_not_invented(self) -> None:
         res = MIRROR["metadata"]["cross_reference_resolution"]
         unresolved = {k for k, v in res.items() if v["status"] == "UNRESOLVED"}
-        # SC-LU-VEGETA-001 was compiled on 2026-11-25 (tests/test_sc_lu_vegeta.py).
-        self.assertEqual(unresolved, {"SC-LU-PICCOLO-001", "SC-LU-GOKU-001", "SC-LU-BUU-001"})
+        # SC-LU-VEGETA-001 was compiled on 2026-11-25 (tests/test_sc_lu_vegeta.py);
+        # SC-LU-GOKU-001 on 2026-11-25g (tests/test_sc_lu_lineup_25g.py).
+        self.assertEqual(unresolved, {"SC-LU-PICCOLO-001", "SC-LU-BUU-001"})
         self.assertEqual(unresolved, set(MIRROR["metadata"]["unresolved_cross_references"]))
         for ref in unresolved:
             self.assertNotIn(ref, MANIFEST_IDS)

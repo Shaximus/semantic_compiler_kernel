@@ -2,6 +2,20 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/lineup-2026-11-25g
+
+### Added
+- `SC-LU-GOKU-001` (SILVER 0.857), `SC-LU-CELL-001` (SILVER 0.846), `SC-LU-TRUNKS-001` (SILVER 0.839), compiled from Shax's t573u sources (`docs/evidence/source-2026-11-25g/01–03`). Self-grades (GOLD 0.92–0.93) kept in `metadata.self_grade` and not accepted: claims re-graded to CANON + ANALOGOUS layers, mapping classes ISOMORPHIC_INVARIANT → STRUCTURAL_ANALOGY, tier by rule (GOLD needs iq ≥ 0.9 and every gate ≥ 0.8). Router `input` kept under 400 characters; the full source text is in `v2_extensions.source_text`. Legacy `identity_claim_allowed` migrated to `substrate_confusion_check` / `positional_claims_permitted`.
+- Canon corrections recorded in `outputs.correction`: Cell's manga DNA is five fighters; "Solar Kamehameha", "Father-Son Kamehameha" and "Super Perfect Cell" are game or fan names; Cell regenerates from his head's core and learns Instant Transmission. Trunks's time machine makes round trips; Super Saiyan Rage is anime-only; the sword's origin is not in canon. Vegeta did not personally kill Yamcha, Tien, Chiaotzu or Piccolo; the Spirit Bomb "pure heart to form" rule is not recorded as canon; main-sequence stars fuse only hydrogen to helium; Kakarot's mission is retold in *Minus* / *Broly* (2018).
+- Unresolved source references (`SC-LU-BARDOCK-001`, `SC-LU-GOHAN-001`, `SC-LU-PICCOLO-001`, `SC-LU-BUU-001`, ambiguous `SC-DR-001`) recorded per entry; nothing stubbed.
+- `tests/test_sc_lu_lineup_25g.py`.
+
+### Changed
+- `SC-LU-VEGETA-001` rev 1.2.0: "The Last Crown" merged as CLM-LU-VEG-10..14 (source claim IDs kept), not as a duplicate ID. "He did not initially know Frieza destroyed Planet Vegeta" confirmed CANON (ch. 257, Dodoria) and linked to CLM-LU-VEG-09. CLM-LU-VEG-13 ("integration would destroy both") scope-limited to his internal drives under RUL-BINARY-001 rev 2. Corrections: Final Flash was not the only non-Gohan attack to badly damage Perfect Cell; Vegeta rallied the Spirit Bomb donors and arranged the Porunga wish rather than giving his own energy. scale_integrity 0.75 → 0.8, corpus_completeness 0.85 → 0.9; composite 0.85 → 0.862; still SILVER.
+- `SC-MIRROR-001`: `SC-LU-GOKU-001` resolved; unresolved references are now `SC-LU-PICCOLO-001`, `SC-LU-BUU-001`. No score changed.
+- Routing: `goku`, `kakarot`, `ultra instinct`, `sc-lu-goku` added to `soul_bomb_sovereignty`. Cell and Trunks phrases are only in `_SOUL_BOMB_EXPLICIT_PATTERN`, because every router keyword also indexes its single tokens. `SC-LU-CELL-001` and `SC-LU-TRUNKS-001` join `EXPLICIT_ONLY_ENTRY_HINTS`; the router blanks those IDs before content scoring so "SC-LU-CELL-001" does not score as "cell", and the elevator's summon lift now honours the explicit-only rule. New entry-lift tie rule (`ENTRY_LIFT_TIE_RATIO` 1.02): when the runner-up entry is homed elsewhere and within 2 %, neither lifts (adding entries re-weighted IDF and flipped a 0.4 % tie on "The AI writes code.").
+- Manifest 25 entries; `validate_catalog.py` registry 28.
+
 ## [Unreleased] — docs/sources-2026-11-25g
 
 ### Added

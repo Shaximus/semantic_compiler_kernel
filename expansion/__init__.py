@@ -277,6 +277,11 @@ _DOMAIN_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         # SC-LU-VEGETA-001 (Sovereignty pole lineup), 2026-11-25. Character and form names
         # only; generic words such as "prince", "pride" or "fusion" are deliberately absent.
         "vegeta", "ultra ego", "majin vegeta", "vegito", "gogeta", "sc-lu-vegeta",
+        # SC-LU-GOKU-001 (Oneness pole lineup), 2026-11-25g. Names only. Cell and Trunks
+        # phrases are not listed here: every keyword also indexes its single tokens on the
+        # domain, so "perfect cell" or "future trunks" would make "cell phone" or "swim
+        # trunks" lift this domain. They sit only in _SOUL_BOMB_EXPLICIT_PATTERN below.
+        "goku", "kakarot", "ultra instinct", "sc-lu-goku",
     )),
     ("finance_economics", (
         "central bank", "commercial bank", "investment bank", "retail bank",
@@ -385,6 +390,8 @@ _SOUL_BOMB_EXPLICIT_PATTERN = _keyword_pattern((
     "frieza", "substrate activation", "outsider's first investment", "sc-lu-frieza",
     "mirror match",
     "vegeta", "ultra ego", "vegito", "gogeta", "sc-lu-vegeta",
+    "goku", "kakarot", "ultra instinct", "sc-lu-goku",
+    "perfect cell", "cell games", "future trunks", "sc-lu-cell", "sc-lu-trunks",
 ))
 
 

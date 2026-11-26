@@ -345,7 +345,8 @@ semantic_compiler_kernel/
 | SC-SB-001 Spirit Bomb three-claim patch (DRAFT 0.4, incl. SC-SIT-001) | `docs/SC-SB-001_THREE_CLAIM_STRUCTURE.md` |
 | SC-FR-001 The Outsider's First Investment / Frieza Protocol (DRAFT 0.1; compiled as SC-LU-FRIEZA-001) | `docs/SC-FR-001_THE_OUTSIDERS_FIRST_INVESTMENT.md`, `calibration_output/compiled_entries/SC-LU-FRIEZA-001.jsonl` |
 | SC-MD-001 Sovereign Mirror Duality (DRAFT 0.1; compiled as SC-MIRROR-001, The Mirrored Loop and the Compression Protocol) | `docs/SC-MD-001_SOVEREIGN_MIRROR_DUALITY.md`, `calibration_output/compiled_entries/SC-MIRROR-001.jsonl` |
-| SC-LU-VEGETA-001 Lineup decode: Vegeta, the Sovereignty pole (compiled, SILVER) | `calibration_output/compiled_entries/SC-LU-VEGETA-001.jsonl` |
+| SC-LU-VEGETA-001 Lineup decode: Vegeta, the Sovereignty pole (compiled, SILVER; rev 1.2.0 merges "The Last Crown") | `calibration_output/compiled_entries/SC-LU-VEGETA-001.jsonl` |
+| SC-LU-GOKU-001 / SC-LU-CELL-001 / SC-LU-TRUNKS-001 Lineup decodes: Goku (Oneness pole), Perfect Cell, Future Trunks (compiled, SILVER) | `calibration_output/compiled_entries/SC-LU-GOKU-001.jsonl`, `SC-LU-CELL-001.jsonl`, `SC-LU-TRUNKS-001.jsonl` |
 | SC-VSR-001 Voluntary State Recompression (DRAFT 0.1) | `docs/SC-VSR-001_VOLUNTARY_STATE_RECOMPRESSION.md` |
 | SC-GOV-001 Measurement, Not Indulgence — governance principle (DRAFT 0.1) | `docs/SC-GOV-001_MEASUREMENT_NOT_INDULGENCE.md` |
 | SC-PATCH-MIRROR-001 Cyclic feedback patch notes (DRAFT 0.1) | `docs/SC-PATCH-MIRROR-001_CYCLIC_FEEDBACK.md` |
