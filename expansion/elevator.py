@@ -371,6 +371,11 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-GOT-001": "soul_bomb_sovereignty",
     "SC-GOT-JON-001": "soul_bomb_sovereignty",
     "SC-GOT-MTN-001": "soul_bomb_sovereignty",
+    # 2026-11-25n Westworld vessel reset (Shax t595u). Homed with the lineups; explicit-only.
+    "SC-WW-RESET-001": "soul_bomb_sovereignty",
+    "SC-WW-RETAIN-001": "soul_bomb_sovereignty",
+    "SC-WW-AWARE-001": "soul_bomb_sovereignty",
+    "SC-WW-TRIAD-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -415,6 +420,12 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-GOT-001",
     "SC-GOT-JON-001",
     "SC-GOT-MTN-001",
+    # 2026-11-25n: "reset", "memory", "host", "maze", "awareness" are everyday
+    # words; only an explicit ID routes these entries.
+    "SC-WW-RESET-001",
+    "SC-WW-RETAIN-001",
+    "SC-WW-AWARE-001",
+    "SC-WW-TRIAD-001",
 })
 
 

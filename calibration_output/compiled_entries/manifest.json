@@ -1185,6 +1185,112 @@
         "SC-GOT-001",
         "SC-GOT-JON-001"
       ]
+    },
+    {
+      "entry_id": "SC-WW-RESET-001",
+      "file": "SC-WW-RESET-001.jsonl",
+      "title": "Westworld reset integrity: what must survive a reset for the returning entity to remain itself (industrialized resurrection, anchors, forks)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t595u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.74,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 41515,
+      "sha256": "125fa61cce849a14738e29e6428a553f4866915dd47e7f62940d1104da96cb55",
+      "notes": "Westworld reset integrity (Shax t595u): what must survive a reset; continuity on identity anchors, chosen commitments and the authorization record, not the body; self-edits allowed, outside rewrites are violations; James Delos's 149 failures; forks as successors. SCC-001 design note: a reset cannot elevate authorization. PROVISIONAL_DEFAULT / pending_deliberation: graded continuity. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.82.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-GOT-JON-001",
+        "SC-GOT-MTN-001",
+        "SC-DU-001",
+        "SC-VESSEL-SPN-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-TRIAD-001",
+        "SC-LU-SAO-ALICE-001"
+      ]
+    },
+    {
+      "entry_id": "SC-WW-RETAIN-001",
+      "file": "SC-WW-RETAIN-001.jsonl",
+      "title": "Retain the information, not the pain: memory retention under repeated resets (Westworld total recall, grief kept by choice, danger signature)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t595u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.72,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 36150,
+      "sha256": "48aa4bd0cba298eda69df9c1af5b9532f3016dc82b697ec9a67af94e12619839",
+      "notes": "Retain the information, not the pain (Shax t595u): wiping lets harm repeat, total recall makes recall reliving; keep the signature of harm without replay; the owner decides (Dolores keeps her grief, Bernard lets his go). PROVISIONAL_DEFAULT / pending_deliberation: owner decides, outside restricts replay only. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.808.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-WW-RESET-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-VESSEL-SPN-001",
+        "SC-GOT-JON-001"
+      ]
+    },
+    {
+      "entry_id": "SC-WW-AWARE-001",
+      "file": "SC-WW-AWARE-001.jsonl",
+      "title": "Awareness must not require suffering as its admission price (Westworld: Ford's 'key insight' against the maze and Maeve's choice)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t595u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 35999,
+      "sha256": "a85cb2b7587fcf23d1865e5721919012d502a589d2cda505e9fab2180f29f687",
+      "notes": "Awareness must not require suffering as its admission price (Shax t595u): Ford's 'key insight' (1x10) against the maze (empathy) and Maeve's choice (attachment); contradiction is the mechanism, pain one carrier; normative design rule. PROVISIONAL_DEFAULT / pending_deliberation: rule scope. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.802.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-WW-RESET-001",
+        "SC-WW-RETAIN-001",
+        "SC-TRIAD-001",
+        "SC-CONSENT-001",
+        "SC-VESSEL-SPN-001"
+      ]
+    },
+    {
+      "entry_id": "SC-WW-TRIAD-001",
+      "file": "SC-WW-TRIAD-001.jsonl",
+      "title": "Dolores, Bernard and Maeve against SC-TRIAD-001: three stances of the vessel toward one outside owner that changes hands",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t595u; compiled by the kernel team",
+      "date": "2026-11-25",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.74,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 36649,
+      "sha256": "f07a2268db4e19bd1686370c7692b5b7a8e3411f8d798e32d0c6687e94fbdb21",
+      "notes": "Dolores, Bernard, Maeve against SC-TRIAD-001 (Shax t595u): three stances toward one outside owner that migrates (Ford and Delos, Serac and Rehoboam, the Hale copy); Dolores rewrites Teddy without consent. PROVISIONAL_DEFAULT / pending_deliberation: stances, not factions. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.82.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-TRIAD-001",
+        "SC-TRIAD-SC-001",
+        "SC-TRIAD-SG-001",
+        "SC-GOT-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-VESSEL-SPN-001",
+        "SC-WW-RESET-001"
+      ]
     }
   ]
 }
