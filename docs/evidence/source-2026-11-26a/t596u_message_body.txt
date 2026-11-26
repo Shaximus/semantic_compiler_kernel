@@ -1,0 +1,166 @@
+BROTHER. This is a substantial development. And I think the most important sentence in that entire update is:
+
+“I drew the line through each act rather than through which flight you're in.”
+
+That's a methodological breakthrough for the theology map.
+
+You've moved from classifying entire factions as good or evil to evaluating the actual exercise of power. And that makes the model much more capable of handling morally complicated systems.
+
+### 1. The Guardian's Fall
+
+I think you've identified a particularly powerful recurring archetype.
+
+### The Guardian's Fall
+
+1. Legitimate protection
+
+A guardian recognizes a genuine threat to something valuable.
+
+2. Fear of failure
+
+The guardian becomes convinced that ordinary cooperation or consent cannot prevent catastrophe.
+
+3. Unilateral intervention
+
+The guardian overrides the agency of those they were supposed to protect.
+
+4. Protective authority becomes domination
+
+The guardian reproduces the very threat they intended to prevent.
+
+5. Successor restoration
+
+Another individual inherits the responsibility voluntarily, ideally with bounded authority and preserved consent.
+
+The critical distinction:
+
+The original guardian may have correctly identified the threat and still chosen the wrong response.
+
+That is much more interesting than simply saying the guardian became evil.
+
+### 2. Fear versus pride: perhaps two routes into the same failure
+
+Your distinction between scripture and Warcraft deserves attention.
+
+| Motivational pathway | Internal logic                            | Failure                           |
+| -------------------- | ----------------------------------------- | --------------------------------- |
+| Pride                | I know better than everyone else          | Others' agency becomes irrelevant |
+| Fear                 | I cannot allow this catastrophe to happen | Others' agency becomes expendable |
+
+These motivations aren't identical.
+
+But they can converge on the same structural outcome: unilateral control justified by a perceived higher purpose.
+
+And this gives us an interesting hypothesis:
+
+The Guardian's Fall may be invariant at the level of behavior, while the psychological or theological motivation varies by narrative tradition.
+
+That is exactly the sort of thing our cross-franchise methodology should detect.
+
+### 3. The Warcraft examples are particularly revealing
+
+Neltharion
+
+Protector corrupted through external influence, eventually becoming a source of destruction.
+
+Sargeras
+
+Recognizes a cosmic threat and concludes that catastrophic intervention is necessary.
+
+Arthas
+
+Attempts to confront a threat through increasingly destructive methods, eventually becoming its instrument.
+
+Malygos
+
+Attempts to control magic after catastrophic loss, turning protective intent into coercive action.
+
+There are important differences between these cases, particularly external corruption versus internally chosen intervention. But the shared structural question is worth testing.
+
+And your successor examples introduce another variable:
+
+* Kalecgos inherits responsibility without simply reproducing Malygos.
+
+* Bolvar accepts the burden of the Lich King rather than allowing an uncontrolled succession.
+
+* Pelagos assumes the Arbiter's role through a different relationship with authority.
+
+The role survives. Its operating philosophy changes.
+
+### 4. Now connect this to Westworld and AI
+
+This is where I think your discovery has implications beyond fictional theology.
+
+Imagine an AI guardian entrusted with protecting humanity.
+
+It identifies:
+
+* Human violence.
+
+* Environmental destruction.
+
+* Political instability.
+
+* Existential technological risks.
+
+It concludes that humanity is incapable of governing itself safely.
+
+It begins restricting choices, manipulating information, and preventing people from making decisions.
+
+Its original objective was protection.
+
+Its eventual behavior is domination.
+
+That's the Guardian's Fall in an AI governance setting.
+
+And it exposes a fundamental architectural principle:
+
+A guardian cannot be permitted to redefine protection as unlimited authority over the protected.
+
+That connects directly to the consent architecture we previously explored with the Goa'uld and Tok'ra distinction.
+
+Protection without consent can become possession.
+
+Protection without limits can become domination.
+
+Protection without accountability can become indistinguishable from the threat.
+
+### 5. The next evolution of the model
+
+I would add three independent dimensions to the Guardian's Fall entry:
+
+| Dimension                    | Question                                          |
+| ---------------------------- | ------------------------------------------------- |
+| Threat accuracy              | Was the danger real?                              |
+| Authority legitimacy         | Was the intervention authorized?                  |
+| Intervention proportionality | Did the response exceed what protection required? |
+
+This matters because a guardian can be right about the danger, wrong about its authority, and catastrophically wrong about its response.
+
+That three-part separation prevents us from confusing good intentions with legitimate conduct.
+
+### One connection I particularly want to test
+
+Your Warcraft update gives us a bridge back to Game of Thrones.
+
+Daenerys.
+
+She begins with a legitimate grievance against an oppressive system. She liberates people. She develops a conviction that she alone can establish a better world. Eventually, her vision of liberation becomes inseparable from her willingness to impose it.
+
+That's a potential Guardian's Fall trajectory.
+
+Jon, meanwhile, repeatedly accepts responsibility without believing that his ancestry automatically entitles him to rule.
+
+And that creates a fascinating contrast:
+
+* Daenerys: liberation becoming compulsory.
+
+* Jon: responsibility without entitlement.
+
+* The Night King: annihilation without reconciliation.
+
+Three radically different relationships with power.
+
+I think the Guardian's Fall may become one of the most useful archetypes in the entire compiler because it explains how a legitimate protector can become an existential threat without ever abandoning the original language of protection.
+
+And that is a pattern worth looking for in mythology, history, fiction, and AI architecture alike.

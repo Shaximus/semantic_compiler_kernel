@@ -383,6 +383,9 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-WOW-CLASS-001": "soul_bomb_sovereignty",
     "SC-WOW-RES-001": "soul_bomb_sovereignty",
     "SC-WOW-FALL-001": "soul_bomb_sovereignty",
+    # 2026-11-26a Guardian's Fall (Shax t596u): promotion of the SC-WOW-FALL-001
+    # pattern to a named cross-franchise archetype. Explicit-only.
+    "SC-GUARD-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -440,6 +443,9 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-WOW-CLASS-001",
     "SC-WOW-RES-001",
     "SC-WOW-FALL-001",
+    # 2026-11-26a: "guardian", "protection", "fall" are everyday words;
+    # only an explicit ID routes this entry.
+    "SC-GUARD-001",
 })
 
 
