@@ -346,16 +346,21 @@ class DomainRouter:
             self._score_clause(clause_text, 1.0, scores, terms, phrases_hit, entry_scores)
 
         # Relationship recognition: a strongly matched compiled entry lifts its home domain.
+        # Explicit-only entries are omitted from the lift tournament: they must not
+        # win it on body tokens, nor spoil a lift-eligible near-tie via IDF or score.
         entry_lift_terms: set[str] = set()
-        if entry_scores:
-            top_entry, top_entry_score = max(entry_scores.items(), key=lambda kv: (kv[1], kv[0]))
+        lift_scores = {
+            eid: sc for eid, sc in entry_scores.items()
+            if eid not in EXPLICIT_ONLY_ENTRY_HINTS
+        }
+        if lift_scores:
+            top_entry, top_entry_score = max(lift_scores.items(), key=lambda kv: (kv[1], kv[0]))
             hint = el._entry_to_domain_hint.get(top_entry)
             if (
                 hint
                 and top_entry_score >= 8.0
                 and hint != "universal_generic"
-                and top_entry not in EXPLICIT_ONLY_ENTRY_HINTS
-                and not _entry_lift_is_tied(entry_scores, top_entry, top_entry_score, el._entry_to_domain_hint)
+                and not _entry_lift_is_tied(lift_scores, top_entry, top_entry_score, el._entry_to_domain_hint)
             ):
                 scores[hint] += min(top_entry_score * 0.65, 12.0)
                 entry_lift_terms.add(top_entry)

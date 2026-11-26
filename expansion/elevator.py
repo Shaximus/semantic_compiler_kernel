@@ -332,6 +332,16 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # SC-CP-001 (Clay and Pots, reconstructed 2026-11-25): base weights vs terminals is the
     # consciousness/cognition split, already carried by that domain's vocabulary.
     "SC-CP-001": "consciousness_cognition",
+    # 2026-11-25h Path of Exile cosmology (Hannah assets, Shax t579u). Homed in
+    # government; all seven are explicit-only so everyday words (sin, beast, atlas —
+    # also a bot name) and distinctive proper nouns do not lift the domain.
+    "SC-POE-DU-001": "government",
+    "SC-POE-MRG-001": "government",
+    "SC-POE-KIT-001": "government",
+    "SC-POE-BST-001": "government",
+    "SC-POE-ATL-001": "government",
+    "SC-POE-VAL-001": "government",
+    "SC-POE-MAL-001": "government",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -339,7 +349,20 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
 # prompt does not compile as consciousness/cognition.
 # SC-LU-CELL-001 and SC-LU-TRUNKS-001 (2026-11-25g) join for the same reason: "cell"
 # (phone, spreadsheet, stem, fuel) and "trunks" (swim, car, tree, elephant) are everyday words.
-EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({"SC-CP-001", "SC-LU-CELL-001", "SC-LU-TRUNKS-001"})
+EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
+    "SC-CP-001",
+    "SC-LU-CELL-001",
+    "SC-LU-TRUNKS-001",
+    # 2026-11-25h PoE cosmology: "sin", "innocence", "beast", "atlas" (also a bot name),
+    # plus distinctive names kept explicit-only so domain lift cannot hijack controls.
+    "SC-POE-DU-001",
+    "SC-POE-MRG-001",
+    "SC-POE-KIT-001",
+    "SC-POE-BST-001",
+    "SC-POE-ATL-001",
+    "SC-POE-VAL-001",
+    "SC-POE-MAL-001",
+})
 
 
 def _require_str_tuple(value: Any, field_name: str) -> tuple[str, ...]:
@@ -1532,19 +1555,34 @@ class DomainElevator:
 
         # Compute per-kind IDF scaling so discriminative tokens outrank boilerplate
         kind_counts: dict[str, int] = defaultdict(int)
+        # Explicit-only entries are indexed for ID summoning but excluded from
+        # compiled-entry IDF so adding them cannot reweight lift competitions
+        # among lift-eligible entries (2026-11-25h: seven PoE entries flipped
+        # a 1.7% DIVINE-RLHF vs DOMAIN-EXPANSION race on an autonomy prompt).
+        lift_eligible_entry_count = 0
         for s in slots.values():
             kind_counts[s.kind] += 1
+            if s.kind == "compiled_entry" and s.key not in EXPLICIT_ONLY_ENTRY_HINTS:
+                lift_eligible_entry_count += 1
 
         token_index: dict[str, tuple[tuple[str, float], ...]] = {}
         for tok, slot_scores in raw_token_weights.items():
             df_by_kind: dict[str, int] = defaultdict(int)
+            df_entry_eligible = 0
             for sid in slot_scores:
-                df_by_kind[slots[sid].kind] += 1
+                kind = slots[sid].kind
+                df_by_kind[kind] += 1
+                if kind == "compiled_entry" and slots[sid].key not in EXPLICIT_ONLY_ENTRY_HINTS:
+                    df_entry_eligible += 1
             postings: list[tuple[str, float]] = []
             for sid, base_w in slot_scores.items():
                 kind = slots[sid].kind
-                n_kind = max(kind_counts[kind], 1)
-                df = df_by_kind[kind]
+                if kind == "compiled_entry":
+                    n_kind = max(lift_eligible_entry_count, 1)
+                    df = df_entry_eligible
+                else:
+                    n_kind = max(kind_counts[kind], 1)
+                    df = df_by_kind[kind]
                 idf = math.log((n_kind + 1.0) / (df + 1.0)) + 1.0
                 postings.append((sid, round(base_w * idf, 6)))
             postings.sort(key=lambda pair: (-pair[1], pair[0]))
@@ -1753,19 +1791,29 @@ class DomainElevator:
             # If a compiled entry matched very strongly (e.g. direct SC-LU-SAO-SUGOU-001 lookup)
             # and its home domain wasn't top-1, give its home domain a clean cross-reference lift.
             if entry_hits:
-                top_entry_score, top_entry_sid = entry_hits[0]
+                # Lift-eligible hits only: explicit-only entries summon when named
+                # but must not win or spoil the lift tournament on body tokens.
+                q_lower = query_text.lower()
+                lift_hits = [
+                    (score, sid) for score, sid in entry_hits
+                    if self._slots[sid].key not in EXPLICIT_ONLY_ENTRY_HINTS
+                    or self._slots[sid].key.lower() in q_lower
+                ]
+                top_entry_score, top_entry_sid = (lift_hits or entry_hits)[0]
                 top_entry_id = self._slots[top_entry_sid].key
                 hint_domain = self._entry_to_domain_hint.get(top_entry_id)
                 # EXPLICIT_ONLY entries lift their home domain only when the query names the ID
                 # (same rule as DomainRouter's entry lift): "swim trunks" must not lift it.
-                if hint_domain and top_entry_id in EXPLICIT_ONLY_ENTRY_HINTS and top_entry_id.lower() not in query_text.lower():
+                if hint_domain and top_entry_id in EXPLICIT_ONLY_ENTRY_HINTS and top_entry_id.lower() not in q_lower:
                     hint_domain = None
                 # Near-tie with an entry homed elsewhere: no lift (same rule as DomainRouter).
-                if hint_domain and len(entry_hits) > 1:
-                    for score_2, sid_2 in entry_hits[1:]:
+                # Explicit-only opponents are ignored unless the query names them.
+                if hint_domain and len(lift_hits) > 1:
+                    for score_2, sid_2 in lift_hits[1:]:
                         if score_2 * ENTRY_LIFT_TIE_RATIO < top_entry_score:
                             break
-                        if self._entry_to_domain_hint.get(self._slots[sid_2].key) != hint_domain:
+                        other_id = self._slots[sid_2].key
+                        if self._entry_to_domain_hint.get(other_id) != hint_domain:
                             hint_domain = None
                             break
                 if hint_domain and top_entry_score >= 8.0:

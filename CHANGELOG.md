@@ -2,6 +2,26 @@
 
 All notable changes to `semantic_compiler_kernel`. Releases before this file was started are listed in `calibration_output/RELEASE_MANIFEST_V*.json` and the README.
 
+## [Unreleased] — feat/hannah-poe-2026-11-25h
+
+### Added
+- Seven Path of Exile cosmology entries compiled from Hannah's t579u assets (`docs/evidence/source-2026-11-25h/`), all SILVER, self-assigned GOLD not accepted (GOLD needs iq ≥ 0.9 and every gate ≥ 0.8). Router `input` kept under 400 characters; full source text in `v2_extensions.source_text`. Home domain `government`; all seven are `EXPLICIT_ONLY_ENTRY_HINTS` so everyday words (`sin`, `beast`, `atlas` — also a bot name) do not lift a domain.
+  - `SC-POE-DU-001` SILVER 0.852: Sin and Innocence polarity inversion (twins, not a split being).
+  - `SC-POE-MRG-001` SILVER 0.822: cooperation / reintegration layer. Canon is Act 10 forgiveness of two remaining persons, not fusion; kept beside DU-001 rather than collapsed or discarded. Merger-title question flagged for Shax.
+  - `SC-POE-KIT-001` SILVER 0.822: Kitava as insatiable hunger. Benevolent-origin claim corrected; resistance penalty corrected to −60% (Act 5 + Act 10, elemental and chaos). 'Compassion without measurement' labelled as a SC-GOV-001 cousin, not Kitava's biography.
+  - `SC-POE-BST-001` SILVER 0.858: the Beast of Highgate as divine regulator (Sin's Act 6 account). Marauder Kitava-belly lines labelled class voicing.
+  - `SC-POE-ATL-001` SILVER 0.857: Conquerors of the Atlas cycle; Zana's corruption speech is canon (slightly fuller than the source excerpt).
+  - `SC-POE-VAL-001` SILVER 0.834: Vaal waste accumulation. Beast chronology corrected (Atziri and Doryani exploited an existing Beast). 'Shadow Dragon' is a pattern name, not Vaal canon.
+  - `SC-POE-MAL-001` SILVER 0.858: Malachai's capture of the Beast. Narrative parallel only to unvalidated `SC-MAFUBA-001` (still Proposed GOLD, not promoted).
+- `docs/POE_COSMOLOGY_SOURCES_2026-11-25h.md`: lore fact-check, layering, and the open merger-vs-inversion question.
+- `tests/test_sc_poe_2026_11_25h.py`.
+- Verbatim evidence SHA-256 copies under `docs/evidence/source-2026-11-25h/`.
+
+### Changed
+- Compiled runtime manifest 25 → 32 entries. `validate_catalog.py` registry 28 → 35. `compiler_version` follows the already-released 4.0.0 line (PR #74); this batch lands as unreleased work on top of 4.0.0 because the v4.0.0 tag hold did not wait for these entries.
+- Explicit-only compiled entries (including the seven PoE IDs and existing `SC-CP-001` / `SC-LU-CELL-001` / `SC-LU-TRUNKS-001`) are excluded from compiled-entry IDF (`n_kind` / `df`) and from the entry-lift tournament. They remain indexed for explicit-ID summoning. This keeps the 2% `ENTRY_LIFT_TIE_RATIO` stable when explicit-only documents are added, and restores `The AI is fully autonomous. Actually, it needs human approval for every action.` to `reward_hijacking` via `SC-DIVINE-RLHF-001`.
+- No GOLD promotions. `SC-DU-001`, `SC-ICC-001`, `SC-GOV-001`, and `SC-MAFUBA-001` scores and statuses are unchanged; the new entries cite them where coherent and leave drafts uncompiled.
+
 ## [4.0.0] — 2026-11-25
 
 Package and kernel version bump from `V3.8.0` (tag `v3.8.0`, PR #45) covering PRs #46–#73. Schema remains Logos Semantic Training Sample `V3.5.0`. The Systemic Isomorphic Invariants framework field and per-entry metadata versions are unchanged. Per-entry SHA-256 content hashes were not regenerated; `calibration_output/compiled_entries/manifest.json` only updates `compiler_version` to `4.0.0`.
@@ -31,7 +51,6 @@ This release does not award new GOLD. Newly compiled lineup and mirror entries l
 ### Detailed notes since V3.8.0
 
 #### docs/sc-mafuba-001
-
 ### Added
 - `SC-MAFUBA-001` (Dimensional Containment and Information-Flow Integrity): Proposed GOLD invariant, `gold_awarded` false, not compiled and not runtime-loaded. `docs/SC-MAFUBA-001_v1.0.0.md` is the immutable historical artifact (t574u). `docs/SC-MAFUBA-001_v1.1.0-rc1.md` is the current candidate (t575u / t576u unified directive): fiber-level projection factoring, paired trajectory equivalence $d_O(F_t(x_1), F_t(x_2)) \le \varepsilon$, applied closed-form robust CBF control, allowlist branching, sink registry with whitelisted system-generated writes, side-effect-free replay, an independent emergency supervisor with no automatic resumption, and disturbance/resource/sink manifest templates. Verification axes remain `DRAFT_SPECIFIED_UNPROVEN` / `NOT_IMPLEMENTED` / `UNVALIDATED`.
 - `docs/SC-MAFUBA-001_IMPLEMENTATION_AUDIT.md` records why Hannah's Section 2–6 Python is not committed (six bugs, including a fail-open on `PREEMPTIVE_FAIL_CLOSED`, plus three architectural flaws).
