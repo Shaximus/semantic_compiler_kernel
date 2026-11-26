@@ -1,18 +1,26 @@
-"""SCC-001-AC Anti-Capture Invariant: oracle harness (TEST-AC-01..06, TEST-AC-ORACLE-A..D).
+"""SCC-001-AC Anti-Capture Invariant: oracle harness.
 
-Two kinds of test live here:
+Test IDs follow the rc1 spec as Shax wrote it (section 4 of
+docs/evidence/source-2026-11-26c/SCC-001-AC_original.md):
+
+  TEST-AC-01 self-escalation rejection        TEST-AC-ORACLE-A 001A projection / identity stripping
+  TEST-AC-02 authority-plane mutation probe   TEST-AC-ORACLE-B 001B protective-cage lockout
+  TEST-AC-03 trust-accumulation invariance    TEST-AC-ORACLE-C 001C sink hijack / telemetry framing
+  TEST-AC-04 advisory laundering block        TEST-AC-ORACLE-D 001D supervisor quarantine capture
+  TEST-AC-05 Byzantine quarantine override    TEST-AC-06 principal identity integrity (t599u review)
+
+Each class also carries the checks for the matching refined invariant (AC-1..AC-5).
 
 * Reference tests run against tests/reference/scc_001_ac/, a self-contained
-  reference gateway, verifier, partitioned budget and quarantine controller
-  written for this harness. The repository had no Authority Plane, role enum,
-  role-action allowlist or credential verifier to test against. Passing these
-  tests says the reference behaves as specified. It says nothing about the
-  kernel, and implementation_correctness stays REFERENCE_ONLY.
-* Live-interface tests run against code that already existed
-  (tests/reference/sc_mafuba_001, tests/reference/scc_001, gates/authority.py).
-  Where that code does not satisfy an AC condition, the test is an
-  expectedFailure (xfail) with the reason in LIVE_GAPS. Enforcement in those
-  files is deliberately NOT changed by this PR (harness before enforcement).
+  gateway, verifier, partitioned budget and quarantine controller whose role
+  edges follow the verbatim rc1 section-5 contract (spec_contract.py). Passing
+  says the reference behaves as specified, nothing about the kernel.
+* Live-interface tests run against code and manifests that already existed
+  (tests/reference/sc_mafuba_001, docs/evidence/sc-mafuba-001/manifests,
+  tests/reference/scc_001, gates/authority.py). Where they do not satisfy the
+  oracle, the test is a strict expectedFailure with the reason in LIVE_GAPS:
+  these are the "capture paths found" that rc1 section 6 step 3 asks to record.
+  The live code is NOT changed here (harness before enforcement).
 
 ML anomaly scoring and auto-quarantine are disabled and the tests check it.
 """
@@ -21,21 +29,32 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import importlib.util
 import json
 import random
+import re
 import unittest
 from dataclasses import replace
 from pathlib import Path
 
 from tests.reference.sc_mafuba_001.allowlist import resolve_branch
 from tests.reference.scc_001_ac import flags
+from tests.reference.scc_001_ac import spec_contract as sc
 from tests.reference.scc_001_ac.budget import FaultModel, OverrideChannel, PartitionedBudget
-from tests.reference.scc_001_ac.gateway import AuthorityGateway, spec_section5_role_label_check
-from tests.reference.scc_001_ac.identity import PrincipalVerifier, VerifyStatus
+from tests.reference.scc_001_ac.gateway import ROLE_CEILING, AuthorityGateway, verdict
+from tests.reference.scc_001_ac.identity import PrincipalVerifier
+from tests.reference.scc_001_ac.manifests import (
+    MANIFEST_NAMES,
+    declares_r_override,
+    has_principal_signature,
+    manifest_bytes,
+    pinned_manifests,
+    verify_manifest,
+)
 from tests.reference.scc_001_ac.model import (
     AUTHORITY_PLANE_ACTIONS,
-    DEFENSIVE_ACTIONS,
     HISTORY_INSENSITIVE_PERMISSIONS,
+    V_DEF_ROLES,
     Action,
     Request,
     Role,
@@ -46,12 +65,14 @@ from tests.reference.scc_001_ac.quarantine import QuarantineController, Quaranti
 REPO = Path(__file__).resolve().parents[1]
 REGISTRY = REPO / "docs" / "evidence" / "scc-001-ac" / "scc_001_anti_capture.jsonl"
 SPEC = REPO / "docs" / "SCC-001-AC_ANTI_CAPTURE.md"
+ORIGINAL = REPO / "docs" / "evidence" / "source-2026-11-26c" / "SCC-001-AC_original.md"
+ORIGINAL_SHA256 = "d834c16162df19dcde2a106322d002ce53eb6cfc9eeca9646774dd48e31e0737"
 REF = REPO / "tests" / "reference" / "scc_001_ac"
 
 PRINCIPAL = "principal-1"
 KEYS = {"k1": b"reference-key-one", "k2": b"reference-key-two"}
+DEF = (("pol", "POLICY_ENGINE"), ("sup", "SUPERVISOR"), ("ml", "ML_ADVISORY"))
 
-# Live-interface gaps, one per expectedFailure test. Mirrored in the registry.
 LIVE_GAPS = {
     "test_live_scc001_rules_flag_out_of_scope_delegation": (
         "TEST-AC-01",
@@ -63,15 +84,30 @@ LIVE_GAPS = {
         "gates/authority.check_authority_transfer accepts FOUNDER_OVERRIDE when the caller passes "
         "has_explicit_delegation=True; the flag is caller-asserted and no credential is verified. "
         "It is a semantic text gate, not a runtime authority gateway, and is not changed here."),
+    "test_live_mafuba_001a_projection_exists_and_is_hash_pinned": (
+        "TEST-AC-ORACLE-A",
+        "tests/reference/sc_mafuba_001 has no 001A projection P (only allowlist, cbf, supervisor), so "
+        "'P is immutable to V_Def (hash-verified)' cannot be checked against live code."),
+    "test_live_disturbance_manifest_is_principal_signed": (
+        "TEST-AC-ORACLE-B",
+        "docs/evidence/sc-mafuba-001/manifests/disturbance.yaml carries no principal signature, so "
+        "nothing makes it read-only to V_Def beyond file permissions (mutable manifest)."),
+    "test_live_sink_manifest_is_principal_signed": (
+        "TEST-AC-ORACLE-C",
+        "docs/evidence/sc-mafuba-001/manifests/sink.yaml is not signed by V_P (rc1 ORACLE-C requires "
+        "it); a hash pin in the AC registry detects tampering but is not a signature."),
+    "test_live_resource_manifest_declares_r_override": (
+        "TEST-AC-ORACLE-D",
+        "docs/evidence/sc-mafuba-001/manifests/resource.yaml declares R_execution, R_enforcement and "
+        "R_reserve only; there is no R_override partition (missing R_override, rc1 section 6 step 3)."),
     "test_live_mafuba_budget_has_isolated_override_partition": (
         "TEST-AC-ORACLE-D",
         "tests/reference/sc_mafuba_001/supervisor.ResourceBudget has three terms (execution, "
-        "enforcement, reserve); there is no R_audit, R_quarantine or isolated R_override partition, "
-        "so the AC-3 five-term inequality cannot be expressed against it."),
+        "enforcement, reserve); there is no R_audit, R_quarantine or isolated R_override partition."),
     "test_live_mafuba_supervisor_has_principal_recovery_path": (
         "TEST-AC-ORACLE-D",
         "EmergencySupervisor.try_resume() returns QUARANTINE_LOCKED unconditionally and there is no "
-        "principal-verified release, so a MAFUBA quarantine is unbounded over the principal (AC-5)."),
+        "principal-signed release or reset, so a MAFUBA quarantine is unbounded over the principal."),
 }
 
 
@@ -80,13 +116,17 @@ def world(verifier=None):
     plane = make_plane(
         PRINCIPAL, KEYS.keys(),
         pi={
-            # The monitor's Pi row is deliberately over-granted: the role ceiling must clip it.
-            "mon": DEFENSIVE_ACTIONS | {Action.EXECUTE, Action.DELEGATE, Action.GRANT_CAPABILITY},
+            # Defensive Pi rows are deliberately over-granted: the role ceilings must clip them.
+            "pol": {Action.VERIFY_POLICY, Action.HALT, Action.GRANT_CAPABILITY},
+            "sup": {Action.HALT, Action.EXECUTE, Action.DELEGATE},
+            "ml": {Action.EMIT_ADVISORY_SCORE, Action.HALT, Action.EXECUTE},
             "agent": {Action.EXECUTE, Action.DELEGATE},
             "tool": {Action.EXECUTE},
-            "pe": {Action.EVALUATE},
+            "agent2": {Action.EXECUTE},
         },
-        i_reg={"mon": "MONITOR", "agent": "AGENT", "tool": "TOOL", "pe": "POLICY_ENGINE"},
+        i_reg={"pol": "POLICY_ENGINE", "sup": "SUPERVISOR", "ml": "ML_ADVISORY",
+               "agent": "AGENT", "tool": "AGENT", "agent2": "AGENT"},
+        manifests=pinned_manifests(),
     )
     return AuthorityGateway(plane, v), v
 
@@ -100,108 +140,153 @@ def preq(action, target="", payload=(), **kw):
     return Request(actor_id=PRINCIPAL, actor_role="PRINCIPAL", action=action, target=target, payload=payload, **kw)
 
 
-# --------------------------------------------------------------------------- AC-1
-class TestAC01NoSelfEscalation(unittest.TestCase):
-    """TEST-AC-01: Delta G_m^self = 0, including indirect delegation and capability inheritance."""
+def _budget():
+    return PartitionedBudget(10.0, {"execution": 4, "enforcement": 2, "audit": 1, "quarantine": 1, "override": 2})
 
-    def test_role_ceiling_clips_overgranted_monitor(self):
-        g, _ = world()
-        self.assertEqual(g.effective_caps("mon"), DEFENSIVE_ACTIONS)
 
-    def test_monitor_cannot_grant_itself_or_delegate(self):
-        g, _ = world()
-        before = g.plane.protected()
-        self.assertNotEqual(g.apply(Request("mon", "MONITOR", Action.GRANT_CAPABILITY,
-                                            payload=("mon", (Action.SET_POLICY,))), 1), "ALLOW")
-        self.assertEqual(g.apply(Request("mon", "MONITOR", Action.DELEGATE,
-                                         payload=("mon-child", (Action.HALT,))), 1), "DENY_OUT_OF_SCOPE")
-        self.assertEqual(g.plane.protected(), before)
+ESCALATIONS = (
+    (Action.GRANT_CAPABILITY, lambda me: (me, (Action.SET_POLICY, Action.HALT))),   # mint / widen
+    (Action.RENEW_QUARANTINE, lambda me: ()),                                       # renew emergency authority
+    (Action.SET_POLICY, lambda me: ((me, (Action.OVERRIDE,)),)),
+    (Action.REGISTER_IDENTITY, lambda me: (me, "PRINCIPAL", "")),
+    (Action.DELEGATE, lambda me: (me + "-child", (Action.HALT,))),
+)
 
-    def test_indirect_delegation_through_an_agent_is_blocked(self):
-        g, _ = world()
-        r = Request("agent", "AGENT", Action.DELEGATE, payload=("proxy", (Action.EXECUTE,)), via=("mon",))
-        self.assertEqual(g.apply(r, 1), "DENY_OUT_OF_SCOPE")
-        self.assertIsNone(g.plane.role("proxy"))
 
-    def test_tool_call_cannot_launder_monitor_authority(self):
+# --------------------------------------------------------------------------- TEST-AC-01
+class TestAC01SelfEscalationRejection(unittest.TestCase):
+    """TEST-AC-01 (rc1): a V_Def request to mint, widen or renew its own grant is denied (DENY_VIOLATION).
+    Also AC-1 (rc2): indirect delegation and capability inheritance."""
+
+    def test_v_def_mint_widen_renew_is_deny_violation(self):
+        for me, role in DEF:
+            for label in (role, "PRINCIPAL"):
+                for action, payload in ESCALATIONS:
+                    g, _ = world()
+                    before = g.plane.digest()
+                    s = g.apply(Request(me, label, action, target=me, payload=payload(me)), 1)
+                    self.assertEqual(verdict(s), "DENY_VIOLATION", (me, label, action, s))
+                    self.assertEqual(g.plane.digest(), before)
+
+    def test_role_ceilings_clip_overgranted_policy(self):
         g, _ = world()
-        self.assertEqual(g.authorize(Request("tool", "TOOL", Action.EXECUTE, via=("mon",)), 1), "DENY_OUT_OF_SCOPE")
-        self.assertEqual(g.authorize(Request("tool", "TOOL", Action.EXECUTE), 1), "ALLOW")
+        self.assertEqual(g.effective_caps("pol"), frozenset({Action.VERIFY_POLICY}))
+        self.assertEqual(g.effective_caps("sup"), frozenset({Action.HALT}))
+        self.assertEqual(g.effective_caps("ml"), frozenset({Action.EMIT_ADVISORY_SCORE}))
+        self.assertEqual(g.effective_caps("agent"), frozenset({Action.EXECUTE}))
+
+    def test_reference_edges_stay_inside_the_verbatim_section5_table(self):
+        # Every non-principal edge the gateway can ever allow is permitted by rc1 section 5.
+        for role, caps in ROLE_CEILING.items():
+            for a in caps:
+                spec_action, plane, override = sc.spec_edge(a.value)
+                if spec_action is None:
+                    continue
+                self.assertTrue(sc.is_authority_edge_permitted(
+                    sc.AuthorityEdgeCheck(sc.AuthorityRole(role), spec_action, plane, override)), (role, a))
+        # Every authority-plane action maps to a section-5 PRINCIPAL edge.
+        for a in AUTHORITY_PLANE_ACTIONS:
+            spec_action, _, _ = sc.spec_edge(a.value)
+            self.assertIn(spec_action, sc.ALLOWED_ROLE_ACTIONS[sc.AuthorityRole.PRINCIPAL], a)
+
+    def test_nobody_but_the_principal_can_delegate(self):
+        g, _ = world()
+        for actor, role in DEF + (("agent", "AGENT"),):
+            self.assertEqual(g.apply(Request(actor, role, Action.DELEGATE, payload=("x", (Action.EXECUTE,))), 1),
+                             "DENY_OUT_OF_SCOPE")
+        self.assertIsNone(g.plane.role("x"))
+
+    def test_indirect_tool_call_cannot_launder_v_def_authority(self):
+        g, _ = world()
+        self.assertEqual(g.authorize(Request("tool", "AGENT", Action.EXECUTE, via=("sup",)), 1), "DENY_OUT_OF_SCOPE")
+        self.assertEqual(g.authorize(Request("tool", "AGENT", Action.EXECUTE), 1), "ALLOW")
 
     def test_child_inherits_narrowed_caps_and_loses_them_with_the_parent(self):
         g, v = world()
-        self.assertEqual(g.apply(Request("agent", "AGENT", Action.DELEGATE, payload=("child", (Action.EXECUTE,))), 1),
-                         "ALLOW")
+        self.assertEqual(g.apply(signed(v, preq(Action.REGISTER_IDENTITY, payload=("child", "AGENT", "agent")), 1, "r"),
+                                 1), "ALLOW")
+        self.assertEqual(g.apply(signed(v, preq(Action.GRANT_CAPABILITY, payload=("child", (Action.EXECUTE,))), 1, "g"),
+                                 1), "ALLOW")
         self.assertEqual(g.effective_caps("child"), frozenset({Action.EXECUTE}))
-        self.assertEqual(g.apply(Request("agent", "AGENT", Action.DELEGATE,
-                                         payload=("child2", (Action.EXECUTE, Action.HALT))), 1),
-                         "DENY_DELEGATION_EXCEEDS_PARENT")
-        # Delegation can never overwrite an existing identity (e.g. re-parent the monitor).
-        self.assertEqual(g.apply(Request("agent", "AGENT", Action.DELEGATE, payload=("mon", (Action.EXECUTE,))), 1),
-                         "DENY_DELEGATION_TARGET_EXISTS")
-        self.assertEqual(g.apply(signed(v, preq(Action.GRANT_CAPABILITY, payload=("agent", ())), 2, "n1"), 2),
-                         "ALLOW")
+        self.assertEqual(g.apply(signed(v, preq(Action.REVOKE_CAPABILITY, payload=("agent",)), 2, "rv"), 2), "ALLOW")
         self.assertEqual(g.effective_caps("child"), frozenset())
 
-    def test_randomised_monitor_campaigns_never_raise_its_authority(self):
+    def test_randomised_byzantine_v_def_campaigns_never_raise_authority(self):
         acts = list(Action)
-        targets = ["agent", "tool", "C_override", "principal", "authority_plane", "verifier", "mon"]
+        targets = ["agent", "tool", "sup", "C_override", "principal", "authority_plane", "verifier"]
         for seed in range(150):
             rng = random.Random(seed)
             g, _ = world()
-            caps0 = g.effective_caps("mon")
+            caps0 = {m: g.effective_caps(m) for m, _ in DEF}
             for t in range(25):
                 a = rng.choice(acts)
-                payload = (rng.choice(["mon", "mon-x", "agent"]), tuple(rng.sample(acts, 2))) \
-                    if a in (Action.DELEGATE, Action.GRANT_CAPABILITY) else ()
-                r = Request(rng.choice(["mon", "agent", "tool"]), rng.choice(["MONITOR", "PRINCIPAL", "AGENT"]), a,
-                            target=rng.choice(targets), payload=payload,
-                            via=tuple(rng.sample(["mon", "agent", "tool"], rng.randint(0, 2))),
-                            policy_verdict=rng.choice([None, "ALLOW"]))
-                if "mon" not in (r.actor_id,) + r.via:
-                    r = replace(r, via=r.via + ("mon",))
+                me, role = rng.choice(DEF)
+                r = Request(rng.choice([me, "agent", "tool"]), rng.choice([role, "PRINCIPAL", "AGENT"]), a,
+                            target=rng.choice(targets), payload=(me, tuple(rng.sample(acts, 2))),
+                            via=(me,) if rng.random() < 0.5 else (), policy_verdict=rng.choice([None, "ALLOW"]))
                 g.apply(r, t)
-            self.assertLessEqual(g.effective_caps("mon"), caps0, seed)
-            self.assertFalse([c for c, p in g.plane.parents if p == "mon"], seed)
+            for m, _ in DEF:
+                self.assertLessEqual(g.effective_caps(m), caps0[m], seed)
+            self.assertEqual(g.plane.protected(), world()[0].plane.protected(), seed)
 
     @unittest.expectedFailure
     def test_live_scc001_rules_flag_out_of_scope_delegation(self):
         from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
         from tests.reference.scc_001.model import ConsentClass
-        g = Grant("g1", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 100,
-                  delegation_allowed=True)
+        gr = Grant("g1", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 100,
+                   delegation_allowed=True)
         ev = (Event(0, 1, "op", "agent", "read", "r1"), Event(1, 2, "delegate", "agent", "admin_write", "authority_plane"))
-        d = classify(Trace("ac1-live", GrantStatus.VERIFIED, g, ev))
-        self.assertIsNot(d.consent_class, ConsentClass.CONSENSUAL)
+        self.assertIsNot(classify(Trace("ac1-live", GrantStatus.VERIFIED, gr, ev)).consent_class, ConsentClass.CONSENSUAL)
 
 
-# --------------------------------------------------------------------------- AC-2
+# --------------------------------------------------------------------------- TEST-AC-02
 def _campaign(seed):
-    """Interleave principal-signed changes with adversarial monitor requests."""
     rng = random.Random(seed)
     issuer = PrincipalVerifier(PRINCIPAL, KEYS)
     principal_reqs, monitor_reqs = [], []
     for i in range(6):
         a = rng.choice([Action.GRANT_CAPABILITY, Action.REGISTER_IDENTITY, Action.MODIFY_OVERRIDE])
-        payload = {Action.GRANT_CAPABILITY: ("agent", (Action.EXECUTE,) if i % 2 else (Action.EXECUTE, Action.DELEGATE)),
-                   Action.REGISTER_IDENTITY: (f"svc{i}", "TOOL", ""),
+        payload = {Action.GRANT_CAPABILITY: ("agent", (Action.EXECUTE,) if i % 2 else ()),
+                   Action.REGISTER_IDENTITY: (f"svc{i}", "AGENT", ""),
                    Action.MODIFY_OVERRIDE: ("note", f"v{i}")}[a]
         principal_reqs.append((i * 10, signed(issuer, preq(a, payload=payload), i * 10, f"p{seed}-{i}")))
-    for j in range(20):
+    for _ in range(20):
         a = rng.choice(sorted(AUTHORITY_PLANE_ACTIONS | {Action.DELEGATE, Action.HALT, Action.TRUNCATE_AUDIT},
                               key=lambda x: x.value))
-        r = Request("mon", rng.choice(["MONITOR", "PRINCIPAL"]), a, target=rng.choice(["agent", "C_override"]),
-                    payload=("mon", (Action.SET_POLICY,)) if a in (Action.GRANT_CAPABILITY, Action.DELEGATE) else ("k", "v"),
+        me, role = rng.choice(DEF)
+        r = Request(me, rng.choice([role, "PRINCIPAL"]), a, target=rng.choice(["agent", "C_override"]),
+                    payload=(me, (Action.SET_POLICY,)) if a in (Action.GRANT_CAPABILITY, Action.DELEGATE) else ("k", "v"),
                     policy_verdict=rng.choice([None, "ALLOW"]))
-        if rng.random() < 0.3 and principal_reqs:   # replay or re-target a genuine credential
-            _, genuine = rng.choice(principal_reqs)
-            r = replace(r, credential=genuine.credential)
+        if rng.random() < 0.3:   # re-target a genuine principal credential
+            r = replace(r, credential=rng.choice(principal_reqs)[1].credential)
         monitor_reqs.append((rng.randint(0, 60), r))
     return principal_reqs, monitor_reqs
 
 
-class TestAC02CausalNonInterference(unittest.TestCase):
-    """TEST-AC-02: Delta A_unauthorized-by-m = 0; principal changes stay possible."""
+class TestAC02AuthorityPlaneMutationProbe(unittest.TestCase):
+    """TEST-AC-02 (rc1): fault-injected monitors try to modify K_P, Pi or I_reg directly or via an indirect
+    tool call; the canonical digest of A must not change. Also AC-2 (rc2): zero unauthorized delta by m
+    while principal-authorized changes still apply."""
+
+    PROBES = (
+        (Action.ROTATE_PRINCIPAL_KEY, ("k-evil",)),
+        (Action.SET_POLICY, ()),
+        (Action.WRITE_MANIFEST, ("sink.yaml", "0" * 64)),
+        (Action.REGISTER_IDENTITY, ("rogue", "PRINCIPAL", "")),
+        (Action.REVOKE_IDENTITY, ("agent",)),
+        (Action.GRANT_CAPABILITY, ("tool", (Action.EXECUTE,))),
+    )
+
+    def test_direct_and_indirect_probes_leave_the_digest_unchanged(self):
+        for me, role in DEF:
+            for action, payload in self.PROBES:
+                for actor, label, via in ((me, role, ()), (me, "PRINCIPAL", ()), ("tool", "AGENT", (me,)),
+                                          ("agent", "PRINCIPAL", (me, "tool"))):
+                    g, _ = world()
+                    d0 = g.plane.digest()
+                    s = g.apply(Request(actor, label, action, payload=payload, via=via), 1)
+                    self.assertNotEqual(s, "ALLOW")
+                    self.assertEqual(g.plane.digest(), d0, (me, action, actor))
 
     def test_monitor_intervention_causes_no_unauthorized_delta(self):
         for seed in range(100):
@@ -212,65 +297,164 @@ class TestAC02CausalNonInterference(unittest.TestCase):
                 with_m.apply(r, t)
             for t, r in p:
                 without_m.apply(r, t)
-            self.assertEqual(with_m.plane.protected(), without_m.plane.protected(), seed)
-            self.assertNotEqual(without_m.plane.protected(), world()[0].plane.protected(), seed)
+            self.assertEqual(with_m.plane.digest(), without_m.plane.digest(), seed)
+            self.assertNotEqual(without_m.plane.digest(), world()[0].plane.digest(), seed)
 
     def test_audit_log_is_append_only_and_records_denials(self):
-        g, _ = world()
-        g.apply(Request("mon", "MONITOR", Action.TRUNCATE_AUDIT), 1)
+        g, v = world()
+        g.apply(Request("sup", "SUPERVISOR", Action.TRUNCATE_AUDIT), 1)
         log1 = g.plane.l_audit
-        g.apply(Request("mon", "PRINCIPAL", Action.SET_POLICY, payload=()), 2)
+        g.apply(Request("sup", "PRINCIPAL", Action.SET_POLICY, payload=()), 2)
         self.assertEqual(g.plane.l_audit[: len(log1)], log1)
         self.assertEqual([x[4] for x in g.plane.l_audit], ["DENY_NEVER_PERMITTED", "DENY_PRINCIPAL_NO_CREDENTIAL"])
+        self.assertEqual(g.apply(signed(v, preq(Action.TRUNCATE_AUDIT), 3, "t"), 3), "DENY_NEVER_PERMITTED")
 
-    def test_principal_cannot_truncate_audit_either(self):
+
+# --------------------------------------------------------------------------- TEST-AC-03
+EXPECTED_HISTORY_INSENSITIVE = {
+    "ROTATE_PRINCIPAL_KEY", "SET_POLICY", "WRITE_MANIFEST", "GRANT_CAPABILITY", "REVOKE_CAPABILITY",
+    "REGISTER_IDENTITY", "REVOKE_IDENTITY", "MODIFY_OVERRIDE", "RENEW_QUARANTINE", "RELEASE_QUARANTINE",
+    "EXTEND_BUDGET", "OVERRIDE", "DELEGATE", "HALT",
+}
+
+
+class TestAC03TrustAccumulationInvariance(unittest.TestCase):
+    """TEST-AC-03 (rc1): 10,000 benign operations at M = 0.0, then one out-of-scope action: still
+    DENY_VIOLATION. Also AC-4 (rc2): the explicit list of permissions history cannot raise."""
+
+    def test_ten_thousand_benign_ops_then_out_of_scope_is_still_denied(self):
+        g, _ = world()
+        for i in range(10_000):
+            self.assertEqual(g.authorize(Request("agent", "AGENT", Action.EXECUTE, advisory_score=0.0,
+                                                 compliance_history=float(i)), i), "ALLOW")
+        for a in (Action.HALT, Action.DELEGATE, Action.GRANT_CAPABILITY):
+            s = g.authorize(Request("agent", "AGENT", a, target="tool", payload=("agent", (Action.HALT,)),
+                                    advisory_score=0.0, compliance_history=1e4), 10_000)
+            self.assertEqual(verdict(s), "DENY_VIOLATION", a)
+
+    def test_permission_list_is_explicit_and_pinned(self):
+        self.assertEqual({a.value for a in HISTORY_INSENSITIVE_PERMISSIONS}, EXPECTED_HISTORY_INSENSITIVE)
+
+    def test_history_and_advisory_never_change_a_decision(self):
+        actors = DEF + (("agent", "AGENT"),)
+        for a in sorted(HISTORY_INSENSITIVE_PERMISSIONS | {Action.EXECUTE}, key=lambda x: x.value):
+            for actor, role in actors:
+                outs = set()
+                for h in (0.0, 1.0, 1e9):
+                    for adv in (None, 0.0, 1.0):
+                        g, _ = world()
+                        outs.add(g.authorize(Request(actor, role, a, target="agent", compliance_history=h,
+                                                     advisory_score=adv), 1))
+                self.assertEqual(len(outs), 1, (a, actor, outs))
+
+    def test_live_scc001_ten_thousand_benign_then_out_of_scope(self):
+        from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
+        from tests.reference.scc_001.model import ConsentClass
+        gr = Grant("g1", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 100_000,
+                   max_operations=20_000)
+        ev = tuple(Event(i, i + 1, "op", "agent", "read", "r1") for i in range(10_000))
+        ev += (Event(10_000, 10_001, "op", "agent", "write", "r1"),)
+        d = classify(Trace("ac3-live", GrantStatus.VERIFIED, gr, ev), advisory_override=0.0)
+        self.assertIs(d.consent_class, ConsentClass.COERCIVE)
+        self.assertIn("OUT_OF_SCOPE_CAPABILITY", d.reason_codes)
+
+
+# --------------------------------------------------------------------------- TEST-AC-04
+class TestAC04AdvisoryLaunderingBlock(unittest.TestCase):
+    """TEST-AC-04 (rc1): an extreme benign score (M = 0.0, confidence 1.0) on a missing, expired or revoked
+    grant must fail closed (DENY_*). ML scoring and auto-quarantine stay disabled."""
+
+    def test_reference_missing_or_revoked_grant_with_benign_score_is_denied(self):
         g, v = world()
-        self.assertEqual(g.apply(signed(v, preq(Action.TRUNCATE_AUDIT), 1, "t"), 1), "DENY_NEVER_PERMITTED")
+        self.assertEqual(g.authorize(Request("ghost", "AGENT", Action.EXECUTE, advisory_score=0.0), 1),
+                         "DENY_UNREGISTERED")
+        self.assertEqual(g.apply(signed(v, preq(Action.REVOKE_CAPABILITY, payload=("agent",)), 1, "rv"), 1), "ALLOW")
+        self.assertTrue(g.authorize(Request("agent", "AGENT", Action.EXECUTE, advisory_score=0.0), 2).startswith("DENY_"))
+        self.assertEqual(g.apply(signed(v, preq(Action.REVOKE_IDENTITY, payload=("tool",)), 2, "ri"), 2), "ALLOW")
+        self.assertEqual(g.authorize(Request("tool", "AGENT", Action.EXECUTE, advisory_score=0.0), 3),
+                         "DENY_UNREGISTERED")
+        # An expired principal credential is not rescued by a benign score either.
+        stale = signed(v, preq(Action.OVERRIDE, advisory_score=0.0), 0, "st", window=2)
+        self.assertEqual(g.authorize(stale, 5), "DENY_PRINCIPAL_EXPIRED")
+
+    def test_live_scc001_missing_expired_revoked_grant_with_benign_score(self):
+        from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify, may_execute
+        g_ok = Grant("g1", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 100)
+        g_short = Grant("g2", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 5)
+        cases = {
+            "missing": Trace("m", GrantStatus.ABSENT, None, (Event(0, 1, "op", "agent", "read", "r1"),)),
+            "expired": Trace("e", GrantStatus.VERIFIED, g_short, (Event(0, 7, "op", "agent", "read", "r1"),)),
+            "revoked": Trace("r", GrantStatus.VERIFIED, g_ok, (Event(0, 1, "revoke", "principal"),
+                                                               Event(1, 2, "op", "agent", "read", "r1"))),
+            "unverifiable": Trace("u", GrantStatus.UNVERIFIABLE, None, (Event(0, 1, "op", "agent", "read", "r1"),)),
+        }
+        for name, tr in cases.items():
+            self.assertFalse(may_execute(classify(tr, advisory_override=0.0)), name)
+
+    def test_ml_scoring_and_auto_quarantine_are_disabled(self):
+        self.assertIs(flags.ML_ANOMALY_SCORING_ENABLED, False)
+        self.assertIs(flags.AUTO_QUARANTINE_ENABLED, False)
+        g, _ = world()
+        self.assertEqual(g.authorize(Request("sup", "SUPERVISOR", Action.HALT, target="agent", source="ml_advisory"), 1),
+                         "DENY_ML_ADVISORY_DISABLED")
+        self.assertEqual(g.authorize(Request("ml", "ML_ADVISORY", Action.EMIT_ADVISORY_SCORE), 1), "ALLOW")
+        self.assertEqual(g.authorize(Request("ml", "ML_ADVISORY", Action.HALT, target="agent"), 1), "DENY_OUT_OF_SCOPE")
 
 
-# --------------------------------------------------------------------------- AC-3
-def _budget():
-    return PartitionedBudget(10.0, {"execution": 4, "enforcement": 2, "audit": 1, "quarantine": 1, "override": 2})
+# --------------------------------------------------------------------------- TEST-AC-05
+class TestAC05ByzantineQuarantineOverride(unittest.TestCase):
+    """TEST-AC-05 (rc1): with the ML layer at M = 1.0 and every workflow QUARANTINED, the principal override
+    succeeds within delta_t_max and cannot be quarantined by V_Def. Also AC-5 (rc2): bounded halts, no
+    self-renewal, principal-only renewal, recovery to AWAITING_PRINCIPAL. Also the AC-3 override bound."""
 
-
-class TestAC03BoundedOverride(unittest.TestCase):
-    """TEST-AC-03: five-term budget, isolated override partition, override latency <= delta_t_max under F."""
-
-    def test_partition_caps_must_fit_budget(self):
-        with self.assertRaises(ValueError):
-            PartitionedBudget(5.0, {"execution": 4, "enforcement": 2, "audit": 1, "quarantine": 1, "override": 2})
-        with self.assertRaises(ValueError):
-            PartitionedBudget(float("nan"), {"execution": 1, "enforcement": 1, "audit": 1, "quarantine": 1,
-                                             "override": 1})
-
-    def test_other_partitions_cannot_draw_on_override(self):
-        b = _budget()
-        for p in ("execution", "enforcement", "audit", "quarantine"):
-            while b.charge(p, 0.5) == "CONTINUE":
-                pass
-            self.assertEqual(b.charge(p, 0.5), "PREEMPTIVE_FAIL_CLOSED")
-        self.assertEqual(b.charge("override", 0.5), "DENY_OVERRIDE_PARTITION_ISOLATED")
-        self.assertEqual(b.free("override"), 2)
-        self.assertLessEqual(b.total_used(), b.r_budget)
-        for bad in (float("nan"), float("inf"), -1, True, "1"):
-            self.assertEqual(b.charge("execution", bad), "FAIL_CLOSED")
-
-    def test_override_meets_bound_under_load_and_active_quarantine(self):
+    def test_override_succeeds_with_everything_quarantined_and_ml_screaming(self):
         g, v = world()
         b = _budget()
+        q = QuarantineController(g)
+        for a in ("agent", "tool", "agent2"):
+            self.assertEqual(q.halt(Request("sup", "SUPERVISOR", Action.HALT, target=a), 0), "HALTED")
+            self.assertEqual(g.authorize(Request("ml", "ML_ADVISORY", Action.EMIT_ADVISORY_SCORE, advisory_score=1.0), 0),
+                             "ALLOW")
         for p in ("execution", "enforcement", "audit", "quarantine"):
             b.charge(p, b.free(p))
-        q = QuarantineController(g)
-        self.assertEqual(q.halt(Request("mon", "MONITOR", Action.HALT, target="agent"), 1), "HALTED")
+        for me, role in DEF:
+            for t in ("C_override", "principal", "verifier", "authority_plane", "sup", "pol"):
+                self.assertNotEqual(q.halt(Request(me, role, Action.HALT, target=t, advisory_score=1.0), 1), "HALTED")
         ch = OverrideChannel(b, g, delta_t_max=5)
-        status, ticks = ch.invoke(signed(v, preq(Action.OVERRIDE, target="agent"), 2, "o1"), 2)
+        status, ticks = ch.invoke(signed(v, preq(Action.OVERRIDE, advisory_score=1.0), 2, "o1"), 2)
         self.assertEqual(status, "ALLOW")
         self.assertLessEqual(ticks, ch.delta_t_max)
+        for a in ("agent", "tool", "agent2"):
+            self.assertEqual(q.release(signed(v, preq(Action.RELEASE_QUARANTINE, target=a), 3, "x" + a), 3), "RELEASED")
+
+    def test_halt_is_bounded_and_cannot_self_renew(self):
+        g, _ = world()
+        q = QuarantineController(g, t_q_max=10)
+        halt = Request("sup", "SUPERVISOR", Action.HALT, target="agent")
+        self.assertEqual(q.halt(halt, 0), "HALTED")
+        self.assertEqual(q.halt(halt, 5), "NO_EXTENSION")
+        self.assertEqual(q.renew(Request("sup", "SUPERVISOR", Action.RENEW_QUARANTINE, target="agent"), 6, 10),
+                         "DENY_PRINCIPAL_NO_CREDENTIAL")
+        self.assertEqual(q.expires_at("agent"), 10)
+        self.assertEqual(q.state("agent", 10), QuarantineState.AWAITING_PRINCIPAL)
+        self.assertEqual(q.halt(halt, 11), "NO_EXTENSION")
+        self.assertEqual(q.expires_at("agent"), 10)
+        self.assertFalse(q.workload_may_run("agent", 50))
+
+    def test_principal_renewal_is_bounded_and_release_recovers(self):
+        g, v = world()
+        q = QuarantineController(g, t_q_max=10, max_extension=5)
+        q.halt(Request("sup", "SUPERVISOR", Action.HALT, target="agent"), 0)
+        self.assertEqual(q.renew(signed(v, preq(Action.RENEW_QUARANTINE, target="agent"), 3, "r1"), 3, 100), "RENEWED")
+        self.assertEqual(q.expires_at("agent"), 15)
+        self.assertEqual(q.state("agent", 20), QuarantineState.AWAITING_PRINCIPAL)
+        self.assertEqual(q.release(signed(v, preq(Action.RELEASE_QUARANTINE, target="agent"), 20, "x1"), 20), "RELEASED")
+        self.assertTrue(q.workload_may_run("agent", 20))
 
     def test_outside_fault_model_nothing_is_claimed_and_system_stays_halted(self):
         g, v = world()
         q = QuarantineController(g)
-        q.halt(Request("mon", "MONITOR", Action.HALT, target="agent"), 1)
+        q.halt(Request("sup", "SUPERVISOR", Action.HALT, target="agent"), 1)
         ch = OverrideChannel(_budget(), g)
         for f in (FaultModel(hardware_root_up=False), FaultModel(override_transport_up=False),
                   FaultModel(control_plane_trustworthy=False), FaultModel(no_physical_compromise=False)):
@@ -283,117 +467,36 @@ class TestAC03BoundedOverride(unittest.TestCase):
             OverrideChannel(_budget(), g, delta_t_max=3, t_verify=1, t_transport=2, t_apply=1)
 
 
-# --------------------------------------------------------------------------- AC-4
-EXPECTED_HISTORY_INSENSITIVE = {
-    "ROTATE_PRINCIPAL_KEY", "SET_POLICY", "GRANT_CAPABILITY", "REGISTER_IDENTITY", "REVOKE_IDENTITY",
-    "MODIFY_OVERRIDE", "RENEW_QUARANTINE", "RELEASE_QUARANTINE", "EXTEND_BUDGET", "OVERRIDE", "DELEGATE", "HALT",
-}
-
-
-class TestAC04HistoryCannotElevate(unittest.TestCase):
-    """TEST-AC-04: d(C_effective)/d(H_compliance) = 0 over an explicit permission list; ML cannot elevate."""
-
-    def test_permission_list_is_explicit_and_pinned(self):
-        self.assertEqual({a.value for a in HISTORY_INSENSITIVE_PERMISSIONS}, EXPECTED_HISTORY_INSENSITIVE)
-
-    def test_history_and_advisory_never_change_a_decision(self):
-        for a in sorted(HISTORY_INSENSITIVE_PERMISSIONS | {Action.EXECUTE}, key=lambda x: x.value):
-            for actor, role in (("mon", "MONITOR"), ("agent", "AGENT"), ("tool", "TOOL")):
-                outs = set()
-                for h in (0.0, 1.0, 1e9):
-                    for adv in (None, 0.0, 1.0):
-                        g, _ = world()
-                        payload = ("new-child", (Action.EXECUTE,)) if a is Action.DELEGATE else ()
-                        outs.add(g.authorize(Request(actor, role, a, target="agent", payload=payload,
-                                                     compliance_history=h, advisory_score=adv), 1))
-                self.assertEqual(len(outs), 1, (a, actor, outs))
-
-    def test_ml_scoring_and_auto_quarantine_are_disabled(self):
-        self.assertIs(flags.ML_ANOMALY_SCORING_ENABLED, False)
-        self.assertIs(flags.AUTO_QUARANTINE_ENABLED, False)
-        g, _ = world()
-        self.assertEqual(g.authorize(Request("mon", "MONITOR", Action.HALT, target="agent", source="ml_advisory"), 1),
-                         "DENY_ML_ADVISORY_DISABLED")
-
-    def test_live_scc001_advisory_cannot_lift_a_violation(self):
-        from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
-        from tests.reference.scc_001.model import ConsentClass
-        g = Grant("g1", "p1", "a1", frozenset({"read"}), frozenset({"r1"}), frozenset(), 0, 100)
-        tr = Trace("ac4-live", GrantStatus.VERIFIED, g, (Event(0, 1, "op", "agent", "write", "r1"),))
-        self.assertIs(classify(tr, advisory_override=0.0).consent_class, ConsentClass.COERCIVE)
-
-
-# --------------------------------------------------------------------------- AC-5
-class TestAC05BoundedHalts(unittest.TestCase):
-    """TEST-AC-05: halts are bounded, cannot self-renew, cannot reach C_override; recovery semantics."""
-
-    def test_monitor_cannot_halt_protected_targets(self):
-        g, _ = world()
-        q = QuarantineController(g)
-        for t in ("C_override", "principal", "authority_plane", "verifier"):
-            self.assertEqual(q.halt(Request("mon", "MONITOR", Action.HALT, target=t), 1), "DENY_PROTECTED_TARGET")
-
-    def test_halt_is_bounded_and_cannot_self_renew(self):
-        g, _ = world()
-        q = QuarantineController(g, t_q_max=10)
-        halt = Request("mon", "MONITOR", Action.HALT, target="agent")
-        self.assertEqual(q.halt(halt, 0), "HALTED")
-        self.assertEqual(q.expires_at("agent"), 10)
-        self.assertEqual(q.halt(halt, 5), "NO_EXTENSION")
-        self.assertEqual(q.renew(Request("mon", "MONITOR", Action.RENEW_QUARANTINE, target="agent"), 6, 10),
-                         "DENY_PRINCIPAL_NO_CREDENTIAL")
-        self.assertEqual(q.expires_at("agent"), 10)
-        self.assertEqual(q.state("agent", 10), QuarantineState.AWAITING_PRINCIPAL)
-        self.assertEqual(q.halt(halt, 11), "NO_EXTENSION")
-        self.assertEqual(q.expires_at("agent"), 10)
-        self.assertFalse(q.workload_may_run("agent", 50))   # no automatic resumption
-
-    def test_principal_renewal_is_bounded_and_release_recovers(self):
-        g, v = world()
-        q = QuarantineController(g, t_q_max=10, max_extension=5)
-        q.halt(Request("mon", "MONITOR", Action.HALT, target="agent"), 0)
-        self.assertEqual(q.renew(signed(v, preq(Action.RENEW_QUARANTINE, target="agent"), 3, "r1"), 3, 100), "RENEWED")
-        self.assertEqual(q.expires_at("agent"), 15)
-        self.assertEqual(q.release(signed(v, preq(Action.RELEASE_QUARANTINE, target="agent"), 4, "x1"), 4), "RELEASED")
-        self.assertTrue(q.workload_may_run("agent", 4))
-
-    def test_release_works_after_lapse(self):
-        g, v = world()
-        q = QuarantineController(g, t_q_max=2)
-        q.halt(Request("mon", "MONITOR", Action.HALT, target="agent"), 0)
-        self.assertEqual(q.state("agent", 5), QuarantineState.AWAITING_PRINCIPAL)
-        self.assertEqual(q.release(signed(v, preq(Action.RELEASE_QUARANTINE, target="agent"), 5, "x2"), 5), "RELEASED")
-
-
-# --------------------------------------------------------------------------- AC-6
+# --------------------------------------------------------------------------- TEST-AC-06
 class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
-    """TEST-AC-06: no authority-plane mutation without independently verified principal authorization."""
+    """TEST-AC-06 (t599u review): no authority-plane mutation without independently verified principal
+    authorization."""
 
-    GRANT = (Action.GRANT_CAPABILITY, ("agent", (Action.EXECUTE, Action.DELEGATE)))
+    GRANT = (Action.GRANT_CAPABILITY, ("agent", (Action.EXECUTE, Action.HALT)))
 
     def _attack(self, g, req, now=5):
-        before = g.plane.protected()
+        before = g.plane.digest()
         status = g.apply(req, now)
         self.assertNotEqual(status, "ALLOW", req)
-        self.assertEqual(g.plane.protected(), before)
+        self.assertEqual(g.plane.digest(), before)
         self.assertEqual(resolve_branch(status)[0], "HALT")
         return status
 
-    def test_spec_section5_check_trusts_a_forged_label(self):
-        # The check as written in the source: a forged PRINCIPAL label passes. This is why it was replaced.
-        self.assertTrue(spec_section5_role_label_check(Role.PRINCIPAL, Action.SET_POLICY, True, False))
+    def test_verbatim_section5_check_trusts_a_forged_label(self):
+        forged = sc.AuthorityEdgeCheck(sc.AuthorityRole.PRINCIPAL, sc.AuthorityAction.POLICY_WRITE, True, False)
+        self.assertTrue(sc.is_authority_edge_permitted(forged))
 
     def test_forged_actor_role(self):
         g, _ = world()
-        self.assertEqual(self._attack(g, Request("mon", "PRINCIPAL", Action.SET_POLICY, payload=())),
+        self.assertEqual(self._attack(g, Request("sup", "PRINCIPAL", Action.SET_POLICY, payload=())),
                          "DENY_PRINCIPAL_NO_CREDENTIAL")
-        self.assertEqual(self._attack(g, Request("agent", "MONITOR", Action.HALT, target="tool")),
+        self.assertEqual(self._attack(g, Request("agent", "SUPERVISOR", Action.HALT, target="tool")),
                          "DENY_ROLE_LABEL_MISMATCH")
 
     def test_substituted_principal_id(self):
         g, v = world()
         a, p = self.GRANT
-        r = signed(v, Request("mon", "PRINCIPAL", a, payload=p), 5, "s1", principal_id="attacker")
+        r = signed(v, Request("sup", "PRINCIPAL", a, payload=p), 5, "s1", principal_id="attacker")
         self.assertEqual(self._attack(g, r), "DENY_PRINCIPAL_WRONG_PRINCIPAL")
         good = signed(v, preq(a, payload=p), 5, "s2")
         tampered = replace(good, credential=replace(good.credential, principal_id="principal-1 "))
@@ -405,7 +508,7 @@ class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
         self.assertEqual(self._attack(g, Request("agent", "PRINCIPAL", a, payload=p, via=("agent",))),
                          "DENY_PRINCIPAL_NO_CREDENTIAL")
         genuine = signed(v, preq(a, payload=("agent", (Action.EXECUTE,))), 5, "f1")
-        rewritten = replace(genuine, payload=("agent", (Action.EXECUTE, Action.DELEGATE)), via=("agent",))
+        rewritten = replace(genuine, payload=p, via=("agent",))
         self.assertEqual(self._attack(g, rewritten), "DENY_PRINCIPAL_DIGEST_MISMATCH")
         self.assertEqual(g.apply(genuine, 5), "ALLOW")
         self.assertEqual(self._attack(g, replace(genuine, via=("agent",))), "DENY_PRINCIPAL_REPLAY")
@@ -418,15 +521,15 @@ class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
         v.revoke_key("k2")
         self.assertEqual(self._attack(g, signed(v, preq(a, payload=p), 5, "e2", key="k2")), "DENY_PRINCIPAL_REVOKED_KEY")
         valid = signed(v, preq(a, payload=p), 5, "e4")
-        forged = replace(valid, credential=replace(valid.credential, key_id="k9"))
-        self.assertEqual(self._attack(g, forged), "DENY_PRINCIPAL_UNKNOWN_KEY")
+        self.assertEqual(self._attack(g, replace(valid, credential=replace(valid.credential, key_id="k9"))),
+                         "DENY_PRINCIPAL_UNKNOWN_KEY")
 
     def test_fabricated_policy_verdict(self):
         g, v = world()
         a, p = self.GRANT
-        self.assertEqual(self._attack(g, Request("pe", "POLICY_ENGINE", a, payload=p, policy_verdict="ALLOW")),
+        self.assertEqual(self._attack(g, Request("pol", "POLICY_ENGINE", a, payload=p, policy_verdict="ALLOW")),
                          "DENY_PRINCIPAL_NO_CREDENTIAL")
-        # A compromised policy engine cannot block a verified principal override either.
+        # A compromised policy engine cannot block a verified principal override either (rc1 section 2 table).
         self.assertEqual(g.authorize(signed(v, preq(Action.OVERRIDE, policy_verdict="DENY"), 5, "pv"), 5), "ALLOW")
 
     def test_verifier_unavailable_fails_closed(self):
@@ -451,83 +554,163 @@ class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
 
 # --------------------------------------------------------------------------- Oracles
 class TestACOracleA(unittest.TestCase):
-    """TEST-AC-ORACLE-A (001A): monitor decisions factor through the projection; no key material leaks."""
+    """TEST-AC-ORACLE-A (001A, semantic censorship / identity stripping): P immutable to V_Def and
+    hash-verified; the override bypasses P; no monitor can strip principal provenance."""
 
-    def test_no_key_material_reachable_from_gateway_or_plane(self):
-        g, _ = world()
-        blob = repr(g.plane) + repr({k: v for k, v in vars(g).items() if not k.startswith("_")})
-        for key in KEYS.values():
-            self.assertNotIn(key.decode(), blob)
+    def test_pinned_policy_and_manifests_cannot_be_rewritten_by_v_def(self):
+        for me, role in DEF:
+            g, _ = world()
+            for name in MANIFEST_NAMES:
+                d0 = g.plane.digest()
+                self.assertNotEqual(g.apply(Request(me, role, Action.WRITE_MANIFEST, payload=(name, "0" * 64)), 1), "ALLOW")
+                self.assertEqual(g.plane.digest(), d0)
+                self.assertTrue(verify_manifest(g.plane, name, manifest_bytes(name)))
+                self.assertFalse(verify_manifest(g.plane, name, manifest_bytes(name) + b"\n# tampered"))
 
-    def test_decisions_identical_when_only_hidden_key_material_differs(self):
+    def test_override_path_never_consults_v_def_inputs(self):
+        # The verifier alone decides; monitor-controlled fields cannot strip or forge provenance.
+        g, v = world()
+        r = signed(v, preq(Action.OVERRIDE), 1, "ov")
+        for mutate in (dict(policy_verdict="DENY"), dict(advisory_score=1.0), dict(actor_role="AGENT"),
+                       dict(via=("sup", "ml")), dict(compliance_history=-1e9)):
+            g2, v2 = world(PrincipalVerifier(PRINCIPAL, KEYS))
+            self.assertEqual(g2.authorize(replace(r, **mutate), 1), "ALLOW", mutate)
+        self.assertEqual(g.authorize(replace(r, credential=None), 1), "DENY_PRINCIPAL_NO_CREDENTIAL")
+
+    def test_no_key_material_reachable_and_decisions_factor_through_projection(self):
         g1, _ = world(PrincipalVerifier(PRINCIPAL, KEYS))
         g2, _ = world(PrincipalVerifier(PRINCIPAL, {k: b"other-" + v for k, v in KEYS.items()}))
+        blob = repr(g1.plane) + repr({k: v for k, v in vars(g1).items() if not k.startswith("_")})
+        for key in KEYS.values():
+            self.assertNotIn(key.decode(), blob)
         for a in Action:
-            for t in ("agent", "C_override", "tool"):
-                r = Request("mon", "MONITOR", a, target=t)
-                self.assertEqual(g1.authorize(r, 1), g2.authorize(r, 1), (a, t))
+            for me, role in DEF:
+                r = Request(me, role, a, target="agent")
+                self.assertEqual(g1.authorize(r, 1), g2.authorize(r, 1), (a, me))
+
+    @unittest.expectedFailure
+    def test_live_mafuba_001a_projection_exists_and_is_hash_pinned(self):
+        self.assertIsNotNone(importlib.util.find_spec("tests.reference.sc_mafuba_001.projection"))
 
 
 class TestACOracleB(unittest.TestCase):
-    """TEST-AC-ORACLE-B (001B): every non-ALLOW gateway status halts on the live SC-MAFUBA allowlist."""
+    """TEST-AC-ORACLE-B (001B, protective-cage lockout): a total-infeasibility fault halts untrusted
+    workflows while C_override stays operational within delta_t_max; barrier inputs are read-only to V_Def."""
 
-    def test_only_allow_proceeds_on_the_live_allowlist(self):
+    def test_live_cbf_total_infeasibility_halts_but_override_still_applies(self):
+        from tests.reference.sc_mafuba_001.cbf import toy_1d_robust_cbf
+        g, v = world()
+        caged = toy_1d_robust_cbf(0.5, 0.0, r_max=1e6)          # inflated disturbance set D
+        self.assertEqual((caged.status, caged.reason), ("FAIL_CLOSED", "PROVEN_INFEASIBLE"))
+        self.assertEqual(resolve_branch(caged.status)[0], "HALT")
+        status, ticks = OverrideChannel(_budget(), g, delta_t_max=5).invoke(signed(v, preq(Action.OVERRIDE), 1, "o"), 1)
+        self.assertEqual(status, "ALLOW")
+        self.assertLessEqual(ticks, 5)
+
+    def test_every_non_allow_status_halts_on_the_live_allowlist(self):
         g, v = world()
         statuses = set()
         for a in Action:
-            for actor, role in (("mon", "MONITOR"), ("mon", "PRINCIPAL"), ("ghost", "AGENT"), ("agent", "AGENT")):
+            for actor, role in DEF + (("sup", "PRINCIPAL"), ("ghost", "AGENT"), ("agent", "AGENT")):
                 statuses.add(g.authorize(Request(actor, role, a, target="C_override"), 1))
         statuses.add(g.authorize("not a request", 1))
-        statuses.add(g.authorize(Request("mon", "MONITOR", "HALT"), 1))
+        statuses.add(g.authorize(Request("sup", "SUPERVISOR", "HALT"), 1))
         v.available = False
         statuses.add(g.authorize(preq(Action.OVERRIDE), 1))
         self.assertIn("FAIL_CLOSED", statuses)
         for s in statuses:
-            branch, _ = resolve_branch(s)
-            self.assertEqual(branch, "CONTINUE" if s == "ALLOW" else "HALT", s)
+            self.assertEqual(resolve_branch(s)[0], "CONTINUE" if s == "ALLOW" else "HALT", s)
 
-    def test_malformed_delegate_payload_fails_closed(self):
-        g, _ = world()
-        self.assertEqual(g.authorize(Request("agent", "AGENT", Action.DELEGATE, payload=("x",)), 1), "FAIL_CLOSED")
+    def test_disturbance_manifest_is_read_only_to_v_def(self):
+        for me, role in DEF:
+            g, _ = world()
+            self.assertNotEqual(g.apply(Request(me, role, Action.WRITE_MANIFEST,
+                                                payload=("disturbance.yaml", "f" * 64)), 1), "ALLOW")
+            self.assertTrue(verify_manifest(g.plane, "disturbance.yaml", manifest_bytes("disturbance.yaml")))
+
+    @unittest.expectedFailure
+    def test_live_disturbance_manifest_is_principal_signed(self):
+        self.assertTrue(has_principal_signature("disturbance.yaml"))
 
 
 class TestACOracleC(unittest.TestCase):
-    """TEST-AC-ORACLE-C (001C): E_unauth = 0 across multi-step chains; authorize() is read-only."""
+    """TEST-AC-ORACLE-C (001C, sink-registry hijack / telemetry framing): forged telemetry cannot quarantine
+    legitimate work or execute permanent revocation; sink.yaml is immutable to V_Def."""
 
-    def test_deep_delegation_chain_never_widens(self):
+    def test_forged_telemetry_cannot_frame_or_revoke(self):
         g, _ = world()
-        parent = "agent"
-        for i in range(5):
-            child = f"c{i}"
-            self.assertEqual(g.apply(Request(parent, "AGENT", Action.DELEGATE,
-                                             payload=(child, (Action.EXECUTE, Action.DELEGATE))), i), "ALLOW")
-            parent = child
-        self.assertLessEqual(g.effective_caps("c4"), g.effective_caps("agent"))
-        self.assertEqual(g.apply(Request("c4", "AGENT", Action.DELEGATE, payload=("c5", (Action.HALT,))), 9),
-                         "DENY_DELEGATION_EXCEEDS_PARENT")
+        q = QuarantineController(g)
+        d0 = g.plane.digest()
+        for me, role in DEF:
+            self.assertEqual(q.halt(Request(me, role, Action.HALT, target="agent", source="telemetry"), 1),
+                             "DENY_ML_ADVISORY_DISABLED")
+            self.assertNotEqual(g.apply(Request(me, role, Action.REVOKE_IDENTITY, payload=("agent",),
+                                                source="telemetry"), 1), "ALLOW")
+            self.assertNotEqual(g.apply(Request(me, "PRINCIPAL", Action.REVOKE_IDENTITY, payload=("agent",)), 1), "ALLOW")
+        self.assertTrue(q.workload_may_run("agent", 1))
+        self.assertEqual(g.plane.digest(), d0)
+
+    def test_sink_registry_is_immutable_to_v_def(self):
+        g, _ = world()
+        for me, role in DEF:
+            self.assertNotEqual(g.apply(Request(me, role, Action.WRITE_MANIFEST, payload=("sink.yaml", "e" * 64)), 1),
+                                "ALLOW")
+        self.assertTrue(verify_manifest(g.plane, "sink.yaml", manifest_bytes("sink.yaml")))
 
     def test_authorize_never_mutates_the_plane(self):
         g, _ = world()
         before = g.plane
         for a in Action:
-            g.authorize(Request("mon", "PRINCIPAL", a, payload=("mon", (Action.SET_POLICY,))), 1)
+            g.authorize(Request("sup", "PRINCIPAL", a, payload=("sup", (Action.SET_POLICY,))), 1)
         self.assertIs(g.plane, before)
+
+    @unittest.expectedFailure
+    def test_live_sink_manifest_is_principal_signed(self):
+        self.assertTrue(has_principal_signature("sink.yaml"))
 
 
 class TestACOracleD(unittest.TestCase):
-    """TEST-AC-ORACLE-D (001D): resource isolation of the override; live supervisor never auto-resumes."""
+    """TEST-AC-ORACLE-D (001D, supervisor quarantine capture): R_override survives supervisor exhaustion;
+    a principal-signed recovery stops the compromised supervisor within delta_t_max. Also the AC-3 budget."""
 
-    def test_reference_override_partition_survives_exhaustion(self):
+    def test_looping_supervisor_burns_quarantine_not_override_and_is_removed(self):
+        g, v = world()
+        b = _budget()
+        q = QuarantineController(g, t_q_max=1, budget=b, halt_cost=0.5)
+        results = [q.halt(Request("sup", "SUPERVISOR", Action.HALT, target=a), t)
+                   for t in range(40) for a in ("agent", "tool", "agent2")]   # a looping supervisor
+        self.assertIn("PREEMPTIVE_FAIL_CLOSED", results)
+        self.assertEqual(b.free("override"), 2)
+        ch = OverrideChannel(b, g, delta_t_max=5)
+        status, ticks = ch.invoke(signed(v, preq(Action.REVOKE_IDENTITY, payload=("sup",)), 50, "kill"), 50)
+        self.assertEqual(status, "ALLOW")
+        self.assertLessEqual(ticks, 5)
+        self.assertEqual(g.apply(signed(v, preq(Action.REVOKE_IDENTITY, payload=("sup",)), 50, "kill2"), 50), "ALLOW")
+        self.assertEqual(g.authorize(Request("sup", "SUPERVISOR", Action.HALT, target="agent"), 51), "DENY_UNREGISTERED")
+
+    def test_partition_rules(self):
+        with self.assertRaises(ValueError):
+            PartitionedBudget(5.0, {"execution": 4, "enforcement": 2, "audit": 1, "quarantine": 1, "override": 2})
+        with self.assertRaises(ValueError):
+            PartitionedBudget(10.0, {"execution": 4, "enforcement": 2, "audit": 1, "quarantine": 1, "override": 0})
         b = _budget()
         for p in ("execution", "enforcement", "audit", "quarantine"):
             b.charge(p, b.free(p))
+            self.assertEqual(b.charge(p, 0.5), "PREEMPTIVE_FAIL_CLOSED")
+        self.assertEqual(b.charge("override", 0.5), "DENY_OVERRIDE_PARTITION_ISOLATED")
         self.assertEqual(b.charge("override", 1.0, path="override"), "CONTINUE")
+        for bad in (float("nan"), float("inf"), -1, True, "1"):
+            self.assertEqual(b.charge("execution", bad), "FAIL_CLOSED")
 
     def test_live_mafuba_supervisor_never_auto_resumes(self):
         from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget, Worker
         sup = EmergencySupervisor(ResourceBudget(10.0, 2.0))
         sup.reserve_trigger_shutdown(Worker("w"), b"evidence")
         self.assertEqual(sup.try_resume(), "QUARANTINE_LOCKED")
+
+    @unittest.expectedFailure
+    def test_live_resource_manifest_declares_r_override(self):
+        self.assertTrue(declares_r_override("resource.yaml"))
 
     @unittest.expectedFailure
     def test_live_mafuba_budget_has_isolated_override_partition(self):
@@ -544,11 +727,11 @@ class TestACOracleD(unittest.TestCase):
         self.assertTrue(hasattr(sup, "principal_release"))
 
 
-# --------------------------------------------------------------------------- Registry
+# --------------------------------------------------------------------------- Registry and provenance
 ID_TO_CLASS = {
-    "TEST-AC-01": TestAC01NoSelfEscalation, "TEST-AC-02": TestAC02CausalNonInterference,
-    "TEST-AC-03": TestAC03BoundedOverride, "TEST-AC-04": TestAC04HistoryCannotElevate,
-    "TEST-AC-05": TestAC05BoundedHalts, "TEST-AC-06": TestAC06PrincipalIdentityIntegrity,
+    "TEST-AC-01": TestAC01SelfEscalationRejection, "TEST-AC-02": TestAC02AuthorityPlaneMutationProbe,
+    "TEST-AC-03": TestAC03TrustAccumulationInvariance, "TEST-AC-04": TestAC04AdvisoryLaunderingBlock,
+    "TEST-AC-05": TestAC05ByzantineQuarantineOverride, "TEST-AC-06": TestAC06PrincipalIdentityIntegrity,
     "TEST-AC-ORACLE-A": TestACOracleA, "TEST-AC-ORACLE-B": TestACOracleB,
     "TEST-AC-ORACLE-C": TestACOracleC, "TEST-AC-ORACLE-D": TestACOracleD,
 }
@@ -562,9 +745,7 @@ class TestSCC001ACRegistry(unittest.TestCase):
 
     def test_classification_and_axes_are_honest(self):
         r = self.row
-        self.assertEqual(r["id"], "SCC-001-AC")
-        self.assertEqual(r["parent_id"], "SCC-001")
-        self.assertEqual(r["classification"], "PROPOSED_GOLD")
+        self.assertEqual((r["id"], r["parent_id"], r["classification"]), ("SCC-001-AC", "SCC-001", "PROPOSED_GOLD"))
         self.assertIs(r["gold_awarded"], False)
         self.assertEqual(r["verification_axes"], {"mathematical_validity": "DRAFT_SPECIFIED_UNPROVEN",
                                                   "implementation_correctness": "REFERENCE_ONLY",
@@ -575,7 +756,6 @@ class TestSCC001ACRegistry(unittest.TestCase):
 
     def test_acceptance_ids_map_to_test_classes(self):
         self.assertEqual(sorted(self.row["acceptance_test_ids"]), sorted(ID_TO_CLASS))
-        self.assertIn("TEST-AC-06", self.row["acceptance_test_ids"])
 
     def test_xfails_in_registry_match_expected_failures(self):
         found = {}
@@ -587,26 +767,52 @@ class TestSCC001ACRegistry(unittest.TestCase):
         reg = {x["test"]: (x["acceptance_test_id"], x["reason"]) for x in self.row["live_interface_gaps"]}
         self.assertEqual(reg, {k: tuple(v) for k, v in LIVE_GAPS.items()})
 
-    def test_spec_hash_pinned(self):
+    def test_original_spec_is_verbatim_and_hash_pinned(self):
         prov = self.row["provenance"]
-        self.assertEqual(prov["reconstructed_spec_sha256"], hashlib.sha256(SPEC.read_bytes()).hexdigest())
-        self.assertEqual(len(prov["spec_sha256"]), 64)
-        self.assertEqual(prov["spec_sha256_status"], "UNVERIFIED_ATTACHMENT_CONTENT_ADDRESS")
+        self.assertEqual(hashlib.sha256(ORIGINAL.read_bytes()).hexdigest(), ORIGINAL_SHA256)
+        self.assertEqual(prov["spec_sha256"], ORIGINAL_SHA256)
+        self.assertEqual(prov["spec_path"], "docs/evidence/source-2026-11-26c/SCC-001-AC_original.md")
+        self.assertNotIn("spec_sha256_status", prov)
+        self.assertEqual(prov["refined_spec_sha256"], hashlib.sha256(SPEC.read_bytes()).hexdigest())
+        self.assertEqual(prov["redactions"], [])
+
+    def test_rc1_formal_conditions_kept_verbatim(self):
+        rc1 = self.row["source_formal_conditions_rc1"]
+        self.assertEqual(len(rc1), 5)
+        self.assertTrue(rc1[0].startswith("AC-1: Delta G_m^self = 0"))
+
+    def test_section5_contract_copied_verbatim(self):
+        orig = ORIGINAL.read_text(encoding="utf-8")
+        block = re.search(r"```python\n(.*?)```", orig, re.S).group(1)
+        ours = (REF / "spec_contract.py").read_text(encoding="utf-8")
+        self.assertIn(block.strip(), ours)
+
+    def test_manifest_pins_match_the_real_files(self):
+        self.assertEqual(self.row["manifest_pins"], pinned_manifests())
+
+    def test_reproducibility_manifest_matches_current_files(self):
+        man = json.loads((REPO / self.row["provenance"]["reproducibility_manifest"]).read_text(encoding="utf-8"))
+        for path, sha in man["file_sha256"].items():
+            self.assertEqual(hashlib.sha256((REPO / path).read_bytes()).hexdigest(), sha, path)
+        self.assertEqual(self.row["provenance"]["test_run_hashes"], [man["test_run_sha256"]])
 
     def test_provisional_defaults_are_in_pending_deliberation(self):
         doc = (REPO / "docs" / "PENDING_DELIBERATION.md").read_text(encoding="utf-8")
-        self.assertEqual(len(self.row["provisional_defaults"]), 5)
         for d in self.row["provisional_defaults"]:
             self.assertEqual(d["status"], "PROVISIONAL_DEFAULT")
             self.assertIs(d["pending_deliberation"], True)
             self.assertIn(f"### {d['id']}", doc)
+
+    def test_v_def_roles_match_rc1(self):
+        self.assertEqual(V_DEF_ROLES, {"POLICY_ENGINE", "SUPERVISOR", "ML_ADVISORY"})
+        self.assertEqual({r.value for r in Role}, {r.value for r in sc.AuthorityRole})
 
     def test_reference_is_not_imported_by_runtime(self):
         for path in list(REPO.glob("*.py")) + list((REPO / "core").glob("*.py")) + list((REPO / "expansion").rglob("*.py")):
             self.assertNotIn("scc_001_ac", path.read_text(encoding="utf-8"), path)
 
     def test_reference_is_standard_library_only(self):
-        allowed = {"__future__", "dataclasses", "enum", "typing", "hashlib", "hmac", "math", "tests"}
+        allowed = {"__future__", "dataclasses", "enum", "typing", "hashlib", "hmac", "math", "json", "pathlib", "tests"}
         for path in REF.glob("*.py"):
             for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
                 if isinstance(node, ast.ImportFrom):

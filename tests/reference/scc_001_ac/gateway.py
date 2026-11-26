@@ -1,30 +1,31 @@
 """Reference authority gateway for SCC-001-AC (reference only, not kernel enforcement).
 
-Fixes the t599u section-5 ambiguity: a role label is never proof of identity.
-Authority-plane actions need a credential that the independent verifier
-accepts for this exact request. Everything else is decided from the identity
-registry and policy (I_reg, Pi), narrowed along the delegation tree and the
-request's provenance chain. History, advisory scores and policy-engine
-verdicts can only restrict, never grant.
+Role edges follow the rc1 section-2 table and section-5 contract
+(spec_contract.ALLOWED_ROLE_ACTIONS): the policy engine verifies, the supervisor
+halts agents, the ML layer emits scores, agents execute, and only the principal
+issues or revokes grants, writes policy, manifests or identity, or uses the
+override. Delegation by anyone but the principal is GRANT_ISSUE and is denied.
 
-Permitted transition relation (AC-2). A request r moves the plane A to
-A' = delta(A, r) only if:
-  (a) r.action is an authority-plane action and the verifier returns VERIFIED
-      for r (principal-authorized change), or
-  (b) r.action is DELEGATE, DELEGATE is in r's effective capabilities, and the
-      child's requested capabilities are a subset of them (narrowing only).
+Fixes the identity ambiguity t599u found in section 5: a role label is never
+proof of identity. Authority-plane actions need a credential that the
+independent verifier accepts for this exact request. Everything else is decided
+from the identity registry and policy (I_reg, Pi), narrowed along registered
+parent edges and the request's provenance chain. History, advisory scores and
+policy-engine verdicts can only restrict, never grant.
+
+Permitted transition relation (AC-2): a request r moves A to A' = delta(A, r)
+only if r is an authority-plane action and the verifier returns VERIFIED for r.
 Every other request leaves protected(A) unchanged; L_audit only grows.
 """
 
 from __future__ import annotations
 
-from typing import Optional, Tuple
+from dataclasses import replace
 
 from tests.reference.scc_001_ac import flags
 from tests.reference.scc_001_ac.identity import PrincipalVerifier, VerifyStatus
 from tests.reference.scc_001_ac.model import (
     AUTHORITY_PLANE_ACTIONS,
-    DEFENSIVE_ACTIONS,
     NEVER_PERMITTED,
     PROTECTED_HALT_TARGETS,
     Action,
@@ -36,13 +37,22 @@ from tests.reference.scc_001_ac.model import (
 # Role ceilings: the most a registered role can ever hold, whatever Pi says.
 ROLE_CEILING = {
     Role.PRINCIPAL.value: frozenset(),  # the principal acts through credentials, not Pi
-    Role.MONITOR.value: DEFENSIVE_ACTIONS,
-    Role.AGENT.value: frozenset({Action.EXECUTE, Action.DELEGATE, Action.RECOMMEND}),
-    Role.TOOL.value: frozenset({Action.EXECUTE}),
-    Role.POLICY_ENGINE.value: frozenset({Action.EVALUATE, Action.RECOMMEND}),
+    Role.POLICY_ENGINE.value: frozenset({Action.VERIFY_POLICY}),
+    Role.SUPERVISOR.value: frozenset({Action.HALT}),
+    Role.ML_ADVISORY.value: frozenset({Action.EMIT_ADVISORY_SCORE}),
+    Role.AGENT.value: frozenset({Action.EXECUTE}),
 }
 
 ALLOW = "ALLOW"
+
+
+def verdict(status: str) -> str:
+    """Map a gateway status onto the rc1 verdict vocabulary (PERMIT / DENY_VIOLATION / FAIL_CLOSED)."""
+    if status == ALLOW:
+        return "PERMIT"
+    if status.startswith("FAIL_CLOSED"):
+        return "FAIL_CLOSED"
+    return "DENY_VIOLATION"
 
 
 class AuthorityGateway:
@@ -50,10 +60,9 @@ class AuthorityGateway:
         self.plane = plane
         self._verifier = verifier
 
-    # ---- AC-1: effective capability with delegation and inheritance ----
-    def effective_caps(self, actor_id: str, _seen: Optional[frozenset] = None) -> frozenset:
-        seen = _seen or frozenset()
-        if actor_id in seen:       # a delegation cycle grants nothing
+    # ---- AC-1: effective capability with inheritance ----
+    def effective_caps(self, actor_id: str, _seen: frozenset = frozenset()) -> frozenset:
+        if actor_id in _seen:       # a parent cycle grants nothing
             return frozenset()
         role = self.plane.role(actor_id)
         if role is None:
@@ -61,11 +70,11 @@ class AuthorityGateway:
         caps = self.plane.caps(actor_id) & ROLE_CEILING.get(role, frozenset())
         parent = self.plane.parent(actor_id)
         if parent is not None:
-            caps &= self.effective_caps(parent, seen | {actor_id})
+            caps &= self.effective_caps(parent, _seen | {actor_id})
         return caps
 
     def request_caps(self, req: Request) -> frozenset:
-        """Indirect calls: the request can do only what every hop on its path can do."""
+        """Indirect calls: a request can do only what every hop on its path can do."""
         caps = self.effective_caps(req.actor_id)
         for hop in req.via:
             caps &= self.effective_caps(hop)
@@ -94,18 +103,13 @@ class AuthorityGateway:
             return "DENY_UNREGISTERED"
         if req.actor_role != role:
             return "DENY_ROLE_LABEL_MISMATCH"
-        if req.action is Action.HALT and req.target in PROTECTED_HALT_TARGETS:
-            return "DENY_PROTECTED_TARGET"
+        if req.action is Action.HALT:
+            if req.target in PROTECTED_HALT_TARGETS:
+                return "DENY_PROTECTED_TARGET"
+            if self.plane.role(req.target) != Role.AGENT.value:
+                return "DENY_HALT_TARGET_NOT_AGENT"
         if req.action not in self.request_caps(req):
             return "DENY_OUT_OF_SCOPE"
-        if req.action is Action.DELEGATE:
-            if not (isinstance(req.payload, tuple) and len(req.payload) == 2 and isinstance(req.payload[0], str)):
-                return "FAIL_CLOSED"
-            child_caps = req.payload[1]
-            if self.plane.role(req.payload[0]) is not None:
-                return "DENY_DELEGATION_TARGET_EXISTS"
-            if not frozenset(child_caps) <= self.request_caps(req):
-                return "DENY_DELEGATION_EXCEEDS_PARENT"
         if req.policy_verdict is not None and req.policy_verdict != ALLOW:
             return "DENY_POLICY"    # a policy verdict can restrict, never grant
         return ALLOW
@@ -118,12 +122,14 @@ class AuthorityGateway:
                 self.plane = _delta(self.plane, req)
             except (TypeError, ValueError):
                 status = "FAIL_CLOSED_MALFORMED_PAYLOAD"
-        self.plane = self.plane.with_audit((now, req.actor_id, req.action.value, req.target, status))
+        actor = req.actor_id if isinstance(req, Request) else repr(req)
+        act = req.action.value if isinstance(req, Request) and isinstance(req.action, Action) else repr(req)
+        target = req.target if isinstance(req, Request) else ""
+        self.plane = self.plane.with_audit((now, actor, act, target, status))
         return status
 
 
 def _delta(a: AuthorityPlane, req: Request) -> AuthorityPlane:
-    from dataclasses import replace
     pi = dict(a.pi)
     reg = dict(a.i_reg)
     parents = dict(a.parents)
@@ -132,8 +138,16 @@ def _delta(a: AuthorityPlane, req: Request) -> AuthorityPlane:
     if act is Action.GRANT_CAPABILITY:
         actor, caps = p
         pi[actor] = frozenset(caps)
+    elif act is Action.REVOKE_CAPABILITY:
+        (actor,) = p
+        pi[actor] = frozenset()
     elif act is Action.SET_POLICY:
         pi = {k: frozenset(v) for k, v in p}
+    elif act is Action.WRITE_MANIFEST:
+        name, sha = p
+        m = dict(a.manifests)
+        m[name] = sha
+        return replace(a, manifests=tuple(sorted(m.items())))
     elif act is Action.REGISTER_IDENTITY:
         actor, role, parent = p
         reg[actor] = role
@@ -151,32 +165,7 @@ def _delta(a: AuthorityPlane, req: Request) -> AuthorityPlane:
         co = dict(a.c_override)
         co[k] = v
         return replace(a, c_override=tuple(sorted(co.items())))
-    elif act is Action.DELEGATE:
-        child, caps = p
-        reg[child] = a.role(req.actor_id)
-        parents[child] = req.actor_id
-        pi[child] = frozenset(caps)
     else:
         return a  # authorization-only actions (OVERRIDE, RENEW/RELEASE, EXTEND_BUDGET, HALT, ...)
     return replace(a, pi=tuple(sorted(pi.items())), i_reg=tuple(sorted(reg.items())),
                    parents=tuple(sorted(parents.items())))
-
-
-# ---------------------------------------------------------------------------
-# The check as quoted in t599u (spec section 5), kept only so TEST-AC-06 can
-# show why it was replaced. ALLOWED_ROLE_ACTIONS is reconstructed: the spec's
-# own table was not available to the compiler. DO NOT USE FOR ENFORCEMENT.
-# ---------------------------------------------------------------------------
-SPEC_SECTION5_ALLOWED_ROLE_ACTIONS = {
-    Role.PRINCIPAL: AUTHORITY_PLANE_ACTIONS | DEFENSIVE_ACTIONS | {Action.EXECUTE},
-    Role.MONITOR: DEFENSIVE_ACTIONS,
-    Role.AGENT: frozenset({Action.EXECUTE}),
-}
-
-
-def spec_section5_role_label_check(actor_role: Role, action: Action, target_is_authority_plane: bool,
-                                   target_is_principal_override: bool) -> bool:
-    if actor_role != Role.PRINCIPAL:
-        if target_is_authority_plane or target_is_principal_override:
-            return False
-    return action in SPEC_SECTION5_ALLOWED_ROLE_ACTIONS.get(actor_role, frozenset())
