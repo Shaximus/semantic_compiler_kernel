@@ -4,6 +4,16 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 
 ## [Unreleased]
 
+### Added
+- Three-faction triad (Shax t586u), three compiled entries, all SILVER. Router `input` is under 400 characters, the full text is in `v2_extensions.source_text`, and the home domain is `soul_bomb_sovereignty`. All three are in `EXPLICIT_ONLY_ENTRY_HINTS`, so they are excluded from compiled-entry IDF and the lift tournament. The compiled manifest is now **35 entries (11 GOLD + 24 SILVER)**.
+  - `SC-TRIAD-001` SILVER 0.803 (min gate 0.7): cross-franchise hub covering StarCraft, Stargate, Diablo, Path of Exile, Dragon Ball and biblical tradition. Holds: consent separates symbiosis from possession; the possessor sits behind the host; the third faction slides into assimilation when it uses the enemy as an instrument. Breaks: the same species on both sides; individuals crossing roles; the third faction's origin varies; Rev 12 treats humanity as contested ground. `PROVISIONAL_DEFAULT` / `pending_deliberation: true` (triad = RUL-BINARY-001 + outside owner), with `needs_review` on trigger.
+  - `SC-TRIAD-SC-001` SILVER 0.844: StarCraft. Corrected: the Void-linked Fallen One is Amon, who binds the zerg through the Overmind. Shax's "Zerg = Satan" is kept as his interpretation.
+  - `SC-TRIAD-SG-001` SILVER 0.849: Stargate. Goa'uld usually enter at the neck (sometimes the mouth); Tok'ra enter by the mouth and take only willing hosts. Same species, split by consent and shared control.
+- `docs/TRIAD_THREE_FACTION_2026-11-25i.md`: lore corrections, holds and breaks, and the MAFUBA parallel (MAFUBA stays Proposed GOLD and unvalidated).
+- `docs/PENDING_DELIBERATION.md`: new section for `SC-TRIAD-001`.
+- Verbatim source and SHA-256 under `docs/evidence/source-2026-11-25i/`.
+- `tests/test_sc_triad_2026_11_25i.py`.
+
 ## [4.0.0] — 2026-11-25
 
 Package and kernel version bump from `V3.8.0` (tag `v3.8.0`, PR #45) covering PRs #46–#78. Schema remains Logos Semantic Training Sample `V3.5.0`. The Systemic Isomorphic Invariants framework field and per-entry metadata versions are unchanged. At the version-bump PR (#74) `calibration_output/compiled_entries/manifest.json` only updated `compiler_version` to `4.0.0`. PRs #75–#78 are included in this 4.0.0 release.
