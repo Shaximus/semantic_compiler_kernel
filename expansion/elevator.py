@@ -399,6 +399,9 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     "SC-TOL-001": "soul_bomb_sovereignty",
     # 2026-11-26e comparative mythology matrix (Shax t605u/t606u). Explicit-only: mythology, zeus, odin, ragnarok, worship, pantheon are everyday words.
     "SC-MYTH-001": "soul_bomb_sovereignty",
+    # SC-SOV-TRADE-001 Sovereign Bilateral Authentication Exchange (Shax t612u/t613u).
+    # Homed on trust_chain; explicit-only so "certificate", "customs", "receipt", "authority" never lift the domain.
+    "SC-SOV-TRADE-001": "trust_chain",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -473,6 +476,8 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-MYTH-001",
     # SC-TOL-001 Tree of Life structural compiler (Shax t608u/t609u). Explicit-only: tree, life, yggdrasil, horizon are everyday words.
     "SC-TOL-001",
+    # SC-SOV-TRADE-001 (Shax t612u/t613u). Explicit-only: certificate, customs, receipt, authority, signature are everyday words.
+    "SC-SOV-TRADE-001",
 })
 
 
