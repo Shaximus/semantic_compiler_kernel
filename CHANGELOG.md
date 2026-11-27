@@ -4,6 +4,31 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 
 ## [Unreleased]
 
+## [4.1.0] — 2026-11-27
+
+Package and kernel version bump from `V4.0.0` (PRs #46–#78), covering the PRs merged from #79 to #102. Schema remains Logos Semantic Training Sample `V3.5.0`, and per-entry content hashes are unchanged by the bump. In `calibration_output/compiled_entries/manifest.json` the bump changes only `compiler_version`, to `4.1.0`. New release manifest: `calibration_output/RELEASE_MANIFEST_V4_1_0.json`. The compiled manifest now has **65 entries (11 GOLD + 54 SILVER)** and the local registry 68 IDs.
+
+This release awards no new GOLD. Every entry compiled since V4.0.0 is SILVER and explicit-only. SCC-001-AC stays `PROPOSED_GOLD` with `gold_awarded` false, and five strict xfails remain open. Catherine remains unresolved. No GitHub Release or package-registry publish accompanies this version.
+
+### Highlights
+- **SCC-001-AC capture paths 1–4 closed (PRs #95–#98) and a distinct `PRINCIPAL_KEY_ROTATE` action (PR #99).** The four paths are identity, consent, resource isolation and recovery. Details are under Security below.
+- **Compact public API (PR #93):** new module `api.py` with `summary_v1(packet)` and `compile_json(text, ...)`, which return a stable, compact, JSON-ready dict for hosted MCP/HTTP and mobile SDKs.
+  - Raw input, normalized input and `forward_text` are left out unless the caller opts in.
+  - Contradiction and category-error records pass through an exact key allowlist (`type`, `resolved`, `error`), and `mapping` is never emitted.
+  - `import semantic_compiler` is unchanged, because the module is not imported by the package `__init__`.
+  - Supporting change: `expansion/registry/loader.py`.
+  - Tests: `tests/test_api_summary_v1.py` and additions to `tests/test_public_api_contract.py`.
+- **Bench baseline (PR #94):** `scripts/bench_baseline.py` reports import time, cold and warm compile, first decompress (median and p95), peak RSS (VmHWM), and the JSON size of `summary_v1` against `to_dict()`, over the Kernel Mobile prompts. It is read-only against the compiler.
+- **Thor in Diablo II and Path of Exile: the Avengers AEP map (PR #100).** Compiled entries `SC-AVG-001` and `SC-WORTHY-001`, both SILVER.
+- **Comparative mythology matrix, Age of Mythology (PR #101).** Compiled entry `SC-MYTH-001`, SILVER.
+- **SC-TOL-001 Tree of Life structural compiler (PR #102).**
+  - Built from Shax's rc5 attachment, with seven recorded kernel fixes.
+  - 42 rc5 acceptance tests plus 28 kernel tests.
+  - Eight fixtures, each with a provenance tier.
+  - Compiled entry SILVER 0.816, with `gold_awarded` false.
+- Earlier in this cycle (PRs #79–#92): the triad, the StarCraft ability map, the vessel extensions, the Consent Invariant and SCC-001, the Archetypal Evolution Principle and Game of Thrones work, World of Warcraft, Westworld, Guardian's Fall, the Lilith/Shard work, and the original SCC-001-AC spec. All are listed below.
+
+
 ### Security
 - SCC-001-AC `PRINCIPAL_KEY_ROTATE` (Shax t601u): key rotation is now a distinct, principal-only action in an rc2 amendment defined beside the verbatim rc1 section-5 contract (`AuthorityActionRC2`, `ALLOWED_ROLE_ACTIONS_RC2`, `is_authority_edge_permitted_rc2`). It replaces the temporary `POLICY_WRITE` mapping. `SCC-001-AC-KP-ROTATE` in `docs/PENDING_DELIBERATION.md` is now `RESOLVED_BY_SHAX`. Routing unchanged: 963-prompt corpus, 0 diffs.
 - SCC-001-AC capture path 4 of 4 closed (recovery, Shax t601u): the MAFUBA reference `EmergencySupervisor` gains `principal_release(worker, credential, now)`. A credential bound to this worker and this quarantine epoch, accepted by an independent principal verifier, ends the quarantine within `delta_t_max`. The release is paid from the override partition, so it still works after the shutdown reserve is exhausted. Everything else fails closed, and there is still no automatic resumption. The ORACLE-D recovery strict xfail is now a passing test with adversarial cases, including replay and cross-quarantine reuse. Five strict xfails remain open, none of them authority or recovery paths. Routing unchanged: 963-prompt corpus, 0 diffs. Still `PROPOSED_GOLD`, `gold_awarded` false.

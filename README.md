@@ -61,7 +61,7 @@ If this work is useful, please contribute or pay for the services it renders:
 
 ## Status
 
-**Current release:** `V4.0.0` (2026-11-25) — supersedes `V3.8.0`
+**Current release:** `V4.1.0` (2026-11-27) — supersedes `V4.0.0`
 
 - **Unified V3.5.0 Schema & Core (`schema 3.5.0`):** `core/`, `extraction/`, `gates/`, `registry/`, and `schemas/logos_semantic_training_sample_v3_5_0.schema.json` are aligned on `V3.5.0` (the legacy V2.1.0/V3.0.0 freeze is lifted, with Kestrel decision-derivative ordering and sensitive input/SFT redaction integrated directly into `core/pipeline.py` and `core/dataset.py`).
 - **Packaging (`pyproject.toml` + `MANIFEST.in`):** Setuptools package layout (`semantic_compiler.*`) with `[project.urls]` and bundled `CANARY.json` & `COMMERCIAL_LICENSE.md` in both wheel and sdist distributions. Editable install via `pip install -e .[test]` makes `semantic_compiler` importable everywhere.
@@ -75,11 +75,11 @@ If this work is useful, please contribute or pay for the services it renders:
 - **Soul Bomb / Reward Signal Inversion V5 Sovereignty Patch & SAO Lineup (`expansion.consciousness.soul_bomb` / `expansion/templates/soul_bomb_sovereignty.yaml`):** Executable engine for `SC-SB-001` (4 surviving discriminators: escalation, substrate, agency, exit; 3 removed discriminators; natural grief vs imposed coercion; direct genuine-reinforcer recalibration; Cosmological sovereignty-absent residual) and `SC-LU-SAO-LINEUP-001` + 7 character decodes (`Kirito`, `Asuna`, `Yui`, `Sugou`, `Alice`, `Eugeo`, `Cardinal`) formalizing exit-behavior classification (8/8 predictor), Kayaba/Heathcliff bootstrapper surrender testing, action-over-team Cardinal residuals, and the 8-pair canon clash matrix.
 - **Flat FLRW Hubble–Schwarzschild Correspondence & Runtime Recoding Over Fixed Base (`expansion.consciousness.cosmo_and_recoding` / `SC-HS-001` v1.1.0 / `SC-IT-OCTO-RNA-EDIT-001`):** Executable TIG-graded cosmology evaluator (`evaluate_flrw_hubble_schwarzschild`: exact `R_S = R_H` across every flat FLRW epoch, Misner–Sharp ratio `R_S/R = (R/R_H)^2`, expanding anti-trapped vs contracting future-trapped null-expansion classification, apparent-vs-event horizon separation, Gibbons–Hawking area-law entropy, `substrate_confusion_check=True`, SC-PATCH-DU-001) and biological/AI runtime-recoding evaluator (`evaluate_runtime_recoding_layer`: Birk et al. Cell 2023 octopus ADAR A-to-I RNA editing & LoRA/prompt adapters over frozen base weights, frozen-base attachment cost, timescale separation, and Catalog Class #24 / Claude `#19`).
 - **Spirit Bomb Reflection (`SC-OMNI-001` v2.0.0), R.E.L.D. v3.0 & Unified Map V7 Legitimacy Architecture (`expansion.consciousness.legitimacy_and_omni`, `gates.testimony_integrity` Check 4):** Executable evaluators for reflected-payload dose thresholds & Attenuation Protocol (`time`/`support`/`intent`), R.E.L.D. v3.0 `CAL = f(DNA, Trauma * Support)`, V7 Part 30/35 Legitimacy Theorem (3 non-tradeable hard constraints + 6 graded dimensions + 4 exit types), Part 28.4/36.2 operational redirection layers & feedback capture, Part 32.4 correlated-validator risk, Part 33.1–33.3 TIG Check 4 Predictive Discrimination & 3 separate confidence values, Part 36.4 sustainable output, and Part 27/33.5 26-entry Cryptographic Invariant Key Ring (`docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md`, `docs/RELD_V3.md`).
-- **Domain Elevator (`expansion.elevator`):** O(1) inverted-rack retrieval, content-addressed `SemanticTicket` compression/rehydration (`park()` / `retrieve()`), and direct cross-domain turntable translation (`rotate_to()`) across all 46 templates, 25 compiled entries, and 14 seed invariant catalog classes without repeated disk reads or linear mansion walks.
-- **Compiled Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (**25 entries — 11 GOLD + 14 SILVER:** `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001` v1.1.0, `SC-DOMAIN-EXPANSION-001`, `SC-SB-001`, `SC-HS-001` v1.1.0, `SC-IT-OCTO-RNA-EDIT-001`, `SC-OMNI-001` v2.0.0, `SC-DU-001`, `SC-CP-001`, `SC-MIRROR-001`, `SC-LU-SAO-LINEUP-001`, `SC-LU-SAO-KIRITO-001`, `SC-LU-SAO-ASUNA-001`, `SC-LU-SAO-YUI-001`, `SC-LU-SAO-SUGOU-001`, `SC-LU-SAO-ALICE-001`, `SC-LU-SAO-EUGEO-001`, `SC-LU-SAO-CARDINAL-001`, `SC-LU-FRIEZA-001`, `SC-LU-VEGETA-001` rev 1.2.0, `SC-LU-GOKU-001`, `SC-LU-CELL-001`, and `SC-LU-TRUNKS-001`).
+- **Domain Elevator (`expansion.elevator`):** O(1) inverted-rack retrieval, content-addressed `SemanticTicket` compression/rehydration (`park()` / `retrieve()`), and direct cross-domain turntable translation (`rotate_to()`) across all 46 templates, 65 compiled entries, and 14 seed invariant catalog classes without repeated disk reads or linear mansion walks.
+- **Compiled Entries (`calibration_output/compiled_entries/`):** Executable JSONL entries with SHA-256 manifest (**65 entries — 11 GOLD + 54 SILVER;** the 40 entries added since V4.0.0 are all SILVER and listed in `docs/invariant_catalog/DOMAIN_LEDGER.md`. **V4.0.0 set:** `SC-DIVINE-RLHF-001`, `SC-NEURO-SLEEPER-001`, `SC-TIG-001`, `SC-CT-001` v1.1.0, `SC-DOMAIN-EXPANSION-001`, `SC-SB-001`, `SC-HS-001` v1.1.0, `SC-IT-OCTO-RNA-EDIT-001`, `SC-OMNI-001` v2.0.0, `SC-DU-001`, `SC-CP-001`, `SC-MIRROR-001`, `SC-LU-SAO-LINEUP-001`, `SC-LU-SAO-KIRITO-001`, `SC-LU-SAO-ASUNA-001`, `SC-LU-SAO-YUI-001`, `SC-LU-SAO-SUGOU-001`, `SC-LU-SAO-ALICE-001`, `SC-LU-SAO-EUGEO-001`, `SC-LU-SAO-CARDINAL-001`, `SC-LU-FRIEZA-001`, `SC-LU-VEGETA-001` rev 1.2.0, `SC-LU-GOKU-001`, `SC-LU-CELL-001`, and `SC-LU-TRUNKS-001`).
 - **Gem Decode & Gem Forge (`expansion.gem_decode`, `expansion.gem_forge`):** Deterministic Path of Exile skill/support-gem translation into inference-architecture build sheets and multi-gem synthesis over a pinned RePoE corpus.
 - **Buildcraft Ontology (`registry` + `translation`):** `BUILD_001`–`BUILD_018` structural compute mappings resolved by a two-layer relation-aware structural + trigger-recall resolver.
-- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → `V3.5.2` → `V3.8.0` → **`V4.0.0`**
+- **Manifest Chain:** `V2.1.3` → `V2.2.0-RC1` → `V2.3.0` → `V3.0.0` → `V3.1.1` → `V3.5.0` → `V3.5.1` → `V3.5.2` → `V3.8.0` → `V4.0.0` → **`V4.1.0`**
 
 ---
 
@@ -302,7 +302,7 @@ semantic_compiler_kernel/
 ├── .agents/skills/       # Native repo agent skills (invariant-translator)
 ├── schemas/              # Core dataset JSON schemas (V3.5.0 primary + V3.1.1/V2.1.0 legacy)
 ├── scripts/              # Corpus generation, calibration, freeze artifacts
-├── calibration_output/   # Generated corpora, release manifests, reports, 25 compiled entries
+├── calibration_output/   # Generated corpora, release manifests, reports, 65 compiled entries
 ├── docs/                 # Provenance docs, invariants, 25-class invariant catalog, Ego-Lineup & FLRW notes
 ├── tests/                # Unit & integration tests (pytest + unittest)
 ├── CANARY.json           # Cryptographic provenance watermark
@@ -317,6 +317,7 @@ semantic_compiler_kernel/
 
 | Artifact | Path |
 |---|---|
+| Release manifest (V4.1.0) | `calibration_output/RELEASE_MANIFEST_V4_1_0.json` |
 | Release manifest (V4.0.0) | `calibration_output/RELEASE_MANIFEST_V4_0_0.json` |
 | Release manifest (V3.8.0) | `calibration_output/RELEASE_MANIFEST_V3_8_0.json` |
 | Release manifest (V3.5.2) | `calibration_output/RELEASE_MANIFEST_V3_5_2.json` |
@@ -324,7 +325,7 @@ semantic_compiler_kernel/
 | Release manifest (V3.5.0) | `calibration_output/RELEASE_MANIFEST_V3_5_0.json` |
 | Release manifest (V3.1.1) | `calibration_output/RELEASE_MANIFEST_V3_1_1.json` |
 | Release manifest (V3.0.0) | `calibration_output/RELEASE_MANIFEST_V3_0_0.json` |
-| Compiled entries manifest (25 entries) | `calibration_output/compiled_entries/manifest.json` |
+| Compiled entries manifest (65 entries) | `calibration_output/compiled_entries/manifest.json` |
 | Invariant catalog (25 classes) | `docs/invariant_catalog/INVARIANT_CATALOG.md` |
 | Flat FLRW Hubble–Schwarzschild note | `docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md` |
 | Known limitations | `calibration_output/KNOWN_LIMITATIONS_V2_1_3.md` |

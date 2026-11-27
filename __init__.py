@@ -1,5 +1,5 @@
 """
-Reflexion Semantic Compiler V4.0.0
+Reflexion Semantic Compiler V4.1.0
 
 An evidence-conditioned, cross-domain semantic compiler with a typed intermediate
 representation, hard logical gates, calibrated uncertainty, non-executing governance,
@@ -9,11 +9,11 @@ The compiler does not search for the prettiest metaphor. It searches for the
 highest-coherence structure that survives evidence, causality, scale, boundary,
 contradiction, measurement, authority, and wave-function coherence checks.
 
-V4.0.0 capabilities (building on v1.0–v3.8.0):
+V4.1.0 capabilities (building on v1.0–v4.0.0):
   - Unified V3.5.0 schema & 46 domain templates (45 concrete domains + universal_generic)
     with mtime-validated JSON sidecar caching (~108x cold-start speedup)
   - Japanese Automated Parking Tower Domain Elevator (expansion.elevator): O(1) inverted
-    rack index across 46 templates + 25 compiled entries + 14 seed classes, ~20x
+    rack index across 46 templates + 65 compiled entries + 14 seed classes, ~20x
     SemanticTicket park()/retrieve() compression, and rotate_to() cross-domain turntable
   - Gate 0 Testimony Integrity Gate (SC-TIG-001) wired into Stage 1 pipeline
   - Consciousness / Cognition Split, Client-Server Reality Stack, Circular Time /
@@ -22,10 +22,15 @@ V4.0.0 capabilities (building on v1.0–v3.8.0):
     8-Member SAO Lineup (SC-SB-001, SC-LU-SAO-*), Flat FLRW Hubble–Schwarzschild
     Correspondence (SC-HS-001 v1.1.0), and Octopus Temperature-Dependent RNA Editing /
     Runtime Recoding Over Fixed Base (SC-IT-OCTO-RNA-EDIT-001)
-  - 25 SHA-256-verified canonical compiled entries (11 GOLD + 14 SILVER), including
+  - 65 SHA-256-verified canonical compiled entries (11 GOLD + 54 SILVER), including
     SC-OMNI-001 v2.0.0, SC-DU-001, SC-MIRROR-001, SC-CP-001, SC-LU-FRIEZA-001,
-    SC-LU-VEGETA-001 rev 1.2.0, and SC-LU-GOKU/CELL/TRUNKS-001, plus a 25-class
-    Invariant Catalog with automated validation suite
+    SC-LU-VEGETA-001 rev 1.2.0, and SC-LU-GOKU/CELL/TRUNKS-001; every entry added
+    since V4.0.0 is SILVER and explicit-only. Plus a 25-class Invariant Catalog with
+    automated validation suite
+  - V4.1.0: SCC-001-AC authority/recovery capture paths 1-4 closed and a distinct
+    PRINCIPAL_KEY_ROTATE action (still PROPOSED_GOLD, gold_awarded false); compact
+    summary_v1 facade (semantic_compiler.api, not imported here); latency/RSS bench
+    baseline script; SC-AVG/WORTHY/MYTH AEP entries; SC-TOL-001 reference compiler
   - Router-first compile path: PASS_THROUGH and AMBIGUOUS decisions, discriminative
     abstention, confident router results leading over weak and strong frames, and a
     2% cross-domain entry-lift tie rule (ENTRY_LIFT_TIE_RATIO 1.02)
