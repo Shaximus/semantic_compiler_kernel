@@ -616,3 +616,25 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Does not change:** the compiled grade, SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-TOL-001`, Catherine (unresolved), `.github/workflows`, the package version (still 4.1.0). GOLD stays withheld.
 - **Hook:** unchanged; the entry stays explicit-only.
 
+
+## SC-SOV-TRADE-001 t616u (CI enforcement and verification pass; Shax t616u)
+
+- **ID:** `SC-SOV-TRADE-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t616u: install the functional dependencies in CI and make sov_trade skips fail there; keep a no-`cryptography` job; run the supported Python matrix; verify (mutation, KATs, independent cross-checks, HSM evidence, property/fuzz tests, static checks, one-command reproduction); attach the evidence; do not merge; R-16 stays not met; the grade stays as it is; report failures rather than working around them.
+- **Evidence:** `docs/evidence/sov-trade-verify-2026-11-27/` (README, environment record, logs, mutation table, cross-check outputs, SHA256SUMS). Reproduce with `make verify`.
+- **New provisional defaults introduced by fixes in this pass (each needs a ruling):**
+  1. **JCS integers:** integers outside ±(2^53−1) (the I-JSON safe range) are refused instead of serialized. Floats stay refused. Lone surrogates are refused.
+  2. **JCS key order:** keys sort by UTF-16 code units as RFC 8785 requires (the earlier code sorted by code point; the RFC 8785 `weird.json` vector exposed it).
+  3. **Transparency log:** RFC 9162 Merkle tree (no duplicated last node). Inclusion proofs bind the leaf index and tree size; consistency proofs are implemented and verified. Size-0 consistency is refused, and hashes that are not 32 bytes are refused (stricter than some upstream test probes; two upstream "equal size" probes therefore diverge, documented in the KAT test).
+  4. **Peer checkpoints:** a checkpoint of a different size without a consistency proof is **not stored** (`consistency_proof_missing`) and does not halt acceptance; a bad consistency proof or an equal-size fork halts with `LEDGER_FORK`.
+  5. **Status lists:** an issuer status list whose signature does not verify (or whose key is unknown, or whose domain differs) gives a hard `SIGNATURE_INVALID`. Before this pass the signature was never checked.
+  6. **RFC 3161 strictness:** tokens must carry an ESS signing-certificate attribute (v2 preferred); the TSA certificate is selected by exact DER match of the signer identifier (stricter than RFC 5280 name matching); the TSA EKU must be critical and only id-kp-timeStamping; only RSA TSA keys are accepted; any parse error becomes `TimestampError`.
+  7. **mTLS revocation:** CRLs are loaded so they actually take effect (Python's `cadata` silently drops CRLs); leaf CRL checking is on when a CRL is supplied.
+  8. **Delegation:** an empty (unconstrained) child set under a constrained parent counts as widening. The authority-gate lattice check fails closed if `gates/authority.py` cannot be imported (it previously failed open).
+  9. **PKCS#11:** `sign()` refuses a key that is extractable or not sensitive, and refuses an ambiguous label (more than one private key).
+- **Question for Shax (not changed):** `authority.issue` computes `needed = {APPROVE, SIGN}` for national-root grants but then requires `{APPROVE, DEPLOY}`; `needed` is unused (ruff F841). Which pair is intended?
+- **Not tested / still a gap:** peer checkpoint signatures are not verified in `store_peer_checkpoint`; the Shamir rehearsal reconstructs the whole secret in memory and its GF(256) arithmetic is not constant-time; `mtls._as_temp_pair` leaves test key PEMs in temporary directories until cleanup; the hybrid "binding of publics" comment describes a no-op; no certified HSM, real organisations, legal review or outside reviewer (R-16). The verification ran on the box, not on Shax's PC (the PC was not reachable).
+- **Grade:** unchanged. SILVER 0.793, `gold_awarded` false. **R-16:** `NOT_MET`. Version 4.1.0; no release or tag.

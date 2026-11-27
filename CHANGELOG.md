@@ -5,6 +5,11 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ## [Unreleased]
 
 ### Added
+- SC-SOV-TRADE-001 **t616u** CI enforcement and verification pass (Shax t616u). The grade is unchanged (SILVER 0.793, `gold_awarded` false). R-16 stays not met. No release, tag or version bump.
+  - CI (`.github/workflows/ci.yml`, edit authorized by Shax for this PR): hash-locked install of `cryptography` and the sov-trade extras, SoftHSM2 and OpenSC, a per-run SoftHSM2 test token, `SOV_TRADE_REQUIRE_FUNCTIONAL=1` so sov_trade skips fail, Python 3.10 to 3.14, a no-`cryptography` job proving the package refuses to import, and an aggregate `test` check.
+  - Fixes found by KATs, property tests, fuzzing, OpenSSL cross-checks and mutation testing: RFC 8785 UTF-16 key order, RFC 9162 Merkle tree with inclusion and consistency proofs, ESS signing-certificate in RFC 3161 tokens plus strict token parsing, CRLs actually enforced in mTLS, status-list signatures verified, delegation empty-scope widening, authority gate fail-closed, PKCS#11 custody checks at sign time, constant-time challenge and commitment comparisons, malformed input fails closed.
+  - Tests: KATs (RFC 8032, NIST ACVP ML-DSA-65, RFC 8785, transparency-dev Merkle probes), hypothesis properties, fuzz, ledger, mTLS rejection reasons, regression tests for every surviving mutation.
+  - `make verify` (scripts/sov_trade/verify.sh) and `scripts/sov_trade/Dockerfile`; evidence in `docs/evidence/sov-trade-verify-2026-11-27/`; new provisional defaults in `docs/PENDING_DELIBERATION.md`.
 - SC-SOV-TRADE-001 **t615u** closes the install-only gaps on the previous reference (Shax t615u). The compiled grade is unchanged (SILVER 0.793, `gold_awarded` false). R-16 stays not met.
   - `cryptography>=50.0.2,<51` is a hard package dependency. `sov_trade` fails closed without it. The vendored `_ed25519` production fallback is gone.
   - Hybrid signatures: Ed25519 + FIPS 204 ML-DSA-65 from pyca/cryptography 50.0.2; both members must verify.
