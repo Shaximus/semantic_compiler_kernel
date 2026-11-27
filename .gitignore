@@ -35,3 +35,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# SC-SOV-TRADE-001 make verify output
+verify-out/
+.hypothesis/
