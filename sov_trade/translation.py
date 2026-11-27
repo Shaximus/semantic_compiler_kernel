@@ -7,7 +7,7 @@ from typing import Any
 
 from .assertion import SignedAssertionEnvelope
 from .canonical import canonical_json
-from .crypto import ALG_ED25519, sha256
+from .crypto import sha256
 from .custody import KeyStore
 from .identity import Principal
 from .types import ActorKind, MappingType, ReasonCode, TradeError

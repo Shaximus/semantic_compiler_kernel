@@ -8,7 +8,7 @@ from typing import Any
 from .canonical import canonical_json
 from .crypto import PublicKey, sha256, verify_signature
 from .custody import KeyStore, Officer
-from .types import ReasonCode, Role, TradeError
+from .types import ReasonCode, Role
 
 
 # PROVISIONAL_DEFAULT: status older than this many seconds is stale.

@@ -99,8 +99,11 @@ class TestPKCS11Signer:
         signer.generate_ed25519("locked")
         assert signer.private_key_exportable("locked") is False
         assert signer.private_key_sensitive("locked") is True
-        with pytest.raises((AttributeSensitive, PKCS11Error, CustodyError)):
+        # The token itself must refuse: a CustodyError here would mean the
+        # token returned CKA_VALUE and only our wrapper caught it.
+        with pytest.raises((AttributeSensitive, PKCS11Error)):
             signer.try_export_private_value("locked")
+        assert not issubclass(CustodyError, PKCS11Error)
 
     def test_config_is_library_path_generic(self, token_env: dict[str, str]) -> None:
         from semantic_compiler.sov_trade.pkcs11 import PKCS11Config
@@ -112,4 +115,57 @@ class TestPKCS11Signer:
         )
         # A certified module is selected by path only; no SoftHSM type switch.
         assert config.library_path.endswith("libsofthsm2.so") or "pkcs11" in config.library_path.lower()
-        assert "softhsm" not in PKCS11Config.__doc__.lower() or True
+        # The config carries no PIN, only the name of the environment variable.
+        assert not any("pin" == f for f in PKCS11Config.__dataclass_fields__)
+
+    def test_sign_refuses_extractable_key(self, token_env: dict[str, str]) -> None:
+        import pkcs11
+        from pkcs11 import Attribute, KeyType, Mechanism
+        from semantic_compiler.sov_trade.pkcs11 import PKCS11Config, PKCS11Signer
+        from semantic_compiler.sov_trade.types import CustodyError
+
+        lib = pkcs11.lib(token_env["library"])
+        token = lib.get_token(token_label=token_env["label"])
+        with token.open(user_pin=os.environ[token_env["pin_env"]], rw=True) as session:
+            session.generate_keypair(
+                KeyType.EC_EDWARDS,
+                mechanism=Mechanism.EC_EDWARDS_KEY_PAIR_GEN,
+                store=True,
+                public_template={
+                    Attribute.EC_PARAMS: bytes.fromhex("06032b6570"),
+                    Attribute.TOKEN: True,
+                    Attribute.LABEL: "leaky",
+                },
+                private_template={
+                    Attribute.SIGN: True,
+                    Attribute.TOKEN: True,
+                    Attribute.SENSITIVE: False,
+                    Attribute.EXTRACTABLE: True,
+                    Attribute.LABEL: "leaky",
+                },
+            )
+        signer = PKCS11Signer(
+            PKCS11Config(
+                library_path=token_env["library"],
+                token_label=token_env["label"],
+                user_pin_env=token_env["pin_env"],
+            )
+        )
+        with pytest.raises(CustodyError):
+            signer.sign("leaky", b"message")
+
+    def test_sign_refuses_ambiguous_label(self, token_env: dict[str, str]) -> None:
+        from semantic_compiler.sov_trade.pkcs11 import PKCS11Config, PKCS11Signer
+        from semantic_compiler.sov_trade.types import CustodyError
+
+        signer = PKCS11Signer(
+            PKCS11Config(
+                library_path=token_env["library"],
+                token_label=token_env["label"],
+                user_pin_env=token_env["pin_env"],
+            )
+        )
+        signer.generate_ed25519("twin")
+        signer.generate_ed25519("twin")
+        with pytest.raises(CustodyError):
+            signer.sign("twin", b"message")
