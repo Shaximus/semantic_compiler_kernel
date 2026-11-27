@@ -5,6 +5,11 @@
 # rc6 (Shax t610u) adds two decided behaviours, tagged "RC6-D1" (scoped child-failure taint)
 # and "RC6-D2" (living vs. self-maintaining vs. autopoietic). Principle: structural validity,
 # biological status and governance authority are three separate dimensions, never one verdict.
+# rc7 (Shax t611u), tagged "RC7": a structural result, an epistemic result and a combined
+# certification are reported separately, so a speculative architecture can be structurally
+# valid without being empirically established. The rc6 propagation rule is unchanged: the
+# combined certification IS rc6's overall_verdict. Unverified substrate, speculative tier and
+# invalid architecture are three different outputs. No new authority path is added.
 # Reference code for offline tests only: not kernel enforcement, not imported by core/ or expansion/.
 """
 SC-TOL-001 v2.1-rc5: Hardened Topology-Aware, Epistemically Constrained Structural Compiler
@@ -37,7 +42,7 @@ from typing import Any, Optional
 # 1. Core Constants & Four-Dimensional State Model: S = (Sigma, T, G(v, e, tau), E)
 # =============================================================================
 
-SCHEMA_VERSION: str = "SC-TOL-001/2.1-rc6+kernel.2"  # rc6 (Shax t610u) on top of rc5 + KERNEL-FIX-1..7
+SCHEMA_VERSION: str = "SC-TOL-001/2.1-rc7+kernel.3"  # rc7 (Shax t611u) on rc6 (t610u) on rc5 + KERNEL-FIX-1..7
 CORE_IMMUTABLE_GATES: frozenset[str] = frozenset({"T0", "T4", "T8"})
 
 
@@ -109,6 +114,125 @@ DIMENSION_GATES: Mapping[str, frozenset[str]] = MappingProxyType({
     "biological": frozenset({"T2", "T7"}),
     "governance": frozenset({"T4", "T8"}),
 })
+
+
+# =============================================================================
+# RC7 (Shax t611u): structural result, epistemic result, combined certification.
+#   - Unverified substrate: the substrate is not empirically established (epistemic).
+#   - Speculative architecture: deliberately in the SPECULATIVE_EXO tier (epistemic).
+#   - Invalid architecture: a structural invariant is violated (structural FAIL).
+# These are not equivalent and are never reported as one value. The combined certification
+# is rc6's overall_verdict, unchanged, so the rc6 propagation rule is not weakened. The two
+# axes are pure functions of the immutable records and child results: they only ever go
+# DOWN (min over evidence), so no child, appended record or exemption can raise them, and
+# they confer no authority (governance stays in T4/T8 and dimension_verdicts()).
+# =============================================================================
+
+class StructuralVerdict(Enum):
+    PASS = "PASS"
+    QUALIFIED = "QUALIFIED"
+    FAIL = "FAIL"
+
+
+class EpistemicStatus(Enum):
+    ESTABLISHED = "ESTABLISHED"        # EMPIRICAL_SCI, nothing unverified
+    NOT_EMPIRICAL = "NOT_EMPIRICAL"    # CORPUS_MYTH: tradition layer, empirical check not applicable
+    UNVERIFIED = "UNVERIFIED"          # speculative tier, or an empirical claim not yet established
+    INADMISSIBLE = "INADMISSIBLE"      # evidence refused (T0 firewall, claim above tier, no effective tier)
+
+
+STRUCTURAL_RANK: Mapping[StructuralVerdict, int] = MappingProxyType({
+    StructuralVerdict.FAIL: 0, StructuralVerdict.QUALIFIED: 1, StructuralVerdict.PASS: 2,
+})
+# PROVISIONAL_DEFAULT (rc7): NOT_EMPIRICAL ranks above UNVERIFIED (a tradition-layer claim is
+# not an unestablished empirical claim); see docs/PENDING_DELIBERATION.md.
+EPISTEMIC_RANK: Mapping[EpistemicStatus, int] = MappingProxyType({
+    EpistemicStatus.INADMISSIBLE: 0, EpistemicStatus.UNVERIFIED: 1,
+    EpistemicStatus.NOT_EMPIRICAL: 2, EpistemicStatus.ESTABLISHED: 3,
+})
+# The ceiling each tier can reach; records and children can only lower it.
+TIER_EPISTEMIC_CEILING: Mapping[EpistemicTier, EpistemicStatus] = MappingProxyType({
+    EpistemicTier.EMPIRICAL_SCI: EpistemicStatus.ESTABLISHED,
+    EpistemicTier.CORPUS_MYTH: EpistemicStatus.NOT_EMPIRICAL,
+    EpistemicTier.SPECULATIVE_EXO: EpistemicStatus.UNVERIFIED,
+})
+TIER_LABEL: Mapping[EpistemicTier, str] = MappingProxyType({
+    EpistemicTier.EMPIRICAL_SCI: "EMPIRICAL", EpistemicTier.CORPUS_MYTH: "CORPUS",
+    EpistemicTier.SPECULATIVE_EXO: "SPECULATIVE",
+})
+
+# Which records speak to the structure itself (what it is).
+STRUCTURAL_RESULT_GATES: frozenset[str] = frozenset({"T1", "T5", "E6"})
+STRUCTURAL_RESULT_CODES: frozenset[str] = frozenset({
+    "self_loop_edge", "dangling_edge",                      # E1 graph well-formedness
+    "boundary_mask_applied", "opaque_fault_nodes_excluded",  # T6 coverage of the structure
+})
+# Which records speak to the evidence for claims about it (what supports it).
+EPISTEMIC_RESULT_GATES: frozenset[str] = frozenset({"T0", "T3"})
+EPISTEMIC_RESULT_CODES: frozenset[str] = frozenset({
+    "source_registry_key_mismatch", "invalid_memory_mechanism_status",
+    "opaque_internal_claim_rejected", "opaque_claim_quarantined",
+    "non_empirical_life_claim_blocked", "myth_empirical_autopoiesis_blocked",
+    "speculative_empirical_autopoiesis_blocked", "myth_substrate_self_certification",
+    "speculative_self_certification",
+})
+_EPISTEMIC_UNVERIFIED_VERDICTS: Mapping[str, frozenset[GateVerdict]] = MappingProxyType({
+    "T2": frozenset({GateVerdict.QUALIFIED, GateVerdict.LIVING_OBSERVED, GateVerdict.SELF_MAINTENANCE_UNVERIFIED}),
+    "T7": frozenset({GateVerdict.UNVERIFIED_SUBSTRATE}),
+})
+CHILD_TAINT_CODE: str = "child_failure_taint"
+
+
+@dataclass(frozen=True)
+class StructuralResult:
+    verdict: StructuralVerdict
+    qualifiers: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"verdict": self.verdict.value, "qualifiers": list(self.qualifiers)}
+
+
+@dataclass(frozen=True)
+class EpistemicResult:
+    tier: Optional[EpistemicTier]
+    status: EpistemicStatus
+    qualifiers: tuple[str, ...] = ()
+
+    @property
+    def label(self) -> str:
+        tier = TIER_LABEL[self.tier] if self.tier is not None else "NO_EFFECTIVE_TIER"
+        return f"{tier} / {self.status.value}"
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"tier": self.tier.value if self.tier is not None else None, "status": self.status.value,
+                "label": self.label, "qualifiers": list(self.qualifiers)}
+
+
+def _structural_effect(rec: "GateRecord") -> Optional[StructuralVerdict]:
+    code = rec.preserved_observation.get("code")
+    if code == CHILD_TAINT_CODE:
+        return None  # RC7: a child's taint is read through the child's own structural result
+    if rec.gate not in STRUCTURAL_RESULT_GATES and code not in STRUCTURAL_RESULT_CODES:
+        return None
+    if rec.verdict in HARD_BLOCK_VERDICTS:
+        return StructuralVerdict.FAIL
+    if rec.verdict in SOFT_BLOCK_VERDICTS or rec.verdict in UNCERTAINTY_VERDICTS:
+        return StructuralVerdict.QUALIFIED
+    return None
+
+
+def _epistemic_effect(rec: "GateRecord") -> Optional[EpistemicStatus]:
+    code = rec.preserved_observation.get("code")
+    if code == CHILD_TAINT_CODE:
+        return None  # RC7: read through the child's own epistemic result
+    if rec.gate in EPISTEMIC_RESULT_GATES or code in EPISTEMIC_RESULT_CODES:
+        if rec.verdict in HARD_BLOCK_VERDICTS:
+            return EpistemicStatus.INADMISSIBLE
+    if rec.verdict in _EPISTEMIC_UNVERIFIED_VERDICTS.get(rec.gate, frozenset()):
+        return EpistemicStatus.UNVERIFIED
+    if rec.gate == "T7" and rec.verdict == GateVerdict.QUALIFIED:
+        return EpistemicStatus.NOT_EMPIRICAL  # myth substrate: empirical verification not applicable
+    return None
 
 
 def _is_valid_int(val: object) -> bool:
@@ -370,6 +494,81 @@ class CompilationResult:
         return {name: tuple(r.verdict for r in self.records if r.gate in gates)
                 for name, gates in DIMENSION_GATES.items()}
 
+    @property
+    def structural_result(self) -> StructuralResult:
+        """RC7: what the structure is. FAIL if a structural invariant is violated, QUALIFIED if
+        the visible structure deviates from its declaration or was not fully analysable, else
+        PASS. Epistemic tier and substrate evidence never enter it. A child contributes its own
+        structural result (never its combined verdict), and can only lower the parent's."""
+        verdict, quals = StructuralVerdict.PASS, []
+        def lower(v: StructuralVerdict, why: str) -> None:
+            nonlocal verdict
+            if STRUCTURAL_RANK[v] < STRUCTURAL_RANK[StructuralVerdict.PASS]:
+                quals.append(f"{why}:{v.value}")
+            if STRUCTURAL_RANK[v] < STRUCTURAL_RANK[verdict]:
+                verdict = v
+        for rec in self.records:
+            eff = _structural_effect(rec)
+            if eff is not None:
+                lower(eff, f"{rec.gate}:{rec.preserved_observation.get('code') or rec.verdict.value}")
+            elif rec.preserved_observation.get("code") == CHILD_TAINT_CODE:
+                v = rec.preserved_observation.get("child_structural_result")
+                if v is not None:
+                    lower(StructuralVerdict(v), f"child:{rec.preserved_observation.get('child_id')}")
+        for child in self.child_results:
+            lower(child.structural_result.verdict, f"child:{child.system_id}")
+        return StructuralResult(verdict, tuple(dict.fromkeys(quals)))
+
+    @property
+    def epistemic_result(self) -> EpistemicResult:
+        """RC7: what evidence supports claims about the structure. Starts at the ceiling of the
+        effective tier (EMPIRICAL -> ESTABLISHED, CORPUS -> NOT_EMPIRICAL, SPECULATIVE ->
+        UNVERIFIED) and only goes down: an evidence record or a child's epistemic result can
+        lower it, nothing raises it. Structural failures never enter it."""
+        tier = self.effective_tier
+        status = TIER_EPISTEMIC_CEILING[tier] if tier is not None else EpistemicStatus.INADMISSIBLE
+        quals = [] if tier is not None else ["no_effective_tier:INADMISSIBLE"]
+        def lower(s: EpistemicStatus, why: str) -> None:
+            nonlocal status
+            if EPISTEMIC_RANK[s] < EPISTEMIC_RANK[EpistemicStatus.ESTABLISHED]:
+                quals.append(f"{why}:{s.value}")
+            if EPISTEMIC_RANK[s] < EPISTEMIC_RANK[status]:
+                status = s
+        for rec in self.records:
+            eff = _epistemic_effect(rec)
+            if eff is not None:
+                lower(eff, f"{rec.gate}:{rec.preserved_observation.get('code') or rec.verdict.value}")
+            elif rec.preserved_observation.get("code") == CHILD_TAINT_CODE:
+                v = rec.preserved_observation.get("child_epistemic_status")
+                if v is not None:
+                    lower(EpistemicStatus(v), f"child:{rec.preserved_observation.get('child_id')}")
+        for child in self.child_results:
+            lower(child.epistemic_result.status, f"child:{child.system_id}")
+        return EpistemicResult(tier, status, tuple(dict.fromkeys(quals)))
+
+    @property
+    def combined_certification(self) -> GateVerdict:
+        """RC7: the combined certification is rc6's overall_verdict, unchanged."""
+        return self.overall_verdict
+
+    @property
+    def empirically_certified(self) -> bool:
+        """RC7: True only for a trustworthy EMPIRICAL_SCI result whose evidence is ESTABLISHED
+        and whose structure did not FAIL. A speculative or corpus result never qualifies."""
+        ep = self.epistemic_result
+        return (self.is_trustworthy and ep.tier == EpistemicTier.EMPIRICAL_SCI
+                and ep.status == EpistemicStatus.ESTABLISHED
+                and self.structural_result.verdict != StructuralVerdict.FAIL)
+
+    def certification(self) -> dict[str, Any]:
+        """RC7: the three outputs side by side (alongside rc6's dimension_verdicts())."""
+        return {
+            "structural": self.structural_result.to_dict(),
+            "epistemic": self.epistemic_result.to_dict(),
+            "combined": self.combined_certification.value,
+            "empirically_certified": self.empirically_certified,
+        }
+
     def codes_for(self, gate: str) -> list[str]:
         return [
             r.preserved_observation["code"]
@@ -397,6 +596,7 @@ class CompilationResult:
         payload = _to_json_safe(self)
         payload["is_blocking"] = self.is_blocking
         payload["is_trustworthy"] = self.is_trustworthy
+        payload["certification"] = self.certification()  # RC7
         return payload
 
     def to_json(self, indent: Optional[int] = None) -> str:
@@ -2078,6 +2278,10 @@ class StructuralCompiler:
                         "generator_identity_affected": False,
                         "siblings_affected": False,
                         "authority_granted": False,
+                        # RC7: the child's two axes, carried for provenance; the parent's axes
+                        # read them and can only be lowered by them.
+                        "child_structural_result": child_res.structural_result.verdict.value,
+                        "child_epistemic_status": child_res.epistemic_result.status.value,
                         "child_failure_records": [
                             {"gate": r.gate, "verdict": r.verdict.value, "message": r.message,
                              "preserved_observation": _to_json_safe(r.preserved_observation)}

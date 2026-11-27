@@ -1,6 +1,6 @@
-# SC-TOL-001: Tree of Life cross-domain structural compiler (Shax t608u / t609u / t610u)
+# SC-TOL-001: Tree of Life cross-domain structural compiler (Shax t608u / t609u / t610u / t611u)
 
-**Status:** v2.1-**rc6** reference implementation: rc5, the seven kernel fixes, and Shax's two t610u decisions (section 5a). **SILVER**, `gold_awarded: false`, `PROVISIONAL_DEFAULT`, because the delegation-chain verification default is still open. Reference code under `tests/reference/sc_tol_001/`. It is not kernel enforcement, it is not packaged, and `core/` and `expansion/` do not import it.
+**Status:** v2.1-**rc7** reference implementation: rc5, the seven kernel fixes, Shax's two t610u decisions (section 5a), and the t611u split into a structural result, an epistemic result and a combined certification (section 5b). **SILVER**, `gold_awarded: false`, `PROVISIONAL_DEFAULT`, because the delegation-chain verification default and three rc7 edge cases are still open. Reference code under `tests/reference/sc_tol_001/`. It is not kernel enforcement, it is not packaged, and `core/` and `expansion/` do not import it.
 
 **Attribution.** This is material Shax supplied. The t608u message is a long design thread pasted from ChatGPT and other-assistant conversations, and the attached `.py` file (rc5) came the same way. The analysis, the gate design and the code were written by those assistants, not by Shax. Shax's own instructions were t607u ("Update and merge all pull requests get the main repo updated to 4.1.0") and t609u (the attachment is rc5, the most current version, and should be implemented instead of the rc2 code pasted in the chat).
 
@@ -19,6 +19,7 @@
 | **v2.1-rc5** | t608u attachment, 128,351 bytes | The supplied primary source. A frozen, serializable `CompilationResult` (`to_dict` / `to_json`, schema `SC-TOL-001/2.1-rc5`); declared and effective tier and topology tracked separately; an optional `halt_on_t0_block`; an iterative Tarjan articulation-point search; an `AuthorityRecord` registry with DAG delegation-chain validation; `MetaArchitectureSpec` processed in E6; **42 tests** (34 from rc4 plus 8 rc5 hardening tests). |
 | rc5 + kernel.1 | this repository (PR #102) | rc5 with the seven recorded fixes in section 5. The schema string is `SC-TOL-001/2.1-rc5+kernel.1`. |
 | **rc6** (rc6 + kernel.2) | Shax t610u, this repository | Two owner decisions, tagged `RC6-D1` / `RC6-D2` in `compiler.py`: scoped child-failure taint, and the living / self-maintaining / autopoietic split (section 5a). The schema string is `SC-TOL-001/2.1-rc6+kernel.2`. `rc5.py` stays verbatim, and rc5's 42 acceptance tests still pass on rc6 unchanged. |
+| **rc7** (rc7 + kernel.3) | Shax t611u, this repository | Three separate outputs, tagged `RC7` in `compiler.py`: a structural result (what the structure is), an epistemic result (what evidence supports claims about it) and a combined certification (rc6's verdict, unchanged). A speculative architecture can now be structurally PASS while staying `SPECULATIVE / UNVERIFIED` and combined QUALIFIED (section 5b). The schema string is `SC-TOL-001/2.1-rc7+kernel.3`. rc6's propagation rule is unchanged, and rc5's 42 tests and rc6's 24 tests still pass. |
 
 ## 2. Model (as implemented in rc5)
 
@@ -54,6 +55,8 @@
 - **`tests/test_sc_tol_001_acceptance.py`:** the 42 rc5 tests, copied verbatim with only an import header added. They run against `compiler.py`.
 - **`tests/test_sc_tol_001_rc6.py`:** 24 adversarial tests for the rc6 propagation and classification boundaries (section 5a).
 - **`docs/evidence/source-2026-11-27b/`:** Shax's t610u decision message, verbatim, with its README.
+- **`tests/test_sc_tol_001_rc7.py`:** 33 tests for the rc7 axes, one class per t611u investigation item, plus combined-certification and no-authority checks (section 5b).
+- **`docs/evidence/source-2026-11-27c/`:** Shax's t611u message, verbatim, with its README.
 - **`tests/test_sc_tol_001_kernel.py`:**
   - the same 42 bodies run against the unmodified `rc5.py`;
   - one regression test per fix, showing the defect in rc5 and the fix in the kernel copy;
@@ -155,7 +158,53 @@ New `SubstrateSpec.empirical_life_observed` (default false):
 
 ### Consequence noted
 
-Speculative children always carry T7 `UNVERIFIED_SUBSTRATE`, so they are QUALIFIED, and so is any speculative meta-generator parent. The meta-generative fixture's E6 is therefore now QUALIFIED; it was PASS in rc5. The parent and both children stay trustworthy.
+Speculative children always carry T7 `UNVERIFIED_SUBSTRATE`, so they are QUALIFIED, and so is any speculative meta-generator parent. The meta-generative fixture's E6 is therefore now QUALIFIED; it was PASS in rc5. The parent and both children stay trustworthy. Shax (t611u) noted that this makes the qualification partly reflect the epistemic tier rather than the architecture; rc7 keeps this rule and reports the axes separately (section 5b).
+
+## 5b. rc7: structural result, epistemic result, combined certification (Shax t611u)
+
+Source: `docs/evidence/source-2026-11-27c/t611u_message_body.txt` (sha256 `a3d3f45a…d8c0`). The direction is Shax's.
+
+**The problem (t611u).** Under rc6 every speculative child carries T7 `UNVERIFIED_SUBSTRATE`, so every speculative child and every speculative generator comes out QUALIFIED. That is consistent with the propagation rule, but the qualification then partly measures the epistemic tier rather than the architecture, and it can read as "speculative means defective".
+
+**Three things that are not equivalent (t611u):**
+
+| Case | What it means | rc7 output |
+|---|---|---|
+| Unverified substrate | The substrate is not empirically established | epistemic `EMPIRICAL / UNVERIFIED` (or `SPECULATIVE / UNVERIFIED`) |
+| Speculative architecture | Deliberately in the speculative tier | epistemic `SPECULATIVE / UNVERIFIED`; structural result unaffected |
+| Invalid architecture | A structural invariant is violated | structural `FAIL` |
+
+**The three outputs** (`CompilationResult.certification()`, also serialised under `certification` in `to_dict()`):
+- **Structural result** (`structural_result`): `PASS`, `QUALIFIED` or `FAIL`. It reads T1, T5 and E6 records, E1 graph well-formedness (`self_loop_edge`, `dangling_edge`) and T6 coverage records. A hard block there is FAIL. A soft block or uncertainty there is QUALIFIED. The epistemic tier never enters it: the same graph gives the same structural result as EMPIRICAL, CORPUS or SPECULATIVE (tested).
+- **Epistemic result** (`epistemic_result`): the effective tier plus a status. The status starts at the tier's ceiling (EMPIRICAL → `ESTABLISHED`, CORPUS → `NOT_EMPIRICAL`, SPECULATIVE → `UNVERIFIED`; no effective tier → `INADMISSIBLE`) and only goes down. An evidence record can lower it: T0 and T3 blocks, claims above tier, T6 claim quarantine, T7 `UNVERIFIED_SUBSTRATE`, and T2 `QUALIFIED` / `LIVING_OBSERVED` / `SELF_MAINTENANCE_UNVERIFIED`. Structural failures never enter it. The label reads like t611u's example, for instance `SPECULATIVE / UNVERIFIED`.
+- **Combined certification** (`combined_certification`): exactly rc6's `overall_verdict`. **The rc6 propagation rule is not weakened**: a speculative child still makes the parent's E6 QUALIFIED, and a BLOCKED child still blocks the parent's current compilation.
+- **`empirically_certified`:** true only for a trustworthy EMPIRICAL result whose evidence is `ESTABLISHED`. A speculative or corpus result never is.
+- The rc6 dimensions (`DIMENSION_GATES`, `dimension_verdicts()`: structural, biological, governance) are kept unchanged alongside.
+
+**Propagation.** A child contributes its own *structural* result to the parent's structural axis and its own *epistemic* status to the parent's epistemic axis, never its combined verdict. The E6 taint record now also carries `child_structural_result` and `child_epistemic_status` for provenance. Every lowering names its cause (for example `child:oceanic_world_tree:UNVERIFIED`). Both axes are minimums over immutable records and child results, so no child, appended record or exemption request can raise them.
+
+**Example (meta-generative fixture):**
+
+| System | Structural | Epistemic | Combined | Empirically certified |
+|---|---|---|---|---|
+| `crystalline_memory_tree` (child) | PASS | SPECULATIVE / UNVERIFIED | QUALIFIED | no |
+| `oceanic_world_tree` (child) | PASS | SPECULATIVE / UNVERIFIED | QUALIFIED | no |
+| `meta_tree_root` generator | QUALIFIED, from its own 3-node graph (`T5:two_node_cut_not_applicable_small_graph`), not from its children | SPECULATIVE / UNVERIFIED | QUALIFIED | no |
+
+A speculative generator over a 4-node graph with speculative children is structural `PASS`, `SPECULATIVE / UNVERIFIED`, combined `QUALIFIED`, trustworthy, and not empirically certified (tested). The other three speculative fixtures (mycelium, plasma lattice, temporal fractal) are structural PASS as well.
+
+**t611u investigation items, as tests** (`tests/test_sc_tol_001_rc7.py`):
+1. *Epistemic qualification propagates independently of structural failure.* A structurally failing child (FAIL, evidence ESTABLISHED) makes the parent structural FAIL and leaves its epistemic result ESTABLISHED. A speculative or unverified child (structural PASS) lowers only the parent's epistemic result. An inadmissible-evidence child (T0) is not a structural failure. A governance-blocked child moves neither axis, only the combined certification. Grandchild evidence reaches the grandparent with no structural effect.
+2. *Speculative generators can reach structural PASS without empirical certification.* Shown on a 4-node speculative generator and on the fixtures. Across every speculative substrate combination, the result is never `ESTABLISHED`, never empirically certified, and never combined PASS. A speculative self-certification attempt is `INADMISSIBLE`, not structurally invalid.
+3. *No child can silently upgrade a parent.* For 5 parent kinds × 7 child kinds, a parent with a child is never higher than the parent alone on any axis. A parent is never higher than its worst child. An EMPIRICAL child cannot lift a SPECULATIVE parent. Every lowering names its child. Appended records (fake E6 PASS, fake T7 `VERIFIED_SUBSTRATE`, a forged taint record claiming ESTABLISHED) and exemption requests change nothing. The axes cannot be assigned.
+4. *963-prompt corpus as a regression baseline.* The reference compiler is imported by no packaged module (tested), so rc7 cannot move routing. The corpus diff is a merge gate run outside pytest, because the corpus loader also reads prompts that live outside the repository. rc7 result: **963 prompts, 0 decision/target diffs** against main `6835aaf`. The fingerprint, sha256 over the sorted `id<TAB>decision<TAB>target` rows, is `0e5d5472…5e62d` on both.
+
+**What a structure is, what supports claims about it, who may change it.** These stay apart. The certification payload has no grant, authority, escalation or mode fields. Grants, escalations and governance verdicts are identical whichever child kind is attached. Fully established evidence does not let a generator authorize its own escalation, and the evidence axis does not hide that governance failure (combined BLOCKED). rc7 adds no authority path.
+
+**Provisional defaults (rc7).** Three edge cases t611u does not decide are recorded in `docs/PENDING_DELIBERATION.md`:
+- coverage limits count as structural QUALIFIED;
+- `NOT_EMPIRICAL` ranks above `UNVERIFIED`;
+- a child's structural FAIL makes the parent's structural result FAIL, for the current compilation only.
 
 ## 6. Fixtures and provenance
 
@@ -165,16 +214,23 @@ Speculative children always carry T7 `UNVERIFIED_SUBSTRATE`, so they are QUALIFI
 | Kabbalistic Sefirot | CORPUS_MYTH | **NEEDS_PER_TEXT_PROVENANCE**. The edge set is Kircher's 1652 layout, used as a modelling choice and not attributed to Sefer Yetzirah, the Zohar or Lurianic texts. | **T0 BLOCKED** (source registered as unverified); T2 INERT_TAXONOMY; not trustworthy |
 | Ashvattha | CORPUS_MYTH | NAMED_IN_SOURCE_NOT_OPENED (Bhagavad Gita 15.1–3; Katha Upanishad 2.3.1) | INVERTED_ARBORESCENT with no horizon declared (rc1 Issue D); nothing masked |
 | Biological phylogeny | EMPIRICAL_SCI | NAMED_IN_SOURCE_NOT_OPENED (Darwin 1859; Woese & Fox 1977; Doolittle 1999) | Declared ARBORESCENT, effective RETICULATE; AUTOPOIESIS_EMPIRICAL; VERIFIED_SUBSTRATE |
-| Multiversal mycelium | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE; no single cut vertex, three two-node cuts |
-| Plasma lattice | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE |
-| Temporal fractal | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 INERT_TAXONOMY (a representation of history is not an organism); T7 UNVERIFIED_SUBSTRATE |
-| Meta-generative tree | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | E6 QUALIFIED under rc6 (both children are QUALIFIED speculative systems; PASS in rc5); two children (crystalline memory, oceanic) compiled independently and trustworthy |
+| Multiversal mycelium | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE; no single cut vertex, three two-node cuts. rc7: structural PASS, SPECULATIVE / UNVERIFIED, combined QUALIFIED |
+| Plasma lattice | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE. rc7: structural PASS, SPECULATIVE / UNVERIFIED, combined QUALIFIED |
+| Temporal fractal | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 INERT_TAXONOMY (a representation of history is not an organism); T7 UNVERIFIED_SUBSTRATE. rc7: structural PASS, SPECULATIVE / UNVERIFIED, combined QUALIFIED |
+| Meta-generative tree | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | E6 QUALIFIED under rc6 (both children are QUALIFIED speculative systems; PASS in rc5); two children (crystalline memory, oceanic) compiled independently and trustworthy. rc7: children structural PASS; parent structural QUALIFIED from its own 3-node graph; all SPECULATIVE / UNVERIFIED, combined QUALIFIED (section 5b) |
+
+rc7 axes for the other fixtures: Yggdrasil and Ashvattha are structural PASS, `CORPUS / NOT_EMPIRICAL`, combined QUALIFIED. Sefirot is structural PASS, `NO_EFFECTIVE_TIER / INADMISSIBLE` (T0), combined BLOCKED, so its block is an evidence block, not a structural one. Phylogeny is structural QUALIFIED (declared ARBORESCENT, effective RETICULATE), `EMPIRICAL / ESTABLISHED`, combined QUALIFIED, and empirically certified: its evidence is established, and its structure deviates from its declaration.
 
 The graph shapes are compiler modelling choices, recorded per fixture. They are not claims about what a tradition "really" contains. The Egyptian, Assyrian, Maya and Bodhi trees from v1 are not yet fixtures.
 
 ## 7. Grade
 
-**SILVER, `gold_awarded: false`.** Re-graded for rc6, 2026-11-27:
+**SILVER, `gold_awarded: false`.** Re-graded for rc7, 2026-11-27: **every gate unchanged, score 0.822, lowest gate 0.75.**
+- rc7 finishes a separation that rc6 was already credited for (`boundary_integrity` 0.88): rc6 separated the structural, biological and governance dimensions, but its qualification still mixed in the epistemic tier. rc7 earns the existing 0.88; it does not raise it.
+- `wave_function_coherence` stays 0.88. One question was collapsed by Shax (t611u), and three new provisional defaults were opened (section 5b).
+- `measurement_integrity` and `corpus_completeness` stay 0.75, because rc7 opens no source and adds no fixture. Per t611u, no gate was tuned toward GOLD.
+
+Re-graded for rc6, 2026-11-27:
 - `boundary_integrity` goes from 0.85 to 0.88, because the three dimensions and the living/autopoietic boundary are now explicit and tested.
 - `wave_function_coherence` goes from 0.85 to 0.88, because two open questions were collapsed by owner decision.
 - Every other gate is unchanged. The minimum gate is still 0.75 (measurement and corpus completeness), so the entry stays SILVER.

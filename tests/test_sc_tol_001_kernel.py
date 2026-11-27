@@ -78,7 +78,7 @@ class Rc5SourceTests(unittest.TestCase):
         self.assertEqual(body, att[: len(body)])
         self.assertEqual(len(body), 1868)
         self.assertEqual(R.SCHEMA_VERSION, "SC-TOL-001/2.1-rc5")
-        self.assertEqual(K.SCHEMA_VERSION, "SC-TOL-001/2.1-rc6+kernel.2")
+        self.assertEqual(K.SCHEMA_VERSION, "SC-TOL-001/2.1-rc7+kernel.3")
 
     def test_acceptance_bodies_are_verbatim(self) -> None:
         att = ATTACHMENT.read_text(encoding="utf-8").splitlines()
