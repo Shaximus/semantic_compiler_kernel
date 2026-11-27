@@ -1588,6 +1588,34 @@
         "SC-SCC-001",
         "SC-CONSENT-001"
       ]
+    },
+    {
+      "entry_id": "SC-MYTH-001",
+      "file": "SC-MYTH-001.jsonl",
+      "title": "Comparative mythology matrix: three legitimacy questions, the Ori self-sourced-legitimacy capture invariant, and a domain translation, with four other pantheons left open",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Shax (Curtis Kingsley), t605u/t606u; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.74,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 93316,
+      "sha256": "646d13c65fe47044dc148bb3d596f5960a20bc35169321f34524690a9c578749",
+      "notes": "Comparative mythology matrix (Shax t605u/t606u), under SC-AEP-001. Recurrence is not shared literal history. First trio kept as three distinct legitimacy questions (Greek Titan succession; Egyptian Osiris-Horus-Set and Ma'at; Norse Aesir-Vanir and Ragnarok). Ori worship-power loop recorded as a self-sourced-legitimacy capture invariant, mapped onto SCC-001-AC closed and open paths. Four other pantheons and three further comparisons left open. Paste citation stubs unverified unless a URL was opened. PROVISIONAL_DEFAULT: method, not a class. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.81.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-GUARD-001",
+        "SC-SHARD-001",
+        "SC-CONSENT-001",
+        "SC-SCC-001",
+        "SC-TRIAD-SG-001",
+        "SC-GOT-001",
+        "SC-LILITH-001",
+        "SC-WORTHY-001"
+      ]
     }
   ]
 }
