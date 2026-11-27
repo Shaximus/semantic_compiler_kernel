@@ -4,6 +4,26 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 
 ## [Unreleased]
 
+### Changed
+- SC-TOL-001 **rc6** implements Shax's t610u decisions on the two items left open in 4.1.0. The source is `docs/evidence/source-2026-11-27b/t610u_message_body.txt` (sha256 `7281f8a6…76a2`; scanned for personal data, none found, no redaction).
+  - The changes are in the kernel copy `tests/reference/sc_tol_001/compiler.py`, tagged `RC6-D1` / `RC6-D2`, with schema string `SC-TOL-001/2.1-rc6+kernel.2`.
+  - `rc5.py` stays verbatim, and rc5's 42 acceptance tests still pass unchanged on rc6.
+- **D1 (ACCEPT): scoped child-failure taint.** ChildFailure ⇒ ParentCompilationTainted, never ParentIdentityDestroyed.
+  - A PASS child adds no taint. A QUALIFIED child makes the parent's E6 QUALIFIED, and the parent stays trustworthy. A BLOCKED child blocks the parent's current compilation.
+  - The taint is an E6 record with code `child_failure_taint` and scope `CURRENT_COMPILATION`. It copies the child's original failure records upward, deep-frozen and append-only, so the parent cannot erase or overwrite them.
+  - The generator is unchanged and can be reused. Siblings are unaffected: a sibling's result is byte-identical with and without a failing sibling.
+  - The taint grants no authority: grants, escalations and governance verdicts are identical with and without the failing child.
+- **D2 (RECLASSIFY): living vs. self-maintaining vs. autopoietic.** New `SubstrateSpec.empirical_life_observed` and T2 verdicts `LIVING_OBSERVED` and `SELF_MAINTENANCE_UNVERIFIED`, which sit alongside `AUTOPOIESIS_EMPIRICAL` and `INERT_TAXONOMY`.
+  - The two new verdicts are uncertainties and never satisfy T2 (`T2_SATISFYING_VERDICTS`, `CompilationResult.t2_satisfied`).
+  - An empirically living system is never `INERT_TAXONOMY`. A static chart with no evidence of life still is.
+  - CORPUS_MYTH and SPECULATIVE_EXO results are unchanged. Claiming observed life in those tiers is a T2 hard block.
+- **Principle recorded:** structural validity, biological status and governance authority are separate dimensions. `DIMENSION_GATES` and `CompilationResult.dimension_verdicts()` report them separately.
+- **Behaviour change:** the meta-generative fixture's E6 is now QUALIFIED, where rc5 gave PASS. Speculative children always carry T7 `UNVERIFIED_SUBSTRATE`, so they and their parent are QUALIFIED.
+- **Tests:** new `tests/test_sc_tol_001_rc6.py` (24 adversarial tests). In `tests/test_sc_tol_001_kernel.py`, the old "child does not taint parent" record becomes an rc5-vs-rc6 regression test.
+- **Re-grade:** `boundary_integrity` and `wave_function_coherence` go from 0.85 to 0.88. SILVER goes from 0.816 to 0.822 (lowest gate still 0.75), and `gold_awarded` stays false.
+- **PENDING_DELIBERATION:** both items are closed (`RESOLVED_BY_SHAX`, t610u). The entry stays `PROVISIONAL_DEFAULT` because the delegation-chain verification default is still open.
+- `.github/workflows` and the hash-pinned `docs/SCC-001-AC_ANTI_CAPTURE.md` are untouched.
+
 ## [4.1.0] — 2026-11-27
 
 Package and kernel version bump from `V4.0.0` (PRs #46–#78), covering the PRs merged from #79 to #102. Schema remains Logos Semantic Training Sample `V3.5.0`, and per-entry content hashes are unchanged by the bump. In `calibration_output/compiled_entries/manifest.json` the bump changes only `compiler_version`, to `4.1.0`. New release manifest: `calibration_output/RELEASE_MANIFEST_V4_1_0.json`. The compiled manifest now has **65 entries (11 GOLD + 54 SILVER)** and the local registry 68 IDs.

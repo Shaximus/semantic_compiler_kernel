@@ -505,7 +505,7 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Does not change:** `SC-SHARD-001`, `SC-GUARD-001`, `SC-WORTHY-001`, SCC-001-AC, Catherine (unresolved) and the Lilith work.
 - **Still open, when reviewed:** Chinese, Japanese, Aztec and Atlantean pantheons; Mesopotamian divine kingship; biblical angelic-rebellion traditions; the Stargate Alteran schism as its own matrix.
 
-## SC-TOL-001 (Tree of Life structural compiler: rc5 with kernel fixes; chain-verification and child-taint defaults)
+## SC-TOL-001 (Tree of Life structural compiler: rc5 with kernel fixes; chain-verification default; child-taint and inert items closed by Shax t610u)
 
 - **ID:** `SC-TOL-001`
 - **Status:** `PROVISIONAL_DEFAULT`
@@ -520,6 +520,11 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
   - (c) Let an untrustworthy child taint its parent.
   - (d) Promote T8 into SCC-001-AC.
 - **Reason:** the seven defects are real (each has a regression test that fails on rc5); the other two choices change rc5 semantics beyond fixing defects, so they wait for Shax.
-- **Hook:** `review_trigger_terms` are `sc-tol-001`, `tree of life compiler`, `recursive capture prevention`, `horizon opacity`, `meta-generator`, `kernel-fix`, `sefirot provenance`. The entry is explicit-only, so it never lifts a route.
+- **Closed, `RESOLVED_BY_SHAX` (t610u, 27 Nov 2026; implemented as rc6; source `docs/evidence/source-2026-11-27b/`):**
+  - **Child taint, alternative (c): ACCEPT, scoped.** A failing child taints the parent's *current* compilation only. A QUALIFIED child makes the parent QUALIFIED, and a BLOCKED child blocks this compilation. The taint never touches the generator's identity or the siblings, keeps the child's failure provenance (which cannot be erased), and grants no authority. ChildFailure ⇒ ParentCompilationTainted, never ParentIdentityDestroyed.
+  - **Represented-only / incomplete-evidence EMPIRICAL case: RECLASSIFY.** `LIVING_OBSERVED` (life observed) and `SELF_MAINTENANCE_UNVERIFIED` (life observed; self-maintenance asserted but not demonstrated) sit alongside `AUTOPOIESIS_EMPIRICAL`. Neither satisfies T2, and an empirically living system is never inert. A static graph with no evidence of life stays `INERT_TAXONOMY`.
+  - **Principle:** structural validity, biological status and governance authority are separate dimensions.
+- **Still provisional:** alternative (b), full chain verification as the default. (a) is moot, since rc5 is kept verbatim beside the fixed copy. (d), promoting T8 into SCC-001-AC, is not chosen.
+- **Hook:** `review_trigger_terms` are `sc-tol-001`, `tree of life compiler`, `recursive capture prevention`, `horizon opacity`, `meta-generator`, `kernel-fix`, `sefirot provenance`, `child failure taint`, `living observed`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-AEP-001`, `SC-MYTH-001`, Catherine (unresolved).
-- **Still open, when reviewed:** per-text provenance for the 10-node / 22-path Sefirot layout; fixtures for the Egyptian, Assyrian, Maya and Bodhi trees; the represented-only EMPIRICAL autopoiesis case (rc5 returns INERT).
+- **Still open, when reviewed:** per-text provenance for the 10-node / 22-path Sefirot layout; fixtures for the Egyptian, Assyrian, Maya and Bodhi trees. (The represented-only EMPIRICAL case was closed by t610u, see above.)

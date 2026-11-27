@@ -35,6 +35,7 @@ kernel. See `docs/SCC-001-AC_ANTI_CAPTURE.md`.
 `tests/reference/sc_tol_001/` contains the SC-TOL-001 Tree of Life structural
 compiler: `rc5.py` is the supplied v2.1-rc5 module verbatim (its in-file tests
 split out to `tests/test_sc_tol_001_acceptance.py`), `compiler.py` is rc5 with
-seven recorded `KERNEL-FIX-n` changes, and `fixtures.py` holds the eight
+seven recorded `KERNEL-FIX-n` changes plus rc6 (`RC6-D1` / `RC6-D2`, Shax
+t610u), and `fixtures.py` holds the eight
 provenance-tagged corpus fixtures. Standard library only. Not loaded by
 `core/` or `expansion/`. See `docs/SC-TOL-001_TREE_OF_LIFE_STRUCTURAL_COMPILER.md`.

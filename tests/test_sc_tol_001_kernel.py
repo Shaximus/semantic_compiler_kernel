@@ -78,7 +78,7 @@ class Rc5SourceTests(unittest.TestCase):
         self.assertEqual(body, att[: len(body)])
         self.assertEqual(len(body), 1868)
         self.assertEqual(R.SCHEMA_VERSION, "SC-TOL-001/2.1-rc5")
-        self.assertEqual(K.SCHEMA_VERSION, "SC-TOL-001/2.1-rc5+kernel.1")
+        self.assertEqual(K.SCHEMA_VERSION, "SC-TOL-001/2.1-rc6+kernel.2")
 
     def test_acceptance_bodies_are_verbatim(self) -> None:
         att = ATTACHMENT.read_text(encoding="utf-8").splitlines()
@@ -195,11 +195,16 @@ class KernelFixRegressionTests(unittest.TestCase):
         self.assertIn("unregistered_upstream_hop", rk.codes_for("T8"))
         self.assertIn(K.GateVerdict.QUALIFIED, rk.verdicts_for("T8"))
 
-    def test_recorded_not_changed_child_does_not_taint_parent(self) -> None:
-        child = _state(K, system_id="child", source_id="nope")
-        r = K.StructuralCompiler().compile(_state(K, meta_spec=K.MetaArchitectureSpec(K.MetaGenerator("m"), [(child, set())])))
-        self.assertTrue(r.is_trustworthy)
+    def test_rc5_child_did_not_taint_parent_rc6_does(self) -> None:
+        # rc5 left the parent trustworthy; rc6 (Shax t610u, RC6-D1) blocks the current compilation.
+        def run(M):
+            child = _state(M, system_id="child", source_id="nope")
+            return M.StructuralCompiler().compile(_state(M, meta_spec=M.MetaArchitectureSpec(M.MetaGenerator("m"), [(child, set())])))
+        self.assertTrue(run(R).is_trustworthy)
+        r = run(K)
+        self.assertFalse(r.is_trustworthy)
         self.assertFalse(r.child_results[0].is_trustworthy)
+        self.assertIn("child_failure_taint", r.codes_for("E6"))
 
     def test_every_fix_is_tagged_and_documented(self) -> None:
         src = (REPO_ROOT / "tests" / "reference" / "sc_tol_001" / "compiler.py").read_text(encoding="utf-8")

@@ -183,7 +183,7 @@ def build_fixtures() -> dict[str, Fixture]:
         nodes={"g1", "g2", "g3"}, edges={("g1", "g2"), ("g2", "g3"), ("g3", "g1")},
         meta_spec=MetaArchitectureSpec(MetaGenerator("meta_tree_root"),
                                        child_emissions=[(child_crystal, set()), (child_ocean, set())])),
-        {"E6": "PASS", "children": 2, "trustworthy": True})
+        {"E6": "QUALIFIED", "children": 2, "trustworthy": True})  # rc6: speculative children are QUALIFIED, so the parent is
     return f
 
 
