@@ -5,6 +5,15 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ## [Unreleased]
 
 ### Added
+- SC-SOV-TRADE-001 **t615u** closes the install-only gaps on the previous reference (Shax t615u). The compiled grade is unchanged (SILVER 0.793, `gold_awarded` false). R-16 stays not met.
+  - `cryptography>=50.0.2,<51` is a hard package dependency. `sov_trade` fails closed without it. The vendored `_ed25519` production fallback is gone.
+  - Hybrid signatures: Ed25519 + FIPS 204 ML-DSA-65 from pyca/cryptography 50.0.2; both members must verify.
+  - PKCS#11 signer (`sov_trade/pkcs11.py`) against SoftHSM2 in tests; keys are non-extractable and sensitive; a certified module can be configured by path.
+  - RFC 3161 client and local test TSA (`sov_trade/timestamp.py`).
+  - Loopback mutual TLS 1.3 with locally generated test CAs (`sov_trade/mtls.py`), including expired, wrong-CA and CRL-revoked rejection.
+  - Scripted 3-of-5 Shamir root ceremony (`sov_trade/ceremony.py`) and runbook `docs/runbooks/SC-SOV-TRADE-001_ROOT_CEREMONY.md`.
+  - Remaining gaps (certified hardware, witnessed national ceremony, agreed TSA/PKI, legal input, R-16) are listed in the spec header and `docs/PENDING_DELIBERATION.md`. `.github/workflows` is untouched. No release, tag or version bump.
+
 - SC-SOV-TRADE-001 **Sovereign Bilateral Authentication Exchange** (Shax t612u specification, t613u "build it"). The source is `docs/evidence/source-2026-11-27d/sc_sov_trade_001_v0.1_attachment.md` (sha256 `4abd1c3c…9311`, 29,621 bytes; scanned for personal data, no redaction). Spec doc: `docs/SC-SOV-TRADE-001_SOVEREIGN_BILATERAL_AUTH_EXCHANGE.md` (compiler header, component-reconciliation table and cross-links; specification text unaltered).
   - **Reference package** `sov_trade/`: trust anchors and recognition records, Signed Assertion Envelope (RFC 8785 canonicalization, Ed25519), scoped delegation with anti-capture (no self-escalation, no proxy laundering, bounded emergency, advisory-only scoring, national override the verifier cannot quarantine), challenge-bound exchange with eight checks, Bilateral Verification Receipts, append-only hash-chained ledgers with Merkle checkpoints and inclusion proofs, a translation layer that cannot mutate a signed source, in-process dual-control key custody, and disputes.
   - Reuses `gates/authority.py` as a lattice check that cannot create grants. Cross-links SCC-001-AC (hash-pinned, not edited) and SC-TOL-001 from the new doc only.
