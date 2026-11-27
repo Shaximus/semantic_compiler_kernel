@@ -68,3 +68,5 @@ Rows 1, 2, 3 and 6 are the ones where a re-read would change wording in an earli
 `SC-AEP-001` is in `EXPLICIT_ONLY_ENTRY_HINTS`, so "archetype", "composite" and "Nephilim" do not lift `soul_bomb_sovereignty`. Naming `SC-AEP-001` sets `needs_review`.
 
 Applied in `docs/AVENGERS_D2_POE_AEP_MAP_2026-11-26d.md` (`SC-AVG-001`, `SC-WORTHY-001`).
+
+Applied in `docs/AEP_COMPARATIVE_MYTHOLOGY_2026-11-26e.md` (`SC-MYTH-001`, comparative mythology matrix: method, not a class).

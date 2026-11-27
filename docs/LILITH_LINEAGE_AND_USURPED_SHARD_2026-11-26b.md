@@ -79,3 +79,5 @@ Shax's Satan/vessel/throne model is interpretation. The Lilith sources do not al
 Everyday words ("lilith," "eve," "sophia," "mary," "catherine," "zerg," "throne," "vessel") do not lift `soul_bomb_sovereignty`. Naming `SC-FEM-001` or `SC-SHARD-001` sets `needs_review`. GOLD is not awarded: nothing was prediction-tested, and no gate is above 0.9.
 
 See also `SC-WORTHY-001` (`docs/AVENGERS_D2_POE_AEP_MAP_2026-11-26d.md`): worthiness is related to the Usurped-Shard pattern (captured authority) but kept separate (provisional default).
+
+See also `SC-MYTH-001` (`docs/AEP_COMPARATIVE_MYTHOLOGY_2026-11-26e.md`): usurpation and restoration (Osiris, Horus and Set) in the comparative mythology matrix. Catherine stays unresolved; no change to this entry's claims.

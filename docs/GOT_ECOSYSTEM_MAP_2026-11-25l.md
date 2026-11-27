@@ -86,3 +86,5 @@ All four IDs are in `EXPLICIT_ONLY_ENTRY_HINTS`. "Throne", "dragon", "snow", "mo
 See also `SC-GUARD-001` and `docs/GUARDIANS_FALL_2026-11-26.md` for the Guardian's Fall test of Daenerys (CANDIDATE), Jon (CONTRAST) and the Night King (EXCLUDED).
 
 See also `SC-AVG-001` and `docs/AVENGERS_D2_POE_AEP_MAP_2026-11-26d.md` for the next AEP map under the same method (Avengers × Diablo II × Path of Exile).
+
+See also `SC-MYTH-001` and `docs/AEP_COMPARATIVE_MYTHOLOGY_2026-11-26e.md` for the comparative mythology matrix (Greek, Egyptian and Norse legitimacy questions) under the same method.
