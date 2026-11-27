@@ -58,6 +58,7 @@ packages = [
     "semantic_compiler.expansion.registry",
     "semantic_compiler.expansion.schema",
     "semantic_compiler.expansion.consciousness",
+    "semantic_compiler.sov_trade",
 ]
 
 [tool.setuptools.package-data]

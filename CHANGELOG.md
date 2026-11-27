@@ -4,6 +4,15 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 
 ## [Unreleased]
 
+### Added
+- SC-SOV-TRADE-001 **Sovereign Bilateral Authentication Exchange** (Shax t612u specification, t613u "build it"). The source is `docs/evidence/source-2026-11-27d/sc_sov_trade_001_v0.1_attachment.md` (sha256 `4abd1c3c…9311`, 29,621 bytes; scanned for personal data, no redaction). Spec doc: `docs/SC-SOV-TRADE-001_SOVEREIGN_BILATERAL_AUTH_EXCHANGE.md` (compiler header, component-reconciliation table and cross-links; specification text unaltered).
+  - **Reference package** `sov_trade/`: trust anchors and recognition records, Signed Assertion Envelope (RFC 8785 canonicalization, Ed25519), scoped delegation with anti-capture (no self-escalation, no proxy laundering, bounded emergency, advisory-only scoring, national override the verifier cannot quarantine), challenge-bound exchange with eight checks, Bilateral Verification Receipts, append-only hash-chained ledgers with Merkle checkpoints and inclusion proofs, a translation layer that cannot mutate a signed source, in-process dual-control key custody, and disputes.
+  - Reuses `gates/authority.py` as a lattice check that cannot create grants. Cross-links SCC-001-AC (hash-pinned, not edited) and SC-TOL-001 from the new doc only.
+  - **Tests:** `tests/test_sc_sov_trade_001.py` (R-01 through R-16, including an honest R-16 `NOT_MET` assertion) and `tests/test_sc_sov_trade_001_adversarial.py` (replay, forged signature, delegation escalation, captured authority, tampered receipt).
+  - **Crypto:** Ed25519 via the `cryptography` package when present; otherwise a vendored CC0 reference so CI (which installs only jsonschema, PyYAML and pytest) can run. No homemade scheme. No secrets in the repository; tests generate ephemeral keys. ML-DSA is not implemented.
+  - **Grade:** SILVER 0.793, lowest gate 0.75, `gold_awarded` false. Not production-certified; no external audit (R-16 is not met and is not claimed). `PROVISIONAL_DEFAULT` for identifier model, canonicalization, skew, software custody, and fail-closed status; section 16's customer questions are listed unanswered in `docs/PENDING_DELIBERATION.md`.
+  - `.github/workflows` and the hash-pinned `docs/SCC-001-AC_ANTI_CAPTURE.md` are untouched. No release, tag or version bump.
+
 ### Changed
 - SC-TOL-001 **rc7** follows Shax's t611u direction. The source is `docs/evidence/source-2026-11-27c/t611u_message_body.txt` (sha256 `a3d3f45a…d8c0`; scanned for personal data, none found, no redaction). The changes are in `tests/reference/sc_tol_001/compiler.py`, tagged `RC7`, with schema string `SC-TOL-001/2.1-rc7+kernel.3`.
   - **Three separate outputs:**
