@@ -560,9 +560,9 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Implementation choices (provisional; flagged for review):**
   1. **Identifier model:** DID-style `did:sov:{domain}:{kind}:{local}`, bound to a public-key set. Not X.509, and not a national scheme.
   2. **Canonicalization:** RFC 8785 JSON Canonicalization Scheme. Not deterministic CBOR. Signed objects accept integers, strings, booleans, null, arrays and objects only; floating-point numbers are rejected.
-  3. **Clock skew bound:** 120 seconds. The time source in this build is an injected clock (tests) or the host UTC clock (otherwise), not an RFC 3161 timestamp authority.
-  4. **Key custody:** in-process, dual-control, ephemeral keys for tests. Not an HSM. The specification's "no signing key in software memory outside an HSM or token" cannot be honoured in this environment.
-  5. **Signatures:** Ed25519. The `cryptography` package is used when present; otherwise a vendored CC0 reference implementation (not side-channel safe) is used so CI can run. ML-DSA (FIPS 204) is not implemented.
+  3. **Clock skew bound:** 120 seconds. The time source in this build is an injected clock (tests) or the host UTC clock (otherwise). An RFC 3161 client and a local test TSA were added in t615u; a nationally agreed TSA is still a gap.
+  4. **Key custody:** in-process dual-control remains available. t615u added a PKCS#11 signer against SoftHSM2 (non-extractable, sensitive keys). A certified hardware HSM is still a gap.
+  5. **Signatures:** t615u makes `cryptography>=50.0.2` a hard requirement (no production fallback) and implements Ed25519 + ML-DSA-65 hybrid signatures; both must verify.
   6. **Document classes:** the full list from the specification is implemented as an enum; tests use certificate of origin as the pilot class. Which class comes first for a customer pilot is left to section 16.
   7. **Parties in tests:** two synthetic nations, Nation A and Nation B. Who the real parties and the contracting customer are is left to section 16.
   8. **Unknown or stale status:** fail closed for every document class (`deferred`). Section 12 allows a bounded grace period for lower-value classes; this build does not.
@@ -590,3 +590,29 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Hook:** `review_trigger_terms` are `sc-sov-trade-001`, `sovereign bilateral authentication`, `signed assertion envelope`, `bilateral verification receipt`, `recognition record`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-TOL-001`, Catherine (unresolved). GOLD stays withheld.
 - **Still open, when reviewed:** every item in section 16, the ten implementation defaults above, and R-16 independent assurance.
+
+## SC-SOV-TRADE-001 t615u (close install-only gaps; Shax t615u)
+
+- **ID:** `SC-SOV-TRADE-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t615u: close the gaps that only needed installs; do the work on the box; leave R-16 not met; do not raise the grade; remaining gaps are those that need outside hardware, real organisations or legal input; open a PR and wait for Shax to approve any merge to main.
+- **Implemented (reference, not production-certified):**
+  1. **`cryptography` is a hard requirement**, pinned `>=50.0.2,<51` in `pyproject.toml`. `sov_trade` refuses to import without it. The vendored `_ed25519` fallback was removed from every production path. Tests cover the refusal and the absence of a production import.
+  2. **Hybrid signatures:** Ed25519 + FIPS 204 ML-DSA-65, both must verify, behind the existing algorithm-agility interface. Library choice: **pyca/cryptography 50.0.2** (Apache-2.0 OR BSD-3-Clause). Official wheels since 48.0.0 ship ML-DSA on OpenSSL 3.5+ (these wheels use OpenSSL 4.0.3). Evaluated and not chosen: `liboqs-python` 0.16.0.2 (MIT, OQS, research/prototyping, needs a liboqs build, OQS says it is not for production) and `pqcrypto` 1.0.0 (Apache-2.0, Backbone, no formal audit, smaller project).
+  3. **PKCS#11 signer** (`python-pkcs11` 0.10.1, SoftHSM2 2.6.1 in tests). Keys are generated with `CKA_EXTRACTABLE=false` and `CKA_SENSITIVE=true`; signing is in-token; `CKA_VALUE` cannot be read through the API. A certified module can be selected by library path and token label, with no code changes. Tokens and PINs are test-generated in temporary directories and are not committed.
+  4. **RFC 3161 client** plus a local test TSA (`asn1crypto` 1.5.1 and `cryptography`). Verification covers imprint, nonce, TSA certificate chain, policy and token signature.
+  5. **Mutual TLS 1.3** on loopback with locally generated test CAs. Expired, wrong-CA and CRL-revoked certificates are rejected.
+  6. **Root ceremony rehearsal:** GF(256) Shamir 3-of-5, with a runbook at `docs/runbooks/SC-SOV-TRADE-001_ROOT_CEREMONY.md`. Three or more custodians can reconstruct and sign; two or fewer cannot; a tampered share is detected.
+- **Grade:** unchanged. SILVER 0.793, lowest gate 0.75, `gold_awarded` false. No recommendation to raise it until R-16 and the remaining gaps below are closed.
+- **R-16:** still `NOT_MET` / `NOT_CLAIMED`. No outside reviewer has signed off.
+- **Still a gap, with the reason:**
+  - Certified hardware HSM and the specification sentence "No signing key ever exists in software memory outside an HSM or token" in a production sense: SoftHSM2 is a software token, and the in-process `KeyStore` still holds software keys when a token is not configured. Swapping in certified hardware is a configuration change, but the hardware itself is outside this repository.
+  - Witnessed national root ceremony, named legal custodians, and a hardware threshold signature that never reassembles the seed: needs real organisations and a legal procedure. This tree has a software rehearsal only.
+  - Agreed national TSA, clock, mTLS PKI, and hybrid post-quantum TLS key exchange: need real organisations and operational PKI. The TSA, CAs and handshakes here are local test fixtures; mTLS is classical TLS 1.3.
+  - FIPS CMVP or other laboratory validation of this software stack: needs an outside lab.
+  - Every unanswered question in section 16 (parties, document-class pilot, identifier model, mandated algorithms and HSM certification, integration, time source, verifier operator, availability, legal standing of receipts, export-licence position, who funds assurance).
+- **Does not change:** the compiled grade, SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-TOL-001`, Catherine (unresolved), `.github/workflows`, the package version (still 4.1.0). GOLD stays withheld.
+- **Hook:** unchanged; the entry stays explicit-only.
+
