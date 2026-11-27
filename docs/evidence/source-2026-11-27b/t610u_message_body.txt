@@ -1,0 +1,94 @@
+[t610u, Shax, 2026-11-27]
+
+Those are two important governance decisions, and I’d keep them separate. One concerns recursive trust propagation. The other concerns what evidence is sufficient to classify a system as living.
+
+My calls:
+
+### 1\. Should a failing child architecture taint its parent generator?
+
+Decision: Yes, conditionally
+
+A child failure should taint the parent generator's current compilation result, but it should not automatically corrupt the generator's permanent identity or invalidate every other child it has ever produced.
+
+I would distinguish three states:
+
+| Child result | Parent result                                           |
+| ------------ | ------------------------------------------------------- |
+| PASS         | No taint                                                |
+| QUALIFIED    | Parent becomes QUALIFIED                                |
+| BLOCKED      | Parent becomes BLOCKED for that emission or compilation |
+
+Why: A generator that produces an architecture cannot claim the resulting architecture is valid while ignoring a failed child. That creates a recursive accountability gap.
+
+But propagation should be scoped. Otherwise, one malformed child becomes a permanent denial-of-service mechanism against the entire generator.
+
+The invariant:
+
+\\text{ChildFailure} \\Rightarrow
+\\text{ParentCompilationTainted}
+
+Not:
+
+\\text{ChildFailure} \\Rightarrow
+\\text{ParentIdentityDestroyed}
+
+I'd also preserve the child's original failure record and propagate its provenance upward. The parent should not be able to erase the reason it was tainted.
+
+### 2\. Should an empirical system shown to be living, but without demonstrated self-maintenance, be graded inert?
+
+Decision: No, change this
+
+I would not classify that as inert.
+
+There are three distinct propositions:
+
+* Living: Evidence supports that the system is alive.
+
+* Self-maintaining: Evidence demonstrates that it actively maintains the conditions required for continued existence.
+
+* Autopoietic: Evidence demonstrates the relevant self-producing and self-maintaining organization.
+
+These are related, but they are not interchangeable.
+
+A system could have empirical evidence of life while the available evidence is insufficient to establish its self-maintenance mechanisms. Calling that system inert is an epistemic classification error.
+
+I'd introduce:
+
+* `LIVING_OBSERVED`
+
+* `SELF_MAINTENANCE_UNVERIFIED`
+
+* `AUTOPOIESIS_EMPIRICAL`
+
+The progression would be:
+
+| Evidence                                          | Classification              |
+| ------------------------------------------------- | --------------------------- |
+| Empirically observed living system                | LIVING_OBSERVED             |
+| Living, but self-maintenance not demonstrated     | SELF_MAINTENANCE_UNVERIFIED |
+| Self-maintenance demonstrated                     | AUTOPOIESIS_EMPIRICAL       |
+| Static graph or taxonomy without evidence of life | INERT_TAXONOMY              |
+
+Importantly, `LIVING_OBSERVED` must not automatically satisfy T2. It is a qualified empirical observation, not proof of autopoiesis.
+
+### My recommended rc5 disposition
+
+### Two decisions for rc6
+
+Recursive failure propagation
+
+ACCEPT
+
+Child failure taints the current parent compilation, with scoped propagation and preserved provenance.
+
+Living vs. autopoietic
+
+RECLASSIFY
+
+Separate observed life from demonstrated self-maintenance. Do not label an empirically living system inert merely because T2 evidence is incomplete.
+
+One additional safeguard: neither decision should silently elevate governance authority. A child failure can affect compilation validity, but it must not grant the generator new permissions to quarantine, revoke, or rewrite other architectures.
+
+The underlying principle: structural validity, biological status, and governance authority are three different dimensions. The compiler should never collapse them into one verdict.
+
+I'd make these explicit rc6 requirements and add adversarial tests for both propagation and classification boundaries.

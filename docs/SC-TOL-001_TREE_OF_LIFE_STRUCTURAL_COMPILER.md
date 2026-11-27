@@ -1,6 +1,6 @@
-# SC-TOL-001: Tree of Life cross-domain structural compiler (Shax t608u / t609u)
+# SC-TOL-001: Tree of Life cross-domain structural compiler (Shax t608u / t609u / t610u)
 
-**Status:** v2.1-rc5 reference implementation plus seven kernel fixes. **SILVER**, `gold_awarded: false`, `PROVISIONAL_DEFAULT`. Reference code under `tests/reference/sc_tol_001/`. It is not kernel enforcement, it is not packaged, and `core/` and `expansion/` do not import it.
+**Status:** v2.1-**rc6** reference implementation: rc5, the seven kernel fixes, and Shax's two t610u decisions (section 5a). **SILVER**, `gold_awarded: false`, `PROVISIONAL_DEFAULT`, because the delegation-chain verification default is still open. Reference code under `tests/reference/sc_tol_001/`. It is not kernel enforcement, it is not packaged, and `core/` and `expansion/` do not import it.
 
 **Attribution.** This is material Shax supplied. The t608u message is a long design thread pasted from ChatGPT and other-assistant conversations, and the attached `.py` file (rc5) came the same way. The analysis, the gate design and the code were written by those assistants, not by Shax. Shax's own instructions were t607u ("Update and merge all pull requests get the main repo updated to 4.1.0") and t609u (the attachment is rc5, the most current version, and should be implemented instead of the rc2 code pasted in the chat).
 
@@ -17,7 +17,8 @@
 | v2.1-rc3 | Only through rc5 | rc5's test suite labels tests 14–28 "15 Adversarial Tests from rc3": authorizer registry and scope, emergency TTL within the grant window, automatic expiry, proxy chains, opaque-node quarantine of T3/T4 claims and O6 faults, two-node cuts, O3 self-loops and re-added edges, falsified claim tiers, T7 for mythic substrates, tamper-restored generators, and separate node and component loss in O6. No rc3 text was supplied. |
 | v2.1-rc4 | Only through rc5 | Tests 29–34, "6 Hardening Tests from rc4": unauthenticated and CAPTURED grants, a QUALIFIED verdict when the two-node-cut search is skipped, chain self-loops and backdated escalations, dangling edges and opaque governance, meta depth, and a single hard block for SPECULATIVE_EXO claiming a verified substrate. No rc4 text was supplied. |
 | **v2.1-rc5** | t608u attachment, 128,351 bytes | The supplied primary source. A frozen, serializable `CompilationResult` (`to_dict` / `to_json`, schema `SC-TOL-001/2.1-rc5`); declared and effective tier and topology tracked separately; an optional `halt_on_t0_block`; an iterative Tarjan articulation-point search; an `AuthorityRecord` registry with DAG delegation-chain validation; `MetaArchitectureSpec` processed in E6; **42 tests** (34 from rc4 plus 8 rc5 hardening tests). |
-| rc5 + kernel.1 | this repository | rc5 with the seven recorded fixes in section 5. The schema string is `SC-TOL-001/2.1-rc5+kernel.1`. |
+| rc5 + kernel.1 | this repository (PR #102) | rc5 with the seven recorded fixes in section 5. The schema string is `SC-TOL-001/2.1-rc5+kernel.1`. |
+| **rc6** (rc6 + kernel.2) | Shax t610u, this repository | Two owner decisions, tagged `RC6-D1` / `RC6-D2` in `compiler.py`: scoped child-failure taint, and the living / self-maintaining / autopoietic split (section 5a). The schema string is `SC-TOL-001/2.1-rc6+kernel.2`. `rc5.py` stays verbatim, and rc5's 42 acceptance tests still pass on rc6 unchanged. |
 
 ## 2. Model (as implemented in rc5)
 
@@ -51,6 +52,8 @@
 - **`tests/reference/sc_tol_001/compiler.py`:** rc5 plus the fixes. Every change is tagged `KERNEL-FIX-n`.
 - **`tests/reference/sc_tol_001/fixtures.py`:** the eight corpus systems, each with a provenance record (section 6).
 - **`tests/test_sc_tol_001_acceptance.py`:** the 42 rc5 tests, copied verbatim with only an import header added. They run against `compiler.py`.
+- **`tests/test_sc_tol_001_rc6.py`:** 24 adversarial tests for the rc6 propagation and classification boundaries (section 5a).
+- **`docs/evidence/source-2026-11-27b/`:** Shax's t610u decision message, verbatim, with its README.
 - **`tests/test_sc_tol_001_kernel.py`:**
   - the same 42 bodies run against the unmodified `rc5.py`;
   - one regression test per fix, showing the defect in rc5 and the fix in the kernel copy;
@@ -102,9 +105,57 @@ All 42 rc5 tests pass both on the unmodified rc5 and on the fixed copy. Each fix
    - **Defect:** with `require_full_chain_verification=False` (the default), an unregistered hop in a delegation chain was treated as validated and left no trace.
    - **Fix:** the request is still accepted, so behaviour is unchanged, but a T8 QUALIFIED record lists the hops (code `unregistered_upstream_hop`). Making full-chain verification the default is left to Shax (section 8).
 
-**Recorded, not changed:**
-- A meta-generator parent stays `is_trustworthy` even when an emitted child is not. rc1 Issue F defines children as independently validated, so the parent's E6 records only illegal exemptions. Whether child failure should taint the parent is an open question.
-- T2 returns `INERT_TAXONOMY` for an EMPIRICAL_SCI system that is only *represented* as living. That matches the rc1 split, but no test pins it.
+**Recorded in rc5+kernel.1, not changed then, and decided by Shax in t610u (section 5a):**
+- A meta-generator parent stayed `is_trustworthy` even when an emitted child was not. **Decided as D1 (ACCEPT).**
+- T2 returned `INERT_TAXONOMY` for an EMPIRICAL_SCI system with incomplete T2 evidence. **Decided as D2 (RECLASSIFY).**
+
+## 5a. rc6: Shax's t610u decisions
+
+Source: `docs/evidence/source-2026-11-27b/t610u_message_body.txt` (sha256 `7281f8a6…76a2`). The decisions are Shax's.
+
+**Principle (t610u).** Structural validity, biological status and governance authority are three separate dimensions. The compiler never collapses them into one verdict.
+- `DIMENSION_GATES` groups the gates: structural is T1, T5, T6 and E6; biological is T2 and T7; governance is T4 and T8. The three groups are disjoint.
+- `CompilationResult.dimension_verdicts()` reports each dimension separately.
+- Tests check that a child taint leaves the parent's biological and governance verdicts unchanged, and that a T2 reclassification leaves the structural and governance verdicts unchanged.
+
+### D1, ACCEPT: scoped child-failure taint (`RC6-D1`)
+
+The invariant is **ChildFailure ⇒ ParentCompilationTainted**, never ParentIdentityDestroyed.
+
+| Child `overall_verdict` | Parent's current compilation |
+|---|---|
+| PASS (no hard block, soft block or uncertainty) | no taint; E6 PASS |
+| QUALIFIED (any soft block or uncertainty) | E6 QUALIFIED; the parent stays trustworthy |
+| BLOCKED (any hard block, or no effective tier) | E6 BLOCKED; the parent is not trustworthy for this compilation |
+
+- **Scope.** The taint is an E6 `GateRecord` with code `child_failure_taint` and `scope: CURRENT_COMPILATION`.
+  - The `MetaGenerator` is a frozen dataclass and is never modified.
+  - The same generator compiles clean in the next compilation if its children are clean, so one malformed child cannot cause a permanent denial of service.
+  - Sibling children are compiled independently. A sibling's result is byte-identical with and without a failing sibling.
+- **Provenance.** The taint record copies the child's original failure records (gate, verdict, message, observation) into `child_failure_records`. The copy is deep-frozen; for a BLOCKED child it holds the hard blocks, and for a QUALIFIED child the soft blocks and uncertainties.
+  - The child's own result is kept in `child_results`.
+  - Nested taints carry the grandchild's provenance upward.
+  - The parent cannot erase or overwrite the reason. Records are immutable, `with_appended_records` only appends, and a child's exemption requests do not remove the taint.
+- **No authority.** The taint adds nothing to grants or escalations. The record states `authority_granted: false`, and the parent's governance verdicts, grants and escalations are identical with and without the failing child. A generator that tries to quarantine its own child is still rejected by T8.
+
+### D2, RECLASSIFY: living vs. self-maintaining vs. autopoietic (`RC6-D2`)
+
+New `SubstrateSpec.empirical_life_observed` (default false):
+
+| Evidence (EMPIRICAL_SCI tier) | T2 verdict | Satisfies T2 |
+|---|---|---|
+| `has_empirical_autopoiesis` (self-maintenance demonstrated) | `AUTOPOIESIS_EMPIRICAL` | yes |
+| life observed, with self-maintenance asserted (`has_represented_autopoiesis`) but not demonstrated | `SELF_MAINTENANCE_UNVERIFIED` | **no** (uncertainty) |
+| life observed, self-maintenance not assessed | `LIVING_OBSERVED` | **no** (uncertainty) |
+| no evidence of life (a static graph or taxonomy, even one *described* as living) | `INERT_TAXONOMY` | no (soft block) |
+
+- An empirically living system is never labelled `INERT_TAXONOMY`.
+- `T2_SATISFYING_VERDICTS` is exactly {`AUTOPOIESIS_EMPIRICAL`, `AUTOPOIESIS_REPRESENTED`}.
+- **CORPUS_MYTH and SPECULATIVE_EXO are unaffected:** without the new flag, their T2 results match rc5 exactly. Claiming `empirical_life_observed` outside EMPIRICAL_SCI is a T2 hard block (`non_empirical_life_claim_blocked`), in line with the existing firewall on empirical autopoiesis.
+
+### Consequence noted
+
+Speculative children always carry T7 `UNVERIFIED_SUBSTRATE`, so they are QUALIFIED, and so is any speculative meta-generator parent. The meta-generative fixture's E6 is therefore now QUALIFIED; it was PASS in rc5. The parent and both children stay trustworthy.
 
 ## 6. Fixtures and provenance
 
@@ -117,13 +168,16 @@ All 42 rc5 tests pass both on the unmodified rc5 and on the fixed copy. Each fix
 | Multiversal mycelium | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE; no single cut vertex, three two-node cuts |
 | Plasma lattice | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 QUALIFIED; T7 UNVERIFIED_SUBSTRATE |
 | Temporal fractal | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | T2 INERT_TAXONOMY (a representation of history is not an organism); T7 UNVERIFIED_SUBSTRATE |
-| Meta-generative tree | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | E6 PASS; two children (crystalline memory, oceanic) compiled independently |
+| Meta-generative tree | SPECULATIVE_EXO | SPECULATIVE_PROPOSAL | E6 QUALIFIED under rc6 (both children are QUALIFIED speculative systems; PASS in rc5); two children (crystalline memory, oceanic) compiled independently and trustworthy |
 
 The graph shapes are compiler modelling choices, recorded per fixture. They are not claims about what a tradition "really" contains. The Egyptian, Assyrian, Maya and Bodhi trees from v1 are not yet fixtures.
 
 ## 7. Grade
 
-**SILVER, `gold_awarded: false`.**
+**SILVER, `gold_awarded: false`.** Re-graded for rc6, 2026-11-27:
+- `boundary_integrity` goes from 0.85 to 0.88, because the three dimensions and the living/autopoietic boundary are now explicit and tested.
+- `wave_function_coherence` goes from 0.85 to 0.88, because two open questions were collapsed by owner decision.
+- Every other gate is unchanged. The minimum gate is still 0.75 (measurement and corpus completeness), so the entry stays SILVER.
 - **Why not GOLD:**
   - The fixture sources are named but were not opened, and the Sefirot attribution is unresolved.
   - Four of the v1 traditions have no fixture.
@@ -150,6 +204,6 @@ The graph shapes are compiler modelling choices, recorded per fixture. They are 
 
 - `SC-TOL-001` is in `EXPLICIT_ONLY_ENTRY_HINTS` with home domain `soul_bomb_sovereignty`.
 - Everyday words ("tree of life", "yggdrasil", "mycelium", "plasma", "fractal") do not lift a route.
-- Naming `SC-TOL-001` sets `needs_review`, because of the provisional default in `docs/PENDING_DELIBERATION.md`.
+- Naming `SC-TOL-001` sets `needs_review`, because of the provisional default still open in `docs/PENDING_DELIBERATION.md` (the delegation-chain verification default). The child-taint and inert-classification items were closed by t610u.
 
 Catherine remains unresolved and is out of scope. Approval to open a pull request is not approval of the tradition claims. SILVER is not validation.
