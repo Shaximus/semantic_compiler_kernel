@@ -1,0 +1,12 @@
+# SC-SOV-TRADE-001 CI and `make verify` inputs. Pins mirror pyproject.toml.
+# Regenerate the lock: uv pip compile --universal --python-version 3.10 \
+#   --generate-hashes requirements/sov-trade-ci.in -o requirements/sov-trade-ci.lock
+jsonschema>=4.0
+PyYAML>=6.0
+cryptography>=50.0.2,<51
+python-pkcs11==0.10.1
+asn1crypto==1.5.1
+pytest==9.2.0
+hypothesis==6.170.22; python_version >= "3.11"
+# hypothesis 6.170 requires Python 3.11+; 6.168.5 is the last release for 3.10.
+hypothesis==6.168.5; python_version < "3.11"
