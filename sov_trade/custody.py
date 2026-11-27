@@ -1,18 +1,25 @@
 """In-memory dual-control key custody.
 
-This is a reference stand-in for HSM custody, not a substitute for it.
-Signing keys live only in process memory, are never serialized to disk
-by this package, and tests must generate them ephemerally.
-
-Spec claim that cannot be honoured here: "No signing key ever exists in
-software memory outside an HSM or token."
+Software keys in this store still live in process memory; they are the
+path used when a token is not configured. Token-resident keys use
+`sov_trade.pkcs11.PKCS11Signer` and are generated non-extractable in the
+token. A certified hardware module is a remaining gap (SoftHSM2 is a
+software token).
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .crypto import KeyPair, PublicKey, generate_ed25519
+from .crypto import (
+    ALG_ED25519,
+    SUITE_ED25519_MLDSA65,
+    KeyPair,
+    PublicKey,
+    generate_ed25519,
+    generate_hybrid,
+    generate_mldsa65,
+)
 from .types import ActorKind, CustodyError, ReasonCode, Role
 
 
@@ -103,11 +110,19 @@ class KeyStore:
         second: Officer,
         *,
         expires_at: int | None = None,
+        algorithm: str = ALG_ED25519,
     ) -> KeyRecord:
         self.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
         if key_id in self._keys:
             raise CustodyError(ReasonCode.DUAL_CONTROL_REQUIRED, "key id already exists")
-        pair = generate_ed25519()
+        if algorithm == ALG_ED25519:
+            pair = generate_ed25519()
+        elif algorithm == "ml-dsa-65":
+            pair = generate_mldsa65()
+        elif algorithm == SUITE_ED25519_MLDSA65:
+            pair = generate_hybrid()
+        else:
+            raise CustodyError(ReasonCode.FAIL_CLOSED, f"unsupported custody algorithm: {algorithm}")
         record = KeyRecord(
             key_id=key_id,
             kind=kind,
