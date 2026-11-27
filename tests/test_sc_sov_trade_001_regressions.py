@@ -355,3 +355,26 @@ def test_wrong_transaction_binding_rejected() -> None:
     result = _verify_with({"txn_id": "txn-other"})
     assert result.outcome is Outcome.REJECTED
     assert ReasonCode.TXN_BINDING_MISMATCH.value in result.reasons
+
+
+@pytest.mark.skipif(not have_asn1crypto(), reason=TIMESTAMP_SKIP)
+def test_timestamp_response_must_be_der() -> None:
+    """Fuzz finding (make verify, 5000 examples): flipping the high bit of
+    the status INTEGER length (0x01 -> 0x81, a zero-length INTEGER) still
+    verified, because the unsigned TimeStampResp wrapper was parsed as BER."""
+    from semantic_compiler.sov_trade.timestamp import (
+        TimestampError,
+        build_request,
+        generate_test_tsa,
+        issue_token,
+        verify_token,
+    )
+
+    tsa = generate_test_tsa()
+    token = issue_token(tsa, build_request(b"data", nonce=11))
+    verify_token(token, data=b"data", nonce=11, trusted_ca=tsa.ca_cert)
+    bad = bytearray(token.der)
+    assert bad[4:9] == bytes.fromhex("3003020100")  # status SEQUENCE { INTEGER 0 }
+    bad[7] ^= 0x80
+    with pytest.raises(TimestampError):
+        verify_token(bytes(bad), data=b"data", nonce=11, trusted_ca=tsa.ca_cert)

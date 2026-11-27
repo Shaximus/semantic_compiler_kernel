@@ -289,6 +289,10 @@ def _verify_token(
         resp = tsp.TimeStampResp.load(raw, strict=True)
     except Exception as exc:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp response is not valid ASN.1") from exc
+    # Require DER, not merely parseable BER. Without this, malformed encodings in the unsigned wrapper
+    # (for example a zero-length status INTEGER, found by the bit-flip
+    # fuzz pass) were still accepted.
+    _require_der(raw)
     status = resp["status"]["status"].native
     if status not in {"granted", "granted_with_mods"}:
         raise TimestampError(ReasonCode.FAIL_CLOSED, f"timestamp status is {status}")
@@ -403,6 +407,70 @@ def _verify_token(
         )
     except Exception as exc:
         raise TimestampError(ReasonCode.SIGNATURE_INVALID, "timestamp token signature is invalid") from exc
+
+
+
+def _require_der(raw: bytes) -> None:
+    """Reject non-DER encodings of the TimeStampResp (X.690 section 10).
+
+    Walks every TLV: definite, minimally encoded lengths; constructed values
+    must be consumed exactly; INTEGERs non-empty and minimal; BOOLEANs one
+    byte of 0x00 or 0xFF; no trailing bytes. Primitive contents (including
+    the OCTET STRING holding TSTInfo, which the signature covers) are not
+    re-parsed here.
+    """
+
+    def fail(why: str) -> None:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, f"timestamp response is not DER: {why}")
+
+    def walk(buf: bytes, start: int, end: int, depth: int) -> None:
+        if depth > 64:
+            fail("nesting too deep")
+        i = start
+        while i < end:
+            tag = buf[i]
+            i += 1
+            if tag & 0x1F == 0x1F:  # high-tag-number form
+                while True:
+                    if i >= end:
+                        fail("truncated tag")
+                    b = buf[i]
+                    i += 1
+                    if not b & 0x80:
+                        break
+            if i >= end:
+                fail("missing length")
+            first = buf[i]
+            i += 1
+            if first < 0x80:
+                length = first
+            elif first == 0x80:
+                fail("indefinite length")
+            else:
+                n = first & 0x7F
+                if n > 4 or i + n > end:
+                    fail("bad long-form length")
+                length = int.from_bytes(buf[i:i + n], "big")
+                if buf[i] == 0 or length < 0x80:
+                    fail("non-minimal length")
+                i += n
+            if i + length > end:
+                fail("length exceeds enclosing value")
+            content = buf[i:i + length]
+            if tag & 0x20:
+                walk(buf, i, i + length, depth + 1)
+            elif tag == 0x02:
+                if length == 0:
+                    fail("empty INTEGER")
+                if length > 1 and ((content[0] == 0x00 and content[1] < 0x80) or (content[0] == 0xFF and content[1] >= 0x80)):
+                    fail("non-minimal INTEGER")
+            elif tag == 0x01 and (length != 1 or content[0] not in (0x00, 0xFF)):
+                fail("bad BOOLEAN")
+            i += length
+
+    if not raw:
+        fail("empty")
+    walk(raw, 0, len(raw), 0)
 
 
 def _check_ess_binding(attrs_native: dict[str, Any], tsa_der: bytes) -> None:
