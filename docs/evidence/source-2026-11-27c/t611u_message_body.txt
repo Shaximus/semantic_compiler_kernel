@@ -1,0 +1,66 @@
+[t611u, Shax, 2026-11-27]
+
+That's a strong rc6 landing. And the important part isn't just the test count. The two decisions survived implementation without creating secondary authority or sibling-contamination problems.
+
+I'd record this as a successful SILVER release candidate, with GOLD correctly withheld.
+
+### What rc6 has established
+
+| Area                          | Result                      | Assessment |
+| ----------------------------- | --------------------------- | ---------- |
+| Test suite                    | 1,130 passing               |            |
+| Prompt corpus                 | 963 prompts, no differences |            |
+| Recursive failure propagation | Parent compilation only     |            |
+| Failure provenance            | Child record preserved      |            |
+| Sibling isolation             | Unaffected                  |            |
+| Authority containment         | No authority inheritance    |            |
+| Living classification         | Separated from autopoiesis  |            |
+| Certification                 | SILVER, 0.822               |            |
+
+### The speculative-generator side effect
+
+I would leave the current behavior in place for rc6, but I would not automatically make it a permanent rule.
+
+There's a subtle distinction worth preserving:
+
+* Unverified substrate: The generator's underlying substrate has not been empirically established.
+
+* Speculative architecture: The architecture is deliberately operating in a speculative epistemic tier.
+
+* Invalid architecture: The architecture violates a structural invariant.
+
+Those are not equivalent.
+
+If every speculative child carries an unverified substrate, then `QUALIFIED` is logically consistent with your current propagation rules. But it also means the qualification score partly reflects the epistemic tier rather than architectural quality.
+
+That creates a possible measurement problem.
+
+### My recommendation: separate structural validity from epistemic confidence
+
+Instead of weakening the propagation rule, consider two independent outputs:
+
+| Dimension              | Example                  |
+| ---------------------- | ------------------------ |
+| Structural result      | PASS                     |
+| Epistemic result       | SPECULATIVE / UNVERIFIED |
+| Combined certification | QUALIFIED                |
+
+This preserves the important distinction: a speculative architecture can be internally coherent without being empirically established.
+
+It also prevents the compiler from accidentally communicating that speculative means defective.
+
+### What I'd put on the rc7 investigation list
+
+* Audit whether epistemic qualification propagates independently from structural failure.
+
+* Verify that speculative generators can achieve structural PASS without receiving empirical certification.
+
+* Confirm that parent qualification cannot be silently upgraded by a child.
+
+* Preserve the existing 963-prompt corpus as a regression baseline.
+
+One thing I would not do: chase the 0.006 score increase or attempt to force GOLD. The withheld certification is useful information. Let the remaining invariants earn it.
+
+The architectural milestone here is that SC-TOL-001 now distinguishes three things that are very easy to conflate: what a structure is, what evidence supports claims about it, and who has authority to change it.
+
+That's the separation I'd protect going forward.
