@@ -547,3 +547,46 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Not provisional (follows from t611u):** the combined certification is the rc6 verdict, unchanged; tier never enters the structural result; the axes only go down (no child, appended record or exemption can raise them); the axes carry no authority.
 - **Hook:** `review_trigger_terms` add `epistemic result`, `structural result`, `speculative architecture`. The entry stays explicit-only.
 - **Does not change:** the rc6 decisions (t610u), the chain-verification default (still provisional, see the SC-TOL-001 entry above), SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), Catherine (unresolved). GOLD stays withheld.
+
+## SC-SOV-TRADE-001 (Sovereign Bilateral Authentication Exchange; Shax t612u / t613u)
+
+- **ID:** `SC-SOV-TRADE-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u (standing rule: pick a default and flag it). Substance from t612u (the attached v0.1 specification) and t613u ("Don't just stick the spec on there....build it.").
+- **Question:** the specification is a design; section 16 leaves the customer questions open; several implementation choices are required to build a runnable reference.
+- **Chosen default:** ship a **reference implementation** in `sov_trade/` that covers the protocol, signed envelopes, recognition, delegation with anti-capture, receipts, ledgers, translation, custody simulation and disputes, compiled as SILVER, not GOLD, not production-certified, and not an invariant class. Section 16's customer questions are listed below and are **not answered**.
+- **Implementation choices (provisional; flagged for review):**
+  1. **Identifier model:** DID-style `did:sov:{domain}:{kind}:{local}`, bound to a public-key set. Not X.509, and not a national scheme.
+  2. **Canonicalization:** RFC 8785 JSON Canonicalization Scheme. Not deterministic CBOR. Signed objects accept integers, strings, booleans, null, arrays and objects only; floating-point numbers are rejected.
+  3. **Clock skew bound:** 120 seconds. The time source in this build is an injected clock (tests) or the host UTC clock (otherwise), not an RFC 3161 timestamp authority.
+  4. **Key custody:** in-process, dual-control, ephemeral keys for tests. Not an HSM. The specification's "no signing key in software memory outside an HSM or token" cannot be honoured in this environment.
+  5. **Signatures:** Ed25519. The `cryptography` package is used when present; otherwise a vendored CC0 reference implementation (not side-channel safe) is used so CI can run. ML-DSA (FIPS 204) is not implemented.
+  6. **Document classes:** the full list from the specification is implemented as an enum; tests use certificate of origin as the pilot class. Which class comes first for a customer pilot is left to section 16.
+  7. **Parties in tests:** two synthetic nations, Nation A and Nation B. Who the real parties and the contracting customer are is left to section 16.
+  8. **Unknown or stale status:** fail closed for every document class (`deferred`). Section 12 allows a bounded grace period for lower-value classes; this build does not.
+  9. **Withdrawal mid-transaction:** if recognition is withdrawn before a receipt is co-signed, new verification fails closed. In-flight policy is otherwise left open.
+  10. **Archive retention:** configurable; the software default is 7 years of seconds and is not a legal claim.
+- **Section 16, unanswered (customer questions; not decided here):**
+  - Who are the two parties, and who is the contracting customer? A government, a ministry, or a trade body acting for one?
+  - Is the second nation a real participant at this stage, or is the first deliverable a one-sided demonstration?
+  - Which document classes come first? A single class such as certificates of origin is a far safer pilot than the full list.
+  - Identifier and credential model: X.509 with a registry binding, DIDs with verifiable credentials, or an existing national scheme?
+  - Mandated algorithms and HSM certification level in each country.
+  - Existing national PKIs, single windows or customs systems this must integrate with.
+  - Agreed time source and acceptable clock skew.
+  - Who operates the verifier in each nation, and who audits it?
+  - Required availability, volumes and latency. The targets in section 12 are guesses.
+  - Legal standing of the receipts in each jurisdiction, and the governing agreement between the nations.
+  - Export-licence position for delivering cryptographic software to the customer.
+  - Who funds and owns independent assurance (penetration test, formal review)?
+  - What is the repository's current state for the components in section 15? (The mapping in the draft was from an earlier review and was not checked against the live repository; the compiler header table now records that check.)
+- **Alternatives not chosen:**
+  - (a) File the specification as documentation only, with no implementation (the original t612u reading, superseded by t613u).
+  - (b) Claim GOLD or production certification.
+  - (c) Invent an ML-DSA implementation or treat R-16 as passing without a third-party review.
+- **Reason:** t613u asked for a working implementation; the missing customer answers do not prevent an internal reference build (the specification already says Phase 1 can begin while Phase 0 is open). GOLD would require production custody, agreed national parameters and independent assurance, none of which this change has.
+- **Hook:** `review_trigger_terms` are `sc-sov-trade-001`, `sovereign bilateral authentication`, `signed assertion envelope`, `bilateral verification receipt`, `recognition record`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-TOL-001`, Catherine (unresolved). GOLD stays withheld.
+- **Still open, when reviewed:** every item in section 16, the ten implementation defaults above, and R-16 independent assurance.
