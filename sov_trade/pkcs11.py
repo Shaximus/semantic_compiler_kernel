@@ -106,6 +106,7 @@ class PKCS11Signer:
                     Attribute.VERIFY: True,
                     Attribute.TOKEN: True,
                     Attribute.LABEL: label,
+                    Attribute.ID: label.encode("utf-8"),
                 },
                 private_template={
                     Attribute.SIGN: True,
@@ -114,6 +115,7 @@ class PKCS11Signer:
                     Attribute.SENSITIVE: True,
                     Attribute.EXTRACTABLE: False,
                     Attribute.LABEL: label,
+                    Attribute.ID: label.encode("utf-8"),
                 },
             )
             if bool(priv[Attribute.EXTRACTABLE]) is not False:
@@ -134,6 +136,13 @@ class PKCS11Signer:
         pin = self.config.user_pin()
         with self._token().open(user_pin=pin, rw=False) as session:
             priv = _find_private(session, label, Attribute, ObjectClass)
+            # Custody rule at use time, not only at generation: refuse to
+            # sign with a key that could have left (or could leave) the token.
+            if bool(priv[Attribute.EXTRACTABLE]) is not False or bool(priv[Attribute.SENSITIVE]) is not True:
+                raise CustodyError(
+                    ReasonCode.FAIL_CLOSED,
+                    "token key is extractable or not sensitive; refusing to sign",
+                )
             signature = priv.sign(message, mechanism=Mechanism.EDDSA)
         if len(signature) != ED25519_SIGNATURE_LEN:
             raise CustodyError(
@@ -194,6 +203,10 @@ def _find_private(session: Any, label: str, Attribute: Any, ObjectClass: Any) ->
     )
     if not objs:
         raise CustodyError(ReasonCode.CHAIN_INVALID, f"no private key labelled {label!r}")
+    if len(objs) > 1:
+        # Ambiguous label: a second (possibly imported, extractable) key
+        # could be selected. Fail closed.
+        raise CustodyError(ReasonCode.FAIL_CLOSED, f"more than one private key labelled {label!r}")
     return objs[0]
 
 

@@ -7,6 +7,7 @@ loopback only.
 
 from __future__ import annotations
 
+import os
 import socket
 import ssl
 import threading
@@ -157,6 +158,30 @@ def issue_cert(
     )
 
 
+def _load_trust(ctx: ssl.SSLContext, ca_pem: bytes, crl_pem: bytes | None) -> None:
+    """Load the trust anchor and, if given, a CRL with leaf checking.
+
+    `load_verify_locations(cadata=...)` silently ignores CRLs, which made
+    CRL checking reject every peer ("unable to get CRL"). CRLs are loaded
+    from a file instead, and the load is confirmed (fail closed).
+    """
+    ctx.load_verify_locations(cadata=ca_pem.decode("ascii"))
+    if crl_pem is None:
+        return
+    import tempfile
+
+    with tempfile.NamedTemporaryFile("wb", suffix=".crl.pem", delete=False) as fh:
+        fh.write(crl_pem)
+        crl_path = fh.name
+    try:
+        ctx.load_verify_locations(cafile=crl_path)
+    finally:
+        os.unlink(crl_path)
+    if ctx.cert_store_stats().get("crl", 0) < 1:
+        raise ValueError("CRL was not loaded into the trust store")
+    ctx.verify_flags |= ssl.VERIFY_CRL_CHECK_LEAF
+
+
 def client_context(
     ca_pem: bytes,
     cert: IssuedCert,
@@ -168,10 +193,7 @@ def client_context(
     ctx.minimum_version = ssl.TLSVersion.TLSv1_3
     ctx.check_hostname = check_hostname
     ctx.verify_mode = ssl.CERT_REQUIRED
-    bundle = ca_pem if crl_pem is None else ca_pem + crl_pem
-    ctx.load_verify_locations(cadata=bundle.decode("ascii"))
-    if crl_pem is not None:
-        ctx.verify_flags |= ssl.VERIFY_CRL_CHECK_LEAF
+    _load_trust(ctx, ca_pem, crl_pem)
     ctx.load_cert_chain(certfile=_as_temp_pair(cert)[0], keyfile=_as_temp_pair(cert)[1])
     return ctx
 
@@ -208,10 +230,7 @@ def server_context(
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ctx.minimum_version = ssl.TLSVersion.TLSv1_3
     ctx.verify_mode = ssl.CERT_REQUIRED
-    bundle = ca_pem if crl_pem is None else ca_pem + crl_pem
-    ctx.load_verify_locations(cadata=bundle.decode("ascii"))
-    if crl_pem is not None:
-        ctx.verify_flags |= ssl.VERIFY_CRL_CHECK_LEAF
+    _load_trust(ctx, ca_pem, crl_pem)
     cert_path, key_path = _as_temp_pair(cert)
     ctx.load_cert_chain(certfile=cert_path, keyfile=key_path)
     return ctx

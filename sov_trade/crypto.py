@@ -14,7 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from typing import Iterable, Mapping, Protocol, Sequence
+from typing import Iterable, Mapping, Protocol
 
 _CRYPTO_IMPORT_ERROR = (
     "semantic_compiler.sov_trade requires the 'cryptography' package "
@@ -290,9 +290,11 @@ def encode_hybrid_signature(members: Mapping[str, bytes]) -> bytes:
 
 
 def decode_hybrid_map(blob: bytes, field: str) -> dict[str, bytes]:
+    if not isinstance(blob, (bytes, bytearray)) or len(blob) > 65536:
+        raise ValueError("hybrid blob is not bytes or is too large")
     try:
-        payload = json.loads(blob.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        payload = json.loads(bytes(blob).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ValueError("hybrid blob is not valid JSON") from exc
     if not isinstance(payload, dict):
         raise ValueError("hybrid blob is not an object")
@@ -306,6 +308,8 @@ def decode_hybrid_map(blob: bytes, field: str) -> dict[str, bytes]:
         if not isinstance(item, dict) or "alg" not in item or field not in item:
             raise ValueError("hybrid member is malformed")
         name = item["alg"]
+        if not isinstance(name, str) or not isinstance(item[field], str):
+            raise ValueError("hybrid member is malformed")
         if name in out:
             raise ValueError(f"duplicate hybrid member: {name}")
         try:

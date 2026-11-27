@@ -53,6 +53,9 @@ class TimestampAuthority:
     tsa_cert: x509.Certificate
     tsa_key: rsa.RSAPrivateKey
     policy: str = TEST_TSA_POLICY
+    # TEST CA key, kept only so tests can mint rogue certificates under the
+    # same CA. A production TSA client never holds a CA key.
+    ca_key: rsa.RSAPrivateKey | None = None
 
     @property
     def ca_der(self) -> bytes:
@@ -144,7 +147,7 @@ def generate_test_tsa(*, now: datetime | None = None) -> TimestampAuthority:
         )
         .sign(private_key=ca_key, algorithm=hashes.SHA256())
     )
-    return TimestampAuthority(ca_cert=ca_cert, tsa_cert=tsa_cert, tsa_key=tsa_key)
+    return TimestampAuthority(ca_cert=ca_cert, tsa_cert=tsa_cert, tsa_key=tsa_key, ca_key=ca_key)
 
 
 def imprint_sha256(data: bytes) -> bytes:
@@ -196,12 +199,25 @@ def issue_token(
     })
     tst_der = tst_info.dump()
     digest = hashlib.sha256(tst_der).digest()
+    tsa_asn1 = ax509.Certificate.load(authority.tsa_der)
+    # RFC 3161 section 2.4.1 / RFC 5816: the token must carry an ESS
+    # signing-certificate attribute that binds the TSA certificate.
+    # ESSCertIDv2 with the default hash algorithm (SHA-256).
+    ess_v2 = tsp.SigningCertificateV2({
+        "certs": [tsp.ESSCertIDv2({
+            "cert_hash": hashlib.sha256(authority.tsa_der).digest(),
+            "issuer_serial": {
+                "issuer": [ax509.GeneralName({"directory_name": tsa_asn1.issuer})],
+                "serial_number": tsa_asn1.serial_number,
+            },
+        })],
+    })
     signed_attrs = cms.CMSAttributes([
         cms.CMSAttribute({"type": "content_type", "values": ["tst_info"]}),
         cms.CMSAttribute({"type": "message_digest", "values": [digest]}),
+        cms.CMSAttribute({"type": "signing_certificate_v2", "values": [ess_v2]}),
     ])
     signature = authority.tsa_key.sign(_signed_attrs_tbs(signed_attrs), padding.PKCS1v15(), hashes.SHA256())
-    tsa_asn1 = ax509.Certificate.load(authority.tsa_der)
     signer_info = cms.SignerInfo({
         "version": 1,
         "sid": cms.SignerIdentifier({
@@ -243,12 +259,34 @@ def verify_token(
 ) -> None:
     """Verify imprint, nonce, policy, TSA chain and CMS signature.
 
-    Raises TimestampError with a distinct reason on each failure class.
+    Also checks (RFC 3161 section 2.3, 2.4.1; RFC 5816): the TSA
+    certificate has the critical id-kp-timeStamping EKU and no other, was
+    valid at genTime, matches the SignerInfo identifier, and is bound by
+    an ESS signing-certificate(-v2) attribute; content-type is id-ct-TSTInfo.
+
+    Raises TimestampError with a distinct reason on each failure class. Any
+    malformed input raises TimestampError (never another exception type).
     """
+    try:
+        _verify_token(token, data=data, nonce=nonce, trusted_ca=trusted_ca, policy=policy)
+    except TimestampError:
+        raise
+    except Exception as exc:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token is malformed") from exc
+
+
+def _verify_token(
+    token: TimestampToken | bytes,
+    *,
+    data: bytes,
+    nonce: int,
+    trusted_ca: x509.Certificate,
+    policy: str,
+) -> None:
     algos, cms, core, tsp, ax509 = _asn1()
     raw = token.der if isinstance(token, TimestampToken) else token
     try:
-        resp = tsp.TimeStampResp.load(raw)
+        resp = tsp.TimeStampResp.load(raw, strict=True)
     except Exception as exc:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp response is not valid ASN.1") from exc
     status = resp["status"]["status"].native
@@ -257,51 +295,107 @@ def verify_token(
     info = resp["time_stamp_token"]
     if info is None or not info.contents:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token is missing")
+    if info["content_type"].native != "signed_data":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token is not CMS SignedData")
     signed = info["content"]
-    if not isinstance(signed, cms.SignedData):
-        # content may need parsing
-        signed = cms.SignedData.load(info["content"].dump()) if hasattr(info["content"], "dump") else info["content"]
+    # Unsigned CMS fields are still checked strictly (RFC 5652 5.1, 5.3):
+    # nothing outside the signature may vary without failing verification.
+    if signed["version"].native != "v3":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "SignedData version must be 3 for id-ct-TSTInfo")
+    digest_algs = [d["algorithm"].native for d in signed["digest_algorithms"]]
+    if digest_algs != ["sha256"]:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "SignedData digestAlgorithms must be exactly SHA-256")
     encap = signed["encap_content_info"]
-    content = encap["content"].parsed if hasattr(encap["content"], "parsed") else encap["content"]
-    if not isinstance(content, tsp.TSTInfo):
-        content = tsp.TSTInfo.load(bytes(encap["content"]))
+    if encap["content_type"].native != "tst_info":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "encapsulated content is not id-ct-TSTInfo")
+    tst_der = bytes(encap["content"])
+    content = tsp.TSTInfo.load(tst_der, strict=True)
+    if content["message_imprint"]["hash_algorithm"]["algorithm"].native != "sha256":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp imprint is not SHA-256")
     expected_imprint = imprint_sha256(data)
     got_imprint = bytes(content["message_imprint"]["hashed_message"])
     if got_imprint != expected_imprint:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp imprint does not match the data")
     if content["nonce"].native != nonce:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp nonce does not match the request")
-    if content["policy"].dotted != policy and content["policy"].native != policy:
-        # dotted vs native
-        got_policy = getattr(content["policy"], "dotted", None) or str(content["policy"].native)
-        if got_policy != policy:
-            raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp policy does not match")
+    if content["policy"].dotted != policy:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp policy does not match")
+    gen_time = content["gen_time"].native
     certs = list(signed["certificates"] or [])
     if not certs:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token carries no TSA certificate")
-    tsa_asn1 = certs[0].chosen if hasattr(certs[0], "chosen") else certs[0]
+    signer_infos = list(signed["signer_infos"])
+    if len(signer_infos) != 1:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token must have exactly one signer")
+    signer = signer_infos[0]
+    if signer["version"].native != "v1":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "SignerInfo version must be 1 (issuerAndSerialNumber)")
+    if signer["digest_algorithm"]["algorithm"].native != "sha256":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "SignerInfo digestAlgorithm must be SHA-256")
+    if signer["signature_algorithm"]["algorithm"].native not in {"sha256_rsa", "rsassa_pkcs1v15"}:
+        raise TimestampError(
+            ReasonCode.FAIL_CLOSED, "SignerInfo signatureAlgorithm must be RSA PKCS#1 v1.5 with SHA-256"
+        )
+    if signer["unsigned_attrs"].native:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "SignerInfo carries unsigned attributes")
+    sid = signer["sid"]
+    if sid.name != "issuer_and_serial_number":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "unsupported SignerIdentifier form")
+    tsa_asn1 = None
+    for choice in certs:
+        if choice.name != "certificate":
+            continue
+        cand = choice.chosen
+        # Exact DER match (stricter than RFC 5280 caseIgnoreMatch): the
+        # unsigned SignerIdentifier must not vary at all.
+        if (
+            cand["tbs_certificate"]["issuer"].dump() == sid.chosen["issuer"].dump()
+            and cand.serial_number == sid.chosen["serial_number"].native
+        ):
+            tsa_asn1 = cand
+            break
+    if tsa_asn1 is None:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "no certificate matches the SignerInfo identifier")
     tsa_der = tsa_asn1.dump()
     tsa_cert = x509.load_der_x509_certificate(tsa_der)
     try:
         tsa_cert.verify_directly_issued_by(trusted_ca)
     except Exception as exc:
         raise TimestampError(ReasonCode.FAIL_CLOSED, "TSA certificate is not chained to the trusted CA") from exc
-    signer_infos = list(signed["signer_infos"])
-    if len(signer_infos) != 1:
-        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token must have exactly one signer")
-    signer = signer_infos[0]
-    signed_attrs = signer["signed_attrs"]
-    if signed_attrs is None:
-        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token has no signed attributes")
-    # message digest over TSTInfo
-    tst_der = bytes(encap["content"])
-    digest = hashlib.sha256(tst_der).digest()
-    attrs_native = {attr["type"].native: attr["values"] for attr in signed_attrs}
-    md_values = attrs_native.get("message_digest")
-    if not md_values or bytes(md_values[0]) != digest:
-        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token signed digest does not match TSTInfo")
     try:
-        tsa_cert.public_key().verify(
+        eku = tsa_cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage)
+    except x509.ExtensionNotFound as exc:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "TSA certificate has no extended key usage") from exc
+    if not eku.critical or list(eku.value) != [ExtendedKeyUsageOID.TIME_STAMPING]:
+        raise TimestampError(
+            ReasonCode.FAIL_CLOSED,
+            "TSA certificate EKU must be critical and only id-kp-timeStamping",
+        )
+    for cert, what in ((tsa_cert, "TSA"), (trusted_ca, "TSA CA")):
+        if not (cert.not_valid_before_utc <= gen_time <= cert.not_valid_after_utc):
+            raise TimestampError(ReasonCode.FAIL_CLOSED, f"{what} certificate was not valid at genTime")
+    signed_attrs = signer["signed_attrs"]
+    if signed_attrs is None or not signed_attrs.contents:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token has no signed attributes")
+    attrs_native: dict[str, Any] = {}
+    for attr in signed_attrs:
+        name = attr["type"].native
+        if name in attrs_native:
+            raise TimestampError(ReasonCode.FAIL_CLOSED, f"duplicate signed attribute {name}")
+        attrs_native[name] = attr["values"]
+    ct_values = attrs_native.get("content_type")
+    if not ct_values or len(ct_values) != 1 or ct_values[0].native != "tst_info":
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "signed content-type attribute is not id-ct-TSTInfo")
+    digest = hashlib.sha256(tst_der).digest()
+    md_values = attrs_native.get("message_digest")
+    if not md_values or len(md_values) != 1 or bytes(md_values[0]) != digest:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token signed digest does not match TSTInfo")
+    _check_ess_binding(attrs_native, tsa_der)
+    tsa_public = tsa_cert.public_key()
+    if not isinstance(tsa_public, rsa.RSAPublicKey):
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "TSA key is not RSA (only RSA PKCS#1 v1.5 is accepted)")
+    try:
+        tsa_public.verify(
             bytes(signer["signature"]),
             _signed_attrs_tbs(signed_attrs),
             padding.PKCS1v15(),
@@ -309,3 +403,23 @@ def verify_token(
         )
     except Exception as exc:
         raise TimestampError(ReasonCode.SIGNATURE_INVALID, "timestamp token signature is invalid") from exc
+
+
+def _check_ess_binding(attrs_native: dict[str, Any], tsa_der: bytes) -> None:
+    """RFC 3161 2.4.1 / RFC 5816: the first ESSCertID must hash the TSA cert."""
+    v2 = attrs_native.get("signing_certificate_v2")
+    v1 = attrs_native.get("signing_certificate")
+    if v2:
+        cert_id = v2[0]["certs"][0]
+        alg = cert_id["hash_algorithm"]["algorithm"].native
+        hashers = {"sha256": hashlib.sha256, "sha384": hashlib.sha384, "sha512": hashlib.sha512}
+        if alg not in hashers:
+            raise TimestampError(ReasonCode.FAIL_CLOSED, f"unsupported ESSCertIDv2 hash {alg}")
+        expected = hashers[alg](tsa_der).digest()
+    elif v1:
+        cert_id = v1[0]["certs"][0]
+        expected = hashlib.sha1(tsa_der, usedforsecurity=False).digest()
+    else:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "timestamp token has no ESS signing-certificate attribute")
+    if bytes(cert_id["cert_hash"]) != expected:
+        raise TimestampError(ReasonCode.FAIL_CLOSED, "ESS signing-certificate does not match the TSA certificate")
