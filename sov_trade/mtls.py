@@ -194,31 +194,35 @@ def client_context(
     ctx.check_hostname = check_hostname
     ctx.verify_mode = ssl.CERT_REQUIRED
     _load_trust(ctx, ca_pem, crl_pem)
-    ctx.load_cert_chain(certfile=_as_temp_pair(cert)[0], keyfile=_as_temp_pair(cert)[1])
+    _load_issued_chain(ctx, cert)
     return ctx
 
 
-# load_cert_chain needs paths; keep a tiny in-memory workaround via temp files
-# scoped to the process. Callers that need many handshakes should use
-# context_from_paths.
+def _load_issued_chain(ctx: ssl.SSLContext, cert: IssuedCert) -> None:
+    """Load a TEST certificate and key into `ctx`.
 
-_temp_paths: dict[int, tuple[str, str]] = {}
-
-
-def _as_temp_pair(cert: IssuedCert) -> tuple[str, str]:
-    key = id(cert)
-    if key in _temp_paths:
-        return _temp_paths[key]
+    `load_cert_chain` only takes paths, so the PEMs are written to a fresh
+    0700 temporary directory, loaded, and deleted immediately. An earlier
+    version cached paths by `id(cert)`; once a cert object was garbage
+    collected, a new cert could reuse its id and be served with the wrong
+    certificate and key (seen as flaky "decrypt error" / "unknown CA" /
+    "unsuitable purpose" failures on CPython 3.10-3.12).
+    """
+    import shutil
     import tempfile
+
     directory = tempfile.mkdtemp(prefix="sov-mtls-")
-    cert_path = f"{directory}/cert.pem"
-    key_path = f"{directory}/key.pem"
-    with open(cert_path, "wb") as fh:
-        fh.write(cert.cert_pem)
-    with open(key_path, "wb") as fh:
-        fh.write(cert.key_pem)
-    _temp_paths[key] = (cert_path, key_path)
-    return cert_path, key_path
+    try:
+        cert_path = os.path.join(directory, "cert.pem")
+        key_path = os.path.join(directory, "key.pem")
+        with open(cert_path, "wb") as fh:
+            fh.write(cert.cert_pem)
+        fd = os.open(key_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(cert.key_pem)
+        ctx.load_cert_chain(certfile=cert_path, keyfile=key_path)
+    finally:
+        shutil.rmtree(directory, ignore_errors=True)
 
 
 def server_context(
@@ -231,8 +235,7 @@ def server_context(
     ctx.minimum_version = ssl.TLSVersion.TLSv1_3
     ctx.verify_mode = ssl.CERT_REQUIRED
     _load_trust(ctx, ca_pem, crl_pem)
-    cert_path, key_path = _as_temp_pair(cert)
-    ctx.load_cert_chain(certfile=cert_path, keyfile=key_path)
+    _load_issued_chain(ctx, cert)
     return ctx
 
 

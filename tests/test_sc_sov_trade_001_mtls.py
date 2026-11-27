@@ -125,8 +125,7 @@ class TestMutualTLSRejectionReasons:
         old = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         old.maximum_version = ssl.TLSVersion.TLSv1_2
         old.load_verify_locations(cadata=ca_b.cert_pem.decode("ascii"))
-        cert_path, key_path = mtls._as_temp_pair(client)
-        old.load_cert_chain(cert_path, key_path)
+        mtls._load_issued_chain(old, client)
         result = handshake_loopback(server_context(ca_a.cert_pem, server), old)
         assert result.ok is False
         assert "PROTOCOL_VERSION" in (result.error or "").upper()
@@ -174,6 +173,26 @@ class TestMutualTLSRejectionReasons:
         )
         assert result.ok is False
         assert "REVOKED" in (result.error or "").upper()
+
+
+    def test_each_context_serves_its_own_certificate(self) -> None:
+        """Regression: contexts must never pick up another (garbage-collected)
+        certificate's files. Build many short-lived certs and check the peer
+        names seen on both sides of every handshake."""
+        import gc
+
+        now, ca_a, ca_b = self._setup()
+        for i in range(12):
+            server = issue_cert(ca_b, f"server-{i}.example", now=now, server=True)
+            client = issue_cert(ca_a, f"client-{i}.example", now=now)
+            result = handshake_loopback(
+                server_context(ca_a.cert_pem, server), client_context(ca_b.cert_pem, client)
+            )
+            assert result.ok, result.error
+            assert result.client_peer == f"server-{i}.example"
+            assert result.server_peer == f"client-{i}.example"
+            del server, client
+            gc.collect()
 
 
 @pytest.mark.skipif(not have_cryptography(), reason=CRYPTOGRAPHY_SKIP)
