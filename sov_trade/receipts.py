@@ -112,9 +112,16 @@ def verify_receipt(
     if not receipt.signatures:
         return ReasonCode.SIGNATURE_INVALID
     for sig in receipt.signatures:
-        pub = keys.get(sig["key_id"])
+        if not isinstance(sig, dict):
+            return ReasonCode.SIGNATURE_INVALID
+        key_id = sig.get("key_id")
+        pub = keys.get(key_id) if isinstance(key_id, str) else None
         if pub is None:
             return ReasonCode.SIGNATURE_INVALID
-        if not verify_signature(pub, payload, bytes.fromhex(sig["signature"])):
+        try:
+            raw = bytes.fromhex(sig["signature"])
+        except (KeyError, TypeError, ValueError):
+            return ReasonCode.SIGNATURE_INVALID
+        if not verify_signature(pub, payload, raw):
             return ReasonCode.SIGNATURE_INVALID
     return ReasonCode.OK

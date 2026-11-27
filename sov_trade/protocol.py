@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hmac
+
 import secrets
 from dataclasses import dataclass, field
 from typing import Any
@@ -14,10 +16,10 @@ from .assertion import (
 from .authority import DelegationRecord, DelegationScope
 from .canonical import CanonicalizationError, canonical_json
 from .clock import DEFAULT_SKEW_SECONDS, Clock
-from .crypto import ALG_ED25519, PublicKey
+from .crypto import PublicKey
 from .identity import IdentityRegistry, domain_of
 from .ledger import Ledger
-from .status import DEFAULT_STATUS_FRESHNESS, StatusList, evaluate_status
+from .status import DEFAULT_STATUS_FRESHNESS, StatusList, evaluate_status, verify_status_list
 from .types import CheckName, Outcome, ReasonCode
 
 
@@ -167,7 +169,8 @@ def _binding_check(
         if fields.get("challenge"):
             return ReasonCode.CHALLENGE_MISMATCH
         return ReasonCode.OK
-    if fields.get("challenge") != challenge.nonce:
+    got = fields.get("challenge")
+    if not isinstance(got, str) or not hmac.compare_digest(got.encode("utf-8"), challenge.nonce.encode("utf-8")):
         return ReasonCode.CHALLENGE_MISMATCH
     if txn.get("txn_id") != challenge.txn_id:
         return ReasonCode.TXN_BINDING_MISMATCH
@@ -182,11 +185,19 @@ def _scope_check(fields: dict[str, Any], verifier_domain: str) -> ReasonCode:
     chain = fields.get("authority_chain") or []
     if not isinstance(chain, list) or not chain:
         return ReasonCode.CHAIN_INVALID
-    doc_class = fields["doc_class"]
+    if not all(isinstance(link, dict) for link in chain):
+        return ReasonCode.CHAIN_INVALID
+    doc_class = fields.get("doc_class")
     subject = fields.get("subject") or {}
+    txn = fields.get("txn_binding") or {}
+    if not isinstance(doc_class, str) or not isinstance(subject, dict) or not isinstance(txn, dict):
+        return ReasonCode.CANONICAL_FORM_MISMATCH
+    raw_value = subject.get("value", 0)
+    if isinstance(raw_value, bool) or not isinstance(raw_value, int):
+        return ReasonCode.CANONICAL_FORM_MISMATCH
     commodity = str(subject.get("commodity_code", ""))
-    value = int(subject.get("value", 0))
-    counterparty = str((fields.get("txn_binding") or {}).get("counterparty_domain", verifier_domain))
+    value = raw_value
+    counterparty = str(txn.get("counterparty_domain", verifier_domain))
     # The envelope stores the chain leaf-to-root. Walk root-to-leaf so
     # each link can only narrow the grant above it.
     parent_scope: DelegationScope | None = None
@@ -338,6 +349,21 @@ class VerifierAgent:
         )
         checks.append(_check(CheckName.VALIDITY_WINDOW, window_reason))
 
+        # The status list is evidence too: it must be signed by a key the
+        # caller supplied, for the issuer's domain (PROVISIONAL_DEFAULT:
+        # an unverifiable status list is a hard SIGNATURE_INVALID, not a
+        # deferral). Before this check, any unsigned list was accepted.
+        status_sig_ok = True
+        if status is not None:
+            status_pub = keys.get(status.key_id)
+            try:
+                status_sig_ok = (
+                    status_pub is not None
+                    and status.domain == envelope.fields.get("domain")
+                    and verify_status_list(status, status_pub)
+                )
+            except (ValueError, CanonicalizationError):
+                status_sig_ok = False
         status_reason = evaluate_status(
             status,
             envelope.fields.get("authority_chain", [{}])[0].get("grantee")
@@ -360,6 +386,8 @@ class VerifierAgent:
                     )
                     if status_reason is not ReasonCode.OK:
                         break
+        if not status_sig_ok:
+            status_reason = ReasonCode.SIGNATURE_INVALID
         checks.append(_check(CheckName.REVOCATION, status_reason))
 
         bind_reason = _binding_check(envelope.fields, challenge)

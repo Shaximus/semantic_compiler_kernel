@@ -15,7 +15,7 @@ across subsets or fails to match the commitment.
 from __future__ import annotations
 
 import hashlib
-import os
+import hmac
 import secrets
 from dataclasses import dataclass
 from typing import Sequence
@@ -167,7 +167,7 @@ def reconstruct_secret(shares: Sequence[Share], *, k: int = DEFAULT_THRESHOLD) -
         ys = [s.data[pos] for s in chosen]
         secret[pos] = _lagrange_at_zero(xs, ys)
     material = bytes(secret)
-    if commit_secret(material) != commitment:
+    if not hmac.compare_digest(commit_secret(material), commitment):
         raise CeremonyError(
             ReasonCode.FAIL_CLOSED,
             "reconstructed secret does not match the published commitment (tampered share)",

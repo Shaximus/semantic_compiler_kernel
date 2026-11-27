@@ -18,7 +18,6 @@ from .identity import Principal, domain_of
 from .types import (
     ActorKind,
     CaptureError,
-    DocClass,
     ReasonCode,
     Role,
     TradeError,
@@ -33,8 +32,10 @@ def _lattice_check(source: str, claimed: str, *, delegated: bool, scoped: bool) 
     """
     try:
         from semantic_compiler.gates import authority as authority_gate
-    except Exception:  # pragma: no cover - package always present in this repo
-        return {"gate_passed": True, "errors": [], "skipped": True}
+    except ImportError:
+        # Fail closed: before t616u this returned gate_passed=True with
+        # skipped=True, so a missing gate silently allowed every grant.
+        return {"gate_passed": False, "errors": ["authority gate unavailable (fail closed)"]}
     transfer = getattr(authority_gate, "check_authority_transfer")
     # Map sovereign roles onto the existing lattice. Roots and issuers
     # approve; operational signers execute; verifiers only recommend.
@@ -80,13 +81,16 @@ class DelegationScope:
         )
 
     def is_subset_of(self, parent: "DelegationScope") -> bool:
-        # An empty parent set means unconstrained (institutional grant).
-        if parent.doc_classes and not self.doc_classes <= parent.doc_classes:
-            return False
-        if parent.commodity_codes and not self.commodity_codes <= parent.commodity_codes:
-            return False
-        if parent.counterparty_domains and not self.counterparty_domains <= parent.counterparty_domains:
-            return False
+        # An empty set means unconstrained (institutional grant). A child
+        # may only narrow: an unconstrained (empty) child under a
+        # constrained parent is a WIDENING and is refused.
+        for mine, theirs in (
+            (self.doc_classes, parent.doc_classes),
+            (self.commodity_codes, parent.commodity_codes),
+            (self.counterparty_domains, parent.counterparty_domains),
+        ):
+            if theirs and (not mine or not mine <= theirs):
+                return False
         if self.value_ceiling > parent.value_ceiling:
             return False
         return True
