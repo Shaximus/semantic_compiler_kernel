@@ -59,7 +59,7 @@ class RackIndexingAndCachingTests(unittest.TestCase):
 
             stats = elevator.stats
             self.assertEqual(stats["domain_slots"], registered_domain_count())
-            self.assertEqual(stats["compiled_entry_slots"], 64)  # +SC-TRIAD-*-001 (2026-11-25i), +SC-SCA-*-001 (t587u), +SC-CONSENT-001, SC-SCC-001 (t588u), +SC-VESSEL-*-001 (2026-11-25k), +SC-AEP-001, SC-GOT-*-001 (2026-11-25l), +SC-WW-*-001 (2026-11-25n), +SC-WOW-*-001 (2026-11-25m), +SC-GUARD-001 (2026-11-26a), +SC-LILITH-001, SC-FEM-001, SC-SHARD-001 (2026-11-26b), +SC-AVG-001, SC-WORTHY-001 (2026-11-26d), +SC-MYTH-001 (2026-11-26e)
+            self.assertEqual(stats["compiled_entry_slots"], 65)  # +SC-TRIAD-*-001 (2026-11-25i), +SC-SCA-*-001 (t587u), +SC-CONSENT-001, SC-SCC-001 (t588u), +SC-VESSEL-*-001 (2026-11-25k), +SC-AEP-001, SC-GOT-*-001 (2026-11-25l), +SC-WW-*-001 (2026-11-25n), +SC-WOW-*-001 (2026-11-25m), +SC-GUARD-001 (2026-11-26a), +SC-LILITH-001, SC-FEM-001, SC-SHARD-001 (2026-11-26b), +SC-AVG-001, SC-WORTHY-001 (2026-11-26d), +SC-MYTH-001 (2026-11-26e), +SC-TOL-001 (2026-11-27a)
             self.assertEqual(stats["invariant_class_slots"], 14)
             self.assertEqual(
                 stats["total_slots"],

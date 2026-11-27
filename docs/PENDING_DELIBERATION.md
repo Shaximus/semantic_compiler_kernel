@@ -504,3 +504,22 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Hook:** `review_trigger_terms` are `sc-myth-001`, `comparative mythology matrix`, `self-sourced legitimacy`, `worship-power loop`, `aesir-vanir`, `osiris-horus-set`, `titan succession`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** `SC-SHARD-001`, `SC-GUARD-001`, `SC-WORTHY-001`, SCC-001-AC, Catherine (unresolved) and the Lilith work.
 - **Still open, when reviewed:** Chinese, Japanese, Aztec and Atlantean pantheons; Mesopotamian divine kingship; biblical angelic-rebellion traditions; the Stargate Alteran schism as its own matrix.
+
+## SC-TOL-001 (Tree of Life structural compiler: rc5 with kernel fixes; chain-verification and child-taint defaults)
+
+- **ID:** `SC-TOL-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t582u (standing rule: pick a default and flag it). Substance from t608u (design thread v1 → v2.1-rc2, material Shax supplied by pasting ChatGPT and other-assistant conversations); version from t609u ("the attached .py is rc5 … implement from rc5").
+- **Question:** ship rc5 verbatim or with fixes; how strict should delegation-chain verification be; should an untrustworthy child taint its meta-generator parent; is SC-TOL-001 an invariant class?
+- **Chosen default:** **rc5 with seven recorded kernel fixes** (rc5 kept verbatim beside it). **Chain verification stays permissive by default** (`require_full_chain_verification=False`), but unregistered hops now produce a T8 QUALIFIED record instead of passing silently. **A parent is not tainted by a child** (children are reported separately). **SC-TOL-001 is a reference compiler, not an invariant class.** SILVER, not GOLD.
+- **Alternatives not chosen:**
+  - (a) Ship rc5 verbatim.
+  - (b) Make full chain verification the default.
+  - (c) Let an untrustworthy child taint its parent.
+  - (d) Promote T8 into SCC-001-AC.
+- **Reason:** the seven defects are real (each has a regression test that fails on rc5); the other two choices change rc5 semantics beyond fixing defects, so they wait for Shax.
+- **Hook:** `review_trigger_terms` are `sc-tol-001`, `tree of life compiler`, `recursive capture prevention`, `horizon opacity`, `meta-generator`, `kernel-fix`, `sefirot provenance`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-AEP-001`, `SC-MYTH-001`, Catherine (unresolved).
+- **Still open, when reviewed:** per-text provenance for the 10-node / 22-path Sefirot layout; fixtures for the Egyptian, Assyrian, Maya and Bodhi trees; the represented-only EMPIRICAL autopoiesis case (rc5 returns INERT).
