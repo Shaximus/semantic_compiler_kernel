@@ -395,6 +395,8 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # invariant (t603u, pasted assistant analysis Shax supplied). Explicit-only.
     "SC-AVG-001": "soul_bomb_sovereignty",
     "SC-WORTHY-001": "soul_bomb_sovereignty",
+    # SC-TOL-001 Tree of Life structural compiler (Shax t608u/t609u)
+    "SC-TOL-001": "soul_bomb_sovereignty",
     # 2026-11-26e comparative mythology matrix (Shax t605u/t606u). Explicit-only: mythology, zeus, odin, ragnarok, worship, pantheon are everyday words.
     "SC-MYTH-001": "soul_bomb_sovereignty",
 }
@@ -469,6 +471,8 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     "SC-WORTHY-001",
     # 2026-11-26e comparative mythology matrix (Shax t605u/t606u). Explicit-only: mythology, zeus, odin, ragnarok, worship, pantheon are everyday words.
     "SC-MYTH-001",
+    # SC-TOL-001 Tree of Life structural compiler (Shax t608u/t609u). Explicit-only: tree, life, yggdrasil, horizon are everyday words.
+    "SC-TOL-001",
 })
 
 

@@ -1616,6 +1616,31 @@
         "SC-LILITH-001",
         "SC-WORTHY-001"
       ]
+    },
+    {
+      "entry_id": "SC-TOL-001",
+      "file": "SC-TOL-001.jsonl",
+      "title": "Tree of Life cross-domain structural compiler: v1 to v2.1-rc5 lineage, gates T0-T8, seven kernel fixes, eight provenance-tagged fixtures",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Material supplied by Shax (Curtis Kingsley), t608u/t609u, pasted assistant design and code; compiled by the kernel team",
+      "date": "2026-11-27",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.74,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 45244,
+      "sha256": "5718d7fd002f680eec87355214cac8661087e3ebc4f1094b61471414180f59ef",
+      "notes": "Tree of Life cross-domain structural compiler (Shax t608u/t609u; pasted assistant design thread and rc5 code Shax supplied). S=(Sigma,T,G(v,e,tau),E); E0-E7; gates T0-T8 incl. T8 recursive capture prevention (bridge to SCC-001-AC). rc5 implemented as reference code under tests/reference/sc_tol_001 with seven recorded KERNEL-FIX changes; 42 rc5 tests pass on rc5 and on the fixed copy. Eight fixtures with provenance; Sefirot 10/22 attribution unresolved (T0 blocks it). PROVISIONAL_DEFAULT. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.816.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-SCC-001",
+        "SC-SHARD-001",
+        "SC-GUARD-001",
+        "SC-WORTHY-001",
+        "SC-MYTH-001"
+      ]
     }
   ]
 }
