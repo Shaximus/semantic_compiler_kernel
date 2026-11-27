@@ -486,3 +486,21 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Hook:** `review_trigger_terms` are `sc-worthy-001`, `worthiness invariant`, `worthiness enchantment`, `capability is not authority`, `hammer of ghrab thaar`, `mjolnir`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** `SC-SHARD-001`, `SC-GUARD-001` and SCC-001-AC are unchanged.
 - **Still open, when reviewed:** scoring dimensions for worthiness; the Marvel source and wording for the enchantment.
+
+## SC-MYTH-001 (comparative mythology matrix as a method; the Ori loop not a class)
+
+- **ID:** `SC-MYTH-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4); compiled from the 26 Nov t605u/t606u messages
+- **Ruling used:** Shax t582u (standing rule: pick a default and flag it). Substance from t605u, material Shax supplied by pasting a ChatGPT conversation; approval and scope from t606u ("Update, and comprehensive decompression and domain translation").
+- **Question:** is the ten-field comparative mythology matrix a new invariant class, and is the Ori worship-power loop its own class?
+- **Chosen default:** **the matrix is a method under `SC-AEP-001`, not an invariant class.** The first trio is kept as three distinct legitimacy questions, not one plot. **The Ori loop is recorded as a capture invariant (self-sourced legitimacy) mapped onto SCC-001-AC, not promoted to a class.**
+- **Alternatives not chosen:**
+  - (a) Collapse the trio into one succession invariant.
+  - (b) Treat the Ori loop as a new invariant class.
+  - (c) Treat Age of Mythology as a historical source.
+- **Reason:** recurrence alone does not establish shared origin; only a first deep dive is done; nothing has been prediction-tested.
+- **Hook:** `review_trigger_terms` are `sc-myth-001`, `comparative mythology matrix`, `self-sourced legitimacy`, `worship-power loop`, `aesir-vanir`, `osiris-horus-set`, `titan succession`. The entry is explicit-only, so it never lifts a route.
+- **Does not change:** `SC-SHARD-001`, `SC-GUARD-001`, `SC-WORTHY-001`, SCC-001-AC, Catherine (unresolved) and the Lilith work.
+- **Still open, when reviewed:** Chinese, Japanese, Aztec and Atlantean pantheons; Mesopotamian divine kingship; biblical angelic-rebellion traditions; the Stargate Alteran schism as its own matrix.

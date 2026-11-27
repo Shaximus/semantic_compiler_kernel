@@ -60,7 +60,7 @@ class AvgWorthySchemaAndGradeTests(unittest.TestCase):
                 self.assertEqual(len(e["functional_departments"]), 15)
                 for x in e["metadata"]["cross_references"]:
                     self.assertIn(x, MANIFEST_IDS)
-        self.assertEqual(len(MANIFEST["entries"]), 63)
+        self.assertEqual(len(MANIFEST["entries"]), 64)  # +SC-MYTH-001 (2026-11-26e)
         self.assertEqual(sum(1 for m in MANIFEST["entries"] if m["classification"] == "GOLD"), 11)
 
     def test_short_router_input_and_full_text_in_body(self) -> None:
