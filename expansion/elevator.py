@@ -395,6 +395,8 @@ _COMPILED_ENTRY_DOMAIN_HINTS: dict[str, str] = {
     # invariant (t603u, pasted assistant analysis Shax supplied). Explicit-only.
     "SC-AVG-001": "soul_bomb_sovereignty",
     "SC-WORTHY-001": "soul_bomb_sovereignty",
+    # 2026-11-26e comparative mythology matrix (Shax t605u/t606u). Explicit-only: mythology, zeus, odin, ragnarok, worship, pantheon are everyday words.
+    "SC-MYTH-001": "soul_bomb_sovereignty",
 }
 
 # Entries whose names are everyday words ("clay", "pots"): their hint routes explicit IDs
@@ -465,6 +467,8 @@ EXPLICIT_ONLY_ENTRY_HINTS: frozenset[str] = frozenset({
     # "build" are everyday or gaming words; only an explicit ID routes these entries.
     "SC-AVG-001",
     "SC-WORTHY-001",
+    # 2026-11-26e comparative mythology matrix (Shax t605u/t606u). Explicit-only: mythology, zeus, odin, ragnarok, worship, pantheon are everyday words.
+    "SC-MYTH-001",
 })
 
 

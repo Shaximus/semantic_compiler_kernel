@@ -198,3 +198,5 @@ Both IDs are in `EXPLICIT_ONLY_ENTRY_HINTS`. Everyday and gaming words ("Avenger
 ## 9. Privacy
 
 The source covers fiction, game systems and a design principle. It was checked for emails, phone numbers, addresses, financial details, credentials and family information; none were found. No personal details are recorded here or in the entries.
+
+See also `SC-MYTH-001` (`docs/AEP_COMPARATIVE_MYTHOLOGY_2026-11-26e.md`): the capability-to-authority jump recurs as structure 2 of the comparative mythology matrix.
