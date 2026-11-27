@@ -1538,6 +1538,56 @@
         "SC-LILITH-001",
         "SC-FEM-001"
       ]
+    },
+    {
+      "entry_id": "SC-AVG-001",
+      "file": "SC-AVG-001.jsonl",
+      "title": "Avengers \u00d7 Diablo II \u00d7 Path of Exile: an Archetypal Evolution Principle map (worthiness, specialization-gate and party-composition invariants; interpretive per-Avenger class tables)",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Material supplied by Shax (Curtis Kingsley), t603u, pasted assistant analysis; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.7,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 72882,
+      "sha256": "142eedb037cfb80aaff5c98f894c363987bd214a81fa9bb9e5673f2eb0f4367e",
+      "notes": "Avengers x Diablo II x Path of Exile AEP map (t603u; material Shax supplied, pasted from a ChatGPT conversation; analysis by that assistant). Invariants: worthiness (SC-WORTHY-001), specialization gate (PoE Labyrinth; secondary-verified), party composition (capability != function != authority). Per-Avenger Diablo II and PoE tables are interpretive, not official, no derivation claim. Groot NO_FORCED_MATCH in PoE; Vision a constructed vessel with agency. Not done: villain roster, Nephilim structure (SC-NEPH-001 unresolved). PROVISIONAL_DEFAULT. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.813.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-WORTHY-001",
+        "SC-SHARD-001",
+        "SC-GUARD-001",
+        "SC-GOT-001",
+        "SC-WOW-CLASS-001"
+      ]
+    },
+    {
+      "entry_id": "SC-WORTHY-001",
+      "file": "SC-WORTHY-001.jsonl",
+      "title": "Worthiness invariant: capability is not legitimate authority (Mj\u00f6lnir's worthiness enchantment; Diablo II Blessed Hammer and the Hammer of Ghrab Thaar), read under SC-AEP-001",
+      "entry_type": "compiler_entry",
+      "version": "3.5.0",
+      "author": "Material supplied by Shax (Curtis Kingsley), t603u, pasted assistant analysis; compiled by the kernel team",
+      "date": "2026-11-26",
+      "status": "COMPILED",
+      "classification": "SILVER",
+      "confidence": 0.72,
+      "gates_passed": "9/9",
+      "record_count": 1,
+      "bytes": 59371,
+      "sha256": "658f718280c777c1b8a48855f5556ba56910d0936d85bedb55dfd756512dfdef",
+      "notes": "Worthiness invariant (t603u; pasted assistant analysis Shax supplied): capability is not legitimate authority. Blessed Hammer / Hammer of Ghrab Thaar checked against The Arreat Summit (the nuns destroyed the relic; the Paladin channels its remnant); Mjolnir enchantment unverified from paste. Engineering form: SCC-001-AC path 1, PR #95. Related to, not merged with, SC-SHARD-001 and SC-GUARD-001. PROVISIONAL_DEFAULT. Explicit-only domain hint: soul_bomb_sovereignty. SILVER 0.822.",
+      "cross_references": [
+        "SC-AEP-001",
+        "SC-AVG-001",
+        "SC-SHARD-001",
+        "SC-GUARD-001",
+        "SC-SCC-001",
+        "SC-CONSENT-001"
+      ]
     }
   ]
 }

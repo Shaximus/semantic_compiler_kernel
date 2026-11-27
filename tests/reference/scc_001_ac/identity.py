@@ -47,18 +47,25 @@ class PrincipalVerifier:
     # --- principal-side helper (stands in for the principal's hardware token) ---
     def issue(self, key_id: str, request: Request, issued_at: int, expires_at: int, nonce: str,
               principal_id: str = None) -> Credential:
+        return self.issue_for_digest(key_id, request.digest(), issued_at, expires_at, nonce, principal_id)
+
+    def issue_for_digest(self, key_id: str, digest: str, issued_at: int, expires_at: int, nonce: str,
+                         principal_id: str = None) -> Credential:
         pid = principal_id or self._principal_id
-        d = request.digest()
-        return Credential(pid, key_id, issued_at, expires_at, nonce, d,
-                          _mac(self._keys[key_id], pid, key_id, issued_at, expires_at, nonce, d))
+        return Credential(pid, key_id, issued_at, expires_at, nonce, digest,
+                          _mac(self._keys[key_id], pid, key_id, issued_at, expires_at, nonce, digest))
 
     def revoke_key(self, key_id: str) -> None:
         self._revoked.add(key_id)
 
     def verify(self, request: Request, now: int) -> VerifyStatus:
+        return self.verify_digest(request.credential, request.digest(), now)
+
+    def verify_digest(self, c: Credential, digest: str, now: int) -> VerifyStatus:
+        """Verify a credential against a request digest computed by the caller's gate
+        (used by gates/authority.check_authority_transfer for FOUNDER_OVERRIDE)."""
         if not self.available:
             return VerifyStatus.UNAVAILABLE
-        c = request.credential
         if c is None:
             return VerifyStatus.NO_CREDENTIAL
         if c.key_id not in self._keys:
@@ -71,7 +78,7 @@ class PrincipalVerifier:
                     c.request_digest)
         if not hmac.compare_digest(good, c.mac):
             return VerifyStatus.BAD_MAC
-        if c.request_digest != request.digest():
+        if c.request_digest != digest:
             return VerifyStatus.DIGEST_MISMATCH
         if now < c.issued_at:
             return VerifyStatus.NOT_YET_VALID

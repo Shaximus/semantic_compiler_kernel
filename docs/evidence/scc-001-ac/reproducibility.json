@@ -1,25 +1,29 @@
 {
   "description": "SCC-001-AC reproducibility manifest. test_run_sha256 = sha256 of the sorted '<classname>::<test> <outcome>' lines (newline-joined) from pytest on tests/test_scc_001_ac_anti_capture.py, excluding TestSCC001ACRegistry (which checks this file).",
   "file_sha256": {
-    "docs/SCC-001-AC_ANTI_CAPTURE.md": "7533278afc5bc34ca3692c1ed5c171846056be50d0fe57bda5c24969baf3aec7",
+    "docs/SCC-001-AC_ANTI_CAPTURE.md": "02dd0538d1bc7b1ea6687d207c319365df2c3c294d45d40ad929e74ce66de5cc",
     "docs/evidence/sc-mafuba-001/manifests/disturbance.yaml": "1479a3480ddc2896d8cdbee3749e617bebe050732151c498711bf3bd0b45ca77",
     "docs/evidence/sc-mafuba-001/manifests/resource.yaml": "6c6a9bdcb240d794ad5bd251902786a5b9578bc064df17aa873898c40da23624",
     "docs/evidence/sc-mafuba-001/manifests/sink.yaml": "93b69255e502211f7fd7076b9c494b1a0cefc9a8dcf3e10031eacddc1c15c6cd",
     "docs/evidence/source-2026-11-26c/SCC-001-AC_original.md": "d834c16162df19dcde2a106322d002ce53eb6cfc9eeca9646774dd48e31e0737",
+    "gates/authority.py": "8d0293699836a3dbb5dbb65363587013607515c10ec91a3844330248f5376090",
+    "tests/reference/sc_mafuba_001/supervisor.py": "8d0afc7ae3f95b263a133d455c892b724e4b8e2216822f76dce079d5628bd35c",
+    "tests/reference/scc_001/model.py": "348973f8f50c402fd716dc1c2f8e92e7247b9016f6783901507a6448773f1b0c",
+    "tests/reference/scc_001/rules.py": "fc1ed64e02a026ccb43c7da4f1483a337d5446ba915772647ca711cd043e9f63",
     "tests/reference/scc_001_ac/__init__.py": "cf7e9bbe0bf7c74d4a64615ec6f87d5faf319f23e71e1cda8d1e4e865c710792",
     "tests/reference/scc_001_ac/budget.py": "859283fcfa8db3bc682c31215a4e0d5aa9d434d58af67746285adc3ac7c879c1",
     "tests/reference/scc_001_ac/flags.py": "048ee47f6d30bd390eb6a07c7216aa477b49597cc403c61190a38b66de5ff283",
     "tests/reference/scc_001_ac/gateway.py": "aef7c23ddb31ff9b652f3e809694b87d2ba8dead7cdbff351be91ecc955f26ab",
-    "tests/reference/scc_001_ac/identity.py": "fa2fcd180490485294db1af0f6dea3111416de190191743506f6542e078c40ca",
+    "tests/reference/scc_001_ac/identity.py": "0af6ddb0b50354d0275481ceab5e83a9c818681dc249023bb03afb2624ad50bb",
     "tests/reference/scc_001_ac/manifests.py": "ea11b373797fba2ac8a9b3618f161fba5414c152547c67453b1cffe2d5d66df6",
     "tests/reference/scc_001_ac/model.py": "bee6241d4a1ff15a5290a4d5387717eb0fb1eb38fae97b205e02ac8011ac40df",
     "tests/reference/scc_001_ac/quarantine.py": "d6fbaf0a5225477d0d5cd8c52c37921bc60bbb8d3ecc414c3615c3b8854e5760",
-    "tests/reference/scc_001_ac/spec_contract.py": "308dd49d51ae7731d06c35b2bf891025a36ab2b60eba77702b9207484d7d33ab",
-    "tests/test_scc_001_ac_anti_capture.py": "4410d0e19e175de5eced0d138972fbef9bc29811c69365cedac987cd703bbd6b"
+    "tests/reference/scc_001_ac/spec_contract.py": "17db598e575cda75cdbe4c954a681b70a8da391dbcb639702f22d2ca34f5f8a0",
+    "tests/test_scc_001_ac_anti_capture.py": "b31c0bda205215291925d09259259c147ed9d376c9cc57ee8ba8907bd3c3054e"
   },
   "test_outcomes": {
-    "passed": 42,
-    "xfailed": 8
+    "passed": 59,
+    "xfailed": 5
   },
-  "test_run_sha256": "02c7f88e18a047870a7bf517993aaed34d3ae5ca7010b0861390bcbc6db3e2af"
+  "test_run_sha256": "084af3decb31adce93b5160751d2e76b73da61f7fdd166e6db0328d4358e97c7"
 }

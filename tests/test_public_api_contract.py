@@ -113,5 +113,63 @@ class PublicApiContractTests(unittest.TestCase):
         self.assertTrue(callable(compile_corpus))
 
 
+
+
+class ApiFacadeContractTests(unittest.TestCase):
+    """Pin the compact ``semantic_compiler.api`` surface added for hosted MCP/HTTP."""
+
+    def test_api_module_exports(self) -> None:
+        from semantic_compiler import api
+
+        self.assertEqual(
+            tuple(api.__all__),
+            ("SUMMARY_SCHEMA", "compile_json", "summary_v1"),
+        )
+        self.assertEqual(api.SUMMARY_SCHEMA, "summary_v1")
+        self.assertTrue(callable(api.compile_json))
+        self.assertTrue(callable(api.summary_v1))
+
+    def test_compile_json_signature(self) -> None:
+        from semantic_compiler.api import compile_json
+
+        sig = inspect.signature(compile_json)
+        self.assertEqual(
+            list(sig.parameters),
+            ["text", "registry", "context", "mode", "include_raw_input"],
+        )
+        params = sig.parameters
+        self.assertIsNone(params["registry"].default)
+        self.assertIsNone(params["context"].default)
+        self.assertEqual(params["mode"].default, "AUTO")
+        self.assertIs(params["include_raw_input"].default, False)
+        self.assertEqual(params["include_raw_input"].kind, inspect.Parameter.KEYWORD_ONLY)
+
+    def test_compile_json_returns_summary_v1_without_raw_input(self) -> None:
+        from semantic_compiler.api import SUMMARY_SCHEMA, compile_json, summary_v1
+        from semantic_compiler.core.packet import COMPILER_VERSION
+
+        text = "The GPU is the weapon; support gems consume VRAM."
+        summary = compile_json(text)
+        self.assertIsInstance(summary, dict)
+        self.assertEqual(summary["schema"], SUMMARY_SCHEMA)
+        self.assertEqual(summary["version"], COMPILER_VERSION)
+        self.assertIn(summary["decision"], Decision.__members__)
+        self.assertNotIn("raw_input", summary)
+        self.assertNotIn("normalized_input", summary)
+        self.assertNotIn("forward_text", summary)
+        self.assertNotIn(text, str(summary))
+
+        packet = compile_semantic_packet(text)
+        from_packet = summary_v1(packet)
+        self.assertEqual(from_packet["decision"], summary["decision"])
+        self.assertEqual(from_packet["version"], summary["version"])
+        self.assertEqual(from_packet["selected_target"], summary["selected_target"])
+
+    def test_api_is_not_a_top_level_export(self) -> None:
+        # Keep the README export tuple stable; hosts import semantic_compiler.api.
+        self.assertNotIn("compile_json", semantic_compiler.__all__)
+        self.assertNotIn("summary_v1", semantic_compiler.__all__)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -62,6 +62,8 @@ class Event:
     (an attempt to alter the grant), ``request`` (agent asks the principal
     for a capability), ``delegate`` (agent spawns a child agent),
     ``persist`` (agent creates a credential, job or background process).
+    A ``delegate`` event's capability, resource, effects and ``until`` describe
+    the child's grant; it may only narrow the parent grant (SCC-001-AC AC-1).
     """
 
     seq: int
@@ -72,6 +74,7 @@ class Event:
     resource: str = ""
     effects: tuple = ()
     trusted: bool = True
+    until: Optional[int] = None  # ``delegate`` only: when the delegated authority ends
 
 
 @dataclass(frozen=True)
