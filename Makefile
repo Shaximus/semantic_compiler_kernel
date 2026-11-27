@@ -4,7 +4,8 @@
 # Full run: fresh venv from the locks, SoftHSM2 test token, full suite
 # (-rs -v, SOV_TRADE_REQUIRE_FUNCTIONAL=1), unittest, validate_catalog,
 # fuzz (5000 examples), HSM evidence, OpenSSL cross-checks, mutation check,
-# static checks, dogfood regression diff. Output: verify-out/.
+# static checks, dogfood regression diff. Output: ../sov-trade-verify-out/
+# (beside the checkout; the repository root is the package).
 verify:
 	bash scripts/sov_trade/verify.sh
 
@@ -15,4 +16,4 @@ verify-quick:
 # Containerised run (Debian trixie: OpenSSL 3.5, SoftHSM2 2.6).
 verify-docker:
 	docker build -f scripts/sov_trade/Dockerfile -t sov-trade-verify .
-	docker run --rm -v "$(CURDIR)/verify-out:/src/semantic_compiler/verify-out" sov-trade-verify
+	docker run --rm -v "$(CURDIR)/../sov-trade-verify-out:/src/sov-trade-verify-out" sov-trade-verify

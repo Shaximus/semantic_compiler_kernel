@@ -203,7 +203,7 @@ def run_one(py: str, mid: str, prop: str, rel: str | None, old: str, new: str,
             control_failures: frozenset[str] = frozenset()) -> dict:
     tmp = Path(tempfile.mkdtemp(prefix=f"sov-mut-{mid}-"))
     root = tmp / "semantic_compiler"
-    shutil.copytree(REPO, root, ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc", ".hypothesis"))
+    shutil.copytree(REPO, root, ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc", ".hypothesis", "verify-out"))
     if rel is not None:
         target = root / rel
         text = target.read_text(encoding="utf-8")

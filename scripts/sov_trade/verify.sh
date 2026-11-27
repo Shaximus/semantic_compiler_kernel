@@ -13,14 +13,20 @@
 #
 # Needs: python3 (>=3.10, venv), git, openssl (3.5+ for the ML-DSA
 # cross-check), softhsm2, opensc (pkcs11-tool).
-# Env: OUT (default ./verify-out), PYTHON (default python3),
+# Env: OUT (default ../sov-trade-verify-out, beside the checkout), PYTHON (default python3),
 #      SOV_TRADE_FUZZ_EXAMPLES (default 5000), SKIP_MUTATION=1,
 #      SOV_TRADE_CORPUS_HARNESS=/path/to/decision_diff.py (optional; the
 #      963-prompt corpus harness is not part of the repo).
 set -uo pipefail
 
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
-OUT="${OUT:-$REPO/verify-out}"
+# Output lives NEXT TO the checkout, never inside it: the repository root is
+# the `semantic_compiler` package, so an output dir inside it would be seen
+# by packaging tests and would loop through the PYTHONPATH symlink.
+OUT="${OUT:-$(cd "$REPO/.." && pwd)/sov-trade-verify-out}"
+case "$(cd "$(dirname "$OUT")" 2>/dev/null && pwd)/" in
+  "$REPO"/*) echo "OUT must be outside the repository ($REPO)"; exit 2 ;;
+esac
 PY="${PYTHON:-python3}"
 export SOV_TRADE_FUZZ_EXAMPLES="${SOV_TRADE_FUZZ_EXAMPLES:-5000}"
 rm -rf "$OUT"; mkdir -p "$OUT/logs"
