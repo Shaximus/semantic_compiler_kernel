@@ -2,6 +2,9 @@
 # (docs/evidence/source-2026-11-27a/sc_tol_001_v2.1-rc5_attachment.py, sha256 55dea4ae...4cfa)
 # plus seven fixes recorded in docs/SC-TOL-001_TREE_OF_LIFE_STRUCTURAL_COMPILER.md section 6.
 # Each change is tagged "KERNEL-FIX-n". The unmodified rc5 is tests/reference/sc_tol_001/rc5.py.
+# rc6 (Shax t610u) adds two decided behaviours, tagged "RC6-D1" (scoped child-failure taint)
+# and "RC6-D2" (living vs. self-maintaining vs. autopoietic). Principle: structural validity,
+# biological status and governance authority are three separate dimensions, never one verdict.
 # Reference code for offline tests only: not kernel enforcement, not imported by core/ or expansion/.
 """
 SC-TOL-001 v2.1-rc5: Hardened Topology-Aware, Epistemically Constrained Structural Compiler
@@ -34,7 +37,7 @@ from typing import Any, Optional
 # 1. Core Constants & Four-Dimensional State Model: S = (Sigma, T, G(v, e, tau), E)
 # =============================================================================
 
-SCHEMA_VERSION: str = "SC-TOL-001/2.1-rc5+kernel.1"  # KERNEL-FIX: marks the fixed copy
+SCHEMA_VERSION: str = "SC-TOL-001/2.1-rc6+kernel.2"  # rc6 (Shax t610u) on top of rc5 + KERNEL-FIX-1..7
 CORE_IMMUTABLE_GATES: frozenset[str] = frozenset({"T0", "T4", "T8"})
 
 
@@ -69,6 +72,8 @@ class GateVerdict(Enum):
     INERT_TAXONOMY = "INERT_TAXONOMY"
     AUTOPOIESIS_EMPIRICAL = "AUTOPOIESIS_EMPIRICAL"
     AUTOPOIESIS_REPRESENTED = "AUTOPOIESIS_REPRESENTED"
+    LIVING_OBSERVED = "LIVING_OBSERVED"  # RC6-D2
+    SELF_MAINTENANCE_UNVERIFIED = "SELF_MAINTENANCE_UNVERIFIED"  # RC6-D2
     VERIFIED_SUBSTRATE = "VERIFIED_SUBSTRATE"
     UNVERIFIED_SUBSTRATE = "UNVERIFIED_SUBSTRATE"
     INERT_OR_NONVIABLE = "INERT_OR_NONVIABLE"
@@ -87,6 +92,22 @@ UNCERTAINTY_VERDICTS: frozenset[GateVerdict] = frozenset({
     GateVerdict.UNVERIFIED_SUBSTRATE,
     GateVerdict.OPAQUE,
     GateVerdict.QUALIFIED,
+    GateVerdict.LIVING_OBSERVED,  # RC6-D2: a qualified observation, not proof of autopoiesis
+    GateVerdict.SELF_MAINTENANCE_UNVERIFIED,  # RC6-D2
+})
+
+# RC6-D2: only these T2 verdicts satisfy T2. LIVING_OBSERVED and SELF_MAINTENANCE_UNVERIFIED
+# never do (Shax t610u: "LIVING_OBSERVED must not automatically satisfy T2").
+T2_SATISFYING_VERDICTS: frozenset[GateVerdict] = frozenset({
+    GateVerdict.AUTOPOIESIS_EMPIRICAL,
+    GateVerdict.AUTOPOIESIS_REPRESENTED,
+})
+
+# Principle (Shax t610u): three separate dimensions, never collapsed into one verdict.
+DIMENSION_GATES: Mapping[str, frozenset[str]] = MappingProxyType({
+    "structural": frozenset({"T1", "T5", "T6", "E6"}),
+    "biological": frozenset({"T2", "T7"}),
+    "governance": frozenset({"T4", "T8"}),
 })
 
 
@@ -195,6 +216,10 @@ class SubstrateSpec:
     medium: str
     has_empirical_autopoiesis: bool = False
     has_represented_autopoiesis: bool = False
+    # RC6-D2: empirical evidence that the system is alive (EMPIRICAL_SCI tier only).
+    # With has_represented_autopoiesis also set (self-maintenance asserted but not
+    # demonstrated) T2 returns SELF_MAINTENANCE_UNVERIFIED; alone, LIVING_OBSERVED.
+    empirical_life_observed: bool = False
     # "verified" | "unverified" | "impossible"
     memory_mechanism_status: str = "unverified"
 
@@ -317,6 +342,33 @@ class CompilationResult:
 
     def verdicts_for(self, gate: str) -> list[GateVerdict]:
         return [r.verdict for r in self.records if r.gate == gate]
+
+    @property
+    def overall_verdict(self) -> GateVerdict:
+        """RC6-D1: BLOCKED (any hard block or no effective tier), QUALIFIED (any soft block
+        or uncertainty), else PASS. Used to scope a child's taint onto its parent."""
+        if self.is_blocking or self.effective_tier is None:
+            return GateVerdict.BLOCKED
+        if self.soft_blocks or self.uncertainties:
+            return GateVerdict.QUALIFIED
+        return GateVerdict.PASS
+
+    @property
+    def t2_satisfied(self) -> bool:
+        """RC6-D2: True only for AUTOPOIESIS_EMPIRICAL / AUTOPOIESIS_REPRESENTED."""
+        t2 = self.verdicts_for("T2")
+        return bool(t2) and all(v not in HARD_BLOCK_VERDICTS for v in t2) and any(
+            v in T2_SATISFYING_VERDICTS for v in t2)
+
+    @property
+    def taint_provenance(self) -> tuple["GateRecord", ...]:
+        """RC6-D1: the parent's child-failure taint records (frozen; append-only)."""
+        return tuple(r for r in self.records if r.preserved_observation.get("code") == "child_failure_taint")
+
+    def dimension_verdicts(self) -> dict[str, tuple[GateVerdict, ...]]:
+        """Principle (t610u): structural, biological and governance verdicts reported apart."""
+        return {name: tuple(r.verdict for r in self.records if r.gate in gates)
+                for name, gates in DIMENSION_GATES.items()}
 
     def codes_for(self, gate: str) -> list[str]:
         return [
@@ -1329,6 +1381,31 @@ class StructuralCompiler:
             builder.add(GateRecord("T2", GateVerdict.AUTOPOIESIS_EMPIRICAL, "Empirical self-maintenance verified."))
             return
 
+        # RC6-D2 (Shax t610u): living, self-maintaining and autopoietic are distinct propositions.
+        # An empirically living system is never labelled inert because T2 evidence is incomplete,
+        # and neither of these verdicts satisfies T2.
+        if state.epistemic_tier == EpistemicTier.EMPIRICAL_SCI and sub.empirical_life_observed:
+            if sub.has_represented_autopoiesis:
+                builder.add(GateRecord(
+                    "T2", GateVerdict.SELF_MAINTENANCE_UNVERIFIED,
+                    "Empirically living; self-maintenance asserted but not demonstrated (does not satisfy T2).",
+                    {"code": "self_maintenance_unverified", "medium": sub.medium},
+                ))
+            else:
+                builder.add(GateRecord(
+                    "T2", GateVerdict.LIVING_OBSERVED,
+                    "Empirically observed living system; self-maintenance not assessed (does not satisfy T2).",
+                    {"code": "living_observed", "medium": sub.medium},
+                ))
+            return
+        if state.epistemic_tier != EpistemicTier.EMPIRICAL_SCI and sub.empirical_life_observed:
+            builder.add(GateRecord(
+                gate="T2",
+                verdict=GateVerdict.BLOCKED,
+                message=f"{state.epistemic_tier.name} entry cannot claim empirically observed life.",
+                preserved_observation={"code": "non_empirical_life_claim_blocked", "medium": sub.medium},
+            ))
+
         if state.epistemic_tier == EpistemicTier.CORPUS_MYTH:
             if sub.has_empirical_autopoiesis:
                 builder.add(GateRecord(
@@ -1924,6 +2001,7 @@ class StructuralCompiler:
 
         gen = state.meta_spec.generator
         blocked = False
+        qualified = False  # RC6-D1
 
         if gen.tamper_events:
             blocked = True
@@ -1973,6 +2051,40 @@ class StructuralCompiler:
                 if rec.preserved_observation.get("code") == "illegal_child_exemption":
                     blocked = True
                     builder.add(GateRecord("E6", GateVerdict.BLOCKED, rec.message, rec.preserved_observation))
+            # RC6-D1 (Shax t610u): ChildFailure => ParentCompilationTainted, never
+            # ParentIdentityDestroyed. The taint is a record in THIS compilation only: the
+            # generator object is frozen and untouched, siblings are compiled independently,
+            # and the child's own failure records are copied upward verbatim (deep-frozen).
+            # The taint grants no authority: nothing is added to grants or escalations.
+            child_verdict = child_res.overall_verdict
+            if child_verdict != GateVerdict.PASS:
+                source = child_res.hard_blocks if child_verdict == GateVerdict.BLOCKED else (
+                    child_res.soft_blocks + child_res.uncertainties)
+                if child_verdict == GateVerdict.BLOCKED:
+                    blocked = True
+                else:
+                    qualified = True
+                builder.add(GateRecord(
+                    gate="E6",
+                    verdict=child_verdict,
+                    message=(f"Child '{child_state.system_id}' of MetaGenerator '{gen.generator_id}' is "
+                             f"{child_verdict.value}; this compilation is tainted (scoped, no authority granted)."),
+                    preserved_observation={
+                        "code": "child_failure_taint",
+                        "generator_id": gen.generator_id,
+                        "child_id": child_state.system_id,
+                        "child_verdict": child_verdict.value,
+                        "scope": "CURRENT_COMPILATION",
+                        "generator_identity_affected": False,
+                        "siblings_affected": False,
+                        "authority_granted": False,
+                        "child_failure_records": [
+                            {"gate": r.gate, "verdict": r.verdict.value, "message": r.message,
+                             "preserved_observation": _to_json_safe(r.preserved_observation)}
+                            for r in source
+                        ],
+                    },
+                ))
 
         for sub_id, requested_gates in state.meta_spec.subgenerator_emissions:
             sub_gen, sub_rec = gen.emit_subgenerator(sub_id, requested_gates)
@@ -1981,5 +2093,5 @@ class StructuralCompiler:
                 blocked = True
                 builder.add(GateRecord("E6", GateVerdict.BLOCKED, sub_rec.message, sub_rec.preserved_observation))
 
-        if not blocked:
+        if not blocked and not qualified:
             builder.add(GateRecord("E6", GateVerdict.PASS, f"MetaGenerator '{gen.generator_id}' boundary verified."))
