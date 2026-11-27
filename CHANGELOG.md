@@ -5,6 +5,18 @@ All notable changes to `semantic_compiler_kernel`. Releases before this file was
 ## [Unreleased]
 
 ### Changed
+- SC-TOL-001 **rc7** follows Shax's t611u direction. The source is `docs/evidence/source-2026-11-27c/t611u_message_body.txt` (sha256 `a3d3f45a…d8c0`; scanned for personal data, none found, no redaction). The changes are in `tests/reference/sc_tol_001/compiler.py`, tagged `RC7`, with schema string `SC-TOL-001/2.1-rc7+kernel.3`.
+  - **Three separate outputs:**
+    - a structural result (`PASS` / `QUALIFIED` / `FAIL`: what the structure is);
+    - an epistemic result (tier / `ESTABLISHED`, `NOT_EMPIRICAL`, `UNVERIFIED` or `INADMISSIBLE`: what evidence supports claims about it);
+    - a combined certification, which is rc6's `overall_verdict`, unchanged. The rc6 propagation rule is not weakened.
+  - New `CompilationResult.structural_result`, `epistemic_result`, `combined_certification`, `empirically_certified` and `certification()`; `to_dict()` gains a `certification` key. The E6 taint record also carries the child's two axes.
+  - Unverified substrate, speculative architecture and invalid architecture are now three different outputs. A speculative generator can be structural PASS, `SPECULATIVE / UNVERIFIED`, combined QUALIFIED, and never empirically certified. The epistemic tier never enters the structural result.
+  - Both axes only go down: no child, appended record or exemption request can raise them, and every lowering names its cause. They carry no authority.
+  - **Tests:** new `tests/test_sc_tol_001_rc7.py` (33 tests), one class per t611u investigation item, plus combined-certification and no-authority checks. rc5's 42 tests and rc6's 24 tests pass unchanged. The 963-prompt corpus has 0 diffs against main `6835aaf` (merge gate).
+  - **Grade:** every gate unchanged; SILVER 0.822, lowest gate 0.75, `gold_awarded` false. Per t611u, nothing was tuned toward GOLD.
+  - **PENDING_DELIBERATION:** new SC-TOL-001 rc7 entry with three provisional defaults: coverage limits count as structural QUALIFIED; `NOT_EMPIRICAL` ranks above `UNVERIFIED`; a child's structural FAIL makes the parent's structural result FAIL for the current compilation only.
+  - `.github/workflows` and the hash-pinned `docs/SCC-001-AC_ANTI_CAPTURE.md` are untouched.
 - SC-TOL-001 **rc6** implements Shax's t610u decisions on the two items left open in 4.1.0. The source is `docs/evidence/source-2026-11-27b/t610u_message_body.txt` (sha256 `7281f8a6…76a2`; scanned for personal data, none found, no redaction).
   - The changes are in the kernel copy `tests/reference/sc_tol_001/compiler.py`, tagged `RC6-D1` / `RC6-D2`, with schema string `SC-TOL-001/2.1-rc6+kernel.2`.
   - `rc5.py` stays verbatim, and rc5's 42 acceptance tests still pass unchanged on rc6.

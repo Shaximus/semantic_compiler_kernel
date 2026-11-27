@@ -528,3 +528,22 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Hook:** `review_trigger_terms` are `sc-tol-001`, `tree of life compiler`, `recursive capture prevention`, `horizon opacity`, `meta-generator`, `kernel-fix`, `sefirot provenance`, `child failure taint`, `living observed`. The entry is explicit-only, so it never lifts a route.
 - **Does not change:** SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), `SC-AEP-001`, `SC-MYTH-001`, Catherine (unresolved).
 - **Still open, when reviewed:** per-text provenance for the 10-node / 22-path Sefirot layout; fixtures for the Egyptian, Assyrian, Maya and Bodhi trees. (The represented-only EMPIRICAL case was closed by t610u, see above.)
+
+## SC-TOL-001 rc7 (structural result vs. epistemic result vs. combined certification, Shax t611u)
+
+- **ID:** `SC-TOL-001` (rc7, schema `SC-TOL-001/2.1-rc7+kernel.3`)
+- **Status:** `PROVISIONAL_DEFAULT` (three edge cases below; the direction itself is Shax's)
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t611u (source `docs/evidence/source-2026-11-27c/`): keep the rc6 propagation rule; report a structural result, an epistemic result and a combined certification separately; unverified substrate, speculative architecture and invalid architecture are not equivalent. Shax t582u for the edge cases t611u does not decide.
+- **Implemented:** `StructuralResult` (PASS / QUALIFIED / FAIL), `EpistemicResult` (tier / ESTABLISHED, NOT_EMPIRICAL, UNVERIFIED, INADMISSIBLE) and `combined_certification` (= rc6 `overall_verdict`, unchanged). Spec doc section 5b.
+- **Edge cases t611u does not decide, with the defaults chosen:**
+  1. **Coverage limits count as structural QUALIFIED.** Horizon opacity (T6 `OPAQUE`), fault sets touching masked nodes, and two-node-cut analysis that is skipped (size cap) or not applicable (3 or fewer visible nodes) make the structural result QUALIFIED, not PASS and not FAIL. They are limits on how much of the structure was checked, so they stay on the structural axis rather than being moved to the epistemic one. Consequence: the meta-generative fixture's own 3-node graph keeps it structurally QUALIFIED, while both of its speculative children are structural PASS.
+     - *Alternatives:* (a) treat coverage limits as epistemic (what we could see), giving structural PASS; (b) treat "not applicable on a 3-node graph" as no finding at all.
+  2. **NOT_EMPIRICAL ranks above UNVERIFIED.** A corpus (tradition-layer) result is not an unestablished empirical claim, so when epistemic results are combined (a parent and its children), a CORPUS child lowers an EMPIRICAL parent only to NOT_EMPIRICAL, and a SPECULATIVE child lowers it to UNVERIFIED.
+     - *Alternative:* treat NOT_EMPIRICAL and UNVERIFIED as incomparable and report both.
+  3. **A child's structural FAIL makes the parent's structural result FAIL, for the current compilation only.** This matches rc6 D1 (the parent's current compilation is BLOCKED) and adds nothing to the generator's identity, the siblings or authority.
+     - *Alternative:* the parent's own structural result stays its own, and a child's FAIL shows only in E6 and the combined certification.
+- **Not provisional (follows from t611u):** the combined certification is the rc6 verdict, unchanged; tier never enters the structural result; the axes only go down (no child, appended record or exemption can raise them); the axes carry no authority.
+- **Hook:** `review_trigger_terms` add `epistemic result`, `structural result`, `speculative architecture`. The entry stays explicit-only.
+- **Does not change:** the rc6 decisions (t610u), the chain-verification default (still provisional, see the SC-TOL-001 entry above), SCC-001-AC (still `PROPOSED_GOLD`, `gold_awarded` false), Catherine (unresolved). GOLD stays withheld.
