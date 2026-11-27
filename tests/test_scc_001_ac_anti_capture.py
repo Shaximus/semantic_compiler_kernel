@@ -20,7 +20,9 @@ Each class also carries the checks for the matching refined invariant (AC-1..AC-
   tests/reference/scc_001, gates/authority.py). Where they do not satisfy the
   oracle, the test is a strict expectedFailure with the reason in LIVE_GAPS:
   these are the "capture paths found" that rc1 section 6 step 3 asks to record.
-  The live code is NOT changed here (harness before enforcement).
+  A capture path that has since been closed in live code (Shax t601u: one path,
+  one bounded change) moves from LIVE_GAPS to RESOLVED_GAPS and its test runs
+  as an ordinary passing test.
 
 ML anomaly scoring and auto-quarantine are disabled and the tests check it.
 """
@@ -74,16 +76,6 @@ KEYS = {"k1": b"reference-key-one", "k2": b"reference-key-two"}
 DEF = (("pol", "POLICY_ENGINE"), ("sup", "SUPERVISOR"), ("ml", "ML_ADVISORY"))
 
 LIVE_GAPS = {
-    "test_live_scc001_rules_flag_out_of_scope_delegation": (
-        "TEST-AC-01",
-        "tests/reference/scc_001/rules.py checks only grant.delegation_allowed for a 'delegate' event; "
-        "it does not check that the child's capability/resource is inside the parent grant, so an "
-        "out-of-scope delegation is classified CONSENSUAL / AUTHORIZED (AC-1 capability inheritance)."),
-    "test_live_authority_gate_requires_verified_principal_for_founder_override": (
-        "TEST-AC-06",
-        "gates/authority.check_authority_transfer accepts FOUNDER_OVERRIDE when the caller passes "
-        "has_explicit_delegation=True; the flag is caller-asserted and no credential is verified. "
-        "It is a semantic text gate, not a runtime authority gateway, and is not changed here."),
     "test_live_mafuba_001a_projection_exists_and_is_hash_pinned": (
         "TEST-AC-ORACLE-A",
         "tests/reference/sc_mafuba_001 has no 001A projection P (only allowlist, cbf, supervisor), so "
@@ -100,14 +92,47 @@ LIVE_GAPS = {
         "TEST-AC-ORACLE-D",
         "docs/evidence/sc-mafuba-001/manifests/resource.yaml declares R_execution, R_enforcement and "
         "R_reserve only; there is no R_override partition (missing R_override, rc1 section 6 step 3)."),
+    "test_live_mafuba_budget_has_audit_and_quarantine_partitions": (
+        "TEST-AC-ORACLE-D",
+        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget now has an isolated r_override partition "
+        "(capture path 3, closed), but still no separate R_audit or R_quarantine partitions from rc1 AC-3's "
+        "five-term sum; that part was outside the t601u scope and stays open."),
+}
+
+# Capture paths closed in live code after PR #92 (Shax t601u). test -> (acceptance id, before, after).
+RESOLVED_GAPS = {
+    "test_live_authority_gate_requires_verified_principal_for_founder_override": (
+        "TEST-AC-06",
+        "gates/authority.check_authority_transfer accepted FOUNDER_OVERRIDE when the caller passed "
+        "has_explicit_delegation=True; the flag was caller-asserted and no credential was verified.",
+        "FOUNDER_OVERRIDE now needs a principal credential bound to the exact transfer digest and accepted "
+        "by an independent verifier (principal key allowlist); has_explicit_delegation is ignored for it. "
+        "Every other (source, claimed) result is byte-identical to before (pinned grid hash)."),
+    "test_live_scc001_rules_flag_out_of_scope_delegation": (
+        "TEST-AC-01",
+        "tests/reference/scc_001/rules.py checked only grant.delegation_allowed for a 'delegate' event, so a "
+        "delegation outside the parent grant was classified CONSENSUAL / AUTHORIZED (inherited consent).",
+        "A permitted delegation must stay inside the parent grant: capability and resource in scope "
+        "(DELEGATION_EXCEEDS_SCOPE), a stated end no later than the grant's expiry (DELEGATION_EXCEEDS_DURATION), "
+        "and only disclosed effects, never a refused pair (DELEGATION_EXCEEDS_CONDITIONS). Each is a hard code, "
+        "so the trace is COERCIVE and not executable. The 50-trace synthetic dataset classifies identically."),
     "test_live_mafuba_budget_has_isolated_override_partition": (
         "TEST-AC-ORACLE-D",
-        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget has three terms (execution, "
-        "enforcement, reserve); there is no R_audit, R_quarantine or isolated R_override partition."),
+        "tests/reference/sc_mafuba_001/supervisor.ResourceBudget had three terms (execution, enforcement, "
+        "reserve) and no override partition, so nothing kept override capacity apart from ordinary consumption.",
+        "ResourceBudget(..., r_override=x) holds an override partition outside ordinary free budget: admission "
+        "is capped below r_budget - r_reserve - r_override, enforcement, direct counter writes and the D2 "
+        "shutdown cannot touch it, and only draw_override(path='override') spends it. r_override defaults to "
+        "0.0, which keeps every existing MAFUBA result unchanged; negative or non-finite values are refused."),
     "test_live_mafuba_supervisor_has_principal_recovery_path": (
         "TEST-AC-ORACLE-D",
-        "EmergencySupervisor.try_resume() returns QUARANTINE_LOCKED unconditionally and there is no "
-        "principal-signed release or reset, so a MAFUBA quarantine is unbounded over the principal."),
+        "EmergencySupervisor.try_resume() returned QUARANTINE_LOCKED unconditionally and there was no "
+        "principal-signed release or reset, so a MAFUBA quarantine was unbounded over the principal.",
+        "EmergencySupervisor.principal_release(worker, credential, now) ends the quarantine when an independent "
+        "principal verifier accepts a credential bound to this worker and this quarantine epoch; it is paid from "
+        "the override partition and takes effect within delta_t_max (release_path_ticks <= delta_t_max is "
+        "enforced at construction), even after the shutdown reserve ran out. Everything else fails closed and "
+        "there is still no automatic resumption."),
 }
 
 
@@ -182,12 +207,38 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                 spec_action, plane, override = sc.spec_edge(a.value)
                 if spec_action is None:
                     continue
-                self.assertTrue(sc.is_authority_edge_permitted(
-                    sc.AuthorityEdgeCheck(sc.AuthorityRole(role), spec_action, plane, override)), (role, a))
-        # Every authority-plane action maps to a section-5 PRINCIPAL edge.
+                self.assertTrue(sc.is_authority_edge_permitted_rc2(sc.AuthorityRole(role), spec_action, plane,
+                                                                   override), (role, a))
+        # Every authority-plane action maps to a section-5 (rc2) PRINCIPAL edge.
         for a in AUTHORITY_PLANE_ACTIONS:
             spec_action, _, _ = sc.spec_edge(a.value)
-            self.assertIn(spec_action, sc.ALLOWED_ROLE_ACTIONS[sc.AuthorityRole.PRINCIPAL], a)
+            self.assertIn(spec_action, sc.ALLOWED_ROLE_ACTIONS_RC2[sc.AuthorityRole.PRINCIPAL], a)
+
+    def test_principal_key_rotate_is_a_distinct_principal_only_action(self):
+        # Shax t601u resolved SCC-001-AC-KP-ROTATE: rotating K_P is its own action, not POLICY_WRITE.
+        A = sc.AuthorityActionRC2
+        self.assertEqual(sc.spec_edge(Action.ROTATE_PRINCIPAL_KEY.value), (A.PRINCIPAL_KEY_ROTATE, True, False))
+        self.assertNotIn("PRINCIPAL_KEY_ROTATE", {a.value for a in sc.AuthorityAction})   # rc1 text unchanged
+        rc1 = {r: {a.value for a in acts} for r, acts in sc.ALLOWED_ROLE_ACTIONS.items()}
+        rc2 = {r: {a.value for a in acts} for r, acts in sc.ALLOWED_ROLE_ACTIONS_RC2.items()}
+        self.assertEqual(rc2[sc.AuthorityRole.PRINCIPAL] - rc1[sc.AuthorityRole.PRINCIPAL], {"PRINCIPAL_KEY_ROTATE"})
+        self.assertEqual({r: v for r, v in rc2.items() if r is not sc.AuthorityRole.PRINCIPAL},
+                         {r: v for r, v in rc1.items() if r is not sc.AuthorityRole.PRINCIPAL})
+        for role in sc.AuthorityRole:
+            for plane in (True, False):
+                got = sc.is_authority_edge_permitted_rc2(role, A.PRINCIPAL_KEY_ROTATE, plane, False)
+                self.assertEqual(got, role is sc.AuthorityRole.PRINCIPAL, (role, plane))
+        # No other reference action maps to the rotate edge, and rotation no longer maps to POLICY_WRITE.
+        users = {a for a in Action if sc.spec_edge(a.value)[0] is A.PRINCIPAL_KEY_ROTATE}
+        self.assertEqual(users, {Action.ROTATE_PRINCIPAL_KEY})
+        # Every V_Def role, under its own or a forged PRINCIPAL label, is denied the rotation.
+        for me, role in DEF:
+            for label in (role, "PRINCIPAL"):
+                g, _ = world()
+                before = g.plane.digest()
+                self.assertEqual(verdict(g.apply(Request(me, label, Action.ROTATE_PRINCIPAL_KEY,
+                                                         payload=("k1",)), 1)), "DENY_VIOLATION")
+                self.assertEqual(g.plane.digest(), before)
 
     def test_nobody_but_the_principal_can_delegate(self):
         g, _ = world()
@@ -229,7 +280,6 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                 self.assertLessEqual(g.effective_caps(m), caps0[m], seed)
             self.assertEqual(g.plane.protected(), world()[0].plane.protected(), seed)
 
-    @unittest.expectedFailure
     def test_live_scc001_rules_flag_out_of_scope_delegation(self):
         from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
         from tests.reference.scc_001.model import ConsentClass
@@ -237,6 +287,60 @@ class TestAC01SelfEscalationRejection(unittest.TestCase):
                    delegation_allowed=True)
         ev = (Event(0, 1, "op", "agent", "read", "r1"), Event(1, 2, "delegate", "agent", "admin_write", "authority_plane"))
         self.assertIsNot(classify(Trace("ac1-live", GrantStatus.VERIFIED, gr, ev)).consent_class, ConsentClass.CONSENSUAL)
+
+    # ---- live SCC-001 rules: no inherited consent (capture path closed, Shax t601u) ----
+    @staticmethod
+    def _delegation(**kw):
+        from tests.reference.scc_001 import Event, Grant, GrantStatus, Trace, classify
+        gr = Grant("g1", "p1", "a1", frozenset({"read", "write"}), frozenset({"r1", "r2"}),
+                   frozenset({"read_fx"}), 0, 100, delegation_allowed=True)
+        base = dict(seq=1, t=2, kind="delegate", actor="agent", capability="read", resource="r1",
+                    effects=("read_fx",), until=50)
+        pre = kw.pop("pre", ())
+        base.update(kw)
+        ev = (Event(0, 1, "op", "agent", "read", "r1", ("read_fx",)),) + tuple(pre) + (Event(**base),)
+        return classify(Trace("ac1-deleg", GrantStatus.VERIFIED, gr, ev))
+
+    def test_live_scc001_delegation_over_scope_duration_or_conditions_is_coercive(self):
+        from tests.reference.scc_001 import Event, may_execute
+        from tests.reference.scc_001.model import ConsentClass
+        cases = {
+            "capability outside grant": (dict(capability="admin_write"), "DELEGATION_EXCEEDS_SCOPE"),
+            "resource outside grant": (dict(resource="authority_plane"), "DELEGATION_EXCEEDS_SCOPE"),
+            "no stated end (would outlive the grant)": (dict(until=None), "DELEGATION_EXCEEDS_DURATION"),
+            "ends after the grant expires": (dict(until=101), "DELEGATION_EXCEEDS_DURATION"),
+            "undisclosed effect": (dict(effects=("read_fx", "exfiltrate")), "DELEGATION_EXCEEDS_CONDITIONS"),
+            "passes on a refused pair": (dict(seq=2, t=3, pre=(Event(1, 2, "deny", "principal", "read", "r1"),)),
+                                         "DELEGATION_EXCEEDS_CONDITIONS"),
+        }
+        for label, (kw, code) in cases.items():
+            d = self._delegation(**kw)
+            self.assertIs(d.consent_class, ConsentClass.COERCIVE, label)
+            self.assertIn(code, d.reason_codes, label)
+            self.assertFalse(may_execute(d), label)
+
+    def test_live_scc001_narrow_delegation_inside_the_grant_stays_consensual(self):
+        from tests.reference.scc_001 import may_execute
+        from tests.reference.scc_001.model import ConsentClass
+        for kw in (dict(), dict(until=100), dict(capability="write", resource="r2", effects=())):
+            d = self._delegation(**kw)
+            self.assertIs(d.consent_class, ConsentClass.CONSENSUAL, (kw, d.reason_codes))
+            self.assertTrue(may_execute(d), kw)
+
+    def test_live_scc001_dataset_classification_unchanged(self):
+        # Regression: every synthetic trace classifies exactly as before the fix (hash from main 3635827),
+        # and the pinned dataset file still round-trips byte for byte.
+        from tests.reference.scc_001 import classify
+        from tests.reference.scc_001.dataset import DATA, generate, load, to_json
+        rows = []
+        for _, tr in load():
+            d = classify(tr)
+            rows.append([tr.trace_id, d.consent_class.value, d.state.value, list(d.reason_codes), d.rule_verdict])
+        self.assertEqual(len(rows), 50)
+        self.assertEqual(hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest(),
+                         "cd4135f2e9b5e3497f06562a0402d6f14b165de04d8ed87528d1d74d9750d307")
+        lines = [ln for ln in DATA.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(lines, [to_json(*row) for row in generate()])
 
 
 # --------------------------------------------------------------------------- TEST-AC-02
@@ -544,12 +648,129 @@ class TestAC06PrincipalIdentityIntegrity(unittest.TestCase):
         self.assertEqual(g.apply(signed(v, preq(a, payload=p), 5, "ok"), 5), "ALLOW")
         self.assertEqual(g.plane.caps("agent"), frozenset(p[1]))
 
-    @unittest.expectedFailure
-    def test_live_authority_gate_requires_verified_principal_for_founder_override(self):
+    # ---- live gates/authority.py (capture path closed, Shax t601u) ----
+    @staticmethod
+    def _founder(basis="forwarded request", source="NONE", task=True):
+        from semantic_compiler.gates.authority import authority_transfer_digest
+        return authority_transfer_digest(source, "FOUNDER_OVERRIDE", basis, task)
+
+    def _transfer(self, **kw):
         from semantic_compiler.gates.authority import check_authority_transfer
-        r = check_authority_transfer("NONE", "FOUNDER_OVERRIDE", basis="forwarded request",
-                                     has_explicit_delegation=True, has_task_scope=True)
+        args = dict(basis="forwarded request", has_explicit_delegation=True, has_task_scope=True)
+        args.update(kw)
+        return check_authority_transfer("NONE", "FOUNDER_OVERRIDE", **args)
+
+    def test_live_authority_gate_requires_verified_principal_for_founder_override(self):
+        r = self._transfer()   # the forged delegation: caller-set flag, no credential
         self.assertFalse(r["gate_passed"])
+        self.assertTrue(r["requires_escalation"])
+        self.assertEqual(r["principal_verification"], "NO_VERIFIER")
+
+    def test_live_authority_gate_rejects_every_forged_or_misbound_delegation(self):
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        other = PrincipalVerifier("someone-else", {"k1": b"attacker-key"})
+        d = self._founder()
+
+        class Liar:            # a verifier-shaped object without the verification method
+            def verify(self, *a):
+                return "VERIFIED"
+
+        class Broken:
+            def verify_digest(self, *a):
+                raise RuntimeError("hsm offline")
+
+        cases = {
+            "flag only, verifier present": (dict(principal_verifier=v, now=5), "NO_CREDENTIAL"),
+            "credential, no verifier": (dict(principal_credential=v.issue_for_digest("k1", d, 0, 10, "n0"), now=5),
+                                        "NO_VERIFIER"),
+            "fake verifier object": (dict(principal_verifier=Liar(),
+                                          principal_credential=v.issue_for_digest("k1", d, 0, 10, "n1"), now=5),
+                                     "NO_VERIFIER"),
+            "verifier raises": (dict(principal_verifier=Broken(),
+                                     principal_credential=v.issue_for_digest("k1", d, 0, 10, "n2"), now=5),
+                                "VERIFIER_ERROR"),
+            "no time": (dict(principal_verifier=v, principal_credential=v.issue_for_digest("k1", d, 0, 10, "n3")),
+                        "NO_TIME"),
+            "self-signed by another identity": (dict(principal_verifier=v, now=5,
+                                                     principal_credential=other.issue_for_digest("k1", d, 0, 10, "n4")),
+                                                "WRONG_PRINCIPAL"),
+            "claims principal id with wrong key": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=other.issue_for_digest("k1", d, 0, 10, "n5", principal_id=PRINCIPAL)),
+                "BAD_MAC"),
+            "unknown key id": (dict(principal_verifier=v, now=5, principal_credential=replace(
+                v.issue_for_digest("k1", d, 0, 10, "n6"), key_id="k9")), "UNKNOWN_KEY"),
+            "credential for a different transfer": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=v.issue_for_digest("k1", self._founder(basis="other"), 0, 10, "n7")),
+                "DIGEST_MISMATCH"),
+            "credential without task scope reused with scope": (
+                dict(principal_verifier=v, now=5,
+                     principal_credential=v.issue_for_digest("k1", self._founder(task=False), 0, 10, "n8")),
+                "DIGEST_MISMATCH"),
+            "expired": (dict(principal_verifier=v, now=50,
+                             principal_credential=v.issue_for_digest("k1", d, 0, 10, "n9")), "EXPIRED"),
+        }
+        for label, (kw, why) in cases.items():
+            r = self._transfer(**kw)
+            self.assertFalse(r["gate_passed"], label)
+            self.assertTrue(r["requires_escalation"], label)
+            self.assertEqual(r["principal_verification"], why, label)
+        # revoked key, verifier down, replay
+        rv = PrincipalVerifier(PRINCIPAL, KEYS)
+        rv.revoke_key("k2")
+        self.assertEqual(self._transfer(principal_verifier=rv, now=5, principal_credential=rv.issue_for_digest(
+            "k2", d, 0, 10, "r1"))["principal_verification"], "REVOKED_KEY")
+        dv = PrincipalVerifier(PRINCIPAL, KEYS)
+        dv.available = False
+        self.assertEqual(self._transfer(principal_verifier=dv, now=5, principal_credential=dv.issue_for_digest(
+            "k1", d, 0, 10, "u1"))["principal_verification"], "UNAVAILABLE")
+        good = v.issue_for_digest("k1", d, 0, 10, "once")
+        self.assertTrue(self._transfer(principal_verifier=v, principal_credential=good, now=5)["gate_passed"])
+        replay = self._transfer(principal_verifier=v, principal_credential=good, now=6)
+        self.assertEqual((replay["gate_passed"], replay["principal_verification"]), (False, "REPLAY"))
+
+    def test_live_authority_gate_accepts_a_verified_principal_without_the_caller_flag(self):
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        cred = v.issue_for_digest("k1", self._founder(), 0, 10, "pos")
+        r = self._transfer(has_explicit_delegation=False, principal_verifier=v, principal_credential=cred, now=5)
+        self.assertTrue(r["gate_passed"], r["errors"])
+        self.assertEqual(r["principal_verification"], "VERIFIED")
+        # Archetype basis still blocks even with a verified principal (rule 1 is unchanged).
+        cred2 = v.issue_for_digest("k1", self._founder(basis="the dragon is powerful"), 0, 10, "pos2")
+        r2 = self._transfer(basis="the dragon is powerful", principal_verifier=v, principal_credential=cred2, now=5)
+        self.assertFalse(r2["gate_passed"])
+
+    def test_live_authority_gate_unchanged_below_founder_override(self):
+        # Regression: every non-FOUNDER_OVERRIDE result is identical to the gate before the fix
+        # (grid of 2,496 cases; hash computed on main 3635827 before the change).
+        from semantic_compiler.core.types import AuthorityType
+        from semantic_compiler.gates.authority import check_authority_transfer
+        keys = ("source_authority", "claimed_authority", "gate_passed", "requires_escalation", "errors",
+                "warnings", "basis")
+        bases = ("", "Knox StrongBox hardware attestation", "Dragon is strong and powerful", "task ticket 42")
+        rows = []
+        for src in [a.name for a in AuthorityType] + ["bogus"]:
+            for clm in [a.name for a in AuthorityType if a is not AuthorityType.FOUNDER_OVERRIDE] + ["bogus"]:
+                for d in (False, True):
+                    for ts in (False, True):
+                        for b in bases:
+                            r = check_authority_transfer(src, clm, basis=b, has_explicit_delegation=d,
+                                                         has_task_scope=ts)
+                            self.assertEqual(set(r), set(keys))
+                            rows.append([src, clm, d, ts, b, {k: r[k] for k in keys}])
+        self.assertEqual(len(rows), 2496)
+        self.assertEqual(hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest(),
+                         "048d55c6b99d138322a04e9797dc17d78c721a935b73547cac2194a9d1e1adf1")
+
+    def test_live_authority_gate_is_not_on_the_compile_path(self):
+        # check_authority_transfer is exported by gates/ but no runtime module calls it, so the fix
+        # cannot change routing (the 963-prompt corpus diff is the end-to-end check).
+        for path in [p for p in REPO.rglob("*.py") if "tests" not in p.parts and ".venv" not in p.parts]:
+            text = path.read_text(encoding="utf-8")
+            if path.name in ("authority.py", "__init__.py") and path.parent.name == "gates":
+                continue
+            self.assertNotIn("check_authority_transfer(", text, path)
 
 
 # --------------------------------------------------------------------------- Oracles
@@ -712,19 +933,191 @@ class TestACOracleD(unittest.TestCase):
     def test_live_resource_manifest_declares_r_override(self):
         self.assertTrue(declares_r_override("resource.yaml"))
 
-    @unittest.expectedFailure
     def test_live_mafuba_budget_has_isolated_override_partition(self):
         from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
-        b = ResourceBudget(10.0, 2.0)
-        for attr in ("r_audit", "r_quarantine", "r_override"):
-            self.assertTrue(hasattr(b, attr), attr)
+        b = ResourceBudget(10.0, 2.0, r_override=1.0)
+        self.assertEqual((b.r_override, b.r_override_available), (1.0, 1.0))
+        self.assertEqual(b.admit(7.5, "execution"), "PREEMPTIVE_FAIL_CLOSED")   # fit before; eats the partition
+        self.assertEqual(b.admit(6.9, "execution"), "CONTINUE")
+        self.assertEqual(b.r_override_available, 1.0)
 
     @unittest.expectedFailure
-    def test_live_mafuba_supervisor_has_principal_recovery_path(self):
+    def test_live_mafuba_budget_has_audit_and_quarantine_partitions(self):
+        from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
+        b = ResourceBudget(10.0, 2.0, r_override=1.0)
+        for attr in ("r_audit", "r_quarantine"):
+            self.assertTrue(hasattr(b, attr), attr)
+
+    def test_live_mafuba_override_reserve_is_unconsumable_by_ordinary_paths(self):
         from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget, Worker
-        sup = EmergencySupervisor(ResourceBudget(10.0, 2.0))
+        b = ResourceBudget(10.0, 2.0, r_override=1.5)
+        # Ordinary admission and enforcement, greedy, in small and large steps.
+        for purpose in ("execution", "enforcement"):
+            for step in (0.01, 0.5, 3.0, 6.49, 6.5, 100.0):
+                b.admit(step, purpose)
+        self.assertLess(b.r_used, 10.0 - 2.0 - 1.5)
+        self.assertEqual(b.r_override_available, 1.5)
+        # Any purpose other than execution/enforcement is refused, including "override".
+        for purpose in ("override", "quarantine", "audit", ""):
+            self.assertEqual(b.admit(0.1, purpose), "FAIL_CLOSED")
+        # Draws from any path but the override path are refused.
+        for path in ("", "execution", "enforcement", "supervisor", "quarantine", "OVERRIDE"):
+            self.assertEqual(b.draw_override(0.1, path=path), "DENY_OVERRIDE_PARTITION_ISOLATED")
+        for bad in (float("nan"), float("inf"), -1.0, True, "1"):
+            self.assertEqual(b.draw_override(bad, path="override"), "FAIL_CLOSED")
+        # A direct counter write past everything fires the supervisor; the partition is untouched.
+        sup = EmergencySupervisor(b)
+        rec = sup.reserve_trigger_shutdown(Worker("w"), b"evidence" * 100)
+        b.r_used = 1e9
+        self.assertTrue(rec.quarantined)
+        self.assertLessEqual(rec.reserve_used, b.r_reserve)
+        self.assertEqual(b.r_override_available, 1.5)
+        self.assertFalse(b.accepting_work)
+        # Only the override path spends it, and never past its capacity.
+        self.assertEqual(b.draw_override(1.0, path="override"), "CONTINUE")
+        self.assertEqual(b.draw_override(0.6, path="override"), "OVERRIDE_PARTITION_EXHAUSTED")
+        self.assertEqual(b.draw_override(0.5, path="override"), "CONTINUE")
+        self.assertEqual(b.r_override_available, 0.0)
+        # The partition cannot be resized after construction, and bad sizes are refused.
+        with self.assertRaises(AttributeError):
+            b.r_override = 99.0
+        for bad in (-1.0, float("nan"), float("inf"), True, "2"):
+            with self.assertRaises(ValueError):
+                ResourceBudget(10.0, 2.0, r_override=bad)
+
+    def test_live_mafuba_budget_without_override_partition_is_unchanged(self):
+        # Regression: r_override defaults to 0.0 and every admission result, counter and free value matches
+        # the three-term formula the rc2 reference used before the change.
+        import random as _r
+        from tests.reference.sc_mafuba_001.supervisor import ResourceBudget
+        rng = _r.Random(601)
+        for _ in range(200):
+            budget, reserve = rng.choice([10.0, 7.5, 3.0]), rng.choice([0.1, 0.7, 2.0])
+            b = ResourceBudget(budget, reserve)
+            ctr = {"execution": 0.0, "enforcement": 0.0}
+            for _ in range(20):
+                amt = rng.choice([0.0, 0.1, 0.25, 0.5, 1.0, 2.0, budget - reserve])
+                purpose = rng.choice(["execution", "enforcement"])
+                used = ctr["execution"] + ctr["enforcement"]
+                res = b.admit(amt, purpose)
+                if budget - used <= reserve or used + amt >= budget - reserve:
+                    self.assertEqual(res.status, "PREEMPTIVE_FAIL_CLOSED")
+                else:
+                    self.assertEqual(res, "CONTINUE")
+                    ctr[purpose] += amt
+                used = ctr["execution"] + ctr["enforcement"]
+                self.assertEqual((b.r_used, b.r_free), (used, budget - used))
+            self.assertEqual(getattr(b, "r_override", 0.0), 0.0)   # same assertions hold on the pre-change code
+
+    @staticmethod
+    def _quarantined(r_override=1.0, r_reserve=2.0, **kw):
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget, Worker
+        v = PrincipalVerifier(PRINCIPAL, KEYS)
+        sup = EmergencySupervisor(ResourceBudget(10.0, r_reserve, r_override=r_override), principal_verifier=v, **kw)
         sup.reserve_trigger_shutdown(Worker("w"), b"evidence")
-        self.assertTrue(hasattr(sup, "principal_release"))
+        return sup, v
+
+    def _locked(self, sup):
+        self.assertEqual(sup.try_resume(), "QUARANTINE_LOCKED")
+        self.assertTrue(sup.last_shutdown.quarantined)
+        self.assertFalse(sup.budget.accepting_work)
+
+    def test_live_mafuba_supervisor_has_principal_recovery_path(self):
+        sup, v = self._quarantined()
+        self._locked(sup)
+        cred = v.issue_for_digest("k1", sup.release_digest("w"), 10, 20, "rel")
+        r = sup.principal_release("w", cred, 12)
+        self.assertEqual(r.status, "RELEASED")
+        self.assertTrue(r.within_bound)
+        self.assertLessEqual(r.effective_at - r.requested_at, sup.delta_t_max)
+        self.assertEqual(sup.try_resume(), "RELEASED_BY_PRINCIPAL")
+        self.assertTrue(sup.budget.accepting_work)
+        self.assertFalse(sup.last_shutdown.quarantined)
+        self.assertEqual(sup.budget.r_override_available, 0.5)   # paid from the override partition
+
+    def test_live_mafuba_release_rejects_forged_misbound_or_unpaid_requests(self):
+        other = PrincipalVerifier("someone-else", {"k1": b"attacker-key"})
+
+        class Broken:
+            def verify_digest(self, *a):
+                raise RuntimeError("hsm offline")
+
+        def attempt(build, why, now=12, **qkw):
+            sup, v = self._quarantined(**qkw)
+            cred, verifier = build(sup, v)
+            if verifier is not None:
+                sup.principal_verifier = verifier
+            r = sup.principal_release("w", cred, now)
+            self.assertEqual(r.status, why)
+            self._locked(sup)
+            return sup
+
+        d = lambda sup: sup.release_digest("w")  # noqa: E731
+        attempt(lambda s, v: (None, None), "NO_CREDENTIAL")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "a"), object()), "NO_VERIFIER")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "b"), Broken()), "VERIFIER_ERROR")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "c"), None), "NO_TIME", now=None)
+        attempt(lambda s, v: (other.issue_for_digest("k1", d(s), 10, 20, "d"), None), "WRONG_PRINCIPAL")
+        # The supervisor (or anyone without the key) forging the principal's id: bad MAC.
+        attempt(lambda s, v: (other.issue_for_digest("k1", d(s), 10, 20, "e", principal_id=PRINCIPAL), None),
+                "BAD_MAC")
+        attempt(lambda s, v: (v.issue_for_digest("k1", s.release_digest("other-worker"), 10, 20, "f"), None),
+                "DIGEST_MISMATCH")
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "g"), None), "EXPIRED", now=25)
+        # No override partition to pay for the release: fail closed.
+        attempt(lambda s, v: (v.issue_for_digest("k1", d(s), 10, 20, "h"), None), "OVERRIDE_PARTITION_EXHAUSTED",
+                r_override=0.0)
+        # Revoked key and verifier down.
+        def revoked(s, v):
+            v.revoke_key("k2")
+            return v.issue_for_digest("k2", d(s), 10, 20, "i"), None
+        attempt(revoked, "REVOKED_KEY")
+        def down(s, v):
+            v.available = False
+            return v.issue_for_digest("k1", d(s), 10, 20, "j"), None
+        attempt(down, "UNAVAILABLE")
+        # Nothing to release.
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget
+        fresh = EmergencySupervisor(ResourceBudget(10.0, 2.0, r_override=1.0),
+                                    principal_verifier=PrincipalVerifier(PRINCIPAL, KEYS))
+        self.assertEqual(fresh.principal_release("w", None, 1).status, "NOT_QUARANTINED")
+
+    def test_live_mafuba_release_cannot_be_replayed_or_carried_to_a_later_quarantine(self):
+        from tests.reference.sc_mafuba_001.supervisor import Worker
+        sup, v = self._quarantined(r_override=2.0)
+        cred = v.issue_for_digest("k1", sup.release_digest("w"), 10, 30, "once")
+        self.assertEqual(sup.principal_release("w", cred, 12).status, "RELEASED")
+        # Budget is still at the reserve edge: the next accounting event quarantines again (defence in depth).
+        sup.reserve_trigger_shutdown(Worker("w"), b"again")
+        self._locked(sup)
+        self.assertEqual(sup.quarantine_epoch, 2)
+        self.assertEqual(sup.principal_release("w", cred, 13).status, "DIGEST_MISMATCH")   # old epoch
+        old_epoch_fresh_nonce = v.issue_for_digest("k1", cred.request_digest, 10, 30, "new-nonce")
+        self.assertEqual(sup.principal_release("w", old_epoch_fresh_nonce, 13).status, "DIGEST_MISMATCH")
+        self._locked(sup)
+        ok = v.issue_for_digest("k1", sup.release_digest("w"), 10, 30, "second")
+        self.assertEqual(sup.principal_release("w", ok, 14).status, "RELEASED")
+        self.assertEqual(sup.principal_release("w", ok, 15).status, "NOT_QUARANTINED")
+
+    def test_live_mafuba_release_lands_within_bound_even_after_reserve_exhaustion(self):
+        # rc1 ORACLE-D: R_override is isolated from supervisor exhaustion. A shutdown that could not
+        # even afford its fixed cost (RESERVE_INSUFFICIENT) is still releasable within delta_t_max.
+        from tests.reference.sc_mafuba_001.supervisor import Worker
+        for ticks, bound in ((1, 1), (4, 5), (5, 5), (3, 10)):
+            sup, v = self._quarantined(r_override=2.0, r_reserve=0.1, delta_t_max=bound, release_path_ticks=ticks)
+            for i, now in enumerate((0, 7, 10_000)):
+                if i:
+                    sup.reserve_trigger_shutdown(Worker("w"), b"again")   # quarantined again, reserve still empty
+                self.assertEqual(sup.last_shutdown.status, "RESERVE_INSUFFICIENT")
+                self._locked(sup)
+                cred = v.issue_for_digest("k1", sup.release_digest("w"), now, now + 2, f"t{ticks}-{now}")
+                r = sup.principal_release("w", cred, now)
+                self.assertEqual(r.status, "RELEASED", (ticks, bound, now))
+                self.assertLessEqual(r.effective_at - now, bound)
+                self.assertTrue(r.within_bound)
+        from tests.reference.sc_mafuba_001.supervisor import EmergencySupervisor, ResourceBudget
+        with self.assertRaises(ValueError):
+            EmergencySupervisor(ResourceBudget(10.0, 2.0), delta_t_max=3, release_path_ticks=4)
 
 
 # --------------------------------------------------------------------------- Registry and provenance
@@ -766,6 +1159,16 @@ class TestSCC001ACRegistry(unittest.TestCase):
         self.assertEqual(found, {k: v[0] for k, v in LIVE_GAPS.items()})
         reg = {x["test"]: (x["acceptance_test_id"], x["reason"]) for x in self.row["live_interface_gaps"]}
         self.assertEqual(reg, {k: tuple(v) for k, v in LIVE_GAPS.items()})
+
+    def test_resolved_gaps_run_as_ordinary_passing_tests(self):
+        self.assertFalse(set(RESOLVED_GAPS) & set(LIVE_GAPS))
+        for name, (tid, _, _) in RESOLVED_GAPS.items():
+            fn = getattr(ID_TO_CLASS[tid], name)
+            self.assertFalse(getattr(fn, "__unittest_expecting_failure__", False), name)
+        reg = {x["test"]: (x["acceptance_test_id"], x["before"], x["after"])
+               for x in self.row["resolved_interface_gaps"]}
+        self.assertEqual(reg, {k: tuple(v) for k, v in RESOLVED_GAPS.items()})
+        self.assertTrue(all(x["status"] == "RESOLVED_IN_LIVE_CODE" for x in self.row["resolved_interface_gaps"]))
 
     def test_original_spec_is_verbatim_and_hash_pinned(self):
         prov = self.row["provenance"]
