@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "jsonschema>=4.0",
     "PyYAML>=6.0",
+    "cryptography>=50.0.2,<51",
 ]
 
 [project.urls]
@@ -32,6 +33,12 @@ Funding = "https://buymeacoffee.com/kingsleywmk"
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
+# Token signing and RFC 3161 helpers. Not required to import sov_trade.
+# GitHub CI does not install these (it does not pip-install this package).
+sov-trade = [
+    "python-pkcs11==0.10.1",
+    "asn1crypto==1.5.1",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

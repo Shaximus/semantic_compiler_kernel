@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .canonical import CanonicalizationError, canonical_json
-from .crypto import ALG_ED25519, PublicKey, sha256, verify_all_signatures
+from .crypto import PublicKey, sha256, verify_all_signatures
 from .custody import KeyStore
 from .identity import Principal, domain_of
 from .types import ActorKind, ReasonCode, TradeError
@@ -160,8 +160,9 @@ def sign_sae(
     signers = [(signer, store)] + list(extra_signers or [])
     for prin, ks in signers:
         sig = ks.sign(prin.key_id, payload, now=now)
+        algorithm = ks.get(prin.key_id).public.algorithm
         env.signatures.append(
-            Signature(algorithm=ALG_ED25519, key_id=prin.key_id, signature=sig.hex())
+            Signature(algorithm=algorithm, key_id=prin.key_id, signature=sig.hex())
         )
     return env
 

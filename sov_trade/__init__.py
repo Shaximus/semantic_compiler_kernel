@@ -7,8 +7,18 @@ and has not had an external audit (R-16 is not met).
 
 from .assertion import SignedAssertionEnvelope, salted_commitment, sign_sae
 from .authority import DelegationScope
+from .ceremony import CeremonyResult, run_root_ceremony
 from .clock import DEFAULT_SKEW_SECONDS, Clock, FrozenClock
-from .crypto import backend_name, generate_ed25519, side_channel_safe
+from .crypto import (
+    ALG_ED25519,
+    ALG_ML_DSA_65,
+    SUITE_ED25519_MLDSA65,
+    backend_name,
+    generate_ed25519,
+    generate_hybrid,
+    generate_mldsa65,
+    side_channel_safe,
+)
 from .disputes import Dispute, open_dispute, resolve_dispute
 from .identity import RecognitionRecord, TrustBundle
 from .ledger import verify_inclusion_proof
@@ -55,9 +65,16 @@ __all__ = [
     "TradeError",
     "TrustBundle",
     "VerificationResult",
+    "ALG_ED25519",
+    "ALG_ML_DSA_65",
+    "CeremonyResult",
+    "SUITE_ED25519_MLDSA65",
     "backend_name",
     "evaluate_status",
     "generate_ed25519",
+    "run_root_ceremony",
+    "generate_mldsa65",
+    "generate_hybrid",
     "merge_public_keys",
     "open_dispute",
     "provenance_round_trip",
