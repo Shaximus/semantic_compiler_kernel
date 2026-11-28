@@ -1,0 +1,744 @@
+[
+ {
+  "id": "M00",
+  "property": "control (no mutation)",
+  "file": null,
+  "status": "CONTROL_OK",
+  "pytest_rc": 0,
+  "failing_tests": [],
+  "n_failing": 0,
+  "seconds": 9.9
+ },
+ {
+  "id": "M01",
+  "property": "hybrid: ML-DSA-65 half not verified",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mldsa_member_forged_fails",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mixed_keys_fail",
+   "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half"
+  ],
+  "n_failing": 3,
+  "seconds": 10.3
+ },
+ {
+  "id": "M02",
+  "property": "hybrid: Ed25519 half not verified",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_ed25519_member_forged_fails",
+   "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half"
+  ],
+  "n_failing": 2,
+  "seconds": 10.1
+ },
+ {
+  "id": "M03",
+  "property": "ML-DSA-65 verify always succeeds",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mldsa_member_forged_fails",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mixed_keys_fail",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_verify_all_signatures_still_requires_every_member",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc31]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc32]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc33]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc34]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc35]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc36]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc37]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc38]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc39]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc40]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc41]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc42]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc43]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc44]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc45]",
+   "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half",
+   "tests.test_sc_sov_trade_001_regressions::test_mldsa_context_is_bound"
+  ],
+  "n_failing": 20,
+  "seconds": 9.9
+ },
+ {
+  "id": "M04",
+  "property": "ML-DSA-65 signing context not bound at verify",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mldsa_member_forged_fails",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_mixed_keys_fail",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_verify_all_signatures_still_requires_every_member",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc31]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc32]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc33]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc34]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc35]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc36]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc37]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc38]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc39]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc40]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc41]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc42]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc43]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc44]",
+   "tests.test_sc_sov_trade_001_kat::test_fips204_mldsa65_sigver[tc45]",
+   "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half",
+   "tests.test_sc_sov_trade_001_regressions::test_mldsa_context_is_bound"
+  ],
+  "n_failing": 20,
+  "seconds": 9.9
+ },
+ {
+  "id": "M05",
+  "property": "Ed25519 verify always succeeds",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR01Impersonation::test_forged_key_cannot_impersonate_a_nation",
+   "tests.test_sc_sov_trade_001.TestR03Tamper::test_bit_flip_every_field",
+   "tests.test_sc_sov_trade_001.TestR10Hybrid::test_hybrid_with_one_broken_signature_fails",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialForgedSignature::test_forged_signature_rejected",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialForgedSignature::test_channel_is_not_a_trust_anchor",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialTamperedReceipt::test_tampered_receipt_fails_offline_verification",
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_ed25519_member_forged_fails",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8032_ed25519[TEST 1]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8032_ed25519[TEST 2]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8032_ed25519[TEST 3]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8032_ed25519[TEST 1024]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8032_ed25519[TEST SHA(abc)]",
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_and_verify_in_token",
+   "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half",
+   "tests.test_sc_sov_trade_001_regressions::test_unsigned_or_forged_status_list_is_rejected"
+  ],
+  "n_failing": 15,
+  "seconds": 9.8
+ },
+ {
+  "id": "M06",
+  "property": "empty signature set accepted",
+  "file": "sov_trade/crypto.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_hybrid.TestHybridSignature::test_verify_all_signatures_still_requires_every_member"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M07",
+  "property": "RFC 3161: TSA nonce not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions.TestTimestampHardening::test_wrong_nonce_rejected",
+   "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_wrong_nonce_fails"
+  ],
+  "n_failing": 2,
+  "seconds": 9.6
+ },
+ {
+  "id": "M08",
+  "property": "RFC 3161: message imprint not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_wrong_imprint_fails"
+  ],
+  "n_failing": 1,
+  "seconds": 9.8
+ },
+ {
+  "id": "M09",
+  "property": "RFC 3161: TSA chain to trusted CA not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_untrusted_tsa_cert_fails"
+  ],
+  "n_failing": 1,
+  "seconds": 10.3
+ },
+ {
+  "id": "M10",
+  "property": "RFC 3161: CMS signature not verified",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_fuzz.TestParserFuzz::test_timestamp_bit_flips",
+   "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_tampered_token_fails"
+  ],
+  "n_failing": 2,
+  "seconds": 11.2
+ },
+ {
+  "id": "M11",
+  "property": "RFC 3161: policy not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_timestamp_policy_mismatch_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 9.9
+ },
+ {
+  "id": "M12",
+  "property": "RFC 3161: signed message-digest not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_fuzz.TestParserFuzz::test_timestamp_bit_flips"
+  ],
+  "n_failing": 1,
+  "seconds": 12.6
+ },
+ {
+  "id": "M13",
+  "property": "RFC 3161: timeStamping EKU not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions.TestTimestampHardening::test_tsa_without_timestamping_eku_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M14",
+  "property": "RFC 3161: ESS signing-certificate binding not checked",
+  "file": "sov_trade/timestamp.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_timestamp_ess_hash_must_match_tsa_certificate"
+  ],
+  "n_failing": 1,
+  "seconds": 10.3
+ },
+ {
+  "id": "M15",
+  "property": "mTLS: server accepts any/expired client cert (no client verification)",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_valid_handshake",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_expired_cert_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_revoked_cert_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_expired_client_cert_reason",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_client_without_certificate_is_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_revoked_client_reason",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_each_context_serves_its_own_certificate"
+  ],
+  "n_failing": 8,
+  "seconds": 9.7
+ },
+ {
+  "id": "M16",
+  "property": "mTLS: client accepts any/expired server cert",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_valid_handshake",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_wrong_ca_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_expired_server_cert_reason",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_client_cert_cannot_act_as_server",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_hostname_mismatch_is_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_each_context_serves_its_own_certificate"
+  ],
+  "n_failing": 7,
+  "seconds": 9.3
+ },
+ {
+  "id": "M17",
+  "property": "mTLS: client certificate optional",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_client_without_certificate_is_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs"
+  ],
+  "n_failing": 2,
+  "seconds": 10.2
+ },
+ {
+  "id": "M18",
+  "property": "mTLS: TLS 1.2 allowed on server",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_tls12_client_is_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs"
+  ],
+  "n_failing": 2,
+  "seconds": 10.0
+ },
+ {
+  "id": "M19",
+  "property": "mTLS: CRL not enforced",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLS::test_revoked_cert_rejected",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_revoked_client_reason"
+  ],
+  "n_failing": 2,
+  "seconds": 10.4
+ },
+ {
+  "id": "M20",
+  "property": "mTLS: hostname not checked",
+  "file": "sov_trade/mtls.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs",
+   "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_hostname_mismatch_is_rejected"
+  ],
+  "n_failing": 2,
+  "seconds": 10.2
+ },
+ {
+  "id": "M21",
+  "property": "ceremony: 2-of-5 shares meet the quorum",
+  "file": "sov_trade/ceremony.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_ceremony.TestRootCeremony::test_two_or_fewer_cannot",
+   "tests.test_sc_sov_trade_001_regressions::test_two_of_five_shares_fail_on_the_quorum_rule_itself",
+   "tests.test_sc_sov_trade_001_regressions::test_duplicate_share_does_not_count_twice"
+  ],
+  "n_failing": 3,
+  "seconds": 10.3
+ },
+ {
+  "id": "M22",
+  "property": "ceremony: duplicate shares count toward quorum",
+  "file": "sov_trade/ceremony.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_duplicate_share_does_not_count_twice"
+  ],
+  "n_failing": 1,
+  "seconds": 9.9
+ },
+ {
+  "id": "M23",
+  "property": "ceremony: published commitment not checked",
+  "file": "sov_trade/ceremony.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_ceremony.TestRootCeremony::test_tampered_share_is_detected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M24",
+  "property": "ceremony: k-subset disagreement not checked",
+  "file": "sov_trade/ceremony.py",
+  "status": "SURVIVED_EQUIVALENT",
+  "pytest_rc": 0,
+  "failing_tests": [],
+  "n_failing": 0,
+  "seconds": 9.9,
+  "equivalence_argument": "every k-subset is reconstructed recursively, and the recursive call already rejects any subset whose secret misses the published SHA-256 commitment; two subsets can only disagree with a SHA-256 collision"
+ },
+ {
+  "id": "M25",
+  "property": "ceremony: reconstructed key not matched to publication",
+  "file": "sov_trade/ceremony.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_quorum_from_another_ceremony_cannot_sign"
+  ],
+  "n_failing": 1,
+  "seconds": 9.8
+ },
+ {
+  "id": "M26",
+  "property": "delegation: value ceiling may grow",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_subset_never_widens",
+   "tests.test_sc_sov_trade_001_regressions::test_value_ceiling_cannot_grow"
+  ],
+  "n_failing": 2,
+  "seconds": 10.7
+ },
+ {
+  "id": "M27",
+  "property": "delegation: empty child set widens a constrained parent",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_subset_never_widens",
+   "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_subset_is_transitive",
+   "tests.test_sc_sov_trade_001_regressions::test_empty_child_scope_under_constrained_parent_is_widening"
+  ],
+  "n_failing": 3,
+  "seconds": 11.7
+ },
+ {
+  "id": "M28",
+  "property": "delegation: doc class not enforced by covers()",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR04Scope::test_signer_outside_doc_class_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M29",
+  "property": "delegation: issuance allows scope beyond parent",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialDelegationEscalation::test_delegate_cannot_widen_scope"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M30",
+  "property": "authority gate: verifier skips per-link narrowing",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_scope_check_ok_only_if_every_link_covers"
+  ],
+  "n_failing": 1,
+  "seconds": 10.9
+ },
+ {
+  "id": "M31",
+  "property": "authority gate: verifier skips scope coverage",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR04Scope::test_signer_outside_doc_class_rejected",
+   "tests.test_sc_sov_trade_001.TestR04Scope::test_signer_outside_commodity_rejected",
+   "tests.test_sc_sov_trade_001.TestR04Scope::test_signer_above_value_ceiling_rejected",
+   "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_scope_check_ok_only_if_every_link_covers"
+  ],
+  "n_failing": 4,
+  "seconds": 10.5
+ },
+ {
+  "id": "M32",
+  "property": "replay check skipped",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR05FreshnessMatrix::test_replayed",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialReplay::test_same_assertion_same_transaction_replayed"
+  ],
+  "n_failing": 2,
+  "seconds": 10.9
+ },
+ {
+  "id": "M33",
+  "property": "challenge nonce not checked",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_wrong_challenge_nonce_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.3
+ },
+ {
+  "id": "M34",
+  "property": "transaction binding not checked",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_wrong_transaction_binding_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 9.8
+ },
+ {
+  "id": "M35",
+  "property": "expired assertion accepted",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR05FreshnessMatrix::test_expired",
+   "tests.test_sc_sov_trade_001.TestR15Degraded::test_clock_drift_rejects"
+  ],
+  "n_failing": 2,
+  "seconds": 10.1
+ },
+ {
+  "id": "M36",
+  "property": "status list signature not verified",
+  "file": "sov_trade/protocol.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_unsigned_or_forged_status_list_is_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.0
+ },
+ {
+  "id": "M37",
+  "property": "revoked status ignored",
+  "file": "sov_trade/status.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR05FreshnessMatrix::test_revoked"
+  ],
+  "n_failing": 1,
+  "seconds": 10.4
+ },
+ {
+  "id": "M38",
+  "property": "receipt signatures not verified",
+  "file": "sov_trade/receipts.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialTamperedReceipt::test_tampered_receipt_fails_offline_verification"
+  ],
+  "n_failing": 1,
+  "seconds": 10.2
+ },
+ {
+  "id": "M39",
+  "property": "transparency log: entry not bound to leaf",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_ledger.TestInclusionBinding::test_entry_substitution_is_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.3
+ },
+ {
+  "id": "M40",
+  "property": "transparency log: consistency proof failure ignored",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_rewritten_history_halts_acceptance",
+   "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_garbage_proof_halts_acceptance"
+  ],
+  "n_failing": 2,
+  "seconds": 10.0
+ },
+ {
+  "id": "M41",
+  "property": "transparency log: missing consistency proof accepted",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_later_checkpoint_without_proof_is_not_stored",
+   "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_older_checkpoint_needs_proof_too"
+  ],
+  "n_failing": 2,
+  "seconds": 10.0
+ },
+ {
+  "id": "M42",
+  "property": "transparency log: equal-size fork not detected",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR08SplitView::test_forked_checkpoint_is_flagged"
+  ],
+  "n_failing": 1,
+  "seconds": 10.6
+ },
+ {
+  "id": "M43",
+  "property": "transparency log: inclusion verifier ignores tree shape (old duplicate-last tree)",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_inclusion_probe[inclusion/3/happy-path.json]",
+   "tests.test_sc_sov_trade_001_ledger.TestInclusionBinding::test_valid_proof_verifies",
+   "tests.test_sc_sov_trade_001_properties.TestLogProperties::test_inclusion_binds_leaf_and_index"
+  ],
+  "n_failing": 3,
+  "seconds": 10.7
+ },
+ {
+  "id": "M44",
+  "property": "transparency log: consistency verifier skips second-root check",
+  "file": "sov_trade/ledger.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/1/modified-proof@0-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/1/modified-proof@1-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/1/modified-proof@2-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/1/swapped-roots.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/2/modified-proof@1-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/3/modified-proof@0-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/3/modified-proof@1-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/3/swapped-roots.json]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc9162_consistency_probe[consistency/4/modified-proof@1-bit-@4.json]",
+   "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_rewritten_history_halts_acceptance",
+   "tests.test_sc_sov_trade_001_properties.TestLogProperties::test_tampered_consistency_proof_fails",
+   "tests.test_sc_sov_trade_001_properties.TestLogProperties::test_rewritten_history_is_inconsistent"
+  ],
+  "n_failing": 12,
+  "seconds": 11.2
+ },
+ {
+  "id": "M45",
+  "property": "JCS: keys sorted by code point, not UTF-16",
+  "file": "sov_trade/canonical.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_kat::test_rfc8785_jcs[weird]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8785_utf16_sort_order_section_3_2_3",
+   "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_keys_sorted_by_utf16_code_units"
+  ],
+  "n_failing": 3,
+  "seconds": 10.6
+ },
+ {
+  "id": "M46",
+  "property": "JCS: floats accepted",
+  "file": "sov_trade/canonical.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_kat::test_rfc8785_jcs[structures]",
+   "tests.test_sc_sov_trade_001_kat::test_rfc8785_jcs[values]",
+   "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_floats_refused"
+  ],
+  "n_failing": 3,
+  "seconds": 10.1
+ },
+ {
+  "id": "M47",
+  "property": "JCS: unsafe integers accepted",
+  "file": "sov_trade/canonical.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_unsafe_integers_refused"
+  ],
+  "n_failing": 1,
+  "seconds": 10.4
+ },
+ {
+  "id": "M48",
+  "property": "PKCS#11: key generated extractable and check removed",
+  "file": "sov_trade/pkcs11.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_and_verify_in_token",
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_private_key_is_non_extractable_and_sensitive",
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_ambiguous_label"
+  ],
+  "n_failing": 3,
+  "seconds": 11.2
+ },
+ {
+  "id": "M49",
+  "property": "PKCS#11: sign-time custody check removed",
+  "file": "sov_trade/pkcs11.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_extractable_key"
+  ],
+  "n_failing": 1,
+  "seconds": 10.2
+ },
+ {
+  "id": "M50",
+  "property": "PKCS#11: ambiguous key label accepted",
+  "file": "sov_trade/pkcs11.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_ambiguous_label"
+  ],
+  "n_failing": 1,
+  "seconds": 9.8
+ },
+ {
+  "id": "M51",
+  "property": "SAE signature check skipped",
+  "file": "sov_trade/assertion.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001.TestR01Impersonation::test_forged_key_cannot_impersonate_a_nation",
+   "tests.test_sc_sov_trade_001.TestR03Tamper::test_bit_flip_every_field",
+   "tests.test_sc_sov_trade_001.TestR10Hybrid::test_hybrid_with_one_broken_signature_fails",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialForgedSignature::test_forged_signature_rejected",
+   "tests.test_sc_sov_trade_001_adversarial.TestAdversarialForgedSignature::test_channel_is_not_a_trust_anchor"
+  ],
+  "n_failing": 5,
+  "seconds": 10.2
+ },
+ {
+  "id": "M52",
+  "property": "authority gate missing fails open",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_regressions::test_authority_gate_unavailable_fails_closed"
+  ],
+  "n_failing": 1,
+  "seconds": 10.4
+ }
+]
