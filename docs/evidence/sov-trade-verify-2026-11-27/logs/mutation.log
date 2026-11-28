@@ -1,0 +1,55 @@
+M00 CONTROL_OK    0 control (no mutation)
+M01 KILLED      3 hybrid: ML-DSA-65 half not verified
+M02 KILLED      2 hybrid: Ed25519 half not verified
+M03 KILLED     20 ML-DSA-65 verify always succeeds
+M04 KILLED     20 ML-DSA-65 signing context not bound at verify
+M05 KILLED     15 Ed25519 verify always succeeds
+M06 KILLED      1 empty signature set accepted
+M07 KILLED      2 RFC 3161: TSA nonce not checked
+M08 KILLED      1 RFC 3161: message imprint not checked
+M09 KILLED      1 RFC 3161: TSA chain to trusted CA not checked
+M10 KILLED      2 RFC 3161: CMS signature not verified
+M11 KILLED      1 RFC 3161: policy not checked
+M12 KILLED      1 RFC 3161: signed message-digest not checked
+M13 KILLED      1 RFC 3161: timeStamping EKU not checked
+M14 KILLED      1 RFC 3161: ESS signing-certificate binding not checked
+M15 KILLED      8 mTLS: server accepts any/expired client cert (no client verification)
+M16 KILLED      7 mTLS: client accepts any/expired server cert
+M17 KILLED      2 mTLS: client certificate optional
+M18 KILLED      2 mTLS: TLS 1.2 allowed on server
+M19 KILLED      2 mTLS: CRL not enforced
+M20 KILLED      2 mTLS: hostname not checked
+M21 KILLED      3 ceremony: 2-of-5 shares meet the quorum
+M22 KILLED      1 ceremony: duplicate shares count toward quorum
+M23 KILLED      1 ceremony: published commitment not checked
+M24 SURVIVED_EQUIVALENT    0 ceremony: k-subset disagreement not checked
+M25 KILLED      1 ceremony: reconstructed key not matched to publication
+M26 KILLED      2 delegation: value ceiling may grow
+M27 KILLED      3 delegation: empty child set widens a constrained parent
+M28 KILLED      1 delegation: doc class not enforced by covers()
+M29 KILLED      1 delegation: issuance allows scope beyond parent
+M30 KILLED      1 authority gate: verifier skips per-link narrowing
+M31 KILLED      4 authority gate: verifier skips scope coverage
+M32 KILLED      2 replay check skipped
+M33 KILLED      1 challenge nonce not checked
+M34 KILLED      1 transaction binding not checked
+M35 KILLED      2 expired assertion accepted
+M36 KILLED      1 status list signature not verified
+M37 KILLED      1 revoked status ignored
+M38 KILLED      1 receipt signatures not verified
+M39 KILLED      1 transparency log: entry not bound to leaf
+M40 KILLED      2 transparency log: consistency proof failure ignored
+M41 KILLED      2 transparency log: missing consistency proof accepted
+M42 KILLED      1 transparency log: equal-size fork not detected
+M43 KILLED      3 transparency log: inclusion verifier ignores tree shape (old duplicate-last tree)
+M44 KILLED     12 transparency log: consistency verifier skips second-root check
+M45 KILLED      3 JCS: keys sorted by code point, not UTF-16
+M46 KILLED      3 JCS: floats accepted
+M47 KILLED      1 JCS: unsafe integers accepted
+M48 KILLED      3 PKCS#11: key generated extractable and check removed
+M49 KILLED      1 PKCS#11: sign-time custody check removed
+M50 KILLED      1 PKCS#11: ambiguous key label accepted
+M51 KILLED      5 SAE signature check skipped
+M52 KILLED      1 authority gate missing fails open
+
+51/52 killed; equivalent survivors: ['M24']; survived/invalid: []

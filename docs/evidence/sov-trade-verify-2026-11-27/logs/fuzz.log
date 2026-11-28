@@ -1,0 +1,20 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /workspace/cos-wt/fresh/sov-trade-verify-out/venv/bin/python
+hypothesis profile 'default'
+rootdir: /workspace/cos-wt/fresh/semantic_compiler
+configfile: pyproject.toml
+plugins: hypothesis-6.170.22, platformdirs-4.14.9
+collecting ... collected 10 items
+
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_hybrid_decode_random_bytes PASSED [ 10%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_hybrid_decode_random_json PASSED [ 20%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_hybrid_verify_mutated PASSED [ 30%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_canonical_json_arbitrary PASSED [ 40%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_canonical_json_deep_nesting PASSED [ 50%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_timestamp_random_bytes PASSED [ 60%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_timestamp_bit_flips PASSED [ 70%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_inclusion_proof_dict PASSED [ 80%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_inclusion_and_consistency_args PASSED [ 90%]
+tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_scope_check_random_chain PASSED [100%]
+
+======================== 10 passed in 75.20s (0:01:15) =========================
