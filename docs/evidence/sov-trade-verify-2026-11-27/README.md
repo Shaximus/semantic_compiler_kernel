@@ -1,19 +1,20 @@
-# SC-SOV-TRADE-001 verification evidence (Shax t616u), 27 Nov 2026
+# SC-SOV-TRADE-001 verification evidence (Shax t616u / t617u), 27 Nov 2026
 
-**Tested commit:** `021252ce2a3c5aaa38b02b5eb9183746b930f94f` (PR #107, branch `feat/sc-sov-trade-001-crypto-gaps`). This evidence directory was added in a later docs-only commit; it changes no code.
+**Tested commit:** `21ce5030ddfc3f3bf91760ebab14ea5bd5ddda8a` (PR #107, branch `feat/sc-sov-trade-001-crypto-gaps`). This evidence directory was added in a later docs-only commit; it changes no code.
 **Where it ran:** the Grok Bot Linux box (Debian 13 trixie), from a fresh `git clone` and a fresh venv built from the hash-locked requirements. **It did not run on Shax's PC**: the registered machine was a phone and the PC was not reachable. **Command:** `make verify` (`scripts/sov_trade/verify.sh`), with `SOV_TRADE_CORPUS_HARNESS` pointing at the box-only 963-prompt corpus harness.
 **Grade:** unchanged, SILVER 0.793, `gold_awarded` false. **R-16:** `NOT_MET`. Version 4.1.0. Nothing merged, tagged or released.
+**t617u:** national-root grants require three distinct officers (APPROVE, SIGN, DEPLOY), a signer holding Role.SIGN, and a 3-of-5 ceremony quorum. `generate_root` and root revoke use the same three-officer rule (provisional, flagged for Shax). Non-grant root signatures still use the in-memory key (remaining gap). Mutations M53–M56 were added; M12 now has a deterministic TSTInfo-binding test.
 **Keys:** every key, certificate, token and PIN used here is a TEST item generated per run (SoftHSM2 test token, test CAs, test TSA). None is committed; PINs are random per run and never written to logs.
 
 ## Environment (step 1)
 ```
-date_local: 2026-11-27 19:48:44 AST
-host_kind: box (Grok Bot Linux box; NOT Shax's PC - PC unreachable)
+date_local: 2026-11-27 23:18:21 AST
+host_kind: unspecified
 uname: Linux grok-bot-vm-420080851 6.12.113+ #1 SMP PREEMPT_DYNAMIC Tue Nov 24 16:59:13 UTC 2026 x86_64 GNU/Linux
 PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
 VERSION_ID="13"
-repo: /workspace/cos-wt/fresh/semantic_compiler
-git_head: 021252ce2a3c5aaa38b02b5eb9183746b930f94f
+repo: /workspace/cos-wt/fresh-t617u-2/semantic_compiler
+git_head: 21ce5030ddfc3f3bf91760ebab14ea5bd5ddda8a
 git_dirty_files: 0
 python: Python 3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0] 
 openssl_cli: OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
@@ -36,36 +37,36 @@ Full `pip freeze`: `logs/environment.txt`.
 | venv | 0 | 10s |
 | softhsm_init | 0 | 0s |
 | pytest_full | 0 | 99s |
-| pytest_sov_trade | 0 | 86s |
+| pytest_sov_trade | 0 | 85s |
 | sov_trade_zero_skips | 0 | 0s |
-| unittest | 0 | 8s |
+| unittest | 0 | 7s |
 | validate_catalog | 0 | 0s |
-| fuzz | 0 | 76s |
+| fuzz | 0 | 75s |
 | hsm_evidence | 0 | 1s |
-| cross_check | 0 | 1s |
-| mutation | 0 | 548s |
-| ruff_errors | 1 | 0s |
+| cross_check | 0 | 0s |
+| mutation | 0 | 777s |
+| ruff_errors | 0 | 0s |
 | ruff_full | INFO(rc=1) | - |
 | mypy | 0 | 1s |
 | bandit | 0 | 1s |
 | bandit_scripts | INFO(rc=1) | - |
-| pip_audit_ci | 0 | 0s |
+| pip_audit_ci | 0 | 1s |
 | pip_audit_static | 0 | 1s |
-| static_audit | 0 | 2s |
-| dogfood_base | 0 | 1s |
-| dogfood_head | 0 | 1s |
+| static_audit | 0 | 1s |
+| dogfood_base | 0 | 2s |
+| dogfood_head | 0 | 0s |
 | dogfood_diff | 0 | 0s |
-| corpus_base | 0 | 6s |
-| corpus_head | 0 | 7s |
+| corpus_base | 0 | 7s |
+| corpus_head | 0 | 6s |
 | corpus_diff | 0 | 0s |
 
-Exit code 0 = pass. `INFO(rc=…)` = report only, not a gate. `ruff_errors` fails on purpose-left F841 (see Static checks).
+Exit code 0 = pass. `INFO(rc=…)` = report only, not a gate. `ruff_errors` (E9,F) is a gate; after t617u it is clean (the unused `needed` F841 is gone).
 
 ## Test counts (step 2)
-- Full suite, `pytest tests -rsx -v` with `SOV_TRADE_REQUIRE_FUNCTIONAL=1`: **1569 passed, 6 xfailed, 1385 subtests passed in 98.36s (0:01:38)**
-- sov_trade only (`-k sov_trade -rsx -v`): **406 passed, 1169 deselected in 85.20s (0:01:25)**
+- Full suite, `pytest tests -rsx -v` with `SOV_TRADE_REQUIRE_FUNCTIONAL=1`: **1580 passed, 6 xfailed, 1385 subtests passed in 97.65s (0:01:37)**
+- sov_trade only (`-k sov_trade -rsx -v`): **417 passed, 1169 deselected in 84.28s (0:01:24)**
 - **sov_trade skips: 0.** Other skips in the full suite: 0.
-- `unittest discover -v`: Ran 831 tests in 6.687s; OK (expected failures=6)
+- `unittest discover -v`: Ran 831 tests in 6.246s; OK (expected failures=6)
 - `validate_catalog.py`: exit 0; 278 [PASS] checks, 0 [FAIL]
 
 ### The 6 xfails (all outside sov_trade, all strict expected failures)
@@ -79,7 +80,7 @@ Exit code 0 = pass. `INFO(rc=…)` = report only, not a gate. `ruff_errors` fail
 xfails seen in this run: 6 (match the list).
 
 ## Mutation check (step 3)
-See `MUTATION_TABLE.md` (also `mutation.json`, `mutation_baseline_original_tests.json`). 51/52 killed; equivalent survivors: ['M24']; survived/invalid: []
+See `MUTATION_TABLE.md` (also `mutation.json`, `mutation_baseline_original_tests.json`). 55/56 killed; equivalent survivors: ['M24']; survived/invalid: []
 
 ## Known-answer tests (step 4), official sources only
 - **RFC 8032** section 7.1 Ed25519 test vectors 1, 2, 3, 1024-byte, SHA(abc): exact public key and signature bytes (rfc-editor.org).
@@ -121,14 +122,14 @@ Aborting.`, bytes written: False
 
 ## Property and fuzz tests (step 7)
 - hypothesis properties (`tests/test_sc_sov_trade_001_properties.py`): canonicalization round-trip, idempotence, key-order independence, UTF-16 order, floats and unsafe integers refused; delegation subset never widens, transitivity, reflexivity, `_scope_check` ok only if every link covers; log consistency verifies, tampered proofs fail, rewritten history is inconsistent, inclusion binds leaf and index.
-- Fuzz pass (`tests/test_sc_sov_trade_001_fuzz.py`, 5000 examples per target): 10 passed in 75.20s (0:01:15). Targets: hybrid signature decoder, hybrid verify mutations, canonicalizer, RFC 3161 parser (random bytes and bit flips), inclusion-proof dict, inclusion/consistency arguments, delegation chains.
+- Fuzz pass (`tests/test_sc_sov_trade_001_fuzz.py`, 5000 examples per target): 10 passed in 73.90s (0:01:13). Targets: hybrid signature decoder, hybrid verify mutations, canonicalizer, RFC 3161 parser (random bytes and bit flips), inclusion-proof dict, inclusion/consistency arguments, delegation chains.
 - An exhaustive single-bit sweep of one token (12,272 flips) leaves exactly one accepted flip: PKIStatus granted -> grantedWithMods, which is unsigned and accepted by design.
 
 ## Static checks (step 8)
 - mypy (`-p semantic_compiler.sov_trade`): Success: no issues found in 20 source files
 - bandit `sov_trade/`: No issues identified. (Low 0, Medium 0, High 0); scripts (report only): Low B404/B603/B101 subprocess/assert findings and B405/B314 for parsing the harness's own JUnit XML.
 - pip-audit (CI lock): No known vulnerabilities found; (static lock): No known vulnerabilities found
-- ruff E9,F: Found 1 error. The one finding is F841 `needed` unused in `sov_trade/authority.py` (`issue`): it computes {APPROVE, SIGN} for national-root grants, but the code requires {APPROVE, DEPLOY}. Left unchanged for Shax to rule on (see PENDING_DELIBERATION). The broader ruff report (`logs/ruff_full.log`) is style (UP, B905, BLE001 on intentional fail-closed catches, E501).
+- ruff E9,F: All checks passed! The t616u F841 (`needed` unused in `authority.issue`) is gone: t617u uses the required set {APPROVE, SIGN, DEPLOY} and the dead variable was removed. The broader ruff report (`logs/ruff_full.log`) is style (UP, B905, BLE001 on intentional fail-closed catches, E501) and is not a gate.
 - `scripts/sov_trade/static_audit.py`: "result": "PASS". Checks: no `random` module anywhere in sov_trade; signature, MAC, commitment and challenge comparisons use `hmac.compare_digest` or the library verify call (listed in the log); secret scan of every tracked and untracked file for private keys, tokens and PINs.
 
 ## Reproducibility (step 9)
@@ -142,13 +143,13 @@ Aborting.`, bytes written: False
 ## CI (step A)
 | job | result | link |
 |---|---|---|
-| functional (python 3.10) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824484 |
-| functional (python 3.11) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824486 |
-| functional (python 3.12) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824380 |
-| functional (python 3.13) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824201 |
-| functional (python 3.14) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824473 |
-| refuses import without cryptography | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140790824455 |
-| test | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46084512723/job/140791249414 |
+| functional (python 3.10) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784683 |
+| functional (python 3.11) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784550 |
+| functional (python 3.12) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784584 |
+| functional (python 3.13) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784619 |
+| functional (python 3.14) | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784749 |
+| refuses import without cryptography | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140846784400 |
+| test | success | https://github.com/Shaximus/semantic_compiler_kernel/actions/runs/46102154929/job/140847284495 |
 
 CI runs SoftHSM2/OpenSC/pinned cryptography on Python 3.10-3.14 with `SOV_TRADE_REQUIRE_FUNCTIONAL=1`, asserts zero sov_trade skips, prints the HSM evidence, and a separate job proves the package refuses to import without `cryptography`. Python 3.10 has 5 non-sov skips (`tests/test_packaging_config.py`, tomllib needs 3.11+). CI does not run the OpenSSL cross-checks (ubuntu-latest's OpenSSL lacks ML-DSA) or the mutation check; `make verify` does.
 

@@ -1,8 +1,8 @@
-# SC-SOV-TRADE-001 mutation table (t616u B3)
+# SC-SOV-TRADE-001 mutation table (t616u B3, updated t617u)
 
 Each mutation is applied to a scratch copy of the tree (the checkout is never edited), the sov_trade tests run against it, and the copy is deleted. A control run with no mutation must pass first (M00). Script: `scripts/sov_trade/mutation_check.py` (patterns are exact source lines; a pattern that does not match exactly once is INVALID).
 
-- **Current tests (this head):** 51/52 killed; equivalent survivors: ['M24']; other survivors/invalid: none. Control M00: CONTROL_OK.
+- **Current tests (this head):** 55/56 killed; equivalent survivors: ['M24']; other survivors/invalid: none. Control M00: CONTROL_OK.
 - **Original tests from 64eb86f, run against the fixed source:** 25/52 killed. Every mutation that survived there is now killed by a test added in this pass, except M24 (equivalent, argued below).
 - Column *orig tests* = result with the PR's original tests (64eb86f) on the fixed source; *now* = result with the current tests. *First failing tests* are the tests that caught it (up to 3).
 - Mutations marked with a dagger in the notes target checks that did not exist before this pass (they were added as fixes), so the original tests could not have covered them.
@@ -18,9 +18,9 @@ Each mutation is applied to a scratch copy of the tree (the checkout is never ed
 | M07 | RFC 3161: TSA nonce not checked | `sov_trade/timestamp.py` | KILLED | **KILLED** | 2 | `t_regressions.TestTimestampHardening::test_wrong_nonce_rejected`<br>`t_timestamp.TestRFC3161::test_wrong_nonce_fails` |
 | M08 | RFC 3161: message imprint not checked | `sov_trade/timestamp.py` | KILLED | **KILLED** | 1 | `t_timestamp.TestRFC3161::test_wrong_imprint_fails` |
 | M09 | RFC 3161: TSA chain to trusted CA not checked | `sov_trade/timestamp.py` | KILLED | **KILLED** | 1 | `t_timestamp.TestRFC3161::test_untrusted_tsa_cert_fails` |
-| M10 | RFC 3161: CMS signature not verified | `sov_trade/timestamp.py` | KILLED | **KILLED** | 2 | `t_fuzz.TestParserFuzz::test_timestamp_bit_flips`<br>`t_timestamp.TestRFC3161::test_tampered_token_fails` |
+| M10 | RFC 3161: CMS signature not verified | `sov_trade/timestamp.py` | KILLED | **KILLED** | 1 | `t_timestamp.TestRFC3161::test_tampered_token_fails` |
 | M11 | RFC 3161: policy not checked | `sov_trade/timestamp.py` | SURVIVED | **KILLED** | 1 | `t_regressions::test_timestamp_policy_mismatch_rejected` |
-| M12 | RFC 3161: signed message-digest not checked | `sov_trade/timestamp.py` | SURVIVED | **KILLED** | 1 | `t_fuzz.TestParserFuzz::test_timestamp_bit_flips` |
+| M12 | RFC 3161: signed message-digest not checked | `sov_trade/timestamp.py` | SURVIVED | **KILLED** | 2 | `t_fuzz.TestParserFuzz::test_timestamp_bit_flips`<br>`t_regressions::test_timestamp_message_digest_binds_tstinfo` |
 | M13 | RFC 3161: timeStamping EKU not checked | `sov_trade/timestamp.py` | SURVIVED | **KILLED** | 1 | `t_regressions.TestTimestampHardening::test_tsa_without_timestamping_eku_rejected` |
 | M14 | RFC 3161: ESS signing-certificate binding not checked | `sov_trade/timestamp.py` | SURVIVED | **KILLED** | 1 | `t_regressions::test_timestamp_ess_hash_must_match_tsa_certificate` |
 | M15 | mTLS: server accepts any/expired client cert (no client verification) | `sov_trade/mtls.py` | KILLED | **KILLED** | 8 | `t_mtls.TestMutualTLS::test_valid_handshake`<br>`t_mtls.TestMutualTLS::test_expired_cert_rejected`<br>`t_mtls.TestMutualTLS::test_revoked_cert_rejected` (+5 more) |
@@ -61,14 +61,18 @@ Each mutation is applied to a scratch copy of the tree (the checkout is never ed
 | M50 | PKCS#11: ambiguous key label accepted | `sov_trade/pkcs11.py` | SURVIVED | **KILLED** | 1 | `t_pkcs11.TestPKCS11Signer::test_sign_refuses_ambiguous_label` |
 | M51 | SAE signature check skipped | `sov_trade/assertion.py` | KILLED | **KILLED** | 5 | `t.TestR01Impersonation::test_forged_key_cannot_impersonate_a_nation`<br>`t.TestR03Tamper::test_bit_flip_every_field`<br>`t.TestR10Hybrid::test_hybrid_with_one_broken_signature_fails` (+2 more) |
 | M52 | authority gate missing fails open | `sov_trade/authority.py` | SURVIVED | **KILLED** | 1 | `t_regressions::test_authority_gate_unavailable_fails_closed` |
+| M53 | national-root grant required set reverted to {APPROVE, DEPLOY} | `sov_trade/authority.py` | - | **KILLED** | 1 | `t_root_control::test_same_officer_in_two_roles_is_rejected` |
+| M54 | national-root sign-time signer check removed | `sov_trade/custody.py` | - | **KILLED** | 1 | `t_root_control::test_store_sign_root_requires_signer_holding_sign` |
+| M55 | dual control restored to a union-of-roles check | `sov_trade/custody.py` | - | **KILLED** | 1 | `t_root_control::test_two_officer_pair_cannot_cover_three_roles` |
+| M56 | national-root grant skips the 3-of-5 ceremony path | `sov_trade/authority.py` | - | **KILLED** | 1 | `t_root_control::test_root_grant_without_ceremony_is_rejected` |
 
-Checks introduced in this pass (dagger): M13, M14, M27, M33, M36, M39, M40, M41, M43, M44, M45, M47, M49, M50, M52.
+Checks introduced in this pass (dagger): M13, M14, M27, M33, M36, M39, M40, M41, M43, M44, M45, M47, M49, M50, M52, M53, M54, M55, M56.
 
 ## Tests written for survivors
 In `tests/test_sc_sov_trade_001_regressions.py`, `tests/test_sc_sov_trade_001_ledger.py`, `tests/test_sc_sov_trade_001_mtls.py` (`TestMutualTLSRejectionReasons`), `tests/test_sc_sov_trade_001_pkcs11.py`, `tests/test_sc_sov_trade_001_kat.py` and `tests/test_sc_sov_trade_001_properties.py`. The *now* column names the exact test for each.
 
-## Weak spot
-M12 (signed message-digest not checked) is caught only by the randomized bit-flip fuzz test (`test_timestamp_bit_flips`; 50 examples inside the mutation harness, 5000 in `make verify`). It was caught in this run, but there is no deterministic test that alters an unchecked TSTInfo field (for example the serial number) while keeping the signed attributes. Recommended follow-up.
+## Weak spot (closed in t617u)
+M12 (signed message-digest not checked) was previously caught only by the randomized bit-flip fuzz test, and it survived a `make verify` run on 52ddef6 when the fuzz pass did not hit the TSTInfo payload. t617u adds `test_timestamp_message_digest_binds_tstinfo`, which changes the TSTInfo serial number while leaving imprint, nonce, policy and signedAttrs intact. M12 is now killed deterministically.
 
 ## Equivalent mutation
 M24 (`ceremony: k-subset disagreement not checked`): with more than k shares, every k-subset is reconstructed by a recursive `reconstruct_secret` call, which already rejects a subset whose secret does not hash to the published commitment. Two subsets can only disagree while both match the commitment with a SHA-256 collision. The check is kept as defence in depth; `test_tampered_extra_share_rejected` shows the behaviour. This is an argument, not a proof; a reviewer may disagree.
