@@ -378,3 +378,43 @@ def test_timestamp_response_must_be_der() -> None:
     bad[7] ^= 0x80
     with pytest.raises(TimestampError):
         verify_token(bytes(bad), data=b"data", nonce=11, trusted_ca=tsa.ca_cert)
+
+
+@pytest.mark.skipif(not have_asn1crypto(), reason=TIMESTAMP_SKIP)
+def test_timestamp_message_digest_binds_tstinfo() -> None:
+    """M12: a change to TSTInfo that leaves imprint, nonce and policy intact
+    must still be rejected. The CMS signature covers signedAttrs, so only
+    the signed message-digest attribute binds those attributes to the
+    encapsulated TSTInfo. The bit-flip fuzz test found this only when it
+    happened to hit that content; this case is deterministic.
+    """
+    from asn1crypto import tsp
+
+    from semantic_compiler.sov_trade.timestamp import (
+        TimestampError,
+        build_request,
+        generate_test_tsa,
+        issue_token,
+        verify_token,
+    )
+
+    tsa = generate_test_tsa()
+    token = issue_token(tsa, build_request(b"data", nonce=5))
+    raw = token.der
+    verify_token(raw, data=b"data", nonce=5, trusted_ca=tsa.ca_cert)
+    encap = tsp.TimeStampResp.load(raw, strict=True)["time_stamp_token"]["content"]["encap_content_info"]
+    old = bytes(encap["content"])
+    info = tsp.TSTInfo.load(old, strict=True)
+    info["serial_number"] = int(info["serial_number"].native) + 1
+    new = info.dump()
+    if len(new) != len(old):
+        serial_der = tsp.TSTInfo.load(old, strict=True)["serial_number"].dump()
+        idx = old.find(serial_der)
+        assert idx >= 0
+        buf = bytearray(old)
+        buf[idx + len(serial_der) - 1] ^= 0x01
+        new = bytes(buf)
+    assert old in raw and new != old
+    mutated = raw.replace(old, new, 1)
+    with pytest.raises(TimestampError, match="digest"):
+        verify_token(mutated, data=b"data", nonce=5, trusted_ca=tsa.ca_cert)

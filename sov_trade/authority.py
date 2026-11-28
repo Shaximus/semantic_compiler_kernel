@@ -245,8 +245,10 @@ class AuthorityRegistry:
                     ReasonCode.FAIL_CLOSED,
                     "national-root grant must be signed by a 3-of-5 ceremony quorum",
                 )
+            root_ceremony = ceremony
+            root_shares = shares
             published = self.store.public_for(grantor.key_id)
-            if ceremony.public.public_key != published.public_key:
+            if root_ceremony.public.public_key != published.public_key:
                 raise TradeError(
                     ReasonCode.FAIL_CLOSED,
                     "ceremony public key does not match the published national root",
@@ -268,8 +270,7 @@ class AuthorityRegistry:
         )
         payload = canonical_json(record.payload())
         if grantor.kind is ActorKind.NATIONAL_ROOT:
-            assert ceremony is not None and shares is not None  # checked above
-            sig = ceremony.sign_with_quorum(payload, shares)
+            sig = root_ceremony.sign_with_quorum(payload, root_shares)
         else:
             sig = self.store.sign(grantor.key_id, payload, now=now)
         record.signature = sig.hex()
