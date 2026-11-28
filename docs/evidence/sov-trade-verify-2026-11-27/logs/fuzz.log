@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /workspace/cos-wt/fresh/sov-trade-verify-out/venv/bin/python
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /workspace/cos-wt/fresh-t617u-2/sov-trade-verify-out/venv/bin/python
 hypothesis profile 'default'
-rootdir: /workspace/cos-wt/fresh/semantic_compiler
+rootdir: /workspace/cos-wt/fresh-t617u-2/semantic_compiler
 configfile: pyproject.toml
 plugins: hypothesis-6.170.22, platformdirs-4.14.9
 collecting ... collected 10 items
@@ -17,4 +17,4 @@ tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_inclusion_proof_dict P
 tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_inclusion_and_consistency_args PASSED [ 90%]
 tests/test_sc_sov_trade_001_fuzz.py::TestParserFuzz::test_scope_check_random_chain PASSED [100%]
 
-======================== 10 passed in 75.20s (0:01:15) =========================
+======================== 10 passed in 73.90s (0:01:13) =========================

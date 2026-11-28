@@ -8,9 +8,9 @@ M06 KILLED      1 empty signature set accepted
 M07 KILLED      2 RFC 3161: TSA nonce not checked
 M08 KILLED      1 RFC 3161: message imprint not checked
 M09 KILLED      1 RFC 3161: TSA chain to trusted CA not checked
-M10 KILLED      2 RFC 3161: CMS signature not verified
+M10 KILLED      1 RFC 3161: CMS signature not verified
 M11 KILLED      1 RFC 3161: policy not checked
-M12 KILLED      1 RFC 3161: signed message-digest not checked
+M12 KILLED      2 RFC 3161: signed message-digest not checked
 M13 KILLED      1 RFC 3161: timeStamping EKU not checked
 M14 KILLED      1 RFC 3161: ESS signing-certificate binding not checked
 M15 KILLED      8 mTLS: server accepts any/expired client cert (no client verification)
@@ -51,5 +51,9 @@ M49 KILLED      1 PKCS#11: sign-time custody check removed
 M50 KILLED      1 PKCS#11: ambiguous key label accepted
 M51 KILLED      5 SAE signature check skipped
 M52 KILLED      1 authority gate missing fails open
+M53 KILLED      1 national-root grant required set reverted to {APPROVE, DEPLOY}
+M54 KILLED      1 national-root sign-time signer check removed
+M55 KILLED      1 dual control restored to a union-of-roles check
+M56 KILLED      1 national-root grant skips the 3-of-5 ceremony path
 
-51/52 killed; equivalent survivors: ['M24']; survived/invalid: []
+55/56 killed; equivalent survivors: ['M24']; survived/invalid: []

@@ -1,7 +1,7 @@
 {
   "cka_value_read": "refused: AttributeSensitive (CKR_ATTRIBUTE_SENSITIVE)",
   "export_attempt_c_wrapkey": {
-    "cmd": "pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so --token-label sov-verify-test --login --pin env:SOV_TRADE_PKCS11_USER_PIN --wrap --mechanism AES-KEY-WRAP-PAD --id 8e185276 --application-id 736f762d65766964656e63652d3333373535306139 --output-file /tmp/sov-hsm-evidence-de7s_h4m/sov-evidence-337550a9.wrapped",
+    "cmd": "pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so --token-label sov-verify-test --login --pin env:SOV_TRADE_PKCS11_USER_PIN --wrap --mechanism AES-KEY-WRAP-PAD --id 4b8c8216 --application-id 736f762d65766964656e63652d6433353634366638 --output-file /tmp/sov-hsm-evidence-9i8zuh34/sov-evidence-d35646f8.wrapped",
     "rc": 1,
     "stderr": "error: PKCS11 function C_WrapKey failed: rv = CKR_KEY_UNEXTRACTABLE (0x6a)\nAborting.",
     "wrapping_key_keygen_rc": 0,
@@ -14,16 +14,16 @@
     "wrote_bytes": false
   },
   "failures": [],
-  "key_label": "sov-evidence-337550a9",
+  "key_label": "sov-evidence-d35646f8",
   "library": "/usr/lib/softhsm/libsofthsm2.so",
   "module_mentions_private_bytes": false,
   "pkcs11_tool_access_line": [
     "Access:     sensitive, always sensitive, never extractable, local"
   ],
-  "pkcs11_tool_list_objects_cmd": "pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so --token-label sov-verify-test --login --pin env:SOV_TRADE_PKCS11_USER_PIN --list-objects --type privkey --label sov-evidence-337550a9",
+  "pkcs11_tool_list_objects_cmd": "pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so --token-label sov-verify-test --login --pin env:SOV_TRADE_PKCS11_USER_PIN --list-objects --type privkey --label sov-evidence-d35646f8",
   "pkcs11_tool_list_objects_rc": 0,
-  "pkcs11_tool_list_objects_stdout": "Private Key Object; EC_EDWARDS\n  label:      sov-evidence-337550a9\n  ID:         736f762d65766964656e63652d3333373535306139\n  Usage:      sign, signRecover\n  Access:     sensitive, always sensitive, never extractable, local\n  uri:        pkcs11:model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=fa4e1147c43b4455;token=sov-verify-test;id=%736f762d65766964656e63652d3333373535306139;object=sov-evidence-337550a9;type=private\n",
-  "public_key_hex": "5f202e28389505e6dd80e561a3da60920a700036273564eea8136b98d721bcdd",
+  "pkcs11_tool_list_objects_stdout": "Private Key Object; EC_EDWARDS\n  label:      sov-evidence-d35646f8\n  ID:         736f762d65766964656e63652d6433353634366638\n  Usage:      sign, signRecover\n  Access:     sensitive, always sensitive, never extractable, local\n  uri:        pkcs11:model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=bae7e5ad754a917c;token=sov-verify-test;id=%736f762d65766964656e63652d6433353634366638;object=sov-evidence-d35646f8;type=private\n",
+  "public_key_hex": "1953773acb26bbce1d1c4bb41ffa89296de50411799c3b793457a12b7529dfa9",
   "python_pkcs11_attributes": {
     "CKA_ALWAYS_SENSITIVE": true,
     "CKA_EXTRACTABLE": false,
@@ -35,7 +35,7 @@
   "result": "PASS",
   "sign_path_calls_token_sign": true,
   "sign_path_forbidden_attributes": [],
-  "softhsm2_conf": "/workspace/cos-wt/fresh/sov-trade-verify-out/softhsm/softhsm2.conf",
+  "softhsm2_conf": "/workspace/cos-wt/fresh-t617u-2/sov-trade-verify-out/softhsm/softhsm2.conf",
   "token": "SoftHSM2 TEST token (not a certified HSM)",
   "token_label": "sov-verify-test",
   "token_signature_verifies_with_cryptography": true
