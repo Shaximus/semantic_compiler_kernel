@@ -639,3 +639,21 @@ Path 3 note: the original ORACLE-D budget xfail asked for three partitions (R_au
 - **Question for Shax (not changed):** `authority.issue` computes `needed = {APPROVE, SIGN}` for national-root grants but then requires `{APPROVE, DEPLOY}`; `needed` is unused (ruff F841). Which pair is intended?
 - **Not tested / still a gap:** peer checkpoint signatures are not verified in `store_peer_checkpoint`; the Shamir rehearsal reconstructs the whole secret in memory and its GF(256) arithmetic is not constant-time; the hybrid "binding of publics" comment describes a no-op; no certified HSM, real organisations, legal review or outside reviewer (R-16). The verification ran on the box, not on Shax's PC (the PC was not reachable).
 - **Grade:** unchanged. SILVER 0.793, `gold_awarded` false. **R-16:** `NOT_MET`. Version 4.1.0; no release or tag.
+
+## SC-SOV-TRADE-001 t617u (three-officer national-root control; Shax t617u)
+
+- **ID:** `SC-SOV-TRADE-001`
+- **Status:** `PROVISIONAL_DEFAULT`
+- **pending_deliberation:** `true`
+- **Date:** 27 Nov 2026, America/Halifax (AST, UTC-4)
+- **Ruling used:** Shax t617u: neither A (APPROVE+SIGN) nor B (APPROVE+DEPLOY) as written. A national-root grant needs three distinct officers, one each holding APPROVE, SIGN and DEPLOY. The signing act must have a human behind it (`custody.sign` requires a signer holding Role.SIGN). `require_dual_control` must assign each required role to a different officer (a union of roles is not enough). Root grants must also go through the existing 3-of-5 ceremony path, not only the in-memory check. Keep R-16 NOT_MET and the grade unchanged. Do not merge.
+- **Implemented:**
+  1. `authority.issue` for a national-root grant requires `signer` (holding Role.SIGN) and three distinct officers covering {APPROVE, SIGN, DEPLOY}. The unused `needed` variable (ruff F841) is gone; the required set is the one that is actually checked.
+  2. `custody.sign` requires `signer` for NATIONAL_ROOT keys, and that officer must hold Role.SIGN. Non-root signatures are unchanged (`signer` may be omitted). Call sites that sign with the root (status genesis, trust bundle, recognition, withdrawal, ledger checkpoint) now pass a SIGN officer.
+  3. `require_dual_control` uses a pairwise/distinct assignment: each required role is held by a different officer. One officer who happens to hold two of the roles cannot cover both.
+  4. **Root revoke (PROVISIONAL_DEFAULT, flagged for Shax):** revoking a NATIONAL_ROOT key requires the same three distinct officers as a root grant. Shax said this should be an explicit decision; the default taken here is "at least as strict as a grant."
+  5. **Root key generation (PROVISIONAL_DEFAULT, flagged for Shax):** `generate_key` refuses NATIONAL_ROOT. Roots are created only by `generate_root`, which requires the same three officers and runs the 3-of-5 ceremony. The same treatment as revoke, recorded because Shax asked for an explicit decision on that class of acts.
+  6. **Ceremony path for root grants (PROVISIONAL_DEFAULT):** `authority.issue` signs a national-root grant only with `CeremonyResult.sign_with_quorum` (threshold shares), and only if the ceremony public key matches the published root. This is still a software rehearsal: `generate_root` also materialises an in-memory KeyPair so existing non-grant root signatures (bundle, status, checkpoint, recognition) can keep working; those paths are not yet on the ceremony, which is a remaining gap.
+- **Grade:** unchanged. SILVER 0.793, `gold_awarded` false. **R-16:** `NOT_MET`. Version 4.1.0; no release or tag.
+- **Hook:** unchanged; the entry stays explicit-only.
+
