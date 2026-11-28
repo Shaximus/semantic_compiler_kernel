@@ -7,7 +7,7 @@
   "pytest_rc": 0,
   "failing_tests": [],
   "n_failing": 0,
-  "seconds": 9.9
+  "seconds": 10.0
  },
  {
   "id": "M01",
@@ -21,7 +21,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half"
   ],
   "n_failing": 3,
-  "seconds": 10.3
+  "seconds": 9.8
  },
  {
   "id": "M02",
@@ -34,7 +34,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_hybrid_rejects_bad_mldsa_half_with_good_ed25519_half"
   ],
   "n_failing": 2,
-  "seconds": 10.1
+  "seconds": 10.0
  },
  {
   "id": "M03",
@@ -65,7 +65,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_mldsa_context_is_bound"
   ],
   "n_failing": 20,
-  "seconds": 9.9
+  "seconds": 10.4
  },
  {
   "id": "M04",
@@ -96,7 +96,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_mldsa_context_is_bound"
   ],
   "n_failing": 20,
-  "seconds": 9.9
+  "seconds": 9.7
  },
  {
   "id": "M05",
@@ -122,7 +122,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_unsigned_or_forged_status_list_is_rejected"
   ],
   "n_failing": 15,
-  "seconds": 9.8
+  "seconds": 10.0
  },
  {
   "id": "M06",
@@ -147,7 +147,7 @@
    "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_wrong_nonce_fails"
   ],
   "n_failing": 2,
-  "seconds": 9.6
+  "seconds": 10.3
  },
  {
   "id": "M08",
@@ -159,7 +159,7 @@
    "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_wrong_imprint_fails"
   ],
   "n_failing": 1,
-  "seconds": 9.8
+  "seconds": 10.1
  },
  {
   "id": "M09",
@@ -171,7 +171,7 @@
    "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_untrusted_tsa_cert_fails"
   ],
   "n_failing": 1,
-  "seconds": 10.3
+  "seconds": 9.8
  },
  {
   "id": "M10",
@@ -180,11 +180,10 @@
   "status": "KILLED",
   "pytest_rc": 1,
   "failing_tests": [
-   "tests.test_sc_sov_trade_001_fuzz.TestParserFuzz::test_timestamp_bit_flips",
    "tests.test_sc_sov_trade_001_timestamp.TestRFC3161::test_tampered_token_fails"
   ],
-  "n_failing": 2,
-  "seconds": 11.2
+  "n_failing": 1,
+  "seconds": 10.0
  },
  {
   "id": "M11",
@@ -196,7 +195,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_timestamp_policy_mismatch_rejected"
   ],
   "n_failing": 1,
-  "seconds": 9.9
+  "seconds": 10.1
  },
  {
   "id": "M12",
@@ -205,10 +204,11 @@
   "status": "KILLED",
   "pytest_rc": 1,
   "failing_tests": [
-   "tests.test_sc_sov_trade_001_fuzz.TestParserFuzz::test_timestamp_bit_flips"
+   "tests.test_sc_sov_trade_001_fuzz.TestParserFuzz::test_timestamp_bit_flips",
+   "tests.test_sc_sov_trade_001_regressions::test_timestamp_message_digest_binds_tstinfo"
   ],
-  "n_failing": 1,
-  "seconds": 12.6
+  "n_failing": 2,
+  "seconds": 12.7
  },
  {
   "id": "M13",
@@ -220,7 +220,7 @@
    "tests.test_sc_sov_trade_001_regressions.TestTimestampHardening::test_tsa_without_timestamping_eku_rejected"
   ],
   "n_failing": 1,
-  "seconds": 10.1
+  "seconds": 9.9
  },
  {
   "id": "M14",
@@ -232,7 +232,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_timestamp_ess_hash_must_match_tsa_certificate"
   ],
   "n_failing": 1,
-  "seconds": 10.3
+  "seconds": 10.0
  },
  {
   "id": "M15",
@@ -251,7 +251,7 @@
    "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_each_context_serves_its_own_certificate"
   ],
   "n_failing": 8,
-  "seconds": 9.7
+  "seconds": 9.9
  },
  {
   "id": "M16",
@@ -269,7 +269,7 @@
    "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_each_context_serves_its_own_certificate"
   ],
   "n_failing": 7,
-  "seconds": 9.3
+  "seconds": 9.8
  },
  {
   "id": "M17",
@@ -295,7 +295,7 @@
    "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_contexts_pin_tls13_and_require_peer_certs"
   ],
   "n_failing": 2,
-  "seconds": 10.0
+  "seconds": 9.8
  },
  {
   "id": "M19",
@@ -308,7 +308,7 @@
    "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_revoked_client_reason"
   ],
   "n_failing": 2,
-  "seconds": 10.4
+  "seconds": 10.6
  },
  {
   "id": "M20",
@@ -321,7 +321,7 @@
    "tests.test_sc_sov_trade_001_mtls.TestMutualTLSRejectionReasons::test_hostname_mismatch_is_rejected"
   ],
   "n_failing": 2,
-  "seconds": 10.2
+  "seconds": 10.3
  },
  {
   "id": "M21",
@@ -335,7 +335,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_duplicate_share_does_not_count_twice"
   ],
   "n_failing": 3,
-  "seconds": 10.3
+  "seconds": 10.1
  },
  {
   "id": "M22",
@@ -347,7 +347,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_duplicate_share_does_not_count_twice"
   ],
   "n_failing": 1,
-  "seconds": 9.9
+  "seconds": 10.1
  },
  {
   "id": "M23",
@@ -359,7 +359,7 @@
    "tests.test_sc_sov_trade_001_ceremony.TestRootCeremony::test_tampered_share_is_detected"
   ],
   "n_failing": 1,
-  "seconds": 10.1
+  "seconds": 10.3
  },
  {
   "id": "M24",
@@ -369,7 +369,7 @@
   "pytest_rc": 0,
   "failing_tests": [],
   "n_failing": 0,
-  "seconds": 9.9,
+  "seconds": 10.2,
   "equivalence_argument": "every k-subset is reconstructed recursively, and the recursive call already rejects any subset whose secret misses the published SHA-256 commitment; two subsets can only disagree with a SHA-256 collision"
  },
  {
@@ -382,7 +382,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_quorum_from_another_ceremony_cannot_sign"
   ],
   "n_failing": 1,
-  "seconds": 9.8
+  "seconds": 10.1
  },
  {
   "id": "M26",
@@ -395,7 +395,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_value_ceiling_cannot_grow"
   ],
   "n_failing": 2,
-  "seconds": 10.7
+  "seconds": 191.7
  },
  {
   "id": "M27",
@@ -409,7 +409,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_empty_child_scope_under_constrained_parent_is_widening"
   ],
   "n_failing": 3,
-  "seconds": 11.7
+  "seconds": 12.8
  },
  {
   "id": "M28",
@@ -421,7 +421,7 @@
    "tests.test_sc_sov_trade_001.TestR04Scope::test_signer_outside_doc_class_rejected"
   ],
   "n_failing": 1,
-  "seconds": 10.1
+  "seconds": 11.6
  },
  {
   "id": "M29",
@@ -433,7 +433,7 @@
    "tests.test_sc_sov_trade_001_adversarial.TestAdversarialDelegationEscalation::test_delegate_cannot_widen_scope"
   ],
   "n_failing": 1,
-  "seconds": 10.1
+  "seconds": 10.2
  },
  {
   "id": "M30",
@@ -460,7 +460,7 @@
    "tests.test_sc_sov_trade_001_properties.TestChainProperties::test_scope_check_ok_only_if_every_link_covers"
   ],
   "n_failing": 4,
-  "seconds": 10.5
+  "seconds": 10.8
  },
  {
   "id": "M32",
@@ -473,7 +473,7 @@
    "tests.test_sc_sov_trade_001_adversarial.TestAdversarialReplay::test_same_assertion_same_transaction_replayed"
   ],
   "n_failing": 2,
-  "seconds": 10.9
+  "seconds": 10.4
  },
  {
   "id": "M33",
@@ -485,7 +485,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_wrong_challenge_nonce_rejected"
   ],
   "n_failing": 1,
-  "seconds": 10.3
+  "seconds": 10.6
  },
  {
   "id": "M34",
@@ -497,7 +497,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_wrong_transaction_binding_rejected"
   ],
   "n_failing": 1,
-  "seconds": 9.8
+  "seconds": 10.2
  },
  {
   "id": "M35",
@@ -510,7 +510,7 @@
    "tests.test_sc_sov_trade_001.TestR15Degraded::test_clock_drift_rejects"
   ],
   "n_failing": 2,
-  "seconds": 10.1
+  "seconds": 10.4
  },
  {
   "id": "M36",
@@ -522,7 +522,7 @@
    "tests.test_sc_sov_trade_001_regressions::test_unsigned_or_forged_status_list_is_rejected"
   ],
   "n_failing": 1,
-  "seconds": 10.0
+  "seconds": 10.9
  },
  {
   "id": "M37",
@@ -534,7 +534,7 @@
    "tests.test_sc_sov_trade_001.TestR05FreshnessMatrix::test_revoked"
   ],
   "n_failing": 1,
-  "seconds": 10.4
+  "seconds": 10.1
  },
  {
   "id": "M38",
@@ -546,7 +546,7 @@
    "tests.test_sc_sov_trade_001_adversarial.TestAdversarialTamperedReceipt::test_tampered_receipt_fails_offline_verification"
   ],
   "n_failing": 1,
-  "seconds": 10.2
+  "seconds": 10.1
  },
  {
   "id": "M39",
@@ -571,7 +571,7 @@
    "tests.test_sc_sov_trade_001_ledger.TestCheckpointConsistency::test_garbage_proof_halts_acceptance"
   ],
   "n_failing": 2,
-  "seconds": 10.0
+  "seconds": 9.6
  },
  {
   "id": "M41",
@@ -596,7 +596,7 @@
    "tests.test_sc_sov_trade_001.TestR08SplitView::test_forked_checkpoint_is_flagged"
   ],
   "n_failing": 1,
-  "seconds": 10.6
+  "seconds": 10.5
  },
  {
   "id": "M43",
@@ -610,7 +610,7 @@
    "tests.test_sc_sov_trade_001_properties.TestLogProperties::test_inclusion_binds_leaf_and_index"
   ],
   "n_failing": 3,
-  "seconds": 10.7
+  "seconds": 10.5
  },
  {
   "id": "M44",
@@ -633,7 +633,7 @@
    "tests.test_sc_sov_trade_001_properties.TestLogProperties::test_rewritten_history_is_inconsistent"
   ],
   "n_failing": 12,
-  "seconds": 11.2
+  "seconds": 11.1
  },
  {
   "id": "M45",
@@ -647,7 +647,7 @@
    "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_keys_sorted_by_utf16_code_units"
   ],
   "n_failing": 3,
-  "seconds": 10.6
+  "seconds": 11.4
  },
  {
   "id": "M46",
@@ -661,7 +661,7 @@
    "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_floats_refused"
   ],
   "n_failing": 3,
-  "seconds": 10.1
+  "seconds": 10.2
  },
  {
   "id": "M47",
@@ -673,7 +673,7 @@
    "tests.test_sc_sov_trade_001_properties.TestCanonicalProperties::test_unsafe_integers_refused"
   ],
   "n_failing": 1,
-  "seconds": 10.4
+  "seconds": 10.3
  },
  {
   "id": "M48",
@@ -687,7 +687,7 @@
    "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_ambiguous_label"
   ],
   "n_failing": 3,
-  "seconds": 11.2
+  "seconds": 10.8
  },
  {
   "id": "M49",
@@ -699,7 +699,7 @@
    "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_extractable_key"
   ],
   "n_failing": 1,
-  "seconds": 10.2
+  "seconds": 10.4
  },
  {
   "id": "M50",
@@ -711,7 +711,7 @@
    "tests.test_sc_sov_trade_001_pkcs11.TestPKCS11Signer::test_sign_refuses_ambiguous_label"
   ],
   "n_failing": 1,
-  "seconds": 9.8
+  "seconds": 10.1
  },
  {
   "id": "M51",
@@ -727,7 +727,7 @@
    "tests.test_sc_sov_trade_001_adversarial.TestAdversarialForgedSignature::test_channel_is_not_a_trust_anchor"
   ],
   "n_failing": 5,
-  "seconds": 10.2
+  "seconds": 10.1
  },
  {
   "id": "M52",
@@ -739,6 +739,54 @@
    "tests.test_sc_sov_trade_001_regressions::test_authority_gate_unavailable_fails_closed"
   ],
   "n_failing": 1,
-  "seconds": 10.4
+  "seconds": 10.3
+ },
+ {
+  "id": "M53",
+  "property": "national-root grant required set reverted to {APPROVE, DEPLOY}",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_root_control::test_same_officer_in_two_roles_is_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.5
+ },
+ {
+  "id": "M54",
+  "property": "national-root sign-time signer check removed",
+  "file": "sov_trade/custody.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_root_control::test_store_sign_root_requires_signer_holding_sign"
+  ],
+  "n_failing": 1,
+  "seconds": 10.1
+ },
+ {
+  "id": "M55",
+  "property": "dual control restored to a union-of-roles check",
+  "file": "sov_trade/custody.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_root_control::test_two_officer_pair_cannot_cover_three_roles"
+  ],
+  "n_failing": 1,
+  "seconds": 10.6
+ },
+ {
+  "id": "M56",
+  "property": "national-root grant skips the 3-of-5 ceremony path",
+  "file": "sov_trade/authority.py",
+  "status": "KILLED",
+  "pytest_rc": 1,
+  "failing_tests": [
+   "tests.test_sc_sov_trade_001_root_control::test_root_grant_without_ceremony_is_rejected"
+  ],
+  "n_failing": 1,
+  "seconds": 10.8
  }
 ]
