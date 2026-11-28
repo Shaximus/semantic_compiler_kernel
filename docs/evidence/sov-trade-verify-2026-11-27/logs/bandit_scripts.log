@@ -3,7 +3,7 @@
 [main]	INFO	cli include tests: None
 [main]	INFO	cli exclude tests: None
 [main]	INFO	running on Python 3.13.5
-Run started:2026-11-28 00:02:25.187567+00:00
+Run started:2026-11-28 03:35:47.498808+00:00
 
 Test results:
 >> Issue: [B101:assert_used] Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
@@ -190,24 +190,24 @@ Test results:
    Severity: Low   Confidence: High
    CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
    More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
-   Location: scripts/sov_trade/mutation_check.py:219:11
-218	    t0 = time.time()
-219	    proc = subprocess.run(
-220	        [py, "-m", "pytest", *TESTS, "-q", "-p", "no:cacheprovider", f"--junitxml={junit}",
-221	         "-o", "junit_family=xunit2"],
-222	        cwd=root, env=env, capture_output=True, text=True, check=False,
-223	    )
-224	    failed: list[str] = []
+   Location: scripts/sov_trade/mutation_check.py:231:11
+230	    t0 = time.time()
+231	    proc = subprocess.run(
+232	        [py, "-m", "pytest", *TESTS, "-q", "-p", "no:cacheprovider", f"--junitxml={junit}",
+233	         "-o", "junit_family=xunit2"],
+234	        cwd=root, env=env, capture_output=True, text=True, check=False,
+235	    )
+236	    failed: list[str] = []
 
 --------------------------------------------------
 >> Issue: [B314:blacklist] Using xml.etree.ElementTree.parse to parse untrusted XML data is known to be vulnerable to XML attacks. Replace xml.etree.ElementTree.parse with its defusedxml equivalent function or make sure defusedxml.defuse_stdlib() is called
    Severity: Medium   Confidence: High
    CWE: CWE-20 (https://cwe.mitre.org/data/definitions/20.html)
    More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b313-b320-xml-bad-elementtree
-   Location: scripts/sov_trade/mutation_check.py:226:20
-225	    if junit.exists():
-226	        for case in ET.parse(junit).getroot().iter("testcase"):
-227	            if case.find("failure") is not None or case.find("error") is not None:
+   Location: scripts/sov_trade/mutation_check.py:238:20
+237	    if junit.exists():
+238	        for case in ET.parse(junit).getroot().iter("testcase"):
+239	            if case.find("failure") is not None or case.find("error") is not None:
 
 --------------------------------------------------
 >> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
@@ -242,7 +242,7 @@ Test results:
 --------------------------------------------------
 
 Code scanned:
-	Total lines of code: 913
+	Total lines of code: 925
 	Total lines skipped (#nosec): 0
 	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
 
