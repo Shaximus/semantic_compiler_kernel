@@ -184,6 +184,18 @@ MUTATIONS: list[tuple[str, str, str, str, str]] = [
     ("M52", "authority gate missing fails open", "sov_trade/authority.py",
      '        return {"gate_passed": False, "errors": ["authority gate unavailable (fail closed)"]}',
      '        return {"gate_passed": True, "errors": [], "skipped": True}'),
+    ("M53", "national-root grant required set reverted to {APPROVE, DEPLOY}", "sov_trade/authority.py",
+     "            self.store.require_dual_control(\n                first, second, frozenset({Role.APPROVE, Role.SIGN, Role.DEPLOY}), signer\n            )",
+     "            self.store.require_dual_control(\n                first, second, frozenset({Role.APPROVE, Role.DEPLOY})\n            )"),
+    ("M54", "national-root sign-time signer check removed", "sov_trade/custody.py",
+     "            if signer is None:\n                raise CustodyError(\n                    ReasonCode.DUAL_CONTROL_REQUIRED,\n                    \"national-root sign requires a signer holding Role.SIGN\",\n                )",
+     "            if False:\n                raise CustodyError(\n                    ReasonCode.DUAL_CONTROL_REQUIRED,\n                    \"national-root sign requires a signer holding Role.SIGN\",\n                )"),
+    ("M55", "dual control restored to a union-of-roles check", "sov_trade/custody.py",
+     "        if not _distinct_assignment(officers, needed):",
+     "        held = officers[0].roles\n        for _o in officers[1:]:\n            held = held | _o.roles\n        if not (not (needed - held)):"),
+    ("M56", "national-root grant skips the 3-of-5 ceremony path", "sov_trade/authority.py",
+     "            if ceremony is None or shares is None:",
+     "            if False and (ceremony is None or shares is None):"),
 ]
 
 # Mutations argued to be equivalent (no observable behaviour change without

@@ -9,7 +9,7 @@ from typing import Any
 
 from .canonical import canonical_json
 from .crypto import sha256
-from .custody import KeyStore
+from .custody import KeyStore, Officer
 from .types import ReasonCode
 
 
@@ -282,7 +282,7 @@ class Ledger:
     def head(self) -> str:
         return merkle_root(self.leaves())
 
-    def checkpoint(self, signer_id: str, *, now: int) -> Checkpoint:
+    def checkpoint(self, signer_id: str, *, now: int, signer: Officer | None = None) -> Checkpoint:
         cp = Checkpoint(
             domain=self.domain,
             seq=len(self.entries),
@@ -290,7 +290,7 @@ class Ledger:
             issued_at=now,
             key_id=signer_id,
         )
-        sig = self.store.sign(signer_id, canonical_json(cp.payload()), now=now)
+        sig = self.store.sign(signer_id, canonical_json(cp.payload()), now=now, signer=signer)
         cp.signature = sig.hex()
         self.checkpoints.append(cp)
         return cp
