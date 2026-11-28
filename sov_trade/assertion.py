@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .canonical import CanonicalizationError, canonical_json
-from .crypto import ALG_ED25519, PublicKey, sha256, verify_all_signatures
+from .crypto import PublicKey, sha256, verify_all_signatures
 from .custody import KeyStore
 from .identity import Principal, domain_of
 from .types import ActorKind, ReasonCode, TradeError
@@ -21,17 +21,12 @@ def _uuid7() -> str:
     if hasattr(uuid, "uuid7"):
         return str(uuid.uuid7())
     # Minimal RFC 9562 UUIDv7 for Python 3.12 (CI).
-    ts = int.from_bytes(os.urandom(0), "big")  # keep import used if clock injected
     import time
 
     unix_ms = int(time.time() * 1000)
     rand = int.from_bytes(os.urandom(10), "big")
     unix_ms &= 0xFFFFFFFFFFFF
-    time_hi = (unix_ms >> 12) & 0xFFFFFFFF
-    time_mid = unix_ms & 0xFFF
-    # version 7
-    a = (time_hi << 16) | (time_mid << 4) | 0x7
-    # variant 10, 62 random bits packed into the rest — construct via UUID bytes
+    # version 7, variant 10, random bits packed into the rest via UUID bytes
     b = bytearray(16)
     b[0:6] = unix_ms.to_bytes(6, "big")
     b[6] = 0x70 | ((rand >> 56) & 0x0F)
@@ -160,8 +155,9 @@ def sign_sae(
     signers = [(signer, store)] + list(extra_signers or [])
     for prin, ks in signers:
         sig = ks.sign(prin.key_id, payload, now=now)
+        algorithm = ks.get(prin.key_id).public.algorithm
         env.signatures.append(
-            Signature(algorithm=ALG_ED25519, key_id=prin.key_id, signature=sig.hex())
+            Signature(algorithm=algorithm, key_id=prin.key_id, signature=sig.hex())
         )
     return env
 
@@ -181,7 +177,11 @@ def verify_sae_signatures(
         pub = keys.get(sig.key_id)
         if pub is None:
             return ReasonCode.SIGNATURE_INVALID
-        triples.append((pub, payload, bytes.fromhex(sig.signature)))
+        try:
+            raw = bytes.fromhex(sig.signature)
+        except (TypeError, ValueError):
+            return ReasonCode.SIGNATURE_INVALID
+        triples.append((pub, payload, raw))
     if not verify_all_signatures(triples):
         return ReasonCode.HYBRID_INCOMPLETE if len(triples) > 1 else ReasonCode.SIGNATURE_INVALID
     return ReasonCode.OK

@@ -1,0 +1,5 @@
+# Static-check tools for SC-SOV-TRADE-001 (`make verify`). Pins mirror pyproject.toml.
+ruff==0.17.6
+mypy==2.4.1
+bandit==1.9.4
+pip-audit==2.10.1

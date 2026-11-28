@@ -9,16 +9,17 @@ already authorize.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from collections.abc import Sequence
 from typing import Any
 
 from .canonical import canonical_json
 from .crypto import sha256
+from .ceremony import CeremonyResult, Share
 from .custody import KeyStore, Officer
 from .identity import Principal, domain_of
 from .types import (
     ActorKind,
     CaptureError,
-    DocClass,
     ReasonCode,
     Role,
     TradeError,
@@ -33,8 +34,10 @@ def _lattice_check(source: str, claimed: str, *, delegated: bool, scoped: bool) 
     """
     try:
         from semantic_compiler.gates import authority as authority_gate
-    except Exception:  # pragma: no cover - package always present in this repo
-        return {"gate_passed": True, "errors": [], "skipped": True}
+    except ImportError:
+        # Fail closed: before t616u this returned gate_passed=True with
+        # skipped=True, so a missing gate silently allowed every grant.
+        return {"gate_passed": False, "errors": ["authority gate unavailable (fail closed)"]}
     transfer = getattr(authority_gate, "check_authority_transfer")
     # Map sovereign roles onto the existing lattice. Roots and issuers
     # approve; operational signers execute; verifiers only recommend.
@@ -80,13 +83,16 @@ class DelegationScope:
         )
 
     def is_subset_of(self, parent: "DelegationScope") -> bool:
-        # An empty parent set means unconstrained (institutional grant).
-        if parent.doc_classes and not self.doc_classes <= parent.doc_classes:
-            return False
-        if parent.commodity_codes and not self.commodity_codes <= parent.commodity_codes:
-            return False
-        if parent.counterparty_domains and not self.counterparty_domains <= parent.counterparty_domains:
-            return False
+        # An empty set means unconstrained (institutional grant). A child
+        # may only narrow: an unconstrained (empty) child under a
+        # constrained parent is a WIDENING and is refused.
+        for mine, theirs in (
+            (self.doc_classes, parent.doc_classes),
+            (self.commodity_codes, parent.commodity_codes),
+            (self.counterparty_domains, parent.counterparty_domains),
+        ):
+            if theirs and (not mine or not mine <= theirs):
+                return False
         if self.value_ceiling > parent.value_ceiling:
             return False
         return True
@@ -174,6 +180,9 @@ class AuthorityRegistry:
         first: Officer,
         second: Officer,
         emergency: bool = False,
+        signer: Officer | None = None,
+        ceremony: CeremonyResult | None = None,
+        shares: Sequence[Share] | None = None,
     ) -> DelegationRecord:
         if grantor.domain != self.domain or grantee.domain != self.domain:
             raise TradeError(ReasonCode.CROSS_ISSUANCE, "delegation stays inside one domain")
@@ -217,13 +226,36 @@ class AuthorityRegistry:
         if not lattice.get("skipped") and not lattice.get("gate_passed", False):
             raise CaptureError(ReasonCode.CAPTURE_SELF_ESCALATION, "; ".join(lattice.get("errors", [])))
 
-        needed = frozenset({Role.APPROVE, Role.SIGN}) if grantor.kind is ActorKind.NATIONAL_ROOT else frozenset({Role.APPROVE})
         if grantor.kind is ActorKind.NATIONAL_ROOT:
-            self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
-        else:
+            if signer is None:
+                raise TradeError(
+                    ReasonCode.DUAL_CONTROL_REQUIRED,
+                    "national-root grant requires a signer holding Role.SIGN",
+                )
+            if Role.SIGN not in signer.roles:
+                raise TradeError(
+                    ReasonCode.ROLE_SEPARATION,
+                    "national-root signer must hold Role.SIGN",
+                )
+            self.store.require_dual_control(
+                first, second, frozenset({Role.APPROVE, Role.SIGN, Role.DEPLOY}), signer
+            )
+            if ceremony is None or shares is None:
+                raise TradeError(
+                    ReasonCode.FAIL_CLOSED,
+                    "national-root grant must be signed by a 3-of-5 ceremony quorum",
+                )
+            root_ceremony = ceremony
+            root_shares = shares
+            published = self.store.public_for(grantor.key_id)
+            if root_ceremony.public.public_key != published.public_key:
+                raise TradeError(
+                    ReasonCode.FAIL_CLOSED,
+                    "ceremony public key does not match the published national root",
+                )
+        elif grantor.kind is ActorKind.INSTITUTIONAL_ISSUER:
             # Officials: still require two officers for issuer-level grants.
-            if grantor.kind is ActorKind.INSTITUTIONAL_ISSUER:
-                self.store.require_dual_control(first, second, frozenset({Role.APPROVE}))
+            self.store.require_dual_control(first, second, frozenset({Role.APPROVE}))
 
         record = DelegationRecord(
             grantor=grantor.identifier,
@@ -236,7 +268,11 @@ class AuthorityRegistry:
             emergency=emergency,
             key_id=grantor.key_id,
         )
-        sig = self.store.sign(grantor.key_id, canonical_json(record.payload()), now=now)
+        payload = canonical_json(record.payload())
+        if grantor.kind is ActorKind.NATIONAL_ROOT:
+            sig = root_ceremony.sign_with_quorum(payload, root_shares)
+        else:
+            sig = self.store.sign(grantor.key_id, payload, now=now)
         record.signature = sig.hex()
         self.records[grantee.identifier] = record
         return record

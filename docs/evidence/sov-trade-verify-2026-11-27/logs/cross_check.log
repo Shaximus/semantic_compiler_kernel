@@ -1,0 +1,17 @@
+PASS  ed25519: openssl verifies project signature
+PASS  ed25519: openssl rejects tampered message
+PASS  hybrid: openssl verifies Ed25519 half
+PASS  hybrid: openssl 3.5+ verifies ML-DSA-65 half (context-string)
+PASS  hybrid: openssl rejects ML-DSA-65 half under a different context
+PASS  hybrid: openssl rejects ML-DSA-65 half on tampered message
+PASS  rfc3161: openssl ts -verify (queryfile) on project token
+PASS  rfc3161: openssl ts -verify (data) on project token
+PASS  rfc3161: openssl ts -verify rejects tampered data
+PASS  rfc3161: openssl ts -reply issues a token for a project request
+PASS  rfc3161: project client verifies OpenSSL-issued token
+PASS  rfc3161: project client rejects OpenSSL token for other data
+PASS  mtls: s_client with valid TEST client cert is accepted (TLS 1.3)
+PASS  mtls: s_client with EXPIRED client cert is rejected
+PASS  mtls: s_client without a client cert is rejected
+PASS  mtls: s_client forcing TLS 1.2 is rejected
+16/16 cross-checks passed

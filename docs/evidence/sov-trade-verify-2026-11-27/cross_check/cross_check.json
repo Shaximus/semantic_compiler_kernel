@@ -1,0 +1,247 @@
+{
+ "openssl": "OpenSSL: OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)",
+ "checks": [
+  {
+   "check": "ed25519: openssl verifies project signature",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey ed25519.pub.pem -rawin -in msg.bin -sigfile ed25519.sig",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "Signature Verified Successfully",
+   "stdout_tail": [
+    "Signature Verified Successfully"
+   ],
+   "stderr_tail": [],
+   "result": "PASS"
+  },
+  {
+   "check": "ed25519: openssl rejects tampered message",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey ed25519.pub.pem -rawin -in tampered.bin -sigfile ed25519.sig",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": null,
+   "stdout_tail": [
+    "Signature Verification Failure"
+   ],
+   "stderr_tail": [
+    "40E7EF052E7F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ED25519 digest_verify:"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "hybrid: openssl verifies Ed25519 half",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey hyb-ed.pub.pem -rawin -in msg.bin -sigfile hyb-ed.sig",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "Signature Verified Successfully",
+   "stdout_tail": [
+    "Signature Verified Successfully"
+   ],
+   "stderr_tail": [],
+   "result": "PASS"
+  },
+  {
+   "check": "hybrid: openssl 3.5+ verifies ML-DSA-65 half (context-string)",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey hyb-mldsa.pub.pem -rawin -in msg.bin -sigfile hyb-mldsa.sig -pkeyopt context-string:SC-SOV-TRADE-001/v1",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "Signature Verified Successfully",
+   "stdout_tail": [
+    "Signature Verified Successfully"
+   ],
+   "stderr_tail": [],
+   "result": "PASS"
+  },
+  {
+   "check": "hybrid: openssl rejects ML-DSA-65 half under a different context",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey hyb-mldsa.pub.pem -rawin -in msg.bin -sigfile hyb-mldsa.sig -pkeyopt context-string:wrong-context",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": null,
+   "stdout_tail": [
+    "Signature Verification Failure"
+   ],
+   "stderr_tail": [
+    "4097AA8A937F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "hybrid: openssl rejects ML-DSA-65 half on tampered message",
+   "cmd": "openssl pkeyutl -verify -pubin -inkey hyb-mldsa.pub.pem -rawin -in tampered.bin -sigfile hyb-mldsa.sig -pkeyopt context-string:SC-SOV-TRADE-001/v1",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": null,
+   "stdout_tail": [
+    "Signature Verification Failure"
+   ],
+   "stderr_tail": [
+    "4037EC5CF87F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "rfc3161: openssl ts -verify (queryfile) on project token",
+   "cmd": "openssl ts -verify -in resp.tsr -CAfile tsa-ca.pem -untrusted tsa.pem -queryfile req.tsq",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "Verification: OK",
+   "stdout_tail": [
+    "Verification: OK"
+   ],
+   "stderr_tail": [
+    "Using configuration from /usr/lib/ssl/openssl.cnf",
+    "Warning: certificate from 'tsa.pem' with subject '/CN=SC-SOV-TRADE-001 Test TSA' is not a CA cert"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "rfc3161: openssl ts -verify (data) on project token",
+   "cmd": "openssl ts -verify -in resp.tsr -CAfile tsa-ca.pem -untrusted tsa.pem -data ts-data.bin",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "Verification: OK",
+   "stdout_tail": [
+    "Verification: OK"
+   ],
+   "stderr_tail": [
+    "Using configuration from /usr/lib/ssl/openssl.cnf",
+    "Warning: certificate from 'tsa.pem' with subject '/CN=SC-SOV-TRADE-001 Test TSA' is not a CA cert"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "rfc3161: openssl ts -verify rejects tampered data",
+   "cmd": "openssl ts -verify -in resp.tsr -CAfile tsa-ca.pem -untrusted tsa.pem -data tampered.bin",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": null,
+   "stdout_tail": [
+    "Verification: FAILED"
+   ],
+   "stderr_tail": [
+    "Using configuration from /usr/lib/ssl/openssl.cnf",
+    "Warning: certificate from 'tsa.pem' with subject '/CN=SC-SOV-TRADE-001 Test TSA' is not a CA cert",
+    "40E723C83E7F0000:error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch:../crypto/ts/ts_rsp_verify.c:508:"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "rfc3161: openssl ts -reply issues a token for a project request",
+   "cmd": "openssl ts -reply -config tsa.cnf -queryfile req2.tsq -out resp2.tsr",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": null,
+   "stdout_tail": [],
+   "stderr_tail": [
+    "Using configuration from tsa.cnf",
+    "Response has been generated.",
+    "40E74D93DF7F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=crypto_device",
+    "40E74D93DF7F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=other_policies"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "rfc3161: project client verifies OpenSSL-issued token",
+   "result": "PASS",
+   "detail": "verify_token accepted the OpenSSL-issued token"
+  },
+  {
+   "check": "rfc3161: project client rejects OpenSSL token for other data",
+   "result": "PASS"
+  },
+  {
+   "check": "mtls: s_client with valid TEST client cert is accepted (TLS 1.3)",
+   "cmd": "openssl s_client -connect 127.0.0.1:37835 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert good.crt -key good.key",
+   "rc": 0,
+   "expect": "success",
+   "must_contain": "hello from project mTLS server",
+   "stdout_tail": [
+    "    Verify return code: 0 (ok)",
+    "    Extended master secret: no",
+    "    Max Early Data: 0",
+    "---",
+    "read R BLOCK",
+    "closed"
+   ],
+   "stderr_tail": [
+    "Connecting to 127.0.0.1",
+    "depth=1 CN=Nation-B TEST CA Test Root CA",
+    "verify return:1",
+    "depth=0 CN=nation-b.example",
+    "verify return:1"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "mtls: s_client with EXPIRED client cert is rejected",
+   "cmd": "openssl s_client -connect 127.0.0.1:54259 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert expired.crt -key expired.key",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": "certificate expired",
+   "stdout_tail": [
+    "Compression: NONE",
+    "Expansion: NONE",
+    "No ALPN negotiated",
+    "Early data was not sent",
+    "Verify return code: 0 (ok)",
+    "---"
+   ],
+   "stderr_tail": [
+    "Connecting to 127.0.0.1",
+    "depth=1 CN=Nation-B TEST CA Test Root CA",
+    "verify return:1",
+    "depth=0 CN=nation-b.example",
+    "verify return:1",
+    "40E7C31FA77F0000:error:0A000415:SSL routines:ssl3_read_bytes:ssl/tls alert certificate expired:../ssl/record/rec_layer_s3.c:918:SSL alert number 45"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "mtls: s_client without a client cert is rejected",
+   "cmd": "openssl s_client -connect 127.0.0.1:37297 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": "certificate required",
+   "stdout_tail": [
+    "Compression: NONE",
+    "Expansion: NONE",
+    "No ALPN negotiated",
+    "Early data was not sent",
+    "Verify return code: 0 (ok)",
+    "---"
+   ],
+   "stderr_tail": [
+    "Connecting to 127.0.0.1",
+    "depth=1 CN=Nation-B TEST CA Test Root CA",
+    "verify return:1",
+    "depth=0 CN=nation-b.example",
+    "verify return:1",
+    "403745D97B7F0000:error:0A00045C:SSL routines:ssl3_read_bytes:tlsv13 alert certificate required:../ssl/record/rec_layer_s3.c:918:SSL alert number 116"
+   ],
+   "result": "PASS"
+  },
+  {
+   "check": "mtls: s_client forcing TLS 1.2 is rejected",
+   "cmd": "openssl s_client -connect 127.0.0.1:39989 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_2 -cert good.crt -key good.key",
+   "rc": 1,
+   "expect": "failure",
+   "must_contain": "protocol version",
+   "stdout_tail": [
+    "    SRP username: None",
+    "    Start Time: 1795836168",
+    "    Timeout   : 7200 (sec)",
+    "    Verify return code: 0 (ok)",
+    "    Extended master secret: no",
+    "---"
+   ],
+   "stderr_tail": [
+    "Connecting to 127.0.0.1",
+    "4087CD0B8E7F0000:error:0A00042E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_layer_s3.c:918:SSL alert number 70"
+   ],
+   "result": "PASS"
+  }
+ ],
+ "passed": 16,
+ "failed": 0,
+ "note": "All keys were TEST keys generated per run and deleted."
+}

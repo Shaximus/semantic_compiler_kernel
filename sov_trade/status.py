@@ -8,7 +8,7 @@ from typing import Any
 from .canonical import canonical_json
 from .crypto import PublicKey, sha256, verify_signature
 from .custody import KeyStore, Officer
-from .types import ReasonCode, Role, TradeError
+from .types import ReasonCode, Role
 
 
 # PROVISIONAL_DEFAULT: status older than this many seconds is stale.
@@ -85,12 +85,13 @@ class StatusService:
         *,
         now: int,
         reason: str = "",
+        signer: Officer | None = None,
     ) -> StatusList:
         self.store.require_dual_control(first, second, frozenset({Role.APPROVE}))
         self.entries.append(StatusEntry(subject=subject, state=state, as_of=now, reason=reason))
-        return self.publish(signer_id, now=now)
+        return self.publish(signer_id, now=now, signer=signer)
 
-    def publish(self, signer_id: str, *, now: int) -> StatusList:
+    def publish(self, signer_id: str, *, now: int, signer: Officer | None = None) -> StatusList:
         self.version += 1
         sl = StatusList(
             domain=self.domain,
@@ -99,7 +100,7 @@ class StatusService:
             entries=list(self.entries),
             key_id=signer_id,
         )
-        sig = self.store.sign(signer_id, canonical_json(sl.payload()), now=now)
+        sig = self.store.sign(signer_id, canonical_json(sl.payload()), now=now, signer=signer)
         sl.signature = sig.hex()
         self.lists.append(sl)
         return sl

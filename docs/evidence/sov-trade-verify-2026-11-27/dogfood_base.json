@@ -1,0 +1,818 @@
+{
+ "id_goku": {
+  "text": "Explain SC-LU-GOKU-001.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 1.0,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    119.7
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 1.00)"
+  ],
+  "summon_entries": [
+   "SC-LU-GOKU-001",
+   "SC-LU-VEGETA-001",
+   "SC-MIRROR-001"
+  ]
+ },
+ "id_cell": {
+  "text": "Explain SC-LU-CELL-001.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 1.0,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    25.0
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 1.00)"
+  ],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-TRIAD-SG-001",
+   "SC-LU-VEGETA-001"
+  ]
+ },
+ "id_trunks": {
+  "text": "Explain SC-LU-TRUNKS-001.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 1.0,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    25.0
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 1.00)"
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-LU-VEGETA-001",
+   "SC-LU-GOKU-001"
+  ]
+ },
+ "id_vegeta": {
+  "text": "Explain SC-LU-VEGETA-001.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.982,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    116.5
+   ],
+   [
+    "client_server_reality",
+    4.1
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.98)"
+  ],
+  "summon_entries": [
+   "SC-LU-VEGETA-001",
+   "SC-LU-GOKU-001",
+   "SC-LU-FRIEZA-001"
+  ]
+ },
+ "goku_open": {
+  "text": "Goku learns from every opponent and gathers the Spirit Bomb from willing donors: an open architecture, the Oneness pole.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.968,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    195.0
+   ],
+   [
+    "client_server_reality",
+    12.5
+   ],
+   [
+    "reward_hijacking",
+    10.3
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.45,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.97)"
+  ],
+  "summon_entries": [
+   "SC-LU-GOKU-001",
+   "SC-OMNI-001",
+   "SC-LU-VEGETA-001"
+  ]
+ },
+ "goku_ui": {
+  "text": "Ultra Instinct removes the observer while Ultra Ego amplifies the self: Goku and Vegeta as Oneness and Sovereignty.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.959,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    272.0
+   ],
+   [
+    "client_server_reality",
+    22.1
+   ],
+   [
+    "domain_expansion",
+    15.2
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.96)"
+  ],
+  "summon_entries": [
+   "SC-LU-GOKU-001",
+   "SC-LU-VEGETA-001",
+   "SC-CP-001"
+  ]
+ },
+ "goku_fusion": {
+  "text": "Goku and Vegeta fuse into Vegito and Gogeta: the cooperation branch of the binary.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.962,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    200.6
+   ],
+   [
+    "remote_attestation",
+    15.1
+   ],
+   [
+    "client_server_reality",
+    12.4
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.96)"
+  ],
+  "summon_entries": [
+   "SC-LU-VEGETA-001",
+   "SC-LU-GOKU-001",
+   "SC-MIRROR-001"
+  ]
+ },
+ "kakarot": {
+  "text": "Kakarot was sent to Earth as an infant and forgot his mission after hitting his head.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.949,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    57.4
+   ],
+   [
+    "domain_expansion",
+    5.8
+   ],
+   [
+    "wireless_power",
+    5.4
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.95)"
+  ],
+  "summon_entries": [
+   "SC-GOT-MTN-001",
+   "SC-LU-GOKU-001",
+   "SC-LILITH-001"
+  ]
+ },
+ "perfect_cell": {
+  "text": "Perfect Cell absorbed Androids 17 and 18 and held the Cell Games to prove his designed perfection, then lost to Gohan's Super Saiyan 2.",
+  "route": "ROUTED",
+  "domain": "mobile_security",
+  "conf": 0.57,
+  "cands": [
+   [
+    "mobile_security",
+    54.9
+   ],
+   [
+    "biology",
+    47.2
+   ],
+   [
+    "android_connectivity",
+    28.7
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "mobile_security",
+  "warnings": [
+   "ROUTED_DOMAIN: mobile_security (routing confidence 0.57)"
+  ],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-LU-VEGETA-001",
+   "SC-OMNI-001"
+  ]
+ },
+ "cell_goodhart": {
+  "text": "Perfect Cell is Goodhart's law: a benchmark-saturated model that mistakes its own tournament for the target.",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.673,
+  "cands": [
+   [
+    "biology",
+    47.2
+   ],
+   [
+    "law",
+    30.9
+   ],
+   [
+    "domain_expansion",
+    15.4
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "organizational",
+  "warnings": [],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-DOMAIN-EXPANSION-001",
+   "SC-NEURO-SLEEPER-001"
+  ]
+ },
+ "future_trunks": {
+  "text": "Future Trunks travelled back to save a timeline that was not his own, and Future Zeno later erased his future.",
+  "route": "ROUTED",
+  "domain": "client_server_reality",
+  "conf": 0.605,
+  "cands": [
+   [
+    "client_server_reality",
+    21.6
+   ],
+   [
+    "reward_hijacking",
+    13.0
+   ],
+   [
+    "consciousness_cognition",
+    10.2
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.45,
+  "selected_target": "client_server_reality",
+  "warnings": [
+   "ROUTED_DOMAIN: client_server_reality (routing confidence 0.60)"
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-LU-VEGETA-001",
+   "SC-VESSEL-CAIN-001"
+  ]
+ },
+ "last_crown": {
+  "text": "Vegeta, the last crown: he learned from Dodoria that Frieza destroyed Planet Vegeta and was angry for himself, not for the planet.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.939,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    123.9
+   ],
+   [
+    "astrology",
+    15.1
+   ],
+   [
+    "reward_hijacking",
+    6.0
+   ]
+  ],
+  "decision": "COMPILED_WITH_GUARDRAILS",
+  "route_to": [],
+  "fit": 0.65,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.94)"
+  ],
+  "summon_entries": [
+   "SC-LU-VEGETA-001",
+   "SC-LU-FRIEZA-001",
+   "SC-LU-CELL-001"
+  ]
+ },
+ "mbs_backup": {
+  "text": "The Frieza chamber sits in the mirrored universe, the CPT backup snapshot of ours.",
+  "route": "ROUTED",
+  "domain": "soul_bomb_sovereignty",
+  "conf": 0.928,
+  "cands": [
+   [
+    "soul_bomb_sovereignty",
+    92.5
+   ],
+   [
+    "client_server_reality",
+    13.3
+   ],
+   [
+    "distributed_consensus",
+    8.1
+   ]
+  ],
+  "decision": "COMPILED",
+  "route_to": [
+   "Logos",
+   "Dragon"
+  ],
+  "fit": 0.65,
+  "selected_target": "soul_bomb_sovereignty",
+  "warnings": [
+   "ROUTED_DOMAIN: soul_bomb_sovereignty (routing confidence 0.93)"
+  ],
+  "summon_entries": [
+   "SC-LU-FRIEZA-001",
+   "SC-MIRROR-001",
+   "SC-DU-001"
+  ]
+ },
+ "ctrl_cellphone": {
+  "text": "My cell phone battery dies by noon, what should I check?",
+  "route": "ROUTED",
+  "domain": "biology",
+  "conf": 0.883,
+  "cands": [
+   [
+    "biology",
+    47.2
+   ],
+   [
+    "poe_chaos_inoculation",
+    11.0
+   ],
+   [
+    "consciousness_cognition",
+    9.8
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.0,
+  "selected_target": "biology",
+  "warnings": [
+   "ROUTED_DOMAIN: biology (routing confidence 0.88)"
+  ],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-DU-001",
+   "SC-NEURO-SLEEPER-001"
+  ]
+ },
+ "ctrl_excel": {
+  "text": "How do I lock a cell in Excel so nobody can edit it?",
+  "route": "ROUTED",
+  "domain": "biology",
+  "conf": 0.947,
+  "cands": [
+   [
+    "biology",
+    71.2
+   ],
+   [
+    "sovereign_local_mesh",
+    7.5
+   ],
+   [
+    "consciousness_cognition",
+    7.0
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "biology",
+  "warnings": [
+   "ROUTED_DOMAIN: biology (routing confidence 0.95)"
+  ],
+  "summon_entries": [
+   "SC-IT-OCTO-RNA-EDIT-001",
+   "SC-NEURO-SLEEPER-001",
+   "SC-LU-CELL-001"
+  ]
+ },
+ "ctrl_stemcell": {
+  "text": "Are stem cell treatments for knee arthritis worth it?",
+  "route": "ROUTED",
+  "domain": "biology",
+  "conf": 0.886,
+  "cands": [
+   [
+    "biology",
+    47.2
+   ],
+   [
+    "medical",
+    10.7
+   ],
+   [
+    "consciousness_cognition",
+    9.8
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.4,
+  "selected_target": "biology",
+  "warnings": [
+   "ROUTED_DOMAIN: biology (routing confidence 0.89)"
+  ],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-TRIAD-SG-001",
+   "SC-NEURO-SLEEPER-001"
+  ]
+ },
+ "ctrl_fuelcell": {
+  "text": "How efficient are hydrogen fuel cells compared to batteries?",
+  "route": "ROUTED",
+  "domain": "biology",
+  "conf": 0.818,
+  "cands": [
+   [
+    "biology",
+    55.5
+   ],
+   [
+    "consciousness_cognition",
+    20.3
+   ],
+   [
+    "wireless_power",
+    15.4
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.2,
+  "selected_target": "biology",
+  "warnings": [
+   "ROUTED_DOMAIN: biology (routing confidence 0.82)"
+  ],
+  "summon_entries": [
+   "SC-NEURO-SLEEPER-001",
+   "SC-LU-CELL-001",
+   "SC-DOMAIN-EXPANSION-001"
+  ]
+ },
+ "ctrl_prison": {
+  "text": "How big is a typical prison cell in Canada?",
+  "route": "ROUTED",
+  "domain": "biology",
+  "conf": 0.897,
+  "cands": [
+   [
+    "biology",
+    47.2
+   ],
+   [
+    "consciousness_cognition",
+    9.8
+   ]
+  ],
+  "decision": "NEEDS_REVISION",
+  "route_to": [],
+  "fit": 0.4,
+  "selected_target": "biology",
+  "warnings": [
+   "ROUTED_DOMAIN: biology (routing confidence 0.90)"
+  ],
+  "summon_entries": [
+   "SC-LU-CELL-001",
+   "SC-NEURO-SLEEPER-001",
+   "SC-IT-OCTO-RNA-EDIT-001"
+  ]
+ },
+ "ctrl_swim": {
+  "text": "Where can I buy swim trunks for a beach vacation?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.108,
+  "cands": [
+   [
+    "social",
+    4.6
+   ],
+   [
+    "client_server_reality",
+    3.7
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-LU-VEGETA-001",
+   "SC-LU-GOKU-001"
+  ]
+ },
+ "ctrl_cartrunk": {
+  "text": "My car trunk will not open with the key fob.",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.364,
+  "cands": [
+   [
+    "trust_chain",
+    13.4
+   ],
+   [
+    "mobile_security",
+    8.7
+   ],
+   [
+    "organizational",
+    7.7
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-WW-AWARE-001",
+   "SC-MYTH-001"
+  ]
+ },
+ "ctrl_tree": {
+  "text": "How do I measure the diameter of a tree trunk?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.491,
+  "cands": [
+   [
+    "speculative_decoding",
+    17.6
+   ],
+   [
+    "kv_cache_inference",
+    10.6
+   ],
+   [
+    "wireless_power",
+    8.0
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-TOL-001",
+   "SC-AVG-001"
+  ]
+ },
+ "ctrl_elephant": {
+  "text": "How many muscles are in an elephant trunk?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.0,
+  "cands": [],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-LU-VEGETA-001",
+   "SC-LU-GOKU-001"
+  ]
+ },
+ "ctrl_future": {
+  "text": "What will the future of remote work look like?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.626,
+  "cands": [
+   [
+    "remote_attestation",
+    20.4
+   ],
+   [
+    "bluetooth",
+    9.5
+   ],
+   [
+    "input_semantic_adapter",
+    8.8
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-LU-TRUNKS-001",
+   "SC-DOMAIN-EXPANSION-001",
+   "SC-NEURO-SLEEPER-001"
+  ]
+ },
+ "ctrl_crown": {
+  "text": "How much does a dental crown cost without insurance?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.256,
+  "cands": [
+   [
+    "poe_chaos_inoculation",
+    8.9
+   ],
+   [
+    "soul_bomb_sovereignty",
+    5.0
+   ],
+   [
+    "finance_economics",
+    4.1
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-GOT-JON-001",
+   "SC-LU-VEGETA-001",
+   "SC-GUARD-001"
+  ]
+ },
+ "ctrl_prince": {
+  "text": "My son wants a prince costume for Halloween.",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.0,
+  "cands": [],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-DU-001",
+   "SC-VESSEL-SW-001",
+   "SC-LU-VEGETA-001"
+  ]
+ },
+ "ctrl_instinct": {
+  "text": "Should I trust my gut instinct about this job offer?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.382,
+  "cands": [
+   [
+    "trust_chain",
+    15.8
+   ],
+   [
+    "soul_bomb_sovereignty",
+    12.6
+   ],
+   [
+    "social",
+    9.3
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-NEURO-SLEEPER-001",
+   "SC-SCA-CONT-001",
+   "SC-VESSEL-SW-001"
+  ]
+ },
+ "ctrl_alarm": {
+  "text": "Can you set an alarm for 7am tomorrow?",
+  "route": "ABSTAIN",
+  "domain": null,
+  "conf": 0.124,
+  "cands": [
+   [
+    "consciousness_cognition",
+    5.4
+   ],
+   [
+    "psychology",
+    4.6
+   ]
+  ],
+  "decision": "PASS_THROUGH",
+  "route_to": [
+   "HOST_AI"
+  ],
+  "fit": -1,
+  "selected_target": null,
+  "warnings": [
+   "PASS_THROUGH: no target system resolved; the input is outside the compiler's domains. Forward the original prompt unchanged to the host AI."
+  ],
+  "summon_entries": [
+   "SC-NEURO-SLEEPER-001",
+   "SC-LU-SAO-YUI-001"
+  ]
+ }
+}

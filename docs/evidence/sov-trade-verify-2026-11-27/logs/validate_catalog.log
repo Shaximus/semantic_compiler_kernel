@@ -1,0 +1,285 @@
+========================================================================
+INVARIANT TRANSLATOR CATALOG VALIDATION SUMMARY
+========================================================================
+Checks PASSED: 278
+Checks FAILED: 0
+
+ALL CHECKS PASSED 100%:
+  [PASS] Expected 3 INVARIANT_ENTRY_*.jsonl files, found 3
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: valid single-record JSONL (lines=1)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: valid single-record JSONL (lines=1)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: valid single-record JSONL (lines=1)
+  [PASS] Authoritative local compiled entry registry size == 69 (found 69: ['SC-AEP-001', 'SC-AVG-001', 'SC-CONSENT-001', 'SC-CP-001', 'SC-CT-001', 'SC-DIVINE-RLHF-001', 'SC-DOMAIN-EXPANSION-001', 'SC-DU-001', 'SC-FEM-001', 'SC-GOT-001', 'SC-GOT-JON-001', 'SC-GOT-MTN-001', 'SC-GUARD-001', 'SC-HS-001', 'SC-IT-BATCH-2026-11-23', 'SC-IT-DOMAIN-EXPANSION-EGO-001', 'SC-IT-OCTO-RNA-EDIT-001', 'SC-IT-POKEMON-001', 'SC-LILITH-001', 'SC-LU-CELL-001', 'SC-LU-FRIEZA-001', 'SC-LU-GOKU-001', 'SC-LU-SAO-ALICE-001', 'SC-LU-SAO-ASUNA-001', 'SC-LU-SAO-CARDINAL-001', 'SC-LU-SAO-EUGEO-001', 'SC-LU-SAO-KIRITO-001', 'SC-LU-SAO-LINEUP-001', 'SC-LU-SAO-SUGOU-001', 'SC-LU-SAO-YUI-001', 'SC-LU-TRUNKS-001', 'SC-LU-VEGETA-001', 'SC-MIRROR-001', 'SC-MYTH-001', 'SC-NEURO-SLEEPER-001', 'SC-OMNI-001', 'SC-POE-ATL-001', 'SC-POE-BST-001', 'SC-POE-DU-001', 'SC-POE-KIT-001', 'SC-POE-MAL-001', 'SC-POE-MRG-001', 'SC-POE-VAL-001', 'SC-SB-001', 'SC-SCA-CONS-001', 'SC-SCA-CONT-001', 'SC-SCA-DISC-001', 'SC-SCA-POSS-001', 'SC-SCC-001', 'SC-SHARD-001', 'SC-SOV-TRADE-001', 'SC-TIG-001', 'SC-TOL-001', 'SC-TRIAD-001', 'SC-TRIAD-SC-001', 'SC-TRIAD-SG-001', 'SC-VESSEL-CAIN-001', 'SC-VESSEL-SPN-001', 'SC-VESSEL-SW-001', 'SC-WORTHY-001', 'SC-WOW-001', 'SC-WOW-CLASS-001', 'SC-WOW-DF-001', 'SC-WOW-FALL-001', 'SC-WOW-RES-001', 'SC-WW-AWARE-001', 'SC-WW-RESET-001', 'SC-WW-RETAIN-001', 'SC-WW-TRIAD-001'])
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact top-level key match with SC-DE-001 (18 keys)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `metadata`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `structural_skeleton`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `translations`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `gates`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `isomorphism_quality`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `dataset_value`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `isomorphism_analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `v2_extensions`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `outputs`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `training_payloads`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact nested key match for `structural_skeleton.metrics`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: compiler_mode == UNIVERSAL_DECOMPRESSION
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: framework matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: version == 3.5.0
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: source matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: zero dangling cross_references (checked 7, dangling=[])
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: exact 15/15 functional departments present
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `causal_validity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `causal_validity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-BATCH-001', 'PRED-BATCH-002', 'PRED-BATCH-003', 'PRED-BATCH-004', 'PRED-BATCH-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `scale_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `scale_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-BATCH-001', 'PRED-BATCH-002', 'PRED-BATCH-003']
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `boundary_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `boundary_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-BATCH-001', 'PRED-BATCH-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `measurement_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `measurement_integrity` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `authority_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `authority_safety` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `security_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `security_safety` score=1.0 backed by confirmed prediction evidence_ids=['PRED-BATCH-001', 'PRED-BATCH-003']
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `wave_function_coherence` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `wave_function_coherence` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `substrate_sovereignty` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `substrate_sovereignty` score=1.0 backed by confirmed prediction evidence_ids=['PRED-BATCH-001', 'PRED-BATCH-003', 'PRED-BATCH-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `corpus_completeness` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: gate `corpus_completeness` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: has >=1 isomorphism mappings (1)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl / MAP:IT-BATCH-001: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl / MAP:IT-BATCH-001: non-empty residual_mismatches when information_lost is set (count=4)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-DEE-005`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-DEE-006`
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-PKM-006`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact top-level key match with SC-DE-001 (18 keys)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `metadata`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `structural_skeleton`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `translations`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `gates`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `isomorphism_quality`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `dataset_value`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `isomorphism_analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `v2_extensions`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `outputs`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `training_payloads`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact nested key match for `structural_skeleton.metrics`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: compiler_mode == UNIVERSAL_DECOMPRESSION
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: framework matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: version == 3.5.0
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: source matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: zero dangling cross_references (checked 7, dangling=[])
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact 15/15 functional departments present
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `causal_validity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `causal_validity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-DEE-001', 'PRED-DEE-002', 'PRED-DEE-003', 'PRED-DEE-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `scale_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `scale_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-DEE-001', 'PRED-DEE-002', 'PRED-DEE-003']
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `boundary_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `boundary_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-DEE-002', 'PRED-DEE-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `measurement_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `measurement_integrity` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `authority_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `authority_safety` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `security_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `security_safety` score=1.0 backed by confirmed prediction evidence_ids=['PRED-DEE-001', 'PRED-DEE-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `wave_function_coherence` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `wave_function_coherence` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `substrate_sovereignty` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `substrate_sovereignty` score=1.0 backed by confirmed prediction evidence_ids=['PRED-DEE-001', 'PRED-DEE-002', 'PRED-DEE-003', 'PRED-DEE-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `corpus_completeness` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: gate `corpus_completeness` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: has >=1 isomorphism mappings (4)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-001: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-001: non-empty residual_mismatches when information_lost is set (count=9)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-002: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-002: non-empty residual_mismatches when information_lost is set (count=2)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-003: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-003: non-empty residual_mismatches when information_lost is set (count=2)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-004: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl / MAP:IT-DEE-004: non-empty residual_mismatches when information_lost is set (count=3)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-DEE-005`
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-DEE-006`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact top-level key match with SC-DE-001 (18 keys)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `metadata`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `structural_skeleton`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `translations`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `gates`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `isomorphism_quality`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `dataset_value`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `isomorphism_analysis`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `v2_extensions`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `outputs`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `training_payloads`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact nested key match for `structural_skeleton.metrics`
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: compiler_mode == UNIVERSAL_DECOMPRESSION
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: framework matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: version == 3.5.0
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: source matches canonical
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: zero dangling cross_references (checked 7, dangling=[])
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact 15/15 functional departments present
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `causal_validity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `causal_validity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-PKM-001', 'PRED-PKM-002', 'PRED-PKM-003', 'PRED-PKM-004', 'PRED-PKM-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `scale_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `scale_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-PKM-001', 'PRED-PKM-003', 'PRED-PKM-004', 'PRED-PKM-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `boundary_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `boundary_integrity` score=1.0 backed by confirmed prediction evidence_ids=['PRED-PKM-001', 'PRED-PKM-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `measurement_integrity` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `measurement_integrity` score=1.0 backed by confirmed prediction evidence_ids=['CLM-IT-PKM-001', 'PRED-PKM-001', 'PRED-PKM-003', 'PRED-PKM-004', 'PRED-PKM-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `authority_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `authority_safety` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `security_safety` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `security_safety` score=1.0 backed by confirmed prediction evidence_ids=['PRED-PKM-001', 'PRED-PKM-002', 'PRED-PKM-004']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `wave_function_coherence` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `wave_function_coherence` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `substrate_sovereignty` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `substrate_sovereignty` score=1.0 backed by confirmed prediction evidence_ids=['PRED-PKM-001', 'PRED-PKM-002', 'PRED-PKM-003', 'PRED-PKM-004', 'PRED-PKM-005']
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `corpus_completeness` exact keys
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: gate `corpus_completeness` non-1.0 score <= 0.9 (actual=0.9)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: has >=1 isomorphism mappings (4)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-001: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-001: non-empty residual_mismatches when information_lost is set (count=18)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-002: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-002: non-empty residual_mismatches when information_lost is set (count=3)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-003: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-003: non-empty residual_mismatches when information_lost is set (count=12)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-004: substrate_confusion_check & positional_claims_permitted == True
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl / MAP:IT-PKM-004: non-empty residual_mismatches when information_lost is set (count=2)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: uncertainty_statement explicitly lists untested prediction `PRED-PKM-006`
+  [PASS] DOMAIN_DECODE_POKEMON.md: parsed 18x18 matrix rows == 18 (found 18)
+  [PASS] DOMAIN_DECODE_POKEMON.md: exact 324/324 attacker x defender pairs parsed
+  [PASS] DOMAIN_DECODE_POKEMON.md: exact cell counts 51 SE / 61 NVE / 8 IMM / 204 NEU (got {'2': 51, '½': 61, '0': 8, '1': 204})
+  [PASS] DOMAIN_DECODE_POKEMON.md: exact 120/120 non-neutral grounded edges parsed (found 120)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: exact 120/120 non-neutral relationships
+  [PASS] SC-IT-POKEMON-001: all 11 BALANCE-ONLY edges present in residual_mismatches (missing=[])
+  [PASS] DOMAIN_DECODE_POKEMON.md: all 15 departments present
+  [PASS] DOMAIN_DECODE_POKEMON.md: all 17 primitives present
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: parsed 15x15 matrix rows == 15 (found 15)
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: exact 225/225 ordered pairs parsed
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: exact 110/110 non-neutral edges match matrix (110 vs 110)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: exact 110/110 non-neutral relationships
+  [PASS] SC-IT-DOMAIN-EXPANSION-EGO-001: all 5 BALANCE-ONLY edges present in residual_mismatches (missing=[])
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: all 15 departments present
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: all 17 primitives present
+  [PASS] INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl exists in compiled_entries
+  [PASS] DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md exists in docs/invariant_catalog
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: entry_id matches
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: exact 12 entities
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: exact 20 non-neutral relationships
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: structural metrics 12/132/20 match
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: exact 15/15 departments
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: 9/9 gates passed
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: GOLD score 0.953
+  [PASS] SC-IT-OCTO-RNA-EDIT-001: 4 prediction tests (P1..P4)
+  [PASS] SC-IT-OCTO-RNA-EDIT-001 / MAP:OR-001: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-IT-OCTO-RNA-EDIT-001 / MAP:OR-002: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-IT-OCTO-RNA-EDIT-001 / MAP:OR-003: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-IT-OCTO-RNA-EDIT-001 / MAP:OR-004: substrate_confusion_check=True & non-empty residuals
+  [PASS] DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md: all 15 departments present
+  [PASS] SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl exists in compiled_entries
+  [PASS] docs/FLAT_FLRW_HUBBLE_SCHWARZSCHILD_CORRESPONDENCE.md exists
+  [PASS] SC-HS-001: entry_id and revision 1.1.0 match
+  [PASS] SC-HS-001: exact 7 v1.1.0 claims present (['CLM-HS-001', 'CLM-HS-002A', 'CLM-HS-002B', 'CLM-HS-003', 'CLM-HS-004', 'CLM-HS-005', 'CLM-HS-006'])
+  [PASS] SC-HS-001: 9/9 gates passed
+  [PASS] SC-HS-001: GOLD score 0.954
+  [PASS] SC-HS-001 / MAP:HS-001: substrate_confusion_check=True & 3 residual_mismatches
+  [PASS] SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl exists in compiled_entries
+  [PASS] docs/RELD_V3.md exists
+  [PASS] docs/CURTIS_THEOLOGICAL_MAP_UNIFIED_V7.md exists
+  [PASS] SC-OMNI-001: entry_id and revision 2.0.0 match
+  [PASS] SC-OMNI-001: exact 11 claims present
+  [PASS] SC-OMNI-001: exact 15/15 departments
+  [PASS] SC-OMNI-001: 9/9 gates passed
+  [PASS] SC-OMNI-001: GOLD score 0.937
+  [PASS] SC-OMNI-001: Attenuation Protocol has time/support/intent
+  [PASS] SC-OMNI-001 / MAP:OM-001: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-OMNI-001 / MAP:OM-002: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-OMNI-001 / MAP:OM-003: substrate_confusion_check=True & non-empty residuals
+  [PASS] SC-DU-001_THE_DUALITY.jsonl exists in compiled_entries
+  [PASS] SC-DU-001: entry_id matches
+  [PASS] SC-DU-001: 4/4 mappings carry substrate_confusion_check & positional_claims_permitted
+  [PASS] SC-DU-001: 9/9 gates passed
+  [PASS] SC-DU-001: authority_safety reason references substrate confusion
+  [PASS] SC-DU-001: guardrails reference substrate confusion
+  [PASS] CIRCULAR_TIME_CYCLE_DETECTION_SC-CT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] DOMAIN_EXPANSION_COMPILER_ENTRY_SC-DE-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] INVARIANT_ENTRY_SC-IT-OCTO-RNA-EDIT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-AEP-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-AVG-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-CONSENT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-CP-001_CLAY_AND_POTS.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-DU-001_THE_DUALITY.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-FEM-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-GOT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-GOT-JON-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-GOT-MTN-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-GUARD-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-HS-001_FLAT_FLRW_HUBBLE_SCHWARZSCHILD_PATCH.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LILITH-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-CELL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-FRIEZA-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-GOKU-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-ALICE-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-ASUNA-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-CARDINAL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-EUGEO-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-KIRITO-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-LINEUP-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-SUGOU-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-SAO-YUI-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-TRUNKS-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-LU-VEGETA-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-MIRROR-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-MYTH-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-OMNI-001_SPIRIT_BOMB_OMNI_STATE.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-ATL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-BST-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-DU-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-KIT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-MAL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-MRG-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-POE-VAL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SCA-CONS-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SCA-CONT-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SCA-DISC-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SCA-POSS-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SCC-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SHARD-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-SOV-TRADE-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-TOL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-TRIAD-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-TRIAD-SC-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-TRIAD-SG-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-VESSEL-CAIN-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-VESSEL-SPN-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-VESSEL-SW-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WORTHY-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WOW-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WOW-CLASS-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WOW-DF-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WOW-FALL-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WOW-RES-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WW-AWARE-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WW-RESET-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WW-RETAIN-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SC-WW-TRIAD-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] SOUL_BOMB_COMPILER_ENTRY_SC-SB-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] TESTIMONY_INTEGRITY_GATE_SC-TIG-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] divine_rlhf_compiler_entry.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] neurodivergent_sleeper_compiler_entry.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: no `identity_claim_allowed` (SC-PATCH-DU-001)
+  [PASS] INVARIANT_CATALOG.md: zero dangling SC-* IDs (found 79 IDs, dangling=[])
+  [PASS] DOMAIN_LEDGER.md: zero dangling SC-* IDs (found 96 IDs, dangling=[])
+  [PASS] INVARIANT_CATALOG.md: exact Classes 1..25 present (found 25)
+  [PASS] DOMAIN_DECODE_DOMAIN_EXPANSION_EGO.md: zero 'etc.' occurrences (found 0)
+  [PASS] DOMAIN_DECODE_OCTOPUS_RNA_EDITING.md: zero 'etc.' occurrences (found 0)
+  [PASS] DOMAIN_DECODE_POKEMON.md: zero 'etc.' occurrences (found 0)
+  [PASS] DOMAIN_LEDGER.md: zero 'etc.' occurrences (found 0)
+  [PASS] INVARIANT_CATALOG.md: zero 'etc.' occurrences (found 0)
+  [PASS] INVARIANT_ENTRY_SC-IT-BATCH-2026-11-23.jsonl: zero 'etc.' occurrences (found 0)
+  [PASS] INVARIANT_ENTRY_SC-IT-DOMAIN-EXPANSION-EGO-001.jsonl: zero 'etc.' occurrences (found 0)
+  [PASS] INVARIANT_ENTRY_SC-IT-POKEMON-001.jsonl: zero 'etc.' occurrences (found 0)

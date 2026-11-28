@@ -17,9 +17,23 @@ class CanonicalizationError(ValueError):
     """The value cannot be canonically serialized under this profile."""
 
 
-def _utf16_key(key: str) -> list[int]:
-    """Sort key per RFC 8785: UTF-16 code units."""
-    return [ord(ch) for ch in key.encode("utf-16-be").decode("utf-16-be")]
+# I-JSON (RFC 7493) / RFC 8785: numbers are IEEE 754 doubles, so only
+# integers in [-(2**53 - 1), 2**53 - 1] round-trip exactly.
+MAX_SAFE_INTEGER = 2**53 - 1
+
+
+def _utf16_key(key: str) -> bytes:
+    """Sort key per RFC 8785 section 3.2.3: UTF-16 code units.
+
+    Big-endian UTF-16 bytes compare in the same order as the sequence of
+    16-bit code units, so astral characters (surrogate pairs, 0xD800+)
+    sort before U+E000..U+FFFF, as the RFC requires. Lone surrogates
+    are not valid JSON text and are rejected.
+    """
+    try:
+        return key.encode("utf-16-be")
+    except UnicodeEncodeError as exc:
+        raise CanonicalizationError("object key contains a lone surrogate") from exc
 
 
 def _serialize(value: Any) -> str:
@@ -32,6 +46,10 @@ def _serialize(value: Any) -> str:
     if isinstance(value, str):
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
     if isinstance(value, int) and not isinstance(value, bool):
+        if abs(value) > MAX_SAFE_INTEGER:
+            # PROVISIONAL_DEFAULT (docs/PENDING_DELIBERATION.md): integers
+            # outside the I-JSON safe range are refused, not rounded.
+            raise CanonicalizationError("integer outside the I-JSON safe range")
         return str(value)
     if isinstance(value, float):
         raise CanonicalizationError(
@@ -60,4 +78,9 @@ def canonical_json(value: Any) -> bytes:
     """Return the UTF-8 JCS encoding of *value*."""
     if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
         raise CanonicalizationError("non-finite floats are not accepted")
-    return _serialize(value).encode("utf-8")
+    try:
+        return _serialize(value).encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise CanonicalizationError("string contains a lone surrogate") from exc
+    except RecursionError as exc:
+        raise CanonicalizationError("value is nested too deeply") from exc

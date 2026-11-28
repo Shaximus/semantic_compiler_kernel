@@ -85,6 +85,7 @@ class ReasonCode(str, Enum):
     ROLE_SEPARATION = "role_separation"
     DUAL_CONTROL_REQUIRED = "dual_control_required"
     LEDGER_FORK = "ledger_fork"
+    CONSISTENCY_PROOF_MISSING = "consistency_proof_missing"
     TRANSLATION_ALTERED_SOURCE = "translation_altered_source"
     CLASS_CHANGE_UNCONFIRMED = "class_change_unconfirmed"
     FAIL_CLOSED = "fail_closed"

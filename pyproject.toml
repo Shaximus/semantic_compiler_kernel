@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "jsonschema>=4.0",
     "PyYAML>=6.0",
+    "cryptography>=50.0.2,<51",
 ]
 
 [project.urls]
@@ -32,6 +33,25 @@ Funding = "https://buymeacoffee.com/kingsleywmk"
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
+# PKCS#11 signer and RFC 3161 helpers. Not required to import sov_trade.
+# GitHub CI installs these (plus apt softhsm2 and opensc) and sets
+# SOV_TRADE_REQUIRE_FUNCTIONAL=1 so a missing dependency fails the run.
+sov-trade = [
+    "python-pkcs11==0.10.1",
+    "asn1crypto==1.5.1",
+]
+# Property/fuzz tests and static checks for SC-SOV-TRADE-001 (make verify).
+sov-trade-test = [
+    "pytest>=7.0",
+    "hypothesis==6.170.22; python_version >= '3.11'",
+    "hypothesis==6.168.5; python_version < '3.11'",
+]
+sov-trade-static = [
+    "ruff==0.17.6",
+    "mypy==2.4.1",
+    "bandit==1.9.4",
+    "pip-audit==2.10.1",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
