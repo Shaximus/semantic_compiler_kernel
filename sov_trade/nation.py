@@ -11,10 +11,11 @@ from .assertion import (
     sign_sae,
 )
 from .authority import AuthorityRegistry, DelegationScope, chain_from
-from .clock import DEFAULT_SKEW_SECONDS, Clock
+from .ceremony import CeremonyResult
 from .crypto import PublicKey, sha256
+from .clock import DEFAULT_SKEW_SECONDS, Clock
 from .custody import KeyStore, Officer
-from .identity import IdentityRegistry, Principal, TrustBundle
+from .identity import IdentityRegistry, Principal, TrustBundle, make_did
 from .ledger import Checkpoint, Ledger
 from .protocol import Challenge, VerificationResult, VerifierAgent
 from .receipts import (
@@ -44,6 +45,9 @@ class Nation:
     verifier: VerifierAgent
     officers: dict[str, Officer]
     root: Principal
+    # Software-rehearsal 3-of-5 shares for the national root. Grants are
+    # signed through this ceremony; the unsplit secret is not reused.
+    root_ceremony: CeremonyResult | None = None
     # Translation signer: no delegation chain to the national root.
     translator: Principal | None = None
 
@@ -61,13 +65,22 @@ class Nation:
         for off in officers.values():
             store.register_officer(off)
         now = clock.now_ts()
-        root = identity.create_principal(
-            ActorKind.NATIONAL_ROOT,
-            "root",
+        root_id = make_did(domain, ActorKind.NATIONAL_ROOT, "root")
+        rec, ceremony = store.generate_root(
+            root_id,
             officers["alpha"],
             officers["bravo"],
+            officers["charlie"],
+        )
+        root = Principal(
+            identifier=root_id,
+            kind=ActorKind.NATIONAL_ROOT,
+            domain=domain,
+            key_id=rec.key_id,
+            public_hex=rec.public.public_hex(),
             parent=None,
         )
+        identity.add_principal(root)
         authority = AuthorityRegistry(domain=domain, store=store, override_holder=root.identifier)
         status = StatusService(domain=domain, store=store)
         ledger = Ledger(domain=domain, store=store)
@@ -83,6 +96,7 @@ class Nation:
             verifier=verifier,
             officers=officers,
             root=root,
+            root_ceremony=ceremony,
         )
         # Translation signer is created under the store but is NOT chained to the root.
         # We register it as a principal with a synthetic parent link that is
@@ -103,6 +117,7 @@ class Nation:
             root.identifier,
             now=now,
             reason="genesis",
+            signer=officers["alpha"],
         )
         return nation
 
@@ -121,6 +136,8 @@ class Nation:
             counterparty_domains=frozenset(),
             value_ceiling=10**12,
         )
+        if self.root_ceremony is None:
+            raise TradeError(ReasonCode.FAIL_CLOSED, "national root has no ceremony")
         self.authority.issue(
             self.root,
             issuer,
@@ -132,6 +149,9 @@ class Nation:
             parent=None,
             first=self.officers["alpha"],
             second=self.officers["bravo"],
+            signer=self.officers["charlie"],
+            ceremony=self.root_ceremony,
+            shares=list(self.root_ceremony.shares[: self.root_ceremony.threshold]),
         )
         self.status.set_state(
             issuer.identifier,
@@ -140,6 +160,7 @@ class Nation:
             self.officers["bravo"],
             self.root.identifier,
             now=now,
+            signer=self.officers["alpha"],
         )
         return issuer
 
@@ -196,6 +217,7 @@ class Nation:
             self.officers["alpha"],
             self.officers["bravo"],
             now=self.clock.now_ts(),
+            signer=self.officers["alpha"],
         )
 
     def recognize(
@@ -222,6 +244,7 @@ class Nation:
             not_before=now,
             not_after=now + validity,
             now=now,
+            signer=self.officers["alpha"],
         )
 
     def withdraw(self, foreign_domain: str) -> None:
@@ -231,6 +254,7 @@ class Nation:
             self.officers["bravo"],
             self.root.identifier,
             now=self.clock.now_ts(),
+            signer=self.officers["alpha"],
         )
 
     def public_keys(self) -> dict[str, PublicKey]:
@@ -351,7 +375,7 @@ class Nation:
         return receipt
 
     def checkpoint(self) -> Checkpoint:
-        return self.ledger.checkpoint(self.root.identifier, now=self.clock.now_ts())
+        return self.ledger.checkpoint(self.root.identifier, now=self.clock.now_ts(), signer=self.officers["alpha"])
 
     def translate(
         self,

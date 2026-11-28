@@ -167,6 +167,11 @@ class IdentityRegistry:
         expires_at: int | None = None,
     ) -> Principal:
         identifier = make_did(self.domain, kind, local)
+        if kind is ActorKind.NATIONAL_ROOT:
+            raise TradeError(
+                ReasonCode.DUAL_CONTROL_REQUIRED,
+                "national-root keys must be created with KeyStore.generate_root",
+            )
         rec = self.store.generate_key(
             identifier, kind, first, second, expires_at=expires_at
         )
@@ -188,7 +193,7 @@ class IdentityRegistry:
         self.add_principal(principal)
         return principal
 
-    def publish_bundle(self, root_id: str, first: Officer, second: Officer, *, now: int) -> TrustBundle:
+    def publish_bundle(self, root_id: str, first: Officer, second: Officer, *, now: int, signer: Officer | None = None) -> TrustBundle:
         self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
         root = self.principals[root_id]
         if root.kind is not ActorKind.NATIONAL_ROOT:
@@ -207,7 +212,7 @@ class IdentityRegistry:
             issued_at=now,
             key_id=root.key_id,
         )
-        sig = self.store.sign(root.key_id, canonical_json(bundle.payload()), now=now)
+        sig = self.store.sign(root.key_id, canonical_json(bundle.payload()), now=now, signer=signer)
         bundle.signature = sig.hex()
         return bundle
 
@@ -241,6 +246,7 @@ class IdentityRegistry:
         not_before: int,
         not_after: int,
         now: int,
+        signer: Officer | None = None,
     ) -> RecognitionRecord:
         self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
         if foreign_domain not in self.received_bundles:
@@ -263,7 +269,7 @@ class IdentityRegistry:
             not_after=not_after,
             key_id=signer_id,
         )
-        sig = self.store.sign(signer_id, canonical_json(record.payload()), now=now)
+        sig = self.store.sign(signer_id, canonical_json(record.payload()), now=now, signer=signer)
         record.signature = sig.hex()
         self.recognitions[foreign_domain] = record
         return record
@@ -276,6 +282,7 @@ class IdentityRegistry:
         signer_id: str,
         *,
         now: int,
+        signer: Officer | None = None,
     ) -> RecognitionRecord:
         self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
         rec = self.recognitions.get(foreign_domain)
@@ -283,7 +290,7 @@ class IdentityRegistry:
             raise TradeError(ReasonCode.UNRECOGNIZED_ANCHOR, "no recognition to withdraw")
         rec.withdrawn = True
         rec.withdrawn_at = now
-        sig = self.store.sign(signer_id, canonical_json(rec.payload()), now=now)
+        sig = self.store.sign(signer_id, canonical_json(rec.payload()), now=now, signer=signer)
         rec.signature = sig.hex()
         rec.key_id = signer_id
         return rec

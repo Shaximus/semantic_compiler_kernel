@@ -9,10 +9,12 @@ already authorize.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from collections.abc import Sequence
 from typing import Any
 
 from .canonical import canonical_json
 from .crypto import sha256
+from .ceremony import CeremonyResult, Share
 from .custody import KeyStore, Officer
 from .identity import Principal, domain_of
 from .types import (
@@ -178,6 +180,9 @@ class AuthorityRegistry:
         first: Officer,
         second: Officer,
         emergency: bool = False,
+        signer: Officer | None = None,
+        ceremony: CeremonyResult | None = None,
+        shares: Sequence[Share] | None = None,
     ) -> DelegationRecord:
         if grantor.domain != self.domain or grantee.domain != self.domain:
             raise TradeError(ReasonCode.CROSS_ISSUANCE, "delegation stays inside one domain")
@@ -221,13 +226,34 @@ class AuthorityRegistry:
         if not lattice.get("skipped") and not lattice.get("gate_passed", False):
             raise CaptureError(ReasonCode.CAPTURE_SELF_ESCALATION, "; ".join(lattice.get("errors", [])))
 
-        needed = frozenset({Role.APPROVE, Role.SIGN}) if grantor.kind is ActorKind.NATIONAL_ROOT else frozenset({Role.APPROVE})
         if grantor.kind is ActorKind.NATIONAL_ROOT:
-            self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
-        else:
+            if signer is None:
+                raise TradeError(
+                    ReasonCode.DUAL_CONTROL_REQUIRED,
+                    "national-root grant requires a signer holding Role.SIGN",
+                )
+            if Role.SIGN not in signer.roles:
+                raise TradeError(
+                    ReasonCode.ROLE_SEPARATION,
+                    "national-root signer must hold Role.SIGN",
+                )
+            self.store.require_dual_control(
+                first, second, frozenset({Role.APPROVE, Role.SIGN, Role.DEPLOY}), signer
+            )
+            if ceremony is None or shares is None:
+                raise TradeError(
+                    ReasonCode.FAIL_CLOSED,
+                    "national-root grant must be signed by a 3-of-5 ceremony quorum",
+                )
+            published = self.store.public_for(grantor.key_id)
+            if ceremony.public.public_key != published.public_key:
+                raise TradeError(
+                    ReasonCode.FAIL_CLOSED,
+                    "ceremony public key does not match the published national root",
+                )
+        elif grantor.kind is ActorKind.INSTITUTIONAL_ISSUER:
             # Officials: still require two officers for issuer-level grants.
-            if grantor.kind is ActorKind.INSTITUTIONAL_ISSUER:
-                self.store.require_dual_control(first, second, frozenset({Role.APPROVE}))
+            self.store.require_dual_control(first, second, frozenset({Role.APPROVE}))
 
         record = DelegationRecord(
             grantor=grantor.identifier,
@@ -240,7 +266,12 @@ class AuthorityRegistry:
             emergency=emergency,
             key_id=grantor.key_id,
         )
-        sig = self.store.sign(grantor.key_id, canonical_json(record.payload()), now=now)
+        payload = canonical_json(record.payload())
+        if grantor.kind is ActorKind.NATIONAL_ROOT:
+            assert ceremony is not None and shares is not None  # checked above
+            sig = ceremony.sign_with_quorum(payload, shares)
+        else:
+            sig = self.store.sign(grantor.key_id, payload, now=now)
         record.signature = sig.hex()
         self.records[grantee.identifier] = record
         return record
