@@ -19,7 +19,7 @@
     "sov_trade/ledger.py:390",
     "sov_trade/protocol.py:173"
   ],
-  "secret_scan_files": 671,
+  "secret_scan_files": 709,
   "secret_scan_findings": [],
   "hard_findings": [],
   "result": "PASS"
