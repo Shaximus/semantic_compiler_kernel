@@ -23,7 +23,7 @@
     "Signature Verification Failure"
    ],
    "stderr_tail": [
-    "4017489F657F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ED25519 digest_verify:"
+    "40E7EF052E7F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ED25519 digest_verify:"
    ],
    "result": "PASS"
   },
@@ -61,7 +61,7 @@
     "Signature Verification Failure"
    ],
    "stderr_tail": [
-    "40B7284AFF7E0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
+    "4097AA8A937F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
    ],
    "result": "PASS"
   },
@@ -75,7 +75,7 @@
     "Signature Verification Failure"
    ],
    "stderr_tail": [
-    "4027A648067F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
+    "4037EC5CF87F0000:error:030000EA:digital envelope routines:EVP_DigestVerify:provider signature failure:../crypto/evp/m_sigver.c:781:ML-DSA-65 digest_verify:"
    ],
    "result": "PASS"
   },
@@ -121,7 +121,7 @@
    "stderr_tail": [
     "Using configuration from /usr/lib/ssl/openssl.cnf",
     "Warning: certificate from 'tsa.pem' with subject '/CN=SC-SOV-TRADE-001 Test TSA' is not a CA cert",
-    "40374B15BC7F0000:error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch:../crypto/ts/ts_rsp_verify.c:508:"
+    "40E723C83E7F0000:error:17800067:time stamp routines:ts_check_imprints:message imprint mismatch:../crypto/ts/ts_rsp_verify.c:508:"
    ],
    "result": "PASS"
   },
@@ -135,8 +135,8 @@
    "stderr_tail": [
     "Using configuration from tsa.cnf",
     "Response has been generated.",
-    "40F7EC5C837F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=crypto_device",
-    "40F7EC5C837F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=other_policies"
+    "40E74D93DF7F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=crypto_device",
+    "40E74D93DF7F0000:error:0700006C:configuration file routines:NCONF_get_string:no value:../crypto/conf/conf_lib.c:316:group=tsa_config1 name=other_policies"
    ],
    "result": "PASS"
   },
@@ -151,7 +151,7 @@
   },
   {
    "check": "mtls: s_client with valid TEST client cert is accepted (TLS 1.3)",
-   "cmd": "openssl s_client -connect 127.0.0.1:55347 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert good.crt -key good.key",
+   "cmd": "openssl s_client -connect 127.0.0.1:37835 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert good.crt -key good.key",
    "rc": 0,
    "expect": "success",
    "must_contain": "hello from project mTLS server",
@@ -174,7 +174,7 @@
   },
   {
    "check": "mtls: s_client with EXPIRED client cert is rejected",
-   "cmd": "openssl s_client -connect 127.0.0.1:43969 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert expired.crt -key expired.key",
+   "cmd": "openssl s_client -connect 127.0.0.1:54259 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3 -cert expired.crt -key expired.key",
    "rc": 1,
    "expect": "failure",
    "must_contain": "certificate expired",
@@ -192,13 +192,13 @@
     "verify return:1",
     "depth=0 CN=nation-b.example",
     "verify return:1",
-    "4087654FE77F0000:error:0A000415:SSL routines:ssl3_read_bytes:ssl/tls alert certificate expired:../ssl/record/rec_layer_s3.c:918:SSL alert number 45"
+    "40E7C31FA77F0000:error:0A000415:SSL routines:ssl3_read_bytes:ssl/tls alert certificate expired:../ssl/record/rec_layer_s3.c:918:SSL alert number 45"
    ],
    "result": "PASS"
   },
   {
    "check": "mtls: s_client without a client cert is rejected",
-   "cmd": "openssl s_client -connect 127.0.0.1:60259 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3",
+   "cmd": "openssl s_client -connect 127.0.0.1:37297 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_3",
    "rc": 1,
    "expect": "failure",
    "must_contain": "certificate required",
@@ -216,19 +216,19 @@
     "verify return:1",
     "depth=0 CN=nation-b.example",
     "verify return:1",
-    "4007D14ADE7F0000:error:0A00045C:SSL routines:ssl3_read_bytes:tlsv13 alert certificate required:../ssl/record/rec_layer_s3.c:918:SSL alert number 116"
+    "403745D97B7F0000:error:0A00045C:SSL routines:ssl3_read_bytes:tlsv13 alert certificate required:../ssl/record/rec_layer_s3.c:918:SSL alert number 116"
    ],
    "result": "PASS"
   },
   {
    "check": "mtls: s_client forcing TLS 1.2 is rejected",
-   "cmd": "openssl s_client -connect 127.0.0.1:60981 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_2 -cert good.crt -key good.key",
+   "cmd": "openssl s_client -connect 127.0.0.1:39989 -servername localhost -CAfile ca-b.pem -verify_return_error -verify_hostname localhost -ign_eof -tls1_2 -cert good.crt -key good.key",
    "rc": 1,
    "expect": "failure",
    "must_contain": "protocol version",
    "stdout_tail": [
     "    SRP username: None",
-    "    Start Time: 1795823595",
+    "    Start Time: 1795836168",
     "    Timeout   : 7200 (sec)",
     "    Verify return code: 0 (ok)",
     "    Extended master secret: no",
@@ -236,7 +236,7 @@
    ],
    "stderr_tail": [
     "Connecting to 127.0.0.1",
-    "400785AD467F0000:error:0A00042E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_layer_s3.c:918:SSL alert number 70"
+    "4087CD0B8E7F0000:error:0A00042E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_layer_s3.c:918:SSL alert number 70"
    ],
    "result": "PASS"
   }

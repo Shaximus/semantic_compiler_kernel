@@ -1,10 +1,10 @@
-date_local: 2026-11-27 19:48:44 AST
-host_kind: box (Grok Bot Linux box; NOT Shax's PC - PC unreachable)
+date_local: 2026-11-27 23:18:21 AST
+host_kind: unspecified
 uname: Linux grok-bot-vm-420080851 6.12.113+ #1 SMP PREEMPT_DYNAMIC Tue Nov 24 16:59:13 UTC 2026 x86_64 GNU/Linux
 PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
 VERSION_ID="13"
-repo: /workspace/cos-wt/fresh/semantic_compiler
-git_head: 021252ce2a3c5aaa38b02b5eb9183746b930f94f
+repo: /workspace/cos-wt/fresh-t617u-2/semantic_compiler
+git_head: 21ce5030ddfc3f3bf91760ebab14ea5bd5ddda8a
 git_dirty_files: 0
 python: Python 3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0] 
 openssl_cli: OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
