@@ -1,0 +1,21 @@
+F841 Local variable `needed` is assigned to but never used
+   --> sov_trade/authority.py:224:9
+    |
+222 |             raise CaptureError(ReasonCode.CAPTURE_SELF_ESCALATION, "; ".join(lattice.get("errors", [])))
+223 |
+224 |         needed = frozenset({Role.APPROVE, Role.SIGN}) if grantor.kind is ActorKind.NATIONAL_ROOT else frozenset({Role.APPROVE})
+    |         ^^^^^^
+225 |         if grantor.kind is ActorKind.NATIONAL_ROOT:
+226 |             self.store.require_dual_control(first, second, frozenset({Role.APPROVE, Role.DEPLOY}))
+    |
+help: Remove assignment to unused variable `needed`
+    |
+223 |
+    -         needed = frozenset({Role.APPROVE, Role.SIGN}) if grantor.kind is ActorKind.NATIONAL_ROOT else frozenset({Role.APPROVE})
+224 +         frozenset({Role.APPROVE, Role.SIGN}) if grantor.kind is ActorKind.NATIONAL_ROOT else frozenset({Role.APPROVE})
+225 |         if grantor.kind is ActorKind.NATIONAL_ROOT:
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 1 error.
+1 unsafe fix available with `--fix --unsafe-fixes`.
