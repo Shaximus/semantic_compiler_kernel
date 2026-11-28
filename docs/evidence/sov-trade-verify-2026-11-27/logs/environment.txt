@@ -1,0 +1,73 @@
+date_local: 2026-11-27 19:48:44 AST
+host_kind: box (Grok Bot Linux box; NOT Shax's PC - PC unreachable)
+uname: Linux grok-bot-vm-420080851 6.12.113+ #1 SMP PREEMPT_DYNAMIC Tue Nov 24 16:59:13 UTC 2026 x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+VERSION_ID="13"
+repo: /workspace/cos-wt/fresh/semantic_compiler
+git_head: 021252ce2a3c5aaa38b02b5eb9183746b930f94f
+git_dirty_files: 0
+python: Python 3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0] 
+openssl_cli: OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+cryptography: 50.0.2 | linked: OpenSSL 4.0.3 29 Sep 2026
+softhsm2: 2.6.1
+pkcs11_module: /usr/lib/softhsm/libsofthsm2.so
+pkcs11_tool: pkcs11-tool: unrecognized option '--version'
+opensc	0.26.1-2
+dpkg: opensc	0.26.1-2
+dpkg: openssl	3.5.9-1~deb13u1
+dpkg: softhsm2	2.6.1-3
+SOV_TRADE_REQUIRE_FUNCTIONAL: 1
+SOV_TRADE_FUZZ_EXAMPLES: 5000
+--- pip freeze
+asn1crypto==1.5.1
+ast_serialize==0.13.1
+attrs==26.1.0
+bandit==1.9.4
+boolean.py==5.0
+CacheControl==0.15.0
+certifi==2026.11.20
+cffi==2.1.1
+charset-normalizer==3.5.3
+cryptography==50.0.2
+cyclonedx-python-lib==11.13.0
+defusedxml==0.7.1
+filelock==4.3.1
+hypothesis==6.170.22
+idna==3.20
+iniconfig==2.3.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+librt==0.17.0
+license-expression==30.4.4
+markdown-it-py==4.3.0
+mdurl==0.1.2
+msgpack==1.2.4
+mypy==2.4.1
+mypy_extensions==1.2.0
+packageurl-python==0.17.6
+packaging==26.4
+pathspec==1.1.1
+pip==26.3
+pip-requirements-parser==32.0.1
+pip_api==0.0.35
+pip_audit==2.10.1
+platformdirs==4.14.9
+pluggy==1.7.0
+py-serializable==2.2.0
+pycparser==3.12
+Pygments==2.21.0
+pyparsing==3.3.3
+pytest==9.2.0
+python-pkcs11==0.10.1
+PyYAML==6.0.4
+referencing==0.37.0
+requests==2.34.2
+rich==15.0.0
+rpds-py==2026.9.1
+ruff==0.17.6
+sortedcontainers==2.4.0
+stevedore==5.10.0
+tomli==2.5.0
+tomli_w==1.2.0
+typing_extensions==4.16.0
+urllib3==2.8.0
