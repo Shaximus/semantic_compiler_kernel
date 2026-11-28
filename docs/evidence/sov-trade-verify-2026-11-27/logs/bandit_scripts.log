@@ -1,0 +1,260 @@
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.13.5
+Run started:2026-11-28 00:02:25.187567+00:00
+
+Test results:
+>> Issue: [B101:assert_used] Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html
+   Location: scripts/sov_trade/build_kat_fixtures.py:41:12
+40	            m = re.search(label + r"[^\n]*:\n(.*?)\n\s*" + nxt, block, re.S)
+41	            assert m, (name, label)
+42	            return re.sub(r"[^0-9a-f]", "", m.group(1))
+
+--------------------------------------------------
+>> Issue: [B101:assert_used] Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html
+   Location: scripts/sov_trade/build_kat_fixtures.py:51:8
+50	        out[-1]["signature"] = re.sub(r"[^0-9a-f]", "", sig.group(1))
+51	        assert len(out[-1]["signature"]) == 128, name
+52	        assert len(out[-1]["public_key"]) == 64 and len(out[-1]["secret_key"]) == 64
+
+--------------------------------------------------
+>> Issue: [B101:assert_used] Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html
+   Location: scripts/sov_trade/build_kat_fixtures.py:52:8
+51	        assert len(out[-1]["signature"]) == 128, name
+52	        assert len(out[-1]["public_key"]) == 64 and len(out[-1]["secret_key"]) == 64
+53	    return out
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: scripts/sov_trade/cross_check.py:28:0
+27	import socket
+28	import subprocess
+29	import sys
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/cross_check.py:42:11
+41	        stdin: bytes | None = None, cwd: str | None = None, timeout: int = 20) -> dict:
+42	    proc = subprocess.run(cmd, input=stdin, capture_output=True, cwd=cwd, timeout=timeout, check=False)
+43	    out = proc.stdout.decode("utf-8", "replace")
+
+--------------------------------------------------
+>> Issue: [B607:start_process_with_partial_path] Starting a process with a partial executable path
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b607_start_process_with_partial_path.html
+   Location: scripts/sov_trade/cross_check.py:61:29
+60	    work = Path(tempfile.mkdtemp(prefix="sov-xcheck-"))
+61	    LOG.append(f"# OpenSSL: {subprocess.run(['openssl', 'version'], capture_output=True, text=True).stdout.strip()}")
+62	    LOG.append(f"# scratch dir (TEST keys only, deleted after run): {work}")
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/cross_check.py:61:29
+60	    work = Path(tempfile.mkdtemp(prefix="sov-xcheck-"))
+61	    LOG.append(f"# OpenSSL: {subprocess.run(['openssl', 'version'], capture_output=True, text=True).stdout.strip()}")
+62	    LOG.append(f"# scratch dir (TEST keys only, deleted after run): {work}")
+
+--------------------------------------------------
+>> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b110_try_except_pass.html
+   Location: scripts/sov_trade/cross_check.py:194:8
+193	                LOG.append(f"# project server side: {type(exc).__name__}: {exc}")
+194	        except Exception:  # noqa: BLE001
+195	            pass
+196	
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: scripts/sov_trade/hsm_evidence.py:31:0
+30	import secrets
+31	import subprocess
+32	import sys
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'SoftHSM2 TEST token (not a certified HSM)'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: scripts/sov_trade/hsm_evidence.py:53:8
+52	    results: dict[str, object] = {
+53	        "token": "SoftHSM2 TEST token (not a certified HSM)",
+54	        "library": library,
+55	        "token_label": token_label,
+56	        "softhsm2_conf": os.environ.get("SOFTHSM2_CONF"),
+57	    }
+58	    failures: list[str] = []
+59	
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/hsm_evidence.py:113:14
+112	    base = ["pkcs11-tool", "--module", library, "--token-label", token_label, "--login", "--pin", f"env:{pin_env}"]
+113	    listing = subprocess.run(
+114	        base + ["--list-objects", "--type", "privkey", "--label", label],
+115	        capture_output=True, text=True, check=False,
+116	    )
+117	    results["pkcs11_tool_list_objects_cmd"] = " ".join(base[:-1] + ["env:" + pin_env, "--list-objects", "--type", "privkey", "--label", label])
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/hsm_evidence.py:137:13
+136	    export_path = os.path.join(scratch, f"{label}.der")
+137	    export = subprocess.run(
+138	        base + ["--read-object", "--type", "privkey", "--label", label, "--output-file", export_path],
+139	        capture_output=True, text=True, check=False,
+140	    )
+141	    exported = os.path.exists(export_path) and os.path.getsize(export_path) > 0
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/hsm_evidence.py:157:13
+156	    wrap_id = secrets.token_hex(4)
+157	    keygen = subprocess.run(
+158	        base + ["--keygen", "--key-type", "AES:32", "--label", "sov-evidence-wrap-" + wrap_id,
+159	                "--id", wrap_id, "--usage-wrap"],
+160	        capture_output=True, text=True, check=False,
+161	    )
+162	    wrapped_path = os.path.join(scratch, f"{label}.wrapped")
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/hsm_evidence.py:163:11
+162	    wrapped_path = os.path.join(scratch, f"{label}.wrapped")
+163	    wrap = subprocess.run(
+164	        base + ["--wrap", "--mechanism", "AES-KEY-WRAP-PAD", "--id", wrap_id,
+165	                "--application-id", label.encode("utf-8").hex(), "--output-file", wrapped_path],
+166	        capture_output=True, text=True, check=False,
+167	    )
+168	    wrapped = os.path.exists(wrapped_path) and os.path.getsize(wrapped_path) > 0
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: scripts/sov_trade/mutation_check.py:20:0
+19	import shutil
+20	import subprocess
+21	import sys
+
+--------------------------------------------------
+>> Issue: [B405:blacklist] Using xml.etree.ElementTree to parse untrusted XML data is known to be vulnerable to XML attacks. Replace xml.etree.ElementTree with the equivalent defusedxml package, or make sure defusedxml.defuse_stdlib() is called.
+   Severity: Low   Confidence: High
+   CWE: CWE-20 (https://cwe.mitre.org/data/definitions/20.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b405-import-xml-etree
+   Location: scripts/sov_trade/mutation_check.py:24:0
+23	import time
+24	import xml.etree.ElementTree as ET
+25	from pathlib import Path
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/mutation_check.py:219:11
+218	    t0 = time.time()
+219	    proc = subprocess.run(
+220	        [py, "-m", "pytest", *TESTS, "-q", "-p", "no:cacheprovider", f"--junitxml={junit}",
+221	         "-o", "junit_family=xunit2"],
+222	        cwd=root, env=env, capture_output=True, text=True, check=False,
+223	    )
+224	    failed: list[str] = []
+
+--------------------------------------------------
+>> Issue: [B314:blacklist] Using xml.etree.ElementTree.parse to parse untrusted XML data is known to be vulnerable to XML attacks. Replace xml.etree.ElementTree.parse with its defusedxml equivalent function or make sure defusedxml.defuse_stdlib() is called
+   Severity: Medium   Confidence: High
+   CWE: CWE-20 (https://cwe.mitre.org/data/definitions/20.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b313-b320-xml-bad-elementtree
+   Location: scripts/sov_trade/mutation_check.py:226:20
+225	    if junit.exists():
+226	        for case in ET.parse(junit).getroot().iter("testcase"):
+227	            if case.find("failure") is not None or case.find("error") is not None:
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: scripts/sov_trade/static_audit.py:23:0
+22	import re
+23	import subprocess
+24	import sys
+
+--------------------------------------------------
+>> Issue: [B607:start_process_with_partial_path] Starting a process with a partial executable path
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b607_start_process_with_partial_path.html
+   Location: scripts/sov_trade/static_audit.py:81:14
+80	
+81	    tracked = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=REPO, capture_output=True, check=True).stdout
+82	    findings = []
+
+--------------------------------------------------
+>> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html
+   Location: scripts/sov_trade/static_audit.py:81:14
+80	
+81	    tracked = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=REPO, capture_output=True, check=True).stdout
+82	    findings = []
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 913
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 20
+		Medium: 1
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 1
+		High: 20
+Files skipped (0):

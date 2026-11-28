@@ -1,0 +1,26 @@
+{
+  "random_module_imports": [],
+  "sensitive_eq_comparisons": [
+    "sov_trade/ceremony.py:193: len(secret) != 32",
+    "sov_trade/crypto.py:354: len(pair._secret) != ED25519_SECRET_LEN + MLDSA65_SEED_LEN",
+    "sov_trade/crypto.py:148: len(signature) != ED25519_SIGNATURE_LEN",
+    "sov_trade/crypto.py:179: len(signature) != MLDSA65_SIGNATURE_LEN",
+    "sov_trade/pkcs11.py:147: len(signature) != ED25519_SIGNATURE_LEN",
+    "sov_trade/timestamp.py:433: tag & 0x1F == 0x1F",
+    "sov_trade/timestamp.py:462: tag == 0x02",
+    "sov_trade/timestamp.py:467: tag == 0x01"
+  ],
+  "hmac_compare_digest_sites": [
+    "sov_trade/ceremony.py:170",
+    "sov_trade/ledger.py:133",
+    "sov_trade/ledger.py:205",
+    "sov_trade/ledger.py:206",
+    "sov_trade/ledger.py:175",
+    "sov_trade/ledger.py:390",
+    "sov_trade/protocol.py:173"
+  ],
+  "secret_scan_files": 671,
+  "secret_scan_findings": [],
+  "hard_findings": [],
+  "result": "PASS"
+}
