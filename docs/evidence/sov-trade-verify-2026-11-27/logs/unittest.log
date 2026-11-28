@@ -1101,6 +1101,6 @@ test_sustainable_output_and_anime_key_decompression (tests.test_v7_legitimacy_om
 test_tig_check_4_preregistration_and_three_confidences (tests.test_v7_legitimacy_omni_reld.V7LegitimacyAndTigCheck4Tests.test_tig_check_4_preregistration_and_three_confidences) ... ok
 
 ----------------------------------------------------------------------
-Ran 831 tests in 6.687s
+Ran 831 tests in 6.246s
 
 OK (expected failures=6)
